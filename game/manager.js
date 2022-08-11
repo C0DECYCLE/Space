@@ -24,7 +24,7 @@ class Manager {
 
     constructor( config ) {
 
-        BABYLON.Logger.LogLevels = BABYLON.Logger.ErrorLogLevel
+        BABYLON.Logger.LogLevels = BABYLON.Logger.ErrorLogLevel;
 
         this.#create();
 
