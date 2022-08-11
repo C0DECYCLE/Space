@@ -6,9 +6,7 @@
     2022
 */
 
-Space.addOnReady( /*async*/ () => {
-
-    //await Ammo();
+Space.addOnReady( () => {
 
     window.manager = new Manager( {} );
 

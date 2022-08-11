@@ -19,29 +19,6 @@ class EngineUtils {
         return vector.rotateByQuaternionToRef( quat, BABYLON.Vector3.Zero() );
     }
     
-    static createDummy( scene, size = Math.round( Math.random() * 10 ) * 1, material, position, rotation ) {
-
-        let dummy = {};
-
-        dummy.root = BABYLON.MeshBuilder.CreateBox( "dummy", { size: size }, scene );
-        dummy.root.position.copyFrom( position );
-        dummy.root.rotationQuaternion = BABYLON.Quaternion.FromEulerVector( rotation );
-        dummy.root.material = material;
-        dummy.root.useLODScreenCoverage = true;
-        dummy.root.addLODLevel( 0.0001, null );  
-        dummy.root.isLODNull = () => dummy.root.getLOD( scene.activeCamera ) == null;
-        dummy.root.physicsImpostor = new BABYLON.PhysicsImpostor( dummy.root, BABYLON.PhysicsImpostor.BoxImpostor, { mass: size/*, friction: 1, restitution: 0*/ }, scene ); 
-
-        dummy.physics = new PhysicsEntity( dummy );
-
-        return dummy;
-    }
-
-    static getFarAway() {
-
-        return new BABYLON.Vector3( 0, 1000 * 1000 * 1000, 0 );
-    }
-
     /*
     static rotateVector( vector, axis, radian ) {
 

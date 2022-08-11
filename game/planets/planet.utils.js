@@ -62,12 +62,7 @@ class PlanetUtils {
 
         v = PlanetUtils.cubesphere( v, planet.config.radius );
         
-        return PlanetUtils.displace( v, planet );
-    }
-
-    static displace( v, planet ) {
-
-        let i = planet.config.seed.add( v );
+        let i = planet.getSeed().add( v );
         let noise = PlanetUtils.heightmap( i, planet );
         
         return v.scaleInPlace( planet.config.radius * ( 1 + noise ) * 0.75 );

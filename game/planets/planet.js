@@ -12,65 +12,73 @@ class Planet {
 
         key: undefined,
         radius: undefined,
-        gravity: 0.8,
         
         min: 64,
         resolution: 16,
 
-        seed: null,
         perlin: new perlinNoise3d()
     };
 
     scene = null;
-    
-    root = null;
-    physics = null;
+    entity = null;
 
     generator = null;
     material = null;
 
+    #seed = null;
     #faces = new Set();
 
     #cachedInsertionString = "";
     #list = new Map();
 
-    constructor( manager, config ) {
+    constructor( scene, camera, config, seed = new BABYLON.Vector3( 0, 0, 0 ) ) {
+    
+        this.#seed = seed;
 
-        this.scene = manager.scene;
+        this.scene = scene;
 
         this.config.key = config.key;
         this.config.radius = config.radius;
-        this.config.gravity = config.gravity || this.config.gravity;
         this.config.min = config.min || this.config.min;
         this.config.resolution = config.resolution || this.config.resolution;
-        this.config.seed = config.seed;
-        this.config.perlin.noiseSeed( this.config.seed.x );
+        this.config.perlin.noiseSeed( this.#seed.x );
 
-        this.#createRoot();
-        this.#addGenerator();
-        this.#setupPhysics();
-        this.#farInsertion();
+        this.entity = new Entity( "planet", this.scene, camera );
+
+        //////////////////////////////////////////////////
+        /*
+        let debug = BABYLON.MeshBuilder.CreateSphere( "debug", { diameter: this.config.radius * 2 * 1.5, segments: 32 }, scene );
+        debug.material = new BABYLON.StandardMaterial( "debug_material", scene );
+        debug.material.diffuseColor = BABYLON.Color3.FromHexString("#ff226b");
+        debug.material.emissiveColor = BABYLON.Color3.FromHexString("#120B25");
+        debug.material.specularColor.set( 0, 0, 0 );
+        debug.material.wireframe = true;
+        debug.parent = this.entity;
+        */
+        //////////////////////////////////////////////////
+
+        this.generator = new PlanetGenerator( this, this.#faces );
+        this.material = this.generator.createMaterial();
+
+        let farFarAway = 1000 * 1000 * 1000;
+        this.insert( new BABYLON.Vector3( 0, farFarAway, 0 ), farFarAway );
     }
 
-    insert( position, distance ) {
+    getSeed() {
+
+        return this.#seed;
+    }
+
+    insert( originPosition, distance ) {
         
-        let insertionString = this.#getInsertionString( position );
+        let insertionString = this.#getInsertionString( originPosition );
         
         if ( insertionString != this.#cachedInsertionString ) {
             
-            this.#insertQuadtrees( position, distance );
+            this.#insertQuadtrees( originPosition, distance );
 
             this.#cachedInsertionString = insertionString;
         }
-    }
-
-    update() {
-
-        this.#list.forEach( ( data, nodeKey ) => {
-            
-            data.mesh.position.copyFrom( this.root.position );
-            data.mesh.rotationQuaternion.copyFrom( this.root.rotationQuaternion );
-        } ); 
     }
 
     disposeAll() {
@@ -81,54 +89,16 @@ class Planet {
             this.#list.delete( nodeKey );
         } ); 
     }
-
-    #createRoot() {
-
-        this.root = new BABYLON.Mesh( "planet", this.scene );
-        this.root.rotationQuaternion = this.root.rotation.toQuaternion();
-
-
-                //////////////////////////////////////////////////
-                /*
-                let debug = BABYLON.MeshBuilder.CreateSphere( "debug", 
-                { diameter: this.config.radius * 2 * 1.5, segments: 32 }, scene );
-                debug.material = new BABYLON.StandardMaterial( "debug_material", scene );
-                debug.material.diffuseColor = BABYLON.Color3.FromHexString("#ff226b");
-                debug.material.emissiveColor = BABYLON.Color3.FromHexString("#120B25");
-                debug.material.specularColor.set( 0, 0, 0 );
-                debug.material.wireframe = true;
-                debug.parent = this.root;
-                */
-                //////////////////////////////////////////////////
-    }
-
-    #addGenerator() {
-
-        this.generator = new PlanetGenerator( this, this.#faces );
-        this.material = this.generator.createMaterial();
-        this.custumMaterial = this.generator.createCustomMaterial();
-    }
-
-    #setupPhysics() {
-
-        this.physics = new PlanetPhysics( this );
-    }
-
-    #farInsertion() {
-
-        let farFarAway = EngineUtils.getFarAway();
-        this.insert( farFarAway, farFarAway.y );
-    }
     
-    #getInsertionString( position ) {
+    #getInsertionString( originPosition ) {
 
-        let diffrence = position.subtract( 
+        let diffrence = originPosition.subtract( 
 
             BABYLON.Vector3.TransformCoordinates( 
 
                 BABYLON.Vector3.One().scaleInPlace( this.config.radius ), 
 
-                this.root.computeWorldMatrix( true ) 
+                this.entity.computeOriginMatrix() 
             )
         );
 
@@ -144,11 +114,11 @@ class Planet {
         return diffrence.toString();
     }
 
-    #insertQuadtrees( position, distance ) {
+    #insertQuadtrees( originPosition, distance ) {
 
         let params = { 
             
-            insertposition: position,
+            insertOriginPosition: originPosition,
             
             list: this.#list,
             
@@ -156,8 +126,8 @@ class Planet {
             distanceRadiusFactor: distance / this.config.radius
         };
 
-        params.centerToInsertion = position.subtract( this.root.position );
-        params.occlusionFallOf = ( 1 - ( params.distanceRadiusFactor - 1 ) ).clamp( -0.95, 0.95 );
+        params.centerToInsertion = originPosition.subtract( this.entity.originPosition );
+        params.occlusionFallOf = ( 1 - ( ( params.centerToInsertion.length() / this.config.radius ) - 1 ) ).clamp( -0.95, 0.95 );
         params.centerToInsertion = params.centerToInsertion.normalize();
 
         
