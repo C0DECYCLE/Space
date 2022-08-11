@@ -8,24 +8,20 @@
 
 class Planets {
 
-    manager = null;
-    scene = null;
     camera = null;
     player = null;
 
     list = new Map();
 
-    constructor( manager ) {
-        
-        this.manager = manager;
-        this.scene = this.manager.scene;
-        this.camera = this.manager.camera;
-        this.player = this.manager.player;
+    constructor( camera, player ) {
+    
+        this.camera = camera;
+        this.player = player;
     }
 
-    register( config ) {
+    register( planet ) {
 
-        this.list.set( config.key, new Planet( this.manager, config ) );
+        this.list.set( planet.config.key, planet );
     }
 
     update() {
@@ -40,9 +36,9 @@ class Planets {
             let distance = BABYLON.Vector3.Distance( planet.root.position, position );
             let distanceRadiusFactor = distance / planet.config.radius;
             
-            if ( distanceRadiusFactor < 1.3/*2*/ && this.player.state.is( "space" ) ) {
+            if ( distanceRadiusFactor < 2 && this.player.state.is( "space" ) ) {
 
-                this.player.state.set( "planet", planet );
+                //this.player.state.set( "planet", planet );
             }
 
             if ( distanceRadiusFactor < 20 ) {
@@ -50,7 +46,6 @@ class Planets {
                 planet.insert( position, distance );
             }
         
-            planet.update();
         } );
     }
 

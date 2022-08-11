@@ -10,12 +10,9 @@ class Controls {
 
     config = {
 
-        panning: 0.005,
-
-        experimentalPointerLock: true
+        panning: 0.005
     };
 
-    manager = null;
     scene = null;
 
     isKeyboarding = false;
@@ -26,12 +23,9 @@ class Controls {
     onPointerUp = new Set();
     onPointerMove = new Set();
 
-    constructor( manager, config ) {
+    constructor( scene, config ) {
 
-        this.manager = manager;
-        this.scene = this.manager.scene;
-
-        this.config.panning = config.panning || this.config.panning;
+        this.scene = scene;
 
         this.#bindKeyboard();
         this.#bindMouse();
@@ -43,14 +37,14 @@ class Controls {
             
             if ( kbInfo.type == BABYLON.KeyboardEventTypes.KEYDOWN ) {
                 
+                this.isKeyboarding = true;
                 this.activeKeys.add( kbInfo.event.key.toLowerCase() );
 
             } else if ( kbInfo.type == BABYLON.KeyboardEventTypes.KEYUP ) {
 
+                this.isKeyboarding = false;
                 this.activeKeys.delete( kbInfo.event.key.toLowerCase() );
             }
-
-            this.isKeyboarding = this.activeKeys.size > 0;
         } );
     }
 
@@ -68,46 +62,11 @@ class Controls {
                 this.isPointerDown = false;
                 this.onPointerUp.forEach( callback => callback( pointerInfo ) );
 
-            } else if ( pointerInfo.type == BABYLON.PointerEventTypes.POINTERMOVE && this.config.experimentalPointerLock == false ) {
+            } else if ( pointerInfo.type == BABYLON.PointerEventTypes.POINTERMOVE ) {
 
                 this.onPointerMove.forEach( callback => callback( pointerInfo ) );
             }
         } );
-
-        if ( this.config.experimentalPointerLock == true ) {
-
-            this.#pointerLock();
-        }
-    }
-
-    #pointerLock() {
-
-        let canvas = Space.engine.babylon._renderingCanvas;
-        let mouseMove = ( event ) => this.onPointerMove.forEach( callback => callback( { event: event } ) );
-        let changeCallback = ( e ) => {
-
-            if (document.pointerLockElement === canvas ||
-                document.mozPointerLockElement === canvas ||
-                document.webkitPointerLockElement === canvas
-            ){
-
-                document.addEventListener( "mousemove", mouseMove, false );
-
-            } else {
-                
-                document.removeEventListener( "mousemove", mouseMove, false );
-            }
-        };
-
-        document.addEventListener('pointerlockchange', changeCallback, false);
-        document.addEventListener('mozpointerlockchange', changeCallback, false);
-        document.addEventListener('webkitpointerlockchange', changeCallback, false);
-
-        canvas.onclick = () => {
-
-            canvas.requestPointerLock = canvas.requestPointerLock || canvas.mozRequestPointerLock || canvas.webkitRequestPointerLock;
-            canvas.requestPointerLock();
-        };
     }
 
 }

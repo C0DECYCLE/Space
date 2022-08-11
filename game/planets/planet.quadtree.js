@@ -14,11 +14,10 @@ class PlanetQuadtree {
     #size = undefined;
 
     #fixRotation = null;
-
-    #up = null;
-    #left = null;
     #right = null;
+    #up = null;
     #forward = null;
+    #left = null;
     #backward = null;
 
     #leftforward = null;
@@ -33,8 +32,17 @@ class PlanetQuadtree {
         this.#size = this.#planet.config.radius * 2;
         this.#fixRotation = fixRotation.scaleInPlace( Math.PI / 2 );
 
-        this.#setup1D();
-        this.#setup2D();
+        this.#right = EngineUtils.vectorRotation( BABYLON.Vector3.Right(), this.#fixRotation );
+        this.#up = EngineUtils.vectorRotation( BABYLON.Vector3.Up(), this.#fixRotation );
+        
+        this.#forward = BABYLON.Vector3.Cross( this.#right, this.#up );
+        this.#left = this.#right.negate();
+        this.#backward = this.#forward.negate();
+
+        this.#leftforward = this.#left.add( this.#forward );
+        this.#rightforward = this.#right.add( this.#forward );
+        this.#leftbackward = this.#backward.add( this.#left );
+        this.#rightbackward = this.#backward.add( this.#right );
 
         this.suffix = suffix;
     }
@@ -42,24 +50,6 @@ class PlanetQuadtree {
     insert( params ) {
 
         this.#recurse( params, this.suffix, this.#up.scale( this.#planet.config.radius ), this.#size );
-    }
-
-    #setup1D() {
-
-        this.#right = EngineUtils.vectorRotation( BABYLON.Vector3.Right(), this.#fixRotation );
-        this.#up = EngineUtils.vectorRotation( BABYLON.Vector3.Up(), this.#fixRotation );
-        
-        this.#forward = BABYLON.Vector3.Cross( this.#right, this.#up );
-        this.#left = this.#right.negate();
-        this.#backward = this.#forward.negate();
-    }
-
-    #setup2D() {
-
-        this.#leftforward = this.#left.add( this.#forward );
-        this.#rightforward = this.#right.add( this.#forward );
-        this.#leftbackward = this.#backward.add( this.#left );
-        this.#rightbackward = this.#backward.add( this.#right );
     }
 
     #recurse( params, nodeKey, position, size ) {
@@ -76,7 +66,7 @@ class PlanetQuadtree {
         } else {
 
             if ( factors.dot > params.occlusionFallOf ) {
-                
+
                 let resolution = this.#getResolution( params, size );
                 
                 if ( params.list.has( nodeKey ) == true ) {
@@ -95,7 +85,7 @@ class PlanetQuadtree {
                         keep: true,
 
                         resolution: resolution,
-                        mesh: this.#planet.generator.createChunkMesh( nodeKey, position, this.#fixRotation, size, resolution, factors.distance )
+                        mesh: this.#planet.generator.createChunkMesh( nodeKey, position, this.#fixRotation, size, resolution )
                     } );
                 }
             }
@@ -105,7 +95,7 @@ class PlanetQuadtree {
     #getDistanceDot( params, position ) {
 
         let terrainifyPosition = PlanetUtils.terrainify( position.clone(), this.#planet );
-        let terrainifyOriginRotatePosition = BABYLON.Vector3.TransformCoordinates( terrainifyPosition, this.#planet.root.computeWorldMatrix( true ) );
+        let terrainifyOriginRotatePosition = BABYLON.Vector3.TransformCoordinates( terrainifyPosition, this.#planet.root.computeWorldMatrix() );
         
         return {
 
