@@ -1,0 +1,138 @@
+"use strict";
+
+/*
+    Palto Studio
+    Developed by Noah Bussinger
+    2022
+*/
+
+class PlayerPhysics extends PhysicsEntity {
+
+    #player = null;
+    #planet = null;
+
+    constructor( player ) {
+
+        super( player/*, true*/ );
+        
+        this.#player = player;
+
+        this.#addPhysics();
+
+        //this.register();
+    }
+
+    setPlanet( value ) {
+
+        this.#planet = value;
+    }
+
+    space() {
+
+        this.#spaceMovement();
+    }
+
+    planet() {
+
+        if ( this.#planet != null ) {
+            
+            //this.update();
+            this.#planet.physics.pullPhysicsEntity( this.#player, true/*, true*/ );
+            this.#planet.physics.collideHeightmap( this.#player );
+            //this.#planet.physics.collideGroundBox( this.#player );
+
+            if ( this.state != PhysicsEntity.STATES.FLOATING ) {
+
+                this.#planetMovement();
+            }
+            
+        } else {
+
+            console.error( "Planet Gravity: Planet is null!" );
+        }
+    }
+
+    #addPhysics() {
+
+        this.#player.mesh.physicsImpostor = new BABYLON.PhysicsImpostor( this.#player.mesh, BABYLON.PhysicsImpostor.SphereImpostor, { mass: 0 }, this.#player.scene );
+        this.#player.root.physicsImpostor = new BABYLON.PhysicsImpostor( this.#player.root, BABYLON.PhysicsImpostor.NoImpostor, { mass: 4, friction: 0.9, restitution: 0.1 }, this.#player.scene );
+        //this.#player.root.neverPhysicsSleep = true;
+    }
+
+    #spaceMovement() {
+
+        let controls = this.#player.controls;
+        let speed = this.#player.config.speed;
+        let translate = new BABYLON.Vector3( 0, 0, 0 );
+
+        if ( controls.activeKeys.has( "w" ) == true ) {
+
+            translate.z = speed;
+
+        } else if ( controls.activeKeys.has( "s" ) == true ) {
+
+            translate.z = -speed;
+        }
+        
+        if ( controls.activeKeys.has( "d" ) == true ) {
+
+            translate.x = speed;
+
+        } else if ( controls.activeKeys.has( "a" ) == true ) {
+
+            translate.x = -speed;
+        }
+        
+        if ( controls.activeKeys.has( "q" ) == true ) {
+
+            translate.y = speed;
+
+        } else if ( controls.activeKeys.has( "e" ) == true ) {
+
+            translate.y = -speed;
+        }
+
+        this.#movementTranslate( translate );
+    }
+
+    #planetMovement() {
+
+        let controls = this.#player.controls;
+        let speed = this.#player.config.speed;
+        let translate = new BABYLON.Vector3( 0, 0, 0 );
+
+        if ( controls.activeKeys.has( "w" ) == true ) {
+
+            translate.z = speed;
+
+        } else if ( controls.activeKeys.has( "s" ) == true ) {
+
+            translate.z = -speed;
+        }
+        
+        if ( controls.activeKeys.has( "d" ) == true ) {
+
+            translate.x = speed;
+
+        } else if ( controls.activeKeys.has( "a" ) == true ) {
+
+            translate.x = -speed;
+        }
+
+        this.#movementTranslate( translate );
+    }
+
+    #movementTranslate( translate ) {
+
+        let root = this.#player.root;
+
+        if ( translate.x != 0 || translate.y != 0 || translate.z != 0 ) {
+
+            root.physicsImpostor.applyImpulse( translate.applyRotationQuaternion( root.rotationQuaternion ), BABYLON.Vector3.Zero() );
+
+        } else {
+            
+            root.physicsImpostor.applyImpulse( root.physicsImpostor.getLinearVelocity().scaleInPlace( -0.01 ), BABYLON.Vector3.Zero() );
+        }
+    }
+}
