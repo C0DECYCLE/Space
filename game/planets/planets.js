@@ -50,7 +50,6 @@ class Planets {
                 planet.insert( position, distance );
             }
         
-            planet.update();
         } );
     }
 

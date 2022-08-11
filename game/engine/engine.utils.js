@@ -29,7 +29,6 @@ class EngineUtils {
         dummy.root.material = material;
         dummy.root.useLODScreenCoverage = true;
         dummy.root.addLODLevel( 0.0001, null );  
-        dummy.root.isLODNull = () => dummy.root.getLOD( scene.activeCamera ) == null;
         dummy.root.physicsImpostor = new BABYLON.PhysicsImpostor( dummy.root, BABYLON.PhysicsImpostor.BoxImpostor, { mass: size/*, friction: 1, restitution: 0*/ }, scene ); 
 
         dummy.physics = new PhysicsEntity( dummy );

@@ -64,15 +64,6 @@ class Planet {
         }
     }
 
-    update() {
-
-        this.#list.forEach( ( data, nodeKey ) => {
-            
-            data.mesh.position.copyFrom( this.root.position );
-            data.mesh.rotationQuaternion.copyFrom( this.root.rotationQuaternion );
-        } ); 
-    }
-
     disposeAll() {
 
         this.#list.forEach( ( data, nodeKey ) => {
@@ -84,7 +75,7 @@ class Planet {
 
     #createRoot() {
 
-        this.root = new BABYLON.Mesh( "planet", this.scene );
+        this.root = new BABYLON.TransformNode( "planet", this.scene );
         this.root.rotationQuaternion = this.root.rotation.toQuaternion();
 
 

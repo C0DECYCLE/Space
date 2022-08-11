@@ -47,13 +47,9 @@ class PlanetGenerator {
         
         mesh.material = this.#planet.material;
         //mesh.occlusionType = BABYLON.AbstractMesh.OCCLUSION_TYPE_OPTIMISTIC; //glitchy
-        //mesh.parent = this.#planet.root;
-        mesh.position.copyFrom( this.#planet.root.position );
-        mesh.rotationQuaternion = this.#planet.root.rotationQuaternion.clone();
-
+        mesh.parent = this.#planet.root;
+    
         this.updateChunkMesh( mesh, position, fixRotation, size );
-
-        this.#planet.physics.createCollisionMesh( mesh, size );
 
         //mesh.position.copyFrom( position );
         //mesh.rotation.copyFrom( fixRotation );

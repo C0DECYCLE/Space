@@ -8,11 +8,11 @@
 
 class PlanetPhysics {
 
-    #planet = null;
+    parent = null;
 
-    constructor( planet ) {
+    constructor( parent ) {
 
-        this.#planet = planet;
+        this.parent = parent;
     }
 
     pullPhysicsEntity( entity, upright = false/*, calm = false*/ ) {
@@ -24,11 +24,11 @@ class PlanetPhysics {
             entity.physics.quaternionTowardsUpright( up, entity.config.standingup );
         }
         
-        //if ( entity.physics.state == PhysicsEntity.STATES.FLOATING ) {
+        if ( entity.physics.state == PhysicsEntity.STATES.FLOATING ) {
             
-            entity.root.physicsImpostor.applyForce( up.scaleInPlace( -this.#planet.config.gravity * 10 ), BABYLON.Vector3.Zero() );
+            entity.root.physicsImpostor.applyForce( up.scaleInPlace( -this.parent.config.gravity * 10 ), BABYLON.Vector3.Zero() );
         
-        /*}*//* else {
+        }/* else {
 
             if ( calm == true ) {
 
@@ -43,10 +43,10 @@ class PlanetPhysics {
         let displace = this.#upToDisplaced( diffrence.clone().normalize() );
         let distance = diffrence.subtractInPlace( displace ).length();
         
-        if ( distance <= 2 ) {
-            log("ground")
+        if ( distance <= 1.5 ) {
+
             entity.physics.state = PhysicsEntity.STATES.PLANETGROUND;
-            //entity.root.physicsImpostor.setLinearVelocity( BABYLON.Vector3.Zero() );
+            entity.root.physicsImpostor.setLinearVelocity( BABYLON.Vector3.Zero() );
 
         } else {
 
@@ -56,48 +56,26 @@ class PlanetPhysics {
     /*
     collideGroundBox( entity ) {
         
-        let diffrence = this.#getDiffrence( entity.root.position );
-        let center = this.#upToDisplaced( diffrence.clone().normalize() );
+        let center = this.#upToDisplaced( this.#getDiffrence( entity.root.position ).normalize() );
         let forward = this.#upToDisplaced( this.#getDiffrence( entity.root.position.add( entity.root.forward.scale( 3 ) ) ).normalize() );
         let right = this.#upToDisplaced( this.#getDiffrence( entity.root.position.add( entity.root.right.scale( 3 ) ) ).normalize() );
-        let distance = diffrence.subtractInPlace( center ).length();
 
         let up = BABYLON.Vector3.Cross( forward.subtractInPlace( center ), right.subtractInPlace( center ) ).normalize();
 
-        entity.physics.box.position.copyFrom( this.#planet.root.position ).addInPlace( center );
+        entity.physics.box.position.copyFrom( this.parent.root.position ).addInPlace( center );
         entity.physics.box.rotationQuaternion.copyFrom( BABYLON.Quaternion.FromLookDirectionRH( entity.physics.box.forward, up ) );
-
-        if ( distance <= 1.5 ) {
-
-            entity.physics.state = PhysicsEntity.STATES.PLANETGROUND;
-
-        } else {
-
-            entity.physics.state = PhysicsEntity.STATES.FLOATING;
-        }
     }
     */
-    createCollisionMesh( mesh, size ) {
-        
-        if ( size == this.#planet.config.min ) {
-
-            mesh.physicsImpostor = new BABYLON.PhysicsImpostor( mesh, BABYLON.PhysicsImpostor.MeshImpostor, { mass: 0 }, this.#planet.scene );
-        
-            //if ( this.#planet.root.physicsImpostor ) this.#planet.root.physicsImpostor.dispose();
-            //this.#planet.root.physicsImpostor = new BABYLON.PhysicsImpostor( this.#planet.root, BABYLON.PhysicsImpostor.NoImpostor, { mass: 0/*, friction: 0.9, restitution: 0.1*/ }, this.#planet.scene );
-        }
-    }
-
     #getDiffrence( position ) {
 
-        return position.subtract( this.#planet.root.position );
+        return position.subtract( this.parent.root.position );
     }
 
     #upToDisplaced( up ) {
 
-        let inPlanetRotation = up.rotateByQuaternionToRef( this.#planet.root.rotationQuaternion.invert(), BABYLON.Vector3.Zero() );
+        let inPlanetRotation = up.rotateByQuaternionToRef( this.parent.root.rotationQuaternion.invert(), BABYLON.Vector3.Zero() );
 
-        return PlanetUtils.displace( inPlanetRotation, this.#planet ).rotateByQuaternionToRef( this.#planet.root.rotationQuaternion, BABYLON.Vector3.Zero() );
+        return PlanetUtils.displace( inPlanetRotation, this.parent ).rotateByQuaternionToRef( this.parent.root.rotationQuaternion, BABYLON.Vector3.Zero() );
     }
 
 }

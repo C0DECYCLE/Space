@@ -8,15 +8,12 @@
 
 class PlayerPhysics extends PhysicsEntity {
 
-    #player = null;
     #planet = null;
 
-    constructor( player ) {
+    constructor( parent ) {
 
-        super( player/*, true*/ );
+        super( parent/*, true*/ );
         
-        this.#player = player;
-
         this.#addPhysics();
 
         //this.register();
@@ -37,15 +34,15 @@ class PlayerPhysics extends PhysicsEntity {
         if ( this.#planet != null ) {
             
             //this.update();
-            this.#planet.physics.pullPhysicsEntity( this.#player, true/*, true*/ );
-            this.#planet.physics.collideHeightmap( this.#player );
-            //this.#planet.physics.collideGroundBox( this.#player );
+            this.#planet.physics.pullPhysicsEntity( this.parent, true/*, true*/ );
+            this.#planet.physics.collideHeightmap( this.parent );
+            //this.#planet.physics.collideGroundBox( this.parent );
 
             if ( this.state != PhysicsEntity.STATES.FLOATING ) {
-
+                
                 this.#planetMovement();
             }
-            
+
         } else {
 
             console.error( "Planet Gravity: Planet is null!" );
@@ -54,15 +51,15 @@ class PlayerPhysics extends PhysicsEntity {
 
     #addPhysics() {
 
-        this.#player.mesh.physicsImpostor = new BABYLON.PhysicsImpostor( this.#player.mesh, BABYLON.PhysicsImpostor.SphereImpostor, { mass: 0 }, this.#player.scene );
-        this.#player.root.physicsImpostor = new BABYLON.PhysicsImpostor( this.#player.root, BABYLON.PhysicsImpostor.NoImpostor, { mass: 4, friction: 0.9, restitution: 0.1 }, this.#player.scene );
-        //this.#player.root.neverPhysicsSleep = true;
+        this.parent.mesh.physicsImpostor = new BABYLON.PhysicsImpostor( this.parent.mesh, BABYLON.PhysicsImpostor.SphereImpostor, { mass: 0 }, this.parent.scene );
+        this.parent.root.physicsImpostor = new BABYLON.PhysicsImpostor( this.parent.root, BABYLON.PhysicsImpostor.NoImpostor, { mass: 4, friction: 0.9, restitution: 0.1 }, this.parent.scene );
+        //this.parent.root.neverPhysicsSleep = true;
     }
 
     #spaceMovement() {
 
-        let controls = this.#player.controls;
-        let speed = this.#player.config.speed;
+        let controls = this.parent.controls;
+        let speed = this.parent.config.speed;
         let translate = new BABYLON.Vector3( 0, 0, 0 );
 
         if ( controls.activeKeys.has( "w" ) == true ) {
@@ -97,8 +94,8 @@ class PlayerPhysics extends PhysicsEntity {
 
     #planetMovement() {
 
-        let controls = this.#player.controls;
-        let speed = this.#player.config.speed;
+        let controls = this.parent.controls;
+        let speed = this.parent.config.speed;
         let translate = new BABYLON.Vector3( 0, 0, 0 );
 
         if ( controls.activeKeys.has( "w" ) == true ) {
@@ -124,7 +121,7 @@ class PlayerPhysics extends PhysicsEntity {
 
     #movementTranslate( translate ) {
 
-        let root = this.#player.root;
+        let root = this.parent.root;
 
         if ( translate.x != 0 || translate.y != 0 || translate.z != 0 ) {
 

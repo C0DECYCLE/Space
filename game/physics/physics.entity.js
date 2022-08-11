@@ -26,7 +26,7 @@ class PhysicsEntity {
 
         this.parent = parent;
 
-        //this.#createBox();
+        this.#createBox();
         /*
         if ( manualRegister == false ) {
 
@@ -62,14 +62,14 @@ class PhysicsEntity {
             this.state = PhysicsEntity.STATES.FLOATING;
         }
     }
-    
+    */
     #createBox() {
 
         this.box = BABYLON.MeshBuilder.CreateBox( "physics_entity_box", { width: 5, height: 0.05, depth: 5 }, this.parent.scene );
         this.box.position.copyFrom( EngineUtils.getFarAway() );
         this.box.rotationQuaternion = this.box.rotation.toQuaternion();
         this.box.visibility = 0;
-        this.box.physicsImpostor = new BABYLON.PhysicsImpostor( this.box, BABYLON.PhysicsImpostor.BoxImpostor, { mass: 0/*, friction: 0.9, restitution: 0.1*//* }, this.parent.scene ); 
+        this.box.physicsImpostor = new BABYLON.PhysicsImpostor( this.box, BABYLON.PhysicsImpostor.BoxImpostor, { mass: 0, friction: 0.9, restitution: 0.1 }, this.parent.scene ); 
     }
-    */
+
 }

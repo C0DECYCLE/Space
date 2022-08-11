@@ -24,8 +24,6 @@ class Manager {
 
     constructor( config ) {
 
-        BABYLON.Logger.LogLevels = BABYLON.Logger.ErrorLogLevel
-
         this.#create();
 
         this.scene.onReadyObservable.add( () => this.#stage() );
@@ -60,8 +58,8 @@ class Manager {
 
                         //this.dummies[i].physics.update();
             
-                        //this.planets.list.get( 0 ).physics.pullPhysicsEntity( this.dummies[i] );
-                        //this.planets.list.get( 0 ).physics.collideHeightmap( this.dummies[i] );
+                        this.planets.list.get( 0 ).physics.pullPhysicsEntity( this.dummies[i] );
+                        this.planets.list.get( 0 ).physics.collideHeightmap( this.dummies[i] );
                         //this.planets.list.get( 0 ).physics.collideGroundBox( this.dummies[i] );
                     }
                 }
