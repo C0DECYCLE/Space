@@ -9,7 +9,6 @@
 class EngineUtils {
 
     static toAngle = 180 / Math.PI;
-    
     static toRadian = Math.PI / 180;
 
     static vectorRotation( vector, rotation ) {
@@ -17,6 +16,40 @@ class EngineUtils {
         const quat = BABYLON.Quaternion.FromEulerVector( rotation );
 
         return vector.rotateByQuaternionToRef( quat, BABYLON.Vector3.Zero() );
+    }
+
+    static getFarAway() {
+
+        return new BABYLON.Vector3( 0, 1000 * 1000 * 1000, 0 );
+    }
+    
+
+    
+    static createDummyField( scene, count, center, material ) {
+
+        let dummies = [];
+
+        for ( let i = 0; i < count; i++ ) {
+
+            dummies.push( EngineUtils.createDummy( scene, undefined, material, 
+                new BABYLON.Vector3( Math.random() * 2 - 1, Math.random() * 2 - 1, Math.random() * 2 - 1 ).scaleInPlace( 30 ).addInPlace( center ), 
+                new BABYLON.Vector3( Math.random() * 2 - 1, Math.random() * 2 - 1, Math.random() * 2 - 1 ).scaleInPlace( Math.PI ) 
+            ) );
+        }
+
+        dummies.update = () => {
+
+            for ( let i = 0; i < dummies.length; i++ ) {
+
+                //dummies[i].physics.update();
+    
+                //this.planets.list.get( 0 ).physics.pullPhysicsEntity( dummies[i] );
+                //this.planets.list.get( 0 ).physics.collideHeightmap( dummies[i] );
+                //this.planets.list.get( 0 ).physics.collideGroundBox( dummies[i] );
+            }
+        };
+
+        return dummies;
     }
     
     static createDummy( scene, size = Math.round( Math.random() * 10 ) * 1, material, position, rotation ) {
@@ -37,10 +70,6 @@ class EngineUtils {
         return dummy;
     }
 
-    static getFarAway() {
-
-        return new BABYLON.Vector3( 0, 1000 * 1000 * 1000, 0 );
-    }
 
     /*
     static rotateVector( vector, axis, radian ) {

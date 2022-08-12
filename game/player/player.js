@@ -85,6 +85,8 @@ class Player {
 
         this.state.add( "space", ( oldState ) => this.#onSpaceEnter( oldState ), ( newState ) => this.#onSpaceLeave( newState ) );
         this.state.add( "planet",( oldState, planet ) => this.#onPlanetEnter( oldState, planet ), ( newState ) => this.#onPlanetLeave( newState ) );
+
+        this.state.set( "space" );
     }
 
     #createMesh() {

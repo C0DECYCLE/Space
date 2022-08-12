@@ -103,8 +103,6 @@ class CameraOrigin {
             this.toRelative( node.position );
             
             node._relativePosition.copyFrom( node.position );
-
-            //this.#physicsRadius( node );
         }
     }
 
@@ -140,65 +138,4 @@ class CameraOrigin {
         }
     }
 
-    #physicsRadius( node ) {
-
-        if ( !node.physicsImpostor || node.neverPhysicsSleep == true ) {
-
-            return;
-        }
-        
-        if ( node._isPhysicsSleeping != true && node._isPhysicsSleeping != false ) {
-
-            node._isPhysicsSleeping = this.parent.manager.physicsPlugin.world.allowSleep;
-        }
-
-        if ( this.#inPhysicsRadius( node ) == true ) {
-
-            if ( node._isPhysicsSleeping == true ) {
-                
-                this.#physicsWakeUp( node );
-            }
-
-        } else {
-
-            if ( node._isPhysicsSleeping == false ) {
-                
-                this.#physicsSleep( node );
-            }
-        }
-    }
-
-    #inPhysicsRadius( node ) {
-
-        return node._relativePosition.lengthSquared() < this.parent.config.physicsRadius * this.parent.config.physicsRadius;
-    }
-
-    #physicsSleep( node ) {
-
-        node._isPhysicsSleeping = true;
-        this.#physicsTraverse( node, "sleep" );
-    }
-
-    #physicsWakeUp( node ) {
-
-        node._isPhysicsSleeping = false;
-        this.#physicsTraverse( node, "wakeUp" );
-    }
-
-    #physicsTraverse( node, func ) {
-
-        node.physicsImpostor[ func ]();
-
-        let children = node.getChildren( undefined, false );
-
-        for ( let i = 0; i < children.length; i++ ) {
-
-            let child = children[i];
-
-            if ( child.physicsImpostor && !child.neverPhysicsSleep ) {
-
-                child.physicsImpostor[ func ]();
-            }
-        }
-    }
 }

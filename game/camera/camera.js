@@ -77,8 +77,7 @@ class Camera {
 
         if ( this.state.is( "player" ) == true ) {
             
-            this.position.copyFrom( BABYLON.Vector3.Lerp( this.position, this.target.root.position, this.config.lerp ) );
-            this.root.rotationQuaternion.copyFrom( BABYLON.Quaternion.Slerp( this.root.rotationQuaternion, this.target.root.rotationQuaternion, this.config.lerp ) );
+            this.#syncWithTarget( this.target );
 
             if ( this.controls.isKeyboarding == true ) {
 
@@ -104,15 +103,18 @@ class Camera {
         this.camera = new BABYLON.ArcRotateCamera( "camera_camera", this.#focusAlpha, this.#focusBeta, this.config.offset, BABYLON.Vector3.Zero(), this.scene );
         this.camera.maxZ = this.config.max;
         this.camera.parent = this.root;
-
-        //slower velocity more up & closer -> faster more down behind and further
-        //when moving, move into panned camera direction
     }
 
     #addOrigin() {
 
         this.origin = new CameraOrigin( this );
         this.position = this.origin.actualPosition;
+    }
+
+    #syncWithTarget( target ) {
+
+        this.position.copyFrom( BABYLON.Vector3.Lerp( this.position, target.root.position, this.config.lerp ) );
+        this.root.rotationQuaternion.copyFrom( BABYLON.Quaternion.Slerp( this.root.rotationQuaternion, target.root.rotationQuaternion, this.config.lerp ) );
     }
     
     #onPlayerEnter( oldState, player ) {
