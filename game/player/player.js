@@ -10,7 +10,7 @@ class Player {
 
     config = {
 
-        speed: 0.05, // 0.15 run 0.05 walk
+        speed: 100.05, // 0.15 run 0.05 walk
         standingup: 0.05,
 
         experimentalPointerLock: true

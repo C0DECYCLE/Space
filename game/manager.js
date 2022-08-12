@@ -87,6 +87,7 @@ class Manager {
 
         this.planets = new Planets( this );
         this.planets.register( { key: 0, radius: 2048, seed: new BABYLON.Vector3( -1123, 7237, -3943 ) } );
+        this.planets.register( { key: 1, radius: 4096, seed: new BABYLON.Vector3( 8513, -9011, -5910 ) } );
 
         
         this.#setupInspector();
@@ -103,6 +104,11 @@ class Manager {
                 light.intensity = 0.5;  
                 light.parent = this.sun;
                 */
+                let sun = BABYLON.MeshBuilder.CreateSphere( "sun", { diameter: 20 * 1000, segments: 16 }, this.scene );
+                sun.material = new BABYLON.StandardMaterial( "sun_material", this.scene );
+                sun.material.diffuseColor.set( 0, 0, 0 );
+                sun.material.emissiveColor = BABYLON.Color3.FromHexString("#fff4b7");
+                sun.material.specularColor.set( 0, 0, 0 );
                 ////////////////////////////////////////////////////
                 
 
@@ -131,10 +137,13 @@ class Manager {
 
     #stage() {
 
-        this.planets.list.get( 0 ).root.position.copyFromFloats( 100, 100, 2048 * 2.3 );
+        let planet0 = this.planets.list.get( 0 );
+        planet0.root.position.copyFromFloats( Math.cos( Math.PI / 2 ), 0, Math.sin( Math.PI / 2 ) ).scaleInPlace( 150 * 1000 );
+        let planet1 = this.planets.list.get( 1 );
+        planet1.root.position.copyFromFloats( Math.cos( -Math.PI / 4 ), 0, Math.sin( -Math.PI / 4 ) ).scaleInPlace( 100 * 1000 );
         
         this.player.state.set( "space" );
-        this.player.root.position.copyFromFloats( 0, 500, 2048 );
+        this.player.root.position.copyFrom( planet0.root.position ).addInPlace( new BABYLON.Vector3( 500, 0, -3 * 1000 ) );
     
         this.camera.attachToPlayer( this.player );
 
@@ -144,7 +153,7 @@ class Manager {
 
                 for ( let i = 0; i < 20; i++ ) {
 
-                    this.dummies.push( EngineUtils.createDummy( this.scene, undefined, this.planets.list.get( 0 ).material, 
+                    this.dummies.push( EngineUtils.createDummy( this.scene, undefined, planet0.material, 
                         new BABYLON.Vector3( Math.random() * 2 - 1, Math.random() * 2 - 1, Math.random() * 2 - 1 ).scaleInPlace( 30 ).addInPlace( this.player.root.position ), 
                         new BABYLON.Vector3( Math.random() * 2 - 1, Math.random() * 2 - 1, Math.random() * 2 - 1 ).scaleInPlace( Math.PI ) 
                     ) );
