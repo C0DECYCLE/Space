@@ -19,7 +19,7 @@ class PlanetGenerator {
 
     createMaterial() {
         
-        let material = new BABYLON.StandardMaterial( "planet_material", this.#planet.scene );
+        let material = new BABYLON.StandardMaterial( `planet${ this.#planet.config.key }_material`, this.#planet.scene );
 
         material.diffuseColor = BABYLON.Color3.FromHexString("#FFEFD4");
         material.emissiveColor = BABYLON.Color3.FromHexString("#120B25");
@@ -30,7 +30,7 @@ class PlanetGenerator {
 
     createCustomMaterial() {
         
-        let material = new BABYLON.CustomMaterial( "planet_custumMaterial", this.#planet.scene );
+        let material = new BABYLON.CustomMaterial( `planet${ this.#planet.config.key }_custumMaterial`, this.#planet.scene );
 
         material.diffuseColor = BABYLON.Color3.FromHexString("#FFEFD4");
         material.emissiveColor = BABYLON.Color3.FromHexString("#120B25");
@@ -43,7 +43,7 @@ class PlanetGenerator {
 
     createChunkMesh( nodeKey, position, fixRotation, size, resolution, distance ) {
 
-        let mesh = BABYLON.MeshBuilder.CreateGround( `planet_chunk_${ nodeKey }`, { width: size, height: size, updatable: true, subdivisions: resolution }, this.#planet.scene );
+        let mesh = BABYLON.MeshBuilder.CreateGround( `planet${ this.#planet.config.key }_chunk_${ nodeKey }`, { width: size, height: size, updatable: true, subdivisions: resolution }, this.#planet.scene );
         
         mesh.material = this.#planet.material;
         //mesh.occlusionType = BABYLON.AbstractMesh.OCCLUSION_TYPE_OPTIMISTIC; //glitchy

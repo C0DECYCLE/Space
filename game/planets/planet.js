@@ -84,7 +84,7 @@ class Planet {
 
     #createRoot() {
 
-        this.root = new BABYLON.Mesh( "planet", this.scene );
+        this.root = new BABYLON.Mesh( `planet${ this.config.key }`, this.scene );
         this.root.rotationQuaternion = this.root.rotation.toQuaternion();
 
 
@@ -153,13 +153,11 @@ class Planet {
             list: this.#list,
             
             distanceCenterInsertion: distance,
-            distanceRadiusFactor: distance / this.config.radius
+            distanceRadiusFactor: distance / this.config.radius,
+
+            centerToInsertion: position.subtract( this.root.position ).normalize(),
+            occlusionFallOf: ( 1 - ( (distance / this.config.radius) - 1 ) ).clamp( -0.95, 0.95 )
         };
-
-        params.centerToInsertion = position.subtract( this.root.position );
-        params.occlusionFallOf = ( 1 - ( params.distanceRadiusFactor - 1 ) ).clamp( -0.95, 0.95 );
-        params.centerToInsertion = params.centerToInsertion.normalize();
-
         
         this.#unkeepAll();
 

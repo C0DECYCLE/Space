@@ -31,6 +31,7 @@ class Planets {
     update() {
 
         this.#insert( this.camera.position );
+        this.#update();
     }
 
     #insert( position ) {
@@ -54,9 +55,12 @@ class Planets {
                 
                 planet.insert( position, distance );
             }
-        
-            planet.update();
         } );
+    }
+
+    #update() {
+
+        this.list.forEach( ( planet, key ) => planet.update() );
     }
 
 }

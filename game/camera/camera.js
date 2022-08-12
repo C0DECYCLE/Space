@@ -29,7 +29,7 @@ class Camera {
     target = null;
 
     origin = null;
-    position = new BABYLON.Vector3();
+    position = null;
 
     #focusAlpha = -Math.PI / 2;
     #focusBeta = Math.PI / 2;
