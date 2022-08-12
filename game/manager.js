@@ -21,6 +21,7 @@ class Manager {
     player = null;
 
     #inspectorNode = null;
+    #isStaged = false;
 
     constructor( config ) {
 
@@ -33,40 +34,10 @@ class Manager {
 
     update( delta ) {
 
-        this.#updateFromInspector();
+        if ( this.#isStaged == true ) {
 
-        this.player.update();
-        
-        this.camera.update();
-
-        if ( this.config.freeze == false ) {
-
-            this.planets.update();
+            this.#updateStage( delta );
         }
-
-
-                ////////////////////////////////////////////////////
-                if ( orbit == true ) {
-                    this.planets.list.get( 0 ).root.rotate( BABYLON.Axis.Y, -0.0001, BABYLON.Space.LOCAL );
-                    o += 0.001;
-                    //this.planets.list.get( 0 ).root.position.copyFromFloats( Math.cos( o ) * 2048, 0, Math.sin( o ) * 2048 );
-                }
-                ////////////////////////////////////////////////////
-
-                ////////////////////////////////////////////////////
-                if ( this.dummies ) {
-
-                    for ( let i = 0; i < this.dummies.length; i++ ) {
-
-                        //this.dummies[i].physics.update();
-            
-                        //this.planets.list.get( 0 ).physics.pullPhysicsEntity( this.dummies[i] );
-                        //this.planets.list.get( 0 ).physics.collideHeightmap( this.dummies[i] );
-                        //this.planets.list.get( 0 ).physics.collideGroundBox( this.dummies[i] );
-                    }
-                }
-                ////////////////////////////////////////////////////
-
                 
         this.scene.render();
     }
@@ -157,6 +128,45 @@ class Manager {
                         new BABYLON.Vector3( Math.random() * 2 - 1, Math.random() * 2 - 1, Math.random() * 2 - 1 ).scaleInPlace( 30 ).addInPlace( this.player.root.position ), 
                         new BABYLON.Vector3( Math.random() * 2 - 1, Math.random() * 2 - 1, Math.random() * 2 - 1 ).scaleInPlace( Math.PI ) 
                     ) );
+                }
+                ////////////////////////////////////////////////////
+
+        this.#isStaged = true;
+    }
+
+    #updateStage( delta ) {
+
+        this.#updateFromInspector();
+
+        this.player.update();
+        
+        this.camera.update();
+
+        if ( this.config.freeze == false ) {
+
+            this.planets.update();
+        }
+
+
+                ////////////////////////////////////////////////////
+                if ( orbit == true ) {
+                    this.planets.list.get( 0 ).root.rotate( BABYLON.Axis.Y, -0.0001, BABYLON.Space.LOCAL );
+                    o += 0.001;
+                    //this.planets.list.get( 0 ).root.position.copyFromFloats( Math.cos( o ) * 2048, 0, Math.sin( o ) * 2048 );
+                }
+                ////////////////////////////////////////////////////
+
+                ////////////////////////////////////////////////////
+                if ( this.dummies ) {
+
+                    for ( let i = 0; i < this.dummies.length; i++ ) {
+
+                        //this.dummies[i].physics.update();
+            
+                        //this.planets.list.get( 0 ).physics.pullPhysicsEntity( this.dummies[i] );
+                        //this.planets.list.get( 0 ).physics.collideHeightmap( this.dummies[i] );
+                        //this.planets.list.get( 0 ).physics.collideGroundBox( this.dummies[i] );
+                    }
                 }
                 ////////////////////////////////////////////////////
     }
