@@ -130,4 +130,5 @@ class PlayerPhysics extends PhysicsEntity {
             root.physicsImpostor.applyImpulse( root.physicsImpostor.getLinearVelocity().scaleInPlace( -0.1 ), BABYLON.Vector3.Zero() );
         }
     }
+    
 }

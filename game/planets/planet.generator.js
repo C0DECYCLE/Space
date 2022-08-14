@@ -20,10 +20,7 @@ class PlanetGenerator {
     createMaterial() {
         
         let material = new BABYLON.StandardMaterial( `planet${ this.#planet.config.key }_material`, this.#planet.scene );
-
-        material.diffuseColor = BABYLON.Color3.FromHexString("#FFEFD4");
-        material.emissiveColor = BABYLON.Color3.FromHexString("#120B25");
-        material.specularColor.set( 0, 0, 0 );
+        material.setColorIntensity( "#534d5f", 1.0 );
 
         return material;
     }
@@ -31,10 +28,7 @@ class PlanetGenerator {
     createCustomMaterial() {
         
         let material = new BABYLON.CustomMaterial( `planet${ this.#planet.config.key }_custumMaterial`, this.#planet.scene );
-
-        material.diffuseColor = BABYLON.Color3.FromHexString("#FFEFD4");
-        material.emissiveColor = BABYLON.Color3.FromHexString("#120B25");
-        material.specularColor.set( 0, 0, 0 );
+        material.setColorIntensity( "#534d5f", 1.0 );
 
         return material;
     }

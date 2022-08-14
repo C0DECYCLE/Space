@@ -51,14 +51,16 @@ class PlanetUtils {
         let n = 0;
 
         for ( let octave = 0; octave < N_OCTAVES; octave++ ) {
-                            //genericNoise3d
-            n += amplitude * planet.config.perlin.get( frequency * v.x, frequency * v.y, frequency * v.z );
+            
+            n += amplitude * planet.config.perlin.get( frequency * v.x, frequency * v.y, frequency * v.z ); //genericNoise3d
 
             frequency *= lacunarity;
             amplitude *= persistence; 
         }
-                                                                    //genericNoise3d
-        let mn = genericNoise3d( v.x * 2, v.y * 2, v.z * 2 ) * 0.35 + planet.config.perlin.get( v.x * 10, v.y * 10, v.z * 10 ) * 0.35 + genericNoise3d( v.x * 500, v.y * 500, v.z * 500 ) * 0.005;
+        
+        let mn = genericNoise3d( v.x * 2, v.y * 2, v.z * 2 ) * 0.35;
+        mn += planet.config.perlin.get( v.x * 10, v.y * 10, v.z * 10 ) * 0.35; //genericNoise3d
+        mn += genericNoise3d( v.x * 500, v.y * 500, v.z * 500 ) * 0.005;
         
         return n.clamp( minimum - 0.1 + ( mn * 0.2 * P_FACTOR ), Infinity );
     }

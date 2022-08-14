@@ -8,6 +8,9 @@
 
 class PlanetQuadtree {
 
+    static INSERT_LIMIT = 48;
+    static INSERT_HALF_LIMIT = 16;
+
     suffix = undefined;
 
     #planet = null;
@@ -68,38 +71,58 @@ class PlanetQuadtree {
         
         if ( factors.distance < size * 1.5 && size > this.#planet.config.min ) {
 
-            this.#recurse( params, `${ nodeKey }0`, this.#leftforward.scale( size / 4 ).addInPlace( position ), size / 2 );
-            this.#recurse( params, `${ nodeKey }1`, this.#rightforward.scale( size / 4 ).addInPlace( position ), size / 2 );
-            this.#recurse( params, `${ nodeKey }2`, this.#leftbackward.scale( size / 4 ).addInPlace( position ), size / 2 );
-            this.#recurse( params, `${ nodeKey }3`, this.#rightbackward.scale( size / 4 ).addInPlace( position ), size / 2 );
-
+            this.#recurseQuad( params, nodeKey, position, size );
+            
         } else {
 
-            if ( factors.dot > params.occlusionFallOf ) {
+            this.#evaluateNode( params, nodeKey, position, size, factors );
+        }
+    }
+
+    #recurseQuad( params, nodeKey, position, size ) {
+
+        this.#recurse( params, `${ nodeKey }0`, this.#leftforward.scale( size / 4 ).addInPlace( position ), size / 2 );
+        this.#recurse( params, `${ nodeKey }1`, this.#rightforward.scale( size / 4 ).addInPlace( position ), size / 2 );
+        this.#recurse( params, `${ nodeKey }2`, this.#leftbackward.scale( size / 4 ).addInPlace( position ), size / 2 );
+        this.#recurse( params, `${ nodeKey }3`, this.#rightbackward.scale( size / 4 ).addInPlace( position ), size / 2 );
+    }
+
+    #evaluateNode( params, nodeKey, position, size, factors ) {
+
+        if ( factors.dot > params.occlusionFallOf ) {
                 
-                let resolution = this.#getResolution( params, size );
-                
-                if ( params.list.has( nodeKey ) == true ) {
+            let resolution = this.#getResolution( params, size );
+            
+            if ( params.list.has( nodeKey ) == true ) {
 
-                    let node = params.list.get( nodeKey );
-                        
-                    if ( node.resolution == resolution ) {
+                this.#keepNode( params, nodeKey, resolution );
 
-                        node.keep = true;
-                    }
+            } else {
 
-                } else {
-
-                    params.list.set( nodeKey, {
-
-                        keep: true,
-
-                        resolution: resolution,
-                        mesh: this.#planet.generator.createChunkMesh( nodeKey, position, this.#fixRotation, size, resolution, factors.distance )
-                    } );
-                }
+                this.#makeNode( params, nodeKey, position, size, factors, resolution );
             }
         }
+    }
+
+    #keepNode( params, nodeKey, resolution ) {
+
+        let node = params.list.get( nodeKey );
+            
+        if ( node.resolution == resolution ) {
+
+            node.keep = true;
+        }
+    }
+
+    #makeNode( params, nodeKey, position, size, factors, resolution ) {
+
+        params.list.set( nodeKey, {
+
+            keep: true,
+
+            resolution: resolution,
+            mesh: this.#planet.generator.createChunkMesh( nodeKey, position, this.#fixRotation, size, resolution, factors.distance )
+        } );
     }
 
     #getDistanceDot( params, position ) {
@@ -115,16 +138,15 @@ class PlanetQuadtree {
         };
     }
 
-    
     #getResolution( params, size ) {
         
         if ( size >= this.#size ) { 
             
-            if ( params.distanceRadiusFactor > 38 ) {
+            if ( params.distanceRadiusFactor > PlanetQuadtree.INSERT_LIMIT - 1 ) {
 
                 return this.#planet.config.resolution / 4;
                 
-            } else if ( params.distanceRadiusFactor > 12 ) {
+            } else if ( params.distanceRadiusFactor > PlanetQuadtree.INSERT_HALF_LIMIT ) {
 
                 return this.#planet.config.resolution / 2;
             }

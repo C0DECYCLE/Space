@@ -32,10 +32,22 @@ class PostProcess {
         this.#defaultPipeline();
     }
 
+    godrays( mesh ) {
+
+        let postprocess = new BABYLON.VolumetricLightScatteringPostProcess( `${ mesh.name }_godrays`, 1.0, this.camera, mesh, 100, BABYLON.Texture.BILINEAR_SAMPLINGMODE, Space.engine.babylon, false );
+        postprocess.weight = 0.1;
+        //postprocess.samples = this.config.samples;
+
+        this.pipelines.push( postprocess );
+    }
+
     #defaultPipeline() {
 
         let pipeline = new BABYLON.DefaultRenderingPipeline( "postprocess_default", true, this.scene, [ this.camera ] );
         pipeline.samples = this.config.samples;
+        pipeline.chromaticAberrationEnabled = true;
+        pipeline.chromaticAberration.radialIntensity = 1;
+        pipeline.chromaticAberration.aberrationAmount = 30;
 
         this.pipelines.push( pipeline );
     }

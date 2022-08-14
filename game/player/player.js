@@ -102,9 +102,7 @@ class Player {
     #createMesh() {
 
         let material = new BABYLON.StandardMaterial( "player_material", this.scene );
-        material.diffuseColor = BABYLON.Color3.FromHexString( "#ff226b" );
-        material.emissiveColor = BABYLON.Color3.FromHexString( "#120B25" );
-        material.specularColor.set( 0, 0, 0 );
+        material.setColorIntensity( "#ff226b", 0.5 );
 
         this.mesh = BABYLON.MeshBuilder.CreateCapsule( "player_mesh", { height: 2, radius: 0.5, tessellation: 8, subdivisions: 1, capSubdivisions: 3 }, this.scene );
         this.mesh.convertToFlatShadedMesh();
@@ -138,16 +136,21 @@ class Player {
 
             if ( this.controls.isKeyboarding == true ) {
 
-                this.root.physicsImpostor.setAngularVelocity( BABYLON.Vector3.Zero() );
+                this.#panPlayer( event );
 
-                this.root.rotate( BABYLON.Axis.Y, event.event.movementX * this.controls.config.panning, BABYLON.Space.LOCAL );
-                this.root.rotate( BABYLON.Axis.X, event.event.movementY * this.controls.config.panning, BABYLON.Space.LOCAL );
-    
             } else {
 
                 this.camera.free( event );
             }
         }
+    }
+
+    #panPlayer( event ) {
+
+        this.root.physicsImpostor.setAngularVelocity( BABYLON.Vector3.Zero() );
+
+        this.root.rotate( BABYLON.Axis.Y, event.event.movementX * this.controls.config.panning, BABYLON.Space.LOCAL );
+        this.root.rotate( BABYLON.Axis.X, event.event.movementY * this.controls.config.panning, BABYLON.Space.LOCAL );
     }
 
     #onSpaceEnter( oldState ) {
