@@ -103,6 +103,8 @@ class Camera {
         this.camera = new BABYLON.ArcRotateCamera( "camera_camera", this.#focusAlpha, this.#focusBeta, this.config.offset, BABYLON.Vector3.Zero(), this.scene );
         this.camera.maxZ = this.config.max;
         this.camera.parent = this.root;
+        //this.camera.checkCollisions = true;
+        //this.camera.collisionRadius = new BABYLON.Vector3( 1, 1, 1 ).scaleInPlace( 1 );
     }
 
     #addOrigin() {

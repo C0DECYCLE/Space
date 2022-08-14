@@ -10,7 +10,7 @@ class CameraOrigin {
 
     parent = null;
     
-    actualPosition = new BABYLON.Vector3();
+    actualPosition = new BABYLON.Vector3( 0, 0, 0 );
     relativePosition = new BABYLON.Vector3( 0, 0, 0 );
 
     constructor( parent ) {

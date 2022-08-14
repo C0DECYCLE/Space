@@ -41,17 +41,18 @@ class Planets {
             let distance = BABYLON.Vector3.Distance( planet.root.position, position );
             let distanceRadiusFactor = distance / planet.config.radius;
             let planetThreashold = 1.3; //2
-
+            //log( key+": "+distanceRadiusFactor );
             if ( distanceRadiusFactor <= planetThreashold && this.player.state.is( "space" ) ) {
 
-                this.player.state.set( "planet", planet );
-
-            } else if ( distanceRadiusFactor > planetThreashold&& this.player.state.is( "planet" ) ) {
+                //this.player.state.set( "planet", planet );
+            }
+            /*
+            if ( distanceRadiusFactor > planetThreashold && this.player.state.is( "planet" ) ) {
 
                 this.player.state.set( "space" );
             }
-
-            if ( distanceRadiusFactor < 20 ) {
+            */
+            if ( distanceRadiusFactor < 40 ) {
                 
                 planet.insert( position, distance );
             }

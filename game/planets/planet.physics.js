@@ -44,7 +44,7 @@ class PlanetPhysics {
         let distance = diffrence.subtractInPlace( displace ).length();
         
         if ( distance <= 2 ) {
-            log("ground")
+            //log("ground")
             entity.physics.state = PhysicsEntity.STATES.PLANETGROUND;
             //entity.root.physicsImpostor.setLinearVelocity( BABYLON.Vector3.Zero() );
 

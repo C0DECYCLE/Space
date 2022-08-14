@@ -34,14 +34,15 @@ class PlanetUtils {
     static heightmap( v, planet ) {
 
         const N_OCTAVES = 5;
-        
-        let frequency = 3.5; //2.5
+        const P_FACTOR = planet.config.radius / 2048;
+
+        let frequency = 3.5 * P_FACTOR; //2.5
         let amplitude = 0.5; //0.5
         
-        let lacunarity = 3.0; //2.0
-        let persistence = 0.3; //0.5
+        const lacunarity = 3.0; //2.0
+        const persistence = 0.3; //0.5
         
-        let minimum = 0.4;
+        const minimum = 0.4;
 
         let n = 0;
 
@@ -55,7 +56,7 @@ class PlanetUtils {
                                                                     //genericNoise3d
         let mn = genericNoise3d( v.x * 2, v.y * 2, v.z * 2 ) * 0.35 + planet.config.perlin.get( v.x * 10, v.y * 10, v.z * 10 ) * 0.35 + genericNoise3d( v.x * 500, v.y * 500, v.z * 500 ) * 0.005;
         
-        return n.clamp( minimum - 0.1 + ( mn * 0.2 ), Infinity );
+        return n.clamp( minimum - 0.1 + ( mn * 0.2 * P_FACTOR ), Infinity );
     }
 
     static terrainify( v, planet ) {

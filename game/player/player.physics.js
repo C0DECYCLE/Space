@@ -55,7 +55,7 @@ class PlayerPhysics extends PhysicsEntity {
     #addPhysics() {
 
         this.#player.mesh.physicsImpostor = new BABYLON.PhysicsImpostor( this.#player.mesh, BABYLON.PhysicsImpostor.SphereImpostor, { mass: 0 }, this.#player.scene );
-        this.#player.root.physicsImpostor = new BABYLON.PhysicsImpostor( this.#player.root, BABYLON.PhysicsImpostor.NoImpostor, { mass: 4, friction: 0.9, restitution: 0.1 }, this.#player.scene );
+        this.#player.root.physicsImpostor = new BABYLON.PhysicsImpostor( this.#player.root, BABYLON.PhysicsImpostor.NoImpostor, { mass: 4 }, this.#player.scene );
         //this.#player.root.neverPhysicsSleep = true;
     }
 
@@ -132,7 +132,7 @@ class PlayerPhysics extends PhysicsEntity {
 
         } else {
             
-            root.physicsImpostor.applyImpulse( root.physicsImpostor.getLinearVelocity().scaleInPlace( -0.01 ), BABYLON.Vector3.Zero() );
+            root.physicsImpostor.applyImpulse( root.physicsImpostor.getLinearVelocity().scaleInPlace( -0.1 ), BABYLON.Vector3.Zero() );
         }
     }
 }

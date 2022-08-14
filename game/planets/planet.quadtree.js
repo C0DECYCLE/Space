@@ -120,11 +120,11 @@ class PlanetQuadtree {
         
         if ( size >= this.#size ) { 
             
-            if ( params.distanceRadiusFactor > 18 ) {
+            if ( params.distanceRadiusFactor > 38 ) {
 
                 return this.#planet.config.resolution / 4;
                 
-            } else if ( params.distanceRadiusFactor > 8 ) {
+            } else if ( params.distanceRadiusFactor > 12 ) {
 
                 return this.#planet.config.resolution / 2;
             }
