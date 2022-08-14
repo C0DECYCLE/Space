@@ -33,6 +33,10 @@ class PlanetUtils {
 
     static heightmap( v, planet ) {
 
+        //https://github.com/simondevyoutube/ProceduralTerrain_Part8/blob/master/src/terrain-constants.js
+        //https://github.com/simondevyoutube/ProceduralTerrain_Part8/blob/master/src/terrain.js
+        //https://github.com/simondevyoutube/ProceduralTerrain_Part8/blob/master/src/noise.js
+
         const N_OCTAVES = 5;
         const P_FACTOR = planet.config.radius / 2048;
 
