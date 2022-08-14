@@ -36,8 +36,6 @@ class PlanetGenerator {
         material.emissiveColor = BABYLON.Color3.FromHexString("#120B25");
         material.specularColor.set( 0, 0, 0 );
 
-        //material.Vertex_After_WorldPosComputed( `` );
-
         return material;
     }
 
@@ -46,22 +44,17 @@ class PlanetGenerator {
         let mesh = BABYLON.MeshBuilder.CreateGround( `planet${ this.#planet.config.key }_chunk_${ nodeKey }`, { width: size, height: size, updatable: true, subdivisions: resolution }, this.#planet.scene );
         
         mesh.material = this.#planet.material;
-        //mesh.occlusionType = BABYLON.AbstractMesh.OCCLUSION_TYPE_OPTIMISTIC; //glitchy
-        //mesh.parent = this.#planet.root;
         mesh.position.copyFrom( this.#planet.root.position );
         mesh.rotationQuaternion = this.#planet.root.rotationQuaternion.clone();
 
-        this.updateChunkMesh( mesh, position, fixRotation, size );
+        this.updateChunkMesh( mesh, position, fixRotation );
 
         this.#planet.physics.createCollisionMesh( mesh, size );
-
-        //mesh.position.copyFrom( position );
-        //mesh.rotation.copyFrom( fixRotation );
                 
         return mesh;
     }
     
-    updateChunkMesh( mesh, position, fixRotation, size ) {
+    updateChunkMesh( mesh, position, fixRotation ) {
         
         let positions = mesh.getVerticesData( BABYLON.VertexBuffer.PositionKind );
 
@@ -69,17 +62,11 @@ class PlanetGenerator {
             
             let vertex = new BABYLON.Vector3( positions[ i * 3 ], positions[ i * 3 + 1 ], positions[ i * 3 + 2 ] );
             
-            //edge: if ( Math.abs( vertex.x / size ) == 0.5 || Math.abs( vertex.z / size ) == 0.5 )
-
             vertex = EngineUtils.vectorRotation( vertex, fixRotation );
             
             vertex.addInPlace( position );
     
             vertex = PlanetUtils.terrainify( vertex, this.#planet );
-    
-            //vertex.subtractInPlace( position );
-
-            //vertex = EngineUtils.vectorRotation( vertex, fixRotation.negate() );
 
             positions[ i * 3 ] = vertex.x;
             positions[ i * 3 + 1 ] = vertex.y;
@@ -88,9 +75,6 @@ class PlanetGenerator {
         
         mesh.updateVerticesData( BABYLON.VertexBuffer.PositionKind, positions );
         mesh.convertToFlatShadedMesh();
-        //mesh.forceSharedVertices();
-        //mesh.removeVerticesData( BABYLON.VertexBuffer.NormalKind );
-        //mesh.removeVerticesData( BABYLON.VertexBuffer.UVKind );
     }
 
     #createFaces( faces ) {

@@ -13,13 +13,11 @@ class PlayerPhysics extends PhysicsEntity {
 
     constructor( player ) {
 
-        super( player/*, true*/ );
+        super( player );
         
         this.#player = player;
 
         this.#addPhysics();
-
-        //this.register();
     }
 
     setPlanet( value ) {
@@ -36,10 +34,8 @@ class PlayerPhysics extends PhysicsEntity {
 
         if ( this.#planet != null ) {
             
-            //this.update();
-            this.#planet.physics.pullPhysicsEntity( this.#player, true/*, true*/ );
+            this.#planet.physics.pullPhysicsEntity( this.#player, true );
             this.#planet.physics.collideHeightmap( this.#player );
-            //this.#planet.physics.collideGroundBox( this.#player );
 
             if ( this.state != PhysicsEntity.STATES.FLOATING ) {
 
@@ -56,7 +52,6 @@ class PlayerPhysics extends PhysicsEntity {
 
         this.#player.mesh.physicsImpostor = new BABYLON.PhysicsImpostor( this.#player.mesh, BABYLON.PhysicsImpostor.SphereImpostor, { mass: 0 }, this.#player.scene );
         this.#player.root.physicsImpostor = new BABYLON.PhysicsImpostor( this.#player.root, BABYLON.PhysicsImpostor.NoImpostor, { mass: 4 }, this.#player.scene );
-        //this.#player.root.neverPhysicsSleep = true;
     }
 
     #spaceMovement() {

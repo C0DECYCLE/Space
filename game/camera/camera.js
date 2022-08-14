@@ -29,7 +29,6 @@ class Camera {
     target = null;
 
     origin = null;
-    position = null;
 
     #focusAlpha = -Math.PI / 2;
     #focusBeta = Math.PI / 2;
@@ -49,6 +48,16 @@ class Camera {
         this.#setupStates();
         this.#createCamera();
         this.#addOrigin();
+    }
+
+    get position() {
+        
+        return this.origin.actualPosition;
+    }
+
+    get rotationQuaternion() {
+        
+        return this.root.rotationQuaternion;
     }
 
     attachToPlayer( player ) {
@@ -103,20 +112,17 @@ class Camera {
         this.camera = new BABYLON.ArcRotateCamera( "camera_camera", this.#focusAlpha, this.#focusBeta, this.config.offset, BABYLON.Vector3.Zero(), this.scene );
         this.camera.maxZ = this.config.max;
         this.camera.parent = this.root;
-        //this.camera.checkCollisions = true;
-        //this.camera.collisionRadius = new BABYLON.Vector3( 1, 1, 1 ).scaleInPlace( 1 );
     }
 
     #addOrigin() {
 
         this.origin = new CameraOrigin( this );
-        this.position = this.origin.actualPosition;
     }
 
     #syncWithTarget( target ) {
 
-        this.position.copyFrom( BABYLON.Vector3.Lerp( this.position, target.root.position, this.config.lerp ) );
-        this.root.rotationQuaternion.copyFrom( BABYLON.Quaternion.Slerp( this.root.rotationQuaternion, target.root.rotationQuaternion, this.config.lerp ) );
+        this.origin.actualPosition.copyFrom( BABYLON.Vector3.Lerp( this.origin.actualPosition, target.position, this.config.lerp ) );
+        this.root.rotationQuaternion.copyFrom( BABYLON.Quaternion.Slerp( this.root.rotationQuaternion, target.rotationQuaternion, this.config.lerp ) );
     }
     
     #onPlayerEnter( oldState, player ) {

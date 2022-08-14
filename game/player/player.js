@@ -10,7 +10,7 @@ class Player {
 
     config = {
 
-        speed: 100.05, // 0.15 run 0.05 walk
+        speed: 0.05, // 0.15 run 0.05 walk
         standingup: 0.05,
 
         experimentalPointerLock: true
@@ -42,6 +42,16 @@ class Player {
         this.#createMesh();    
         this.#setupPhysics();
         this.#registerObservables();
+    }
+
+    get position() {
+        
+        return this.root.position;
+    }
+
+    get rotationQuaternion() {
+        
+        return this.root.rotationQuaternion;
     }
 
     update() {

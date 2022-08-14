@@ -60,11 +60,21 @@ class Planet {
         this.#farInsertion();
     }
 
+    get position() {
+        
+        return this.root.position;
+    }
+
+    get rotationQuaternion() {
+        
+        return this.root.rotationQuaternion;
+    }
+
     place( orbitCenter, distanceInOrbit, angleAroundOrbit ) {
 
         this.#orbitCenter = orbitCenter;
         this.#distanceInOrbit = distanceInOrbit;
-        this.#angleAroundOrbit = angleAroundOrbit;
+        this.#angleAroundOrbit = angleAroundOrbit * EngineUtils.toRadian;
 
         this.root.position
         .copyFromFloats( Math.cos( this.#angleAroundOrbit ), 0, Math.sin( this.#angleAroundOrbit ) )
@@ -124,9 +134,9 @@ class Planet {
     }
 
     #updateSpin() {
-
+        
         //bug: always going in and out of planet state bug
-        //setup sun/light real copy from old project
+        //setup star/light real copy from old project
         //fix planet heightmap generation
         //refactor
 

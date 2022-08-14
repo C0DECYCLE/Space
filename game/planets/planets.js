@@ -38,10 +38,10 @@ class Planets {
 
         this.list.forEach( ( planet, key ) => {
             
-            let distance = BABYLON.Vector3.Distance( planet.root.position, position );
+            let distance = BABYLON.Vector3.Distance( planet.position, position );
             let distanceRadiusFactor = distance / planet.config.radius;
-            let planetThreashold = 1.3; //2
-            //log( key+": "+distanceRadiusFactor );
+            let planetThreashold = 1.3;
+            
             if ( distanceRadiusFactor <= planetThreashold && this.player.state.is( "space" ) ) {
 
                 //this.player.state.set( "planet", planet );
