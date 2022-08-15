@@ -44,7 +44,9 @@ class PlanetGenerator {
         this.updateChunkMesh( mesh, position, fixRotation );
 
         this.#planet.physics.createCollisionMesh( mesh, size );
-                
+        this.#planet.manager.star.shadow.cast( mesh, true, false );        
+        this.#planet.manager.star.shadow.receive( mesh, true, false );        
+
         return mesh;
     }
     

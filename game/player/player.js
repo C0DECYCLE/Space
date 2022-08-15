@@ -113,6 +113,9 @@ class Player {
         head.position.copyFromFloats( 0, 0.5, 0.4 );
         head.material = material;
         head.parent = this.mesh;
+
+        this.manager.star.shadow.cast( this.mesh, true, true );
+        this.manager.star.shadow.receive( this.mesh, true, true );
     }
 
     #setupPhysics() {

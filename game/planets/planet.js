@@ -26,6 +26,7 @@ class Planet {
         perlin: new perlinNoise3d()
     };
 
+    manager = null;
     scene = null;
     
     root = null;
@@ -44,6 +45,7 @@ class Planet {
 
     constructor( manager, config ) {
 
+        this.manager = manager;
         this.scene = manager.scene;
 
         this.config.key = config.key;

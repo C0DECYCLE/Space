@@ -8,7 +8,7 @@
 
 class ManagerStage {
 
-    parent = null;
+    #manager = null;
 
     #install = undefined;
     #stage = undefined;
@@ -16,9 +16,9 @@ class ManagerStage {
 
     #isStagingComplete = false;
 
-    constructor( parent, install, stage, run ) {
+    constructor( manager, install, stage, run ) {
 
-        this.parent = parent;
+        this.#manager = manager;
         
         this.#install = install;
         this.#stage = stage;

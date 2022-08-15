@@ -85,7 +85,7 @@ class Manager {
 
 
                 ////////////////////////////////////////////////////
-                window.dummies = EngineUtils.createDummyField( this.scene, 10, this.player.position, this.planets.list.get( 0 ).material );
+                window.dummies = EngineUtils.createDummyField( this.scene, 10, this.player.position, this.planets.list.get( 0 ).material, this.star );
                 ////////////////////////////////////////////////////
     }
 

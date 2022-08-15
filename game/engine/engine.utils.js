@@ -25,13 +25,13 @@ class EngineUtils {
     
     ////////////////////////////////////////////////////////////////////////////////////////////////
     
-    static createDummyField( scene, count, center, material ) {
+    static createDummyField( scene, count, center, material, star ) {
 
         let dummies = [];
 
         for ( let i = 0; i < count; i++ ) {
 
-            dummies.push( EngineUtils.createDummy( scene, undefined, material, 
+            dummies.push( EngineUtils.createDummy( scene, undefined, material, star, 
                 new BABYLON.Vector3( Math.random() * 2 - 1, Math.random() * 2 - 1, Math.random() * 2 - 1 ).scaleInPlace( 30 ).addInPlace( center ), 
                 new BABYLON.Vector3( Math.random() * 2 - 1, Math.random() * 2 - 1, Math.random() * 2 - 1 ).scaleInPlace( Math.PI ) 
             ) );
@@ -52,7 +52,7 @@ class EngineUtils {
         return dummies;
     }
     
-    static createDummy( scene, size = Math.round( Math.random() * 10 ) * 1, material, position, rotation ) {
+    static createDummy( scene, size = Math.round( Math.random() * 10 ) * 1, material, star, position, rotation ) {
 
         let dummy = {
 
@@ -77,6 +77,9 @@ class EngineUtils {
         dummy.root.physicsImpostor = new BABYLON.PhysicsImpostor( dummy.root, BABYLON.PhysicsImpostor.BoxImpostor, { mass: size/*, friction: 1, restitution: 0*/ }, scene ); 
 
         dummy.physics = new PhysicsEntity( dummy );
+        
+        star.shadow.cast( dummy.root, true, false );
+        star.shadow.receive( dummy.root, true, true );
 
         return dummy;
     }

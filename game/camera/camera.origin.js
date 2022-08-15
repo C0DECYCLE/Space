@@ -8,14 +8,14 @@
 
 class CameraOrigin {
 
-    parent = null;
-    
     actualPosition = new BABYLON.Vector3( 0, 0, 0 );
     relativePosition = new BABYLON.Vector3( 0, 0, 0 );
 
-    constructor( parent ) {
+    #camera = null;
+    
+    constructor( camera ) {
 
-        this.parent = parent;
+        this.#camera = camera;
 
         this.#setupRoot();
         this.#registerObservables();
@@ -43,16 +43,16 @@ class CameraOrigin {
 
     #setupRoot() {
 
-        this.parent.root._actualPosition = this.actualPosition;
-        this.parent.root._relativePosition = this.relativePosition;
-        this.parent.root.inspectableCustomProperties = this.#inspectorCustomProperties();
+        this.#camera.root._actualPosition = this.actualPosition;
+        this.#camera.root._relativePosition = this.relativePosition;
+        this.#camera.root.inspectableCustomProperties = this.#inspectorCustomProperties();
     }
 
     #registerObservables() {
 
-        this.parent.scene.onBeforePhysicsObservable.add( () => this.#beforePhysics() );
-        this.parent.scene.onAfterPhysicsObservable.add( () => this.#afterPhysics() );
-        this.parent.scene.onAfterRenderObservable.add( () => this.#afterRender() );
+        this.#camera.scene.onBeforePhysicsObservable.add( () => this.#beforePhysics() );
+        this.#camera.scene.onAfterPhysicsObservable.add( () => this.#afterPhysics() );
+        this.#camera.scene.onAfterRenderObservable.add( () => this.#afterRender() );
     }
 
     #inspectorCustomProperties() {
@@ -75,7 +75,7 @@ class CameraOrigin {
 
     #beforePhysics() {
 
-        let scene = this.parent.scene;
+        let scene = this.#camera.scene;
 
         if ( scene.rootNodes[0].name != "camera" ) {
 
@@ -108,7 +108,7 @@ class CameraOrigin {
 
     #afterPhysics() {
         
-        let scene = this.parent.scene;
+        let scene = this.#camera.scene;
 
         for ( let i = 1; i < scene.rootNodes.length; i++ ) {
 
@@ -125,7 +125,7 @@ class CameraOrigin {
 
     #afterRender() {
         
-        let scene = this.parent.scene;
+        let scene = this.#camera.scene;
 
         for ( let i = 1; i < scene.rootNodes.length; i++ ) {
 

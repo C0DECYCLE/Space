@@ -37,6 +37,7 @@ class PlanetUtils {
         //https://github.com/simondevyoutube/ProceduralTerrain_Part8/blob/master/src/terrain.js
         //https://github.com/simondevyoutube/ProceduralTerrain_Part8/blob/master/src/noise.js
 
+        /*
         const N_OCTAVES = 5;
         const P_FACTOR = planet.config.radius / 2048;
 
@@ -45,8 +46,6 @@ class PlanetUtils {
         
         const lacunarity = 3.0; //2.0
         const persistence = 0.3; //0.5
-        
-        const minimum = 0.4;
 
         let n = 0;
 
@@ -58,11 +57,41 @@ class PlanetUtils {
             amplitude *= persistence; 
         }
         
-        let mn = genericNoise3d( v.x * 2, v.y * 2, v.z * 2 ) * 0.35;
-        mn += planet.config.perlin.get( v.x * 10, v.y * 10, v.z * 10 ) * 0.35; //genericNoise3d
-        mn += genericNoise3d( v.x * 500, v.y * 500, v.z * 500 ) * 0.005;
-        
-        return n.clamp( minimum - 0.1 + ( mn * 0.2 * P_FACTOR ), Infinity );
+        return n.clamp( 0.0, Infinity );
+        */
+
+        let _params = {
+            octaves: 13,
+            persistence: 10.5,
+            lacunarity: 1.6,
+            exponentiation: 7.5,
+            height: 100,
+            scale: 1000,
+            seed: 1
+        };
+
+        const G = 2.0 ** (-_params.persistence);
+        const xs = v.x / _params.scale;
+        const ys = v.y / _params.scale;
+        const zs = v.z / _params.scale;
+        const noiseFunc = planet.config.perlin.get;
+
+        let amplitude = 1.0;
+        let frequency = 1.0;
+        let normalization = 0;
+        let total = 0;
+        for (let o = 0; o < _params.octaves; o++) {
+            const noiseValue = noiseFunc(
+            xs * frequency, ys * frequency, zs * frequency) * 0.5 + 0.5;
+
+            total += noiseValue * amplitude;
+            normalization += amplitude;
+            amplitude *= G;
+            frequency *= _params.lacunarity;
+        }
+        total /= normalization;
+        return Math.pow(
+            total, _params.exponentiation) * _params.height;
     }
 
     static terrainify( v, planet ) {
@@ -77,7 +106,7 @@ class PlanetUtils {
         let i = planet.config.seed.add( v );
         let noise = PlanetUtils.heightmap( i, planet );
         
-        return v.scaleInPlace( planet.config.radius * ( 1 + noise ) * 0.75 );
+        return v.scaleInPlace( planet.config.radius + noise );
     }
 
 }
