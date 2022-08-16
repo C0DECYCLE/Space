@@ -152,9 +152,6 @@ class Planet {
     #updateSpin() {
         
         //bug: always going in and out of planet state bug
-        //refactor new heightmap stuff 
-        //make diffrent planets configs 
-        //remove sp code
         //look if we need planet mask
         //look if star shadow is finished
         //make planet shader/color the planet

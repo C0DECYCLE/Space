@@ -60,23 +60,22 @@ class Manager {
 
         this.planets = new Planets( this );
         
-        this.planets.register( { key: 0, seed: new BABYLON.Vector3( -1123, 7237, -3943 ), radius: 2048, spin: 0.005/*, orbit: 0.04*/ } );
-        this.planets.register( { key: 1, seed: new BABYLON.Vector3( 8513, -9011, -5910 ), radius: 2048, spin: 0.005/*, orbit: 0.02*/ } );
-        this.planets.register( { key: 2, seed: new BABYLON.Vector3( -925, -2011, 7770 ), radius: 4096, spin: 0.0025/*, orbit: 0.01*/ } );
-        this.planets.register( { key: 3, seed: new BABYLON.Vector3( 2253, 7001, 4099 ), radius: 512, spin: 0.01/*, orbit: 1*/ } );
+        this.planets.register( { key: 0, seed: new BABYLON.Vector3( -1123, 7237, -3943 ), radius: 1024, spin: 0.005, mountainy: 5, warp: 0.8 } );
+        this.planets.register( { key: 1, seed: new BABYLON.Vector3( 8513, -9011, -5910 ), radius: 2048, spin: 0.005, variant: "1", mountainy: 3.5, warp: 1.0 } );
+        this.planets.register( { key: 2, seed: new BABYLON.Vector3( -925, -2011, 7770 ), radius: 4096, spin: 0.0025 } );
+        this.planets.register( { key: 3, seed: new BABYLON.Vector3( 2253, 7001, 4099 ), radius: 256, spin: 0.01, mountainy: 2, warp: 0.6 } );
         
 
         return this.scene;
     }
 
-    #stage() { //let sp = this.#spherePlanet( 512, new BABYLON.Vector3( -1000 * 1000, 0, 0 ) );
-
+    #stage() { 
+        
         this.planets.list.get( 0 ).place( this.star.position, 100 * 1000, 90 );
         this.planets.list.get( 1 ).place( this.star.position, 200 * 1000, -45 );
         this.planets.list.get( 2 ).place( this.star.position, 250 * 1000, 240 );
         this.planets.list.get( 3 ).place( this.planets.list.get( 2 ).position, 10 * 1000, 60 );
         
-        //this.player.position.copyFrom( sp.position ).addInPlace( new BABYLON.Vector3( 1 * 1000, 0, 0 ) );
         this.player.position.copyFrom( this.planets.list.get( 3 ).position ).addInPlace( new BABYLON.Vector3( 1 * 1000, 0, 0 ) );
         this.player.root.rotate( BABYLON.Axis.Y, -Math.PI / 1.5, BABYLON.Space.LOCAL );
     
@@ -106,49 +105,6 @@ class Manager {
                 ////////////////////////////////////////////////////
                 window.dummies.update();
                 ////////////////////////////////////////////////////
-    }
-
-    #spherePlanet( radius, position ) {
-
-        let debug = null;
-        let sp = {
-            config: {
-                radius: radius,
-                seed: new BABYLON.Vector3( 2253, 7001, 4099 ),
-                perlin: new perlinNoise3d()
-            }
-        };
-        sp.config.perlin.noiseSeed( sp.config.seed.x );
-
-        window.reVertex = () => {
-            if ( debug != null ) debug.dispose();
-
-            debug = BABYLON.MeshBuilder.CreateTiledBox( "debug", 
-            { size: radius * 2, tileSize: radius / 32, updatable: false }, this.scene );
-            debug.position.copyFrom( position );
-            debug.material = this.planets.list.get( 0 ).material;
-            debug.rotationQuaternion = debug.rotation.toQuaternion();
-            
-            let positions = debug.getVerticesData( BABYLON.VertexBuffer.PositionKind );
-
-            for ( let i = 0; i < positions.length / 3; i++ ) {
-                
-                let vertex = new BABYLON.Vector3( positions[ i * 3 ], positions[ i * 3 + 1 ], positions[ i * 3 + 2 ] );
-                
-                vertex = PlanetUtils.terrainify( sp, vertex );
-
-                positions[ i * 3 ] = vertex.x;
-                positions[ i * 3 + 1 ] = vertex.y;
-                positions[ i * 3 + 2 ] = vertex.z;
-            }
-            
-            debug.updateVerticesData( BABYLON.VertexBuffer.PositionKind, positions );
-            debug.convertToFlatShadedMesh();
-            
-        };
-        reVertex();
-
-        return debug;
     }
 
 }

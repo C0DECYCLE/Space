@@ -8,14 +8,12 @@
 
 class PlanetUtils {
 
-    static HEIGHTMAP = {
+    static terrainify( planet, v ) {
 
-        octaves: 6,
-        noiseScale: 750,
-        multiplyFrequencyBy: 1.8,
-        multiplyAmplitudeBy: 0.5,
-        pow: 3.5
-    };
+        v = PlanetUtils.cubesphere( v, planet.config.radius );
+        
+        return PlanetUtils.displace( planet, v );
+    }
 
     static cubesphere( v, r ) {
         
@@ -39,78 +37,10 @@ class PlanetUtils {
         
         return v;
     }
-    
-    static fractionalBrownianMotion( perlin, v ) {
-
-        const xs = v.x / PlanetUtils.HEIGHTMAP.noiseScale;
-        const ys = v.y / PlanetUtils.HEIGHTMAP.noiseScale;
-        const zs = v.z / PlanetUtils.HEIGHTMAP.noiseScale;
-
-        let total = 0;
-        let frequency = 1.0;
-        let normalization = 0;
-        let amplitude = 1.0;
-
-        for ( let o = 0; o < PlanetUtils.HEIGHTMAP.octaves; o++ ) {
-
-            const noiseValue = perlin.get( xs * frequency, ys * frequency, zs * frequency );
-            total += noiseValue * amplitude;
-            
-            frequency *= PlanetUtils.HEIGHTMAP.multiplyFrequencyBy;
-            normalization += amplitude;
-            amplitude *= PlanetUtils.HEIGHTMAP.multiplyAmplitudeBy;
-        }
-        
-        total /= normalization;
-
-        return Math.pow( total, PlanetUtils.HEIGHTMAP.pow );
-    }
-
-    static heightmap( planet, v ) {
-
-        //https://github.com/dandrino/terrain-erosion-3-ways
-        //https://starcitizenguidetothegalaxy.com/planet-modelling/
-
-        return PlanetUtils[ `heightmapVariant${ planet.config.variant }` ]( planet, v );
-    }
-    
-    static heightmapVariant0( planet, v ) {
-        
-        const perlin = planet.config.perlin;
-        const fbm = PlanetUtils.fractionalBrownianMotion;
-        const heightScale = planet.config.mountainy * 200;
-        const warp = planet.config.warp;
-
-        const vOffset = v.add( planet.config.seed.scale( 0.001 ) );
-        const offset = planet.config.seed.scale( fbm( perlin, vOffset ) * warp );
-
-        return fbm( perlin, offset.addInPlace( v ) ) * heightScale;
-    }
-
-    static heightmapVariant1( planet, v ) {
-
-        const perlin = planet.config.perlin;
-        const fbm = PlanetUtils.fractionalBrownianMotion;
-        const heightScale = planet.config.mountainy * 200;
-        const warp = planet.config.warp;
-
-        const vOffset = v.add( planet.config.seed.scale( 0.001 ) );
-        const fbmOffset = fbm( perlin, vOffset ); 
-        const offset = new BABYLON.Vector3( fbmOffset * 2 - 1, Math.sin( fbmOffset * 10 ), Math.cos( fbmOffset * 10 ) ).scaleInPlace( heightScale * warp );
-
-        return fbm( perlin, offset.addInPlace( v ) ) * heightScale;
-    }
-
-    static terrainify( planet, v ) {
-
-        v = PlanetUtils.cubesphere( v, planet.config.radius );
-        
-        return PlanetUtils.displace( planet, v );
-    }
 
     static displace( planet, v ) {
         
-        let noise = PlanetUtils.heightmap( planet, v.scale( planet.config.radius ).addInPlace( planet.config.seed ) );
+        let noise = PlanetUtilsHeightmap.get( planet, v.scale( planet.config.radius ).addInPlace( planet.config.seed ) );
         
         return v.scaleInPlace( planet.config.radius + noise );
     }
