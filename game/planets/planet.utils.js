@@ -69,9 +69,18 @@ class PlanetUtils {
     static heightmap( planet, v ) {
 
         const perlin = planet.config.perlin;
+        const fbm = PlanetUtils.fractionalBrownianMotion;
         const heightScale = planet.config.mountainy * 200;
 
-        return PlanetUtils.fractionalBrownianMotion( perlin, v ) * heightScale;
+        //https://github.com/dandrino/terrain-erosion-3-ways
+        //https://starcitizenguidetothegalaxy.com/planet-modelling/
+
+        const vOffset = v.add( planet.config.seed.scale( 0.001 ) );
+        const fbmOffset = fbm( perlin, vOffset ); 
+        const offset = planet.config.seed.scale( fbmOffset * 0.5 );
+        //const offset = new BABYLON.Vector3( fbmOffset, -fbmOffset, -fbmOffset + 0.5 ).scaleInPlace( heightScale );
+
+        return fbm( perlin, offset.addInPlace( v ) ) * heightScale;
     }
 
     static terrainify( planet, v ) {
