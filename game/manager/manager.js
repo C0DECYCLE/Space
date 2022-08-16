@@ -69,13 +69,14 @@ class Manager {
         return this.scene;
     }
 
-    #stage() {
+    #stage() { //let sp = this.#spherePlanet( 512, new BABYLON.Vector3( -1000 * 1000, 0, 0 ) );
 
         this.planets.list.get( 0 ).place( this.star.position, 100 * 1000, 90 );
         this.planets.list.get( 1 ).place( this.star.position, 200 * 1000, -45 );
         this.planets.list.get( 2 ).place( this.star.position, 250 * 1000, 240 );
         this.planets.list.get( 3 ).place( this.planets.list.get( 2 ).position, 10 * 1000, 60 );
         
+        //this.player.position.copyFrom( sp.position ).addInPlace( new BABYLON.Vector3( 1 * 1000, 0, 0 ) );
         this.player.position.copyFrom( this.planets.list.get( 3 ).position ).addInPlace( new BABYLON.Vector3( 1 * 1000, 0, 0 ) );
         this.player.root.rotate( BABYLON.Axis.Y, -Math.PI / 1.5, BABYLON.Space.LOCAL );
     
@@ -89,8 +90,7 @@ class Manager {
                 ////////////////////////////////////////////////////
     }
 
-    #run( delta ) {
-
+    #run( delta ) {1
         if ( this.config.freeze == false ) {
 
             this.planets.update();
@@ -106,6 +106,49 @@ class Manager {
                 ////////////////////////////////////////////////////
                 window.dummies.update();
                 ////////////////////////////////////////////////////
+    }
+
+    #spherePlanet( radius, position ) {
+
+        let debug = null;
+        let sp = {
+            config: {
+                radius: radius,
+                seed: new BABYLON.Vector3( 2253, 7001, 4099 ),
+                perlin: new perlinNoise3d()
+            }
+        };
+        sp.config.perlin.noiseSeed( sp.config.seed.x );
+
+        window.reVertex = () => {
+            if ( debug != null ) debug.dispose();
+
+            debug = BABYLON.MeshBuilder.CreateTiledBox( "debug", 
+            { size: radius * 2, tileSize: radius / 32, updatable: false }, this.scene );
+            debug.position.copyFrom( position );
+            debug.material = this.planets.list.get( 0 ).material;
+            debug.rotationQuaternion = debug.rotation.toQuaternion();
+            
+            let positions = debug.getVerticesData( BABYLON.VertexBuffer.PositionKind );
+
+            for ( let i = 0; i < positions.length / 3; i++ ) {
+                
+                let vertex = new BABYLON.Vector3( positions[ i * 3 ], positions[ i * 3 + 1 ], positions[ i * 3 + 2 ] );
+                
+                vertex = PlanetUtils.terrainify( vertex, sp );
+
+                positions[ i * 3 ] = vertex.x;
+                positions[ i * 3 + 1 ] = vertex.y;
+                positions[ i * 3 + 2 ] = vertex.z;
+            }
+            
+            debug.updateVerticesData( BABYLON.VertexBuffer.PositionKind, positions );
+            debug.convertToFlatShadedMesh();
+            
+        };
+        reVertex();
+
+        return debug;
     }
 
 }

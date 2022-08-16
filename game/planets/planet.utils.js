@@ -33,65 +33,42 @@ class PlanetUtils {
 
     static heightmap( v, planet ) {
 
-        //https://github.com/simondevyoutube/ProceduralTerrain_Part8/blob/master/src/terrain-constants.js
-        //https://github.com/simondevyoutube/ProceduralTerrain_Part8/blob/master/src/terrain.js
-        //https://github.com/simondevyoutube/ProceduralTerrain_Part8/blob/master/src/noise.js
+        const mountainy = 7.5;
 
-        /*
-        const N_OCTAVES = 5;
-        const P_FACTOR = planet.config.radius / 2048;
-
-        let frequency = 3.5 * P_FACTOR; //2.5
-        let amplitude = 0.5; //0.5
-        
-        const lacunarity = 3.0; //2.0
-        const persistence = 0.3; //0.5
-
-        let n = 0;
-
-        for ( let octave = 0; octave < N_OCTAVES; octave++ ) {
-            
-            n += amplitude * planet.config.perlin.get( frequency * v.x, frequency * v.y, frequency * v.z ); //genericNoise3d
-
-            frequency *= lacunarity;
-            amplitude *= persistence; 
+        if ( !window._p ) {
+            window._p = {
+                octaves: 6,
+                noiseScale: 750,
+                heightScale: mountainy * 200,
+                multiplyFrequencyBy: 1.8,
+                multiplyAmplitudeBy: 0.5,
+                pow: 3.5,
+            };
         }
-        
-        return n.clamp( 0.0, Infinity );
-        */
 
-        let _params = {
-            octaves: 13,
-            persistence: 10.5,
-            lacunarity: 1.6,
-            exponentiation: 7.5,
-            height: 100,
-            scale: 1000,
-            seed: 1
-        };
+        const xs = v.x / _p.noiseScale;
+        const ys = v.y / _p.noiseScale;
+        const zs = v.z / _p.noiseScale;
 
-        const G = 2.0 ** (-_params.persistence);
-        const xs = v.x / _params.scale;
-        const ys = v.y / _params.scale;
-        const zs = v.z / _params.scale;
-        const noiseFunc = planet.config.perlin.get;
-
-        let amplitude = 1.0;
+        let total = 0;
         let frequency = 1.0;
         let normalization = 0;
-        let total = 0;
-        for (let o = 0; o < _params.octaves; o++) {
-            const noiseValue = noiseFunc(
-            xs * frequency, ys * frequency, zs * frequency) * 0.5 + 0.5;
+        let amplitude = 1.0;
+
+        for ( let o = 0; o < _p.octaves; o++ ) {
+
+            const noiseValue = planet.config.perlin.get( xs * frequency, ys * frequency, zs * frequency );
 
             total += noiseValue * amplitude;
+            
+            frequency *= _p.multiplyFrequencyBy;
             normalization += amplitude;
-            amplitude *= G;
-            frequency *= _params.lacunarity;
+            amplitude *= _p.multiplyAmplitudeBy;
         }
+        
         total /= normalization;
-        return Math.pow(
-            total, _params.exponentiation) * _params.height;
+
+        return Math.pow( total, _p.pow ) * _p.heightScale;
     }
 
     static terrainify( v, planet ) {
@@ -102,9 +79,8 @@ class PlanetUtils {
     }
 
     static displace( v, planet ) {
-
-        let i = planet.config.seed.add( v );
-        let noise = PlanetUtils.heightmap( i, planet );
+        
+        let noise = PlanetUtils.heightmap( v.scale( planet.config.radius ).addInPlace( planet.config.seed ), planet );
         
         return v.scaleInPlace( planet.config.radius + noise );
     }

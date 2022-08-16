@@ -34,7 +34,7 @@ class PlanetGenerator {
     }
 
     createChunkMesh( nodeKey, position, fixRotation, size, resolution, distance ) {
-
+        //maybe switch to tiledplane?
         let mesh = BABYLON.MeshBuilder.CreateGround( `planet${ this.#planet.config.key }_chunk_${ nodeKey }`, { width: size, height: size, updatable: true, subdivisions: resolution }, this.#planet.scene );
         
         mesh.material = this.#planet.material;

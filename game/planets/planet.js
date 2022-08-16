@@ -135,7 +135,7 @@ class Planet {
 
         this.generator = new PlanetGenerator( this, this.#faces );
         this.material = this.generator.createMaterial();
-        this.custumMaterial = this.generator.createCustomMaterial();
+        //this.custumMaterial = this.generator.createCustomMaterial();
     }
 
     #setupPhysics() {
