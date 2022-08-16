@@ -17,8 +17,8 @@ class Star {
 
         shadow: {
 
-            radius: 0.5 * 1000,
-            resolution: 1024,
+            radius: 1.0 * 1000,
+            resolution: 2048,
 
             bias: 0.005,
             blend: 0.05,

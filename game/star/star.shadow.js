@@ -60,24 +60,6 @@ class StarShadow {
         }
     }
 
-    createPlanetShadow( planet ) {
-        /*
-        let options = { diameter: planet.config.radius * 2.0 * ( 1.0 + this.config.noise.minHeight ), segments: 6 };
-
-        this.mask = BABYLON.MeshBuilder.CreateSphere( RendererHelper.name( this.type, "mask" ), options, this.scene );
-        this.mask.scaling.y = 0.001;
-        this.mask.position.copyFrom( this.root.position );
-        
-        this.mask.material = new BABYLON.StandardMaterial( RendererHelper.name( this.type, "mask_material" ), this.scene );
-        this.mask.material.disableLighting = true;
-
-        this.sun.castShadow( true, this.mask );*/
-    }
-
-    updatePlanetShadow() {
-
-    }
-
     #configureLight() {
 
         this.#light.autoCalcShadowZBounds = false;

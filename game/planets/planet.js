@@ -152,8 +152,6 @@ class Planet {
     #updateSpin() {
         
         //bug: always going in and out of planet state bug
-        //look if we need planet mask
-        //look if star shadow is finished
         //make planet shader/color the planet
 
         if ( this.config.spin != false ) {
