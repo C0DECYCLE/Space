@@ -10,6 +10,8 @@ class Engine {
     
     canvas = null;
     babylon = null;
+    extensions = null;
+
     stats = [];
 
     #update = function() {};
@@ -20,6 +22,7 @@ class Engine {
         this.#browserSupport( () => {
 
             this.#createBabylon();
+            this.#createExtensions();
             this.#createStats();
 
             this.babylon.runRenderLoop( () => this.#render() );
@@ -65,6 +68,11 @@ class Engine {
     #createBabylon() {
 
         this.babylon = new BABYLON.Engine( this.canvas );
+    }
+
+    #createExtensions() {
+
+        this.extensions = new EngineExtensions( this );
     }
 
     #createStats() {

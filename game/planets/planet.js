@@ -12,15 +12,24 @@ class Planet {
 
         key: undefined,
         radius: undefined,
+
         gravity: 0.8,
+        influence: 0.5,
+
+        spin: false,
+        orbit: false,
         
         min: 64,
         resolution: 16,
 
         seed: null,
-        perlin: new perlinNoise3d()
+        perlin: new perlinNoise3d(),
+        variant: "0", //"1"
+        mountainy: 7.5, //3.5
+        warp: 0.3 //1.0
     };
 
+    manager = null;
     scene = null;
     
     root = null;
@@ -33,18 +42,28 @@ class Planet {
 
     #cachedInsertionString = "";
     #list = new Map();
+    #orbitCenter = new BABYLON.Vector3( 0, 0, 0 );
+    #distanceInOrbit = 0;
+    #angleAroundOrbit = 0;
 
     constructor( manager, config ) {
 
+        this.manager = manager;
         this.scene = manager.scene;
 
         this.config.key = config.key;
         this.config.radius = config.radius;
         this.config.gravity = config.gravity || this.config.gravity;
+        this.config.influence = config.influence || this.config.influence;
+        this.config.spin = config.spin || this.config.spin;
+        this.config.orbit = config.orbit || this.config.orbit;
         this.config.min = config.min || this.config.min;
         this.config.resolution = config.resolution || this.config.resolution;
         this.config.seed = config.seed;
         this.config.perlin.noiseSeed( this.config.seed.x );
+        this.config.variant = config.variant || this.config.variant;
+        this.config.mountainy = config.mountainy || this.config.mountainy;
+        this.config.warp = config.warp || this.config.warp;
 
         this.#createRoot();
         this.#addGenerator();
@@ -52,8 +71,35 @@ class Planet {
         this.#farInsertion();
     }
 
-    insert( position, distance ) {
+    get position() {
         
+        return this.root.position;
+    }
+
+    get rotationQuaternion() {
+        
+        return this.root.rotationQuaternion;
+    }
+
+    place( orbitCenter, distanceInOrbit, angleAroundOrbit ) {
+
+        this.#orbitCenter = orbitCenter;
+        this.#distanceInOrbit = distanceInOrbit;
+        this.#angleAroundOrbit = angleAroundOrbit * EngineUtils.toRadian;
+
+        this.root.position
+        .copyFromFloats( Math.cos( this.#angleAroundOrbit ), 0, Math.sin( this.#angleAroundOrbit ) )
+        .scaleInPlace( this.#distanceInOrbit )
+        .addInPlace( this.#orbitCenter );
+    }
+
+    insert( position, distance, force = false ) {
+        
+        if ( force == false && distance / this.config.radius > PlanetQuadtree.INSERT_LIMIT ) {
+
+            return;
+        }
+
         let insertionString = this.#getInsertionString( position );
         
         if ( insertionString != this.#cachedInsertionString ) {
@@ -65,6 +111,9 @@ class Planet {
     }
 
     update() {
+
+        this.#updateSpin();
+        this.#updateOrbit();
 
         this.#list.forEach( ( data, nodeKey ) => {
             
@@ -84,29 +133,15 @@ class Planet {
 
     #createRoot() {
 
-        this.root = new BABYLON.Mesh( "planet", this.scene );
+        this.root = new BABYLON.Mesh( `planet${ this.config.key }`, this.scene );
         this.root.rotationQuaternion = this.root.rotation.toQuaternion();
-
-
-                //////////////////////////////////////////////////
-                /*
-                let debug = BABYLON.MeshBuilder.CreateSphere( "debug", 
-                { diameter: this.config.radius * 2 * 1.5, segments: 32 }, scene );
-                debug.material = new BABYLON.StandardMaterial( "debug_material", scene );
-                debug.material.diffuseColor = BABYLON.Color3.FromHexString("#ff226b");
-                debug.material.emissiveColor = BABYLON.Color3.FromHexString("#120B25");
-                debug.material.specularColor.set( 0, 0, 0 );
-                debug.material.wireframe = true;
-                debug.parent = this.root;
-                */
-                //////////////////////////////////////////////////
     }
 
     #addGenerator() {
 
         this.generator = new PlanetGenerator( this, this.#faces );
         this.material = this.generator.createMaterial();
-        this.custumMaterial = this.generator.createCustomMaterial();
+        //this.custumMaterial = this.generator.createCustomMaterial();
     }
 
     #setupPhysics() {
@@ -114,10 +149,34 @@ class Planet {
         this.physics = new PlanetPhysics( this );
     }
 
+    #updateSpin() {
+        
+        //bug: always going in and out of planet state bug
+        //make planet shader/color the planet
+
+        if ( this.config.spin != false ) {
+
+            this.root.rotate( BABYLON.Axis.Y, this.config.spin * EngineUtils.toRadian, BABYLON.Space.LOCAL ); //make very movement speed * delta time
+        }
+    }
+    
+    #updateOrbit() {
+
+        if ( this.config.orbit != false ) {
+
+            this.#angleAroundOrbit += this.config.orbit * EngineUtils.toRadian;
+
+            this.root.position
+            .copyFromFloats( Math.cos( this.#angleAroundOrbit ), 0, Math.sin( this.#angleAroundOrbit ) )
+            .scaleInPlace( this.#distanceInOrbit )
+            .addInPlace( this.#orbitCenter );
+        }
+    }
+
     #farInsertion() {
 
         let farFarAway = EngineUtils.getFarAway();
-        this.insert( farFarAway, farFarAway.y );
+        this.insert( farFarAway, farFarAway.y, true );
     }
     
     #getInsertionString( position ) {
@@ -153,13 +212,11 @@ class Planet {
             list: this.#list,
             
             distanceCenterInsertion: distance,
-            distanceRadiusFactor: distance / this.config.radius
+            distanceRadiusFactor: distance / this.config.radius,
+
+            centerToInsertion: position.subtract( this.root.position ).normalize(),
+            occlusionFallOf: ( 1 - ( (distance / this.config.radius) - 1 ) ).clamp( -1.05, 0.95 )
         };
-
-        params.centerToInsertion = position.subtract( this.root.position );
-        params.occlusionFallOf = ( 1 - ( params.distanceRadiusFactor - 1 ) ).clamp( -0.95, 0.95 );
-        params.centerToInsertion = params.centerToInsertion.normalize();
-
         
         this.#unkeepAll();
 

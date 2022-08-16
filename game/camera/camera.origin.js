@@ -8,14 +8,14 @@
 
 class CameraOrigin {
 
-    parent = null;
-    
-    actualPosition = new BABYLON.Vector3();
+    actualPosition = new BABYLON.Vector3( 0, 0, 0 );
     relativePosition = new BABYLON.Vector3( 0, 0, 0 );
 
-    constructor( parent ) {
+    #camera = null;
+    
+    constructor( camera ) {
 
-        this.parent = parent;
+        this.#camera = camera;
 
         this.#setupRoot();
         this.#registerObservables();
@@ -43,16 +43,16 @@ class CameraOrigin {
 
     #setupRoot() {
 
-        this.parent.root._actualPosition = this.actualPosition;
-        this.parent.root._relativePosition = this.relativePosition;
-        this.parent.root.inspectableCustomProperties = this.#inspectorCustomProperties();
+        this.#camera.root._actualPosition = this.actualPosition;
+        this.#camera.root._relativePosition = this.relativePosition;
+        this.#camera.root.inspectableCustomProperties = this.#inspectorCustomProperties();
     }
 
     #registerObservables() {
 
-        this.parent.scene.onBeforePhysicsObservable.add( () => this.#beforePhysics() );
-        this.parent.scene.onAfterPhysicsObservable.add( () => this.#afterPhysics() );
-        this.parent.scene.onAfterRenderObservable.add( () => this.#afterRender() );
+        this.#camera.scene.onBeforePhysicsObservable.add( () => this.#beforePhysics() );
+        this.#camera.scene.onAfterPhysicsObservable.add( () => this.#afterPhysics() );
+        this.#camera.scene.onAfterRenderObservable.add( () => this.#afterRender() );
     }
 
     #inspectorCustomProperties() {
@@ -75,7 +75,7 @@ class CameraOrigin {
 
     #beforePhysics() {
 
-        let scene = this.parent.scene;
+        let scene = this.#camera.scene;
 
         if ( scene.rootNodes[0].name != "camera" ) {
 
@@ -103,14 +103,12 @@ class CameraOrigin {
             this.toRelative( node.position );
             
             node._relativePosition.copyFrom( node.position );
-
-            //this.#physicsRadius( node );
         }
     }
 
     #afterPhysics() {
         
-        let scene = this.parent.scene;
+        let scene = this.#camera.scene;
 
         for ( let i = 1; i < scene.rootNodes.length; i++ ) {
 
@@ -127,7 +125,7 @@ class CameraOrigin {
 
     #afterRender() {
         
-        let scene = this.parent.scene;
+        let scene = this.#camera.scene;
 
         for ( let i = 1; i < scene.rootNodes.length; i++ ) {
 
@@ -140,65 +138,4 @@ class CameraOrigin {
         }
     }
 
-    #physicsRadius( node ) {
-
-        if ( !node.physicsImpostor || node.neverPhysicsSleep == true ) {
-
-            return;
-        }
-        
-        if ( node._isPhysicsSleeping != true && node._isPhysicsSleeping != false ) {
-
-            node._isPhysicsSleeping = this.parent.manager.physicsPlugin.world.allowSleep;
-        }
-
-        if ( this.#inPhysicsRadius( node ) == true ) {
-
-            if ( node._isPhysicsSleeping == true ) {
-                
-                this.#physicsWakeUp( node );
-            }
-
-        } else {
-
-            if ( node._isPhysicsSleeping == false ) {
-                
-                this.#physicsSleep( node );
-            }
-        }
-    }
-
-    #inPhysicsRadius( node ) {
-
-        return node._relativePosition.lengthSquared() < this.parent.config.physicsRadius * this.parent.config.physicsRadius;
-    }
-
-    #physicsSleep( node ) {
-
-        node._isPhysicsSleeping = true;
-        this.#physicsTraverse( node, "sleep" );
-    }
-
-    #physicsWakeUp( node ) {
-
-        node._isPhysicsSleeping = false;
-        this.#physicsTraverse( node, "wakeUp" );
-    }
-
-    #physicsTraverse( node, func ) {
-
-        node.physicsImpostor[ func ]();
-
-        let children = node.getChildren( undefined, false );
-
-        for ( let i = 0; i < children.length; i++ ) {
-
-            let child = children[i];
-
-            if ( child.physicsImpostor && !child.neverPhysicsSleep ) {
-
-                child.physicsImpostor[ func ]();
-            }
-        }
-    }
 }

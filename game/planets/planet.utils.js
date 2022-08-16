@@ -8,6 +8,13 @@
 
 class PlanetUtils {
 
+    static terrainify( planet, v ) {
+
+        v = PlanetUtils.cubesphere( v, planet.config.radius );
+        
+        return PlanetUtils.displace( planet, v );
+    }
+
     static cubesphere( v, r ) {
         
         v.scaleInPlace( 1 / r );
@@ -31,46 +38,11 @@ class PlanetUtils {
         return v;
     }
 
-    static heightmap( v, planet ) {
-
-        const N_OCTAVES = 5;
+    static displace( planet, v ) {
         
-        let frequency = 3.5; //2.5
-        let amplitude = 0.5; //0.5
+        let noise = PlanetUtilsHeightmap.get( planet, v.scale( planet.config.radius ).addInPlace( planet.config.seed ) );
         
-        let lacunarity = 3.0; //2.0
-        let persistence = 0.3; //0.5
-        
-        let minimum = 0.4;
-
-        let n = 0;
-
-        for ( let octave = 0; octave < N_OCTAVES; octave++ ) {
-                            //genericNoise3d
-            n += amplitude * planet.config.perlin.get( frequency * v.x, frequency * v.y, frequency * v.z );
-
-            frequency *= lacunarity;
-            amplitude *= persistence; 
-        }
-                                                                    //genericNoise3d
-        let mn = genericNoise3d( v.x * 2, v.y * 2, v.z * 2 ) * 0.35 + planet.config.perlin.get( v.x * 10, v.y * 10, v.z * 10 ) * 0.35 + genericNoise3d( v.x * 500, v.y * 500, v.z * 500 ) * 0.005;
-        
-        return n.clamp( minimum - 0.1 + ( mn * 0.2 ), Infinity );
-    }
-
-    static terrainify( v, planet ) {
-
-        v = PlanetUtils.cubesphere( v, planet.config.radius );
-        
-        return PlanetUtils.displace( v, planet );
-    }
-
-    static displace( v, planet ) {
-
-        let i = planet.config.seed.add( v );
-        let noise = PlanetUtils.heightmap( i, planet );
-        
-        return v.scaleInPlace( planet.config.radius * ( 1 + noise ) * 0.75 );
+        return v.scaleInPlace( planet.config.radius + noise );
     }
 
 }

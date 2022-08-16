@@ -31,27 +31,37 @@ class Planets {
     update() {
 
         this.#insert( this.camera.position );
+        this.#update();
     }
 
     #insert( position ) {
 
         this.list.forEach( ( planet, key ) => {
             
-            let distance = BABYLON.Vector3.Distance( planet.root.position, position );
+            let distance = BABYLON.Vector3.Distance( planet.position, position );
             let distanceRadiusFactor = distance / planet.config.radius;
+            let planetThreashold = 1 + planet.config.influence;
             
-            if ( distanceRadiusFactor < 1.3/*2*/ && this.player.state.is( "space" ) ) {
+            /*
+            if ( distanceRadiusFactor <= planetThreashold && this.player.state.is( "space" ) ) {
 
                 this.player.state.set( "planet", planet );
             }
+            */
+            /*
+            if ( distanceRadiusFactor > planetThreashold && this.player.state.is( "planet" ) ) {
 
-            if ( distanceRadiusFactor < 20 ) {
-                
-                planet.insert( position, distance );
+                this.player.state.set( "space" );
             }
-        
-            planet.update();
+            */
+           
+            planet.insert( position, distance );
         } );
+    }
+
+    #update() {
+
+        this.list.forEach( ( planet, key ) => planet.update() );
     }
 
 }
