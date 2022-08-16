@@ -62,7 +62,7 @@ class PlanetGenerator {
             
             vertex.addInPlace( position );
     
-            vertex = PlanetUtils.terrainify( vertex, this.#planet );
+            vertex = PlanetUtils.terrainify( this.#planet, vertex );
 
             positions[ i * 3 ] = vertex.x;
             positions[ i * 3 + 1 ] = vertex.y;

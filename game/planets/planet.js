@@ -23,7 +23,8 @@ class Planet {
         resolution: 16,
 
         seed: null,
-        perlin: new perlinNoise3d()
+        perlin: new perlinNoise3d(),
+        mountainy: 7.5
     };
 
     manager = null;
@@ -58,6 +59,7 @@ class Planet {
         this.config.resolution = config.resolution || this.config.resolution;
         this.config.seed = config.seed;
         this.config.perlin.noiseSeed( this.config.seed.x );
+        this.config.mountainy = config.mountainy || this.config.mountainy;
 
         this.#createRoot();
         this.#addGenerator();

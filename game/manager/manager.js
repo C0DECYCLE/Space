@@ -135,7 +135,7 @@ class Manager {
                 
                 let vertex = new BABYLON.Vector3( positions[ i * 3 ], positions[ i * 3 + 1 ], positions[ i * 3 + 2 ] );
                 
-                vertex = PlanetUtils.terrainify( vertex, sp );
+                vertex = PlanetUtils.terrainify( sp, vertex );
 
                 positions[ i * 3 ] = vertex.x;
                 positions[ i * 3 + 1 ] = vertex.y;

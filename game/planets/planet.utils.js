@@ -8,6 +8,15 @@
 
 class PlanetUtils {
 
+    static HEIGHTMAP = {
+
+        octaves: 6,
+        noiseScale: 750,
+        multiplyFrequencyBy: 1.8,
+        multiplyAmplitudeBy: 0.5,
+        pow: 3.5
+    };
+
     static cubesphere( v, r ) {
         
         v.scaleInPlace( 1 / r );
@@ -30,57 +39,51 @@ class PlanetUtils {
         
         return v;
     }
+    
+    static fractionalBrownianMotion( perlin, v ) {
 
-    static heightmap( v, planet ) {
-
-        const mountainy = 7.5;
-
-        if ( !window._p ) {
-            window._p = {
-                octaves: 6,
-                noiseScale: 750,
-                heightScale: mountainy * 200,
-                multiplyFrequencyBy: 1.8,
-                multiplyAmplitudeBy: 0.5,
-                pow: 3.5,
-            };
-        }
-
-        const xs = v.x / _p.noiseScale;
-        const ys = v.y / _p.noiseScale;
-        const zs = v.z / _p.noiseScale;
+        const xs = v.x / PlanetUtils.HEIGHTMAP.noiseScale;
+        const ys = v.y / PlanetUtils.HEIGHTMAP.noiseScale;
+        const zs = v.z / PlanetUtils.HEIGHTMAP.noiseScale;
 
         let total = 0;
         let frequency = 1.0;
         let normalization = 0;
         let amplitude = 1.0;
 
-        for ( let o = 0; o < _p.octaves; o++ ) {
+        for ( let o = 0; o < PlanetUtils.HEIGHTMAP.octaves; o++ ) {
 
-            const noiseValue = planet.config.perlin.get( xs * frequency, ys * frequency, zs * frequency );
-
+            const noiseValue = perlin.get( xs * frequency, ys * frequency, zs * frequency );
             total += noiseValue * amplitude;
             
-            frequency *= _p.multiplyFrequencyBy;
+            frequency *= PlanetUtils.HEIGHTMAP.multiplyFrequencyBy;
             normalization += amplitude;
-            amplitude *= _p.multiplyAmplitudeBy;
+            amplitude *= PlanetUtils.HEIGHTMAP.multiplyAmplitudeBy;
         }
         
         total /= normalization;
 
-        return Math.pow( total, _p.pow ) * _p.heightScale;
+        return Math.pow( total, PlanetUtils.HEIGHTMAP.pow );
     }
 
-    static terrainify( v, planet ) {
+    static heightmap( planet, v ) {
+
+        const perlin = planet.config.perlin;
+        const heightScale = planet.config.mountainy * 200;
+
+        return PlanetUtils.fractionalBrownianMotion( perlin, v ) * heightScale;
+    }
+
+    static terrainify( planet, v ) {
 
         v = PlanetUtils.cubesphere( v, planet.config.radius );
         
-        return PlanetUtils.displace( v, planet );
+        return PlanetUtils.displace( planet, v );
     }
 
-    static displace( v, planet ) {
+    static displace( planet, v ) {
         
-        let noise = PlanetUtils.heightmap( v.scale( planet.config.radius ).addInPlace( planet.config.seed ), planet );
+        let noise = PlanetUtils.heightmap( planet, v.scale( planet.config.radius ).addInPlace( planet.config.seed ) );
         
         return v.scaleInPlace( planet.config.radius + noise );
     }

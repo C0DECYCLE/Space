@@ -127,7 +127,7 @@ class PlanetQuadtree {
 
     #getDistanceDot( params, position ) {
 
-        let terrainifyPosition = PlanetUtils.terrainify( position.clone(), this.#planet );
+        let terrainifyPosition = PlanetUtils.terrainify( this.#planet, position.clone() );
         let terrainifyOriginRotatePosition = BABYLON.Vector3.TransformCoordinates( terrainifyPosition, this.#planet.root.computeWorldMatrix( true ) );
         
         return {

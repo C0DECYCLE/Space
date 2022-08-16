@@ -60,7 +60,7 @@ class PlanetPhysics {
 
         let inPlanetRotation = up.rotateByQuaternionToRef( this.#planet.rotationQuaternion.invert(), BABYLON.Vector3.Zero() );
 
-        return PlanetUtils.displace( inPlanetRotation, this.#planet ).rotateByQuaternionToRef( this.#planet.rotationQuaternion, BABYLON.Vector3.Zero() );
+        return PlanetUtils.displace( this.#planet, inPlanetRotation ).rotateByQuaternionToRef( this.#planet.rotationQuaternion, BABYLON.Vector3.Zero() );
     }
 
 }
