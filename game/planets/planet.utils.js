@@ -73,7 +73,7 @@ class PlanetUtils {
 
         return PlanetUtils[ `heightmapVariant${ planet.config.variant }` ]( planet, v );
     }
-
+    
     static heightmapVariant0( planet, v ) {
         
         const perlin = planet.config.perlin;
