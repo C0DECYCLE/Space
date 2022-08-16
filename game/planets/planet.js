@@ -24,7 +24,9 @@ class Planet {
 
         seed: null,
         perlin: new perlinNoise3d(),
-        mountainy: 7.5
+        variant: "0", //"1"
+        mountainy: 7.5, //3.5
+        warp: 0.3 //1.0
     };
 
     manager = null;
@@ -59,7 +61,9 @@ class Planet {
         this.config.resolution = config.resolution || this.config.resolution;
         this.config.seed = config.seed;
         this.config.perlin.noiseSeed( this.config.seed.x );
+        this.config.variant = config.variant || this.config.variant;
         this.config.mountainy = config.mountainy || this.config.mountainy;
+        this.config.warp = config.warp || this.config.warp;
 
         this.#createRoot();
         this.#addGenerator();

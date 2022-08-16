@@ -68,17 +68,35 @@ class PlanetUtils {
 
     static heightmap( planet, v ) {
 
-        const perlin = planet.config.perlin;
-        const fbm = PlanetUtils.fractionalBrownianMotion;
-        const heightScale = planet.config.mountainy * 200;
-
         //https://github.com/dandrino/terrain-erosion-3-ways
         //https://starcitizenguidetothegalaxy.com/planet-modelling/
 
+        return PlanetUtils[ `heightmapVariant${ planet.config.variant }` ]( planet, v );
+    }
+
+    static heightmapVariant0( planet, v ) {
+        
+        const perlin = planet.config.perlin;
+        const fbm = PlanetUtils.fractionalBrownianMotion;
+        const heightScale = planet.config.mountainy * 200;
+        const warp = planet.config.warp;
+
+        const vOffset = v.add( planet.config.seed.scale( 0.001 ) );
+        const offset = planet.config.seed.scale( fbm( perlin, vOffset ) * warp );
+
+        return fbm( perlin, offset.addInPlace( v ) ) * heightScale;
+    }
+
+    static heightmapVariant1( planet, v ) {
+
+        const perlin = planet.config.perlin;
+        const fbm = PlanetUtils.fractionalBrownianMotion;
+        const heightScale = planet.config.mountainy * 200;
+        const warp = planet.config.warp;
+
         const vOffset = v.add( planet.config.seed.scale( 0.001 ) );
         const fbmOffset = fbm( perlin, vOffset ); 
-        const offset = planet.config.seed.scale( fbmOffset * 0.5 );
-        //const offset = new BABYLON.Vector3( fbmOffset, -fbmOffset, -fbmOffset + 0.5 ).scaleInPlace( heightScale );
+        const offset = new BABYLON.Vector3( fbmOffset * 2 - 1, Math.sin( fbmOffset * 10 ), Math.cos( fbmOffset * 10 ) ).scaleInPlace( heightScale * warp );
 
         return fbm( perlin, offset.addInPlace( v ) ) * heightScale;
     }
