@@ -50,8 +50,6 @@ class PlayerPhysics extends PhysicsEntity {
 
     #addPhysics() {
 
-        this.#player.mesh.physicsImpostor = new BABYLON.PhysicsImpostor( this.#player.mesh, BABYLON.PhysicsImpostor.SphereImpostor, { mass: 0 }, this.#player.scene );
-        this.#player.root.physicsImpostor = new BABYLON.PhysicsImpostor( this.#player.root, BABYLON.PhysicsImpostor.NoImpostor, { mass: 4 }, this.#player.scene );
     }
 
     #spaceMovement() {
@@ -118,16 +116,14 @@ class PlayerPhysics extends PhysicsEntity {
     }
 
     #movementTranslate( translate ) {
-
-        let root = this.#player.root;
-
+        
         if ( translate.x != 0 || translate.y != 0 || translate.z != 0 ) {
 
-            root.physicsImpostor.applyImpulse( translate.applyRotationQuaternion( root.rotationQuaternion ), BABYLON.Vector3.Zero() );
+            this.#player.position.addInPlace( translate.applyRotationQuaternion( this.#player.rotationQuaternion ) );
 
         } else {
             
-            root.physicsImpostor.applyImpulse( root.physicsImpostor.getLinearVelocity().scaleInPlace( -0.1 ), BABYLON.Vector3.Zero() );
+            
         }
     }
     

@@ -29,12 +29,18 @@ class EngineUtils {
 
         let dummies = [];
 
+        dummies.root = new BABYLON.TransformNode( "dummies", scene );
+        dummies.root.rotationQuaternion = dummies.root.rotation.toQuaternion();
+
         for ( let i = 0; i < count; i++ ) {
 
-            dummies.push( EngineUtils.createDummy( scene, undefined, material, star, 
+            let dummy = EngineUtils.createDummy( scene, undefined, material, star, 
                 new BABYLON.Vector3( Math.random() * 2 - 1, Math.random() * 2 - 1, Math.random() * 2 - 1 ).scaleInPlace( 30 ).addInPlace( center ), 
                 new BABYLON.Vector3( Math.random() * 2 - 1, Math.random() * 2 - 1, Math.random() * 2 - 1 ).scaleInPlace( Math.PI ) 
-            ) );
+            );
+
+            dummy.root.parent = dummies.root;
+            dummies.push( dummy );
         }
 
         dummies.update = () => {
@@ -74,8 +80,7 @@ class EngineUtils {
         dummy.root.useLODScreenCoverage = true;
         dummy.root.addLODLevel( 0.0001, null );  
         dummy.root.isLODNull = () => dummy.root.getLOD( scene.activeCamera ) == null;
-        dummy.root.physicsImpostor = new BABYLON.PhysicsImpostor( dummy.root, BABYLON.PhysicsImpostor.BoxImpostor, { mass: size/*, friction: 1, restitution: 0*/ }, scene ); 
-
+        
         dummy.physics = new PhysicsEntity( dummy );
         
         star.shadow.cast( dummy.root, true, false );

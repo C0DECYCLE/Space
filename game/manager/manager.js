@@ -45,7 +45,6 @@ class Manager {
         this.scene = new BABYLON.Scene( Space.engine.babylon );
         this.scene.clearColor = BABYLON.Color3.FromHexString( this.config.dark ).scale( 0.25 * 0.5 );
         this.scene.ambient = new Ambient( this.scene, this.config.dark, 0.25 * 1.25 );
-        this.scene.enablePhysics( BABYLON.Vector3.Zero(), new BABYLON.CannonJSPlugin() );
         
         
         this.controls = new Controls( this, {} );

@@ -28,7 +28,6 @@ class PhysicsEntity {
         let look = BABYLON.Quaternion.FromLookDirectionRH( this.#parent.root.forward, up );
 
         this.#parent.root.rotationQuaternion.copyFrom( BABYLON.Quaternion.Slerp( this.#parent.root.rotationQuaternion, look, stretch ) );
-        this.#parent.root.physicsImpostor.setAngularVelocity( BABYLON.Vector3.Zero() );
     }
     
 }

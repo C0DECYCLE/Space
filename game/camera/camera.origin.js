@@ -50,8 +50,7 @@ class CameraOrigin {
 
     #registerObservables() {
 
-        this.#camera.scene.onBeforePhysicsObservable.add( () => this.#beforePhysics() );
-        this.#camera.scene.onAfterPhysicsObservable.add( () => this.#afterPhysics() );
+        this.#camera.scene.onBeforeRenderObservable.add( () => this.#beforeRender() );
         this.#camera.scene.onAfterRenderObservable.add( () => this.#afterRender() );
     }
 
@@ -73,7 +72,7 @@ class CameraOrigin {
         ];
     }
 
-    #beforePhysics() {
+    #beforeRender() {
 
         let scene = this.#camera.scene;
 
@@ -103,23 +102,6 @@ class CameraOrigin {
             this.toRelative( node.position );
             
             node._relativePosition.copyFrom( node.position );
-        }
-    }
-
-    #afterPhysics() {
-        
-        let scene = this.#camera.scene;
-
-        for ( let i = 1; i < scene.rootNodes.length; i++ ) {
-
-            let node = scene.rootNodes[i];
-
-            if ( node.physicsImpostor && node._actualPosition && node._relativePosition ) {
-                
-                let physicsStep = node.position.subtract( node._relativePosition );
-
-                node._actualPosition.addInPlace( physicsStep );
-            }
         }
     }
 

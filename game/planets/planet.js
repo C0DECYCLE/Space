@@ -114,12 +114,6 @@ class Planet {
 
         this.#updateSpin();
         this.#updateOrbit();
-
-        this.#list.forEach( ( data, nodeKey ) => {
-            
-            data.mesh.position.copyFrom( this.root.position );
-            data.mesh.rotationQuaternion.copyFrom( this.root.rotationQuaternion );
-        } ); 
     }
 
     disposeAll() {
@@ -133,7 +127,7 @@ class Planet {
 
     #createRoot() {
 
-        this.root = new BABYLON.Mesh( `planet${ this.config.key }`, this.scene );
+        this.root = new BABYLON.TransformNode( `planet${ this.config.key }`, this.scene );
         this.root.rotationQuaternion = this.root.rotation.toQuaternion();
     }
 
@@ -151,9 +145,6 @@ class Planet {
 
     #updateSpin() {
         
-        //bug: always going in and out of planet state bug
-        //make planet shader/color the planet
-
         if ( this.config.spin != false ) {
 
             this.root.rotate( BABYLON.Axis.Y, this.config.spin * EngineUtils.toRadian, BABYLON.Space.LOCAL ); //make very movement speed * delta time

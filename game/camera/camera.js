@@ -13,9 +13,7 @@ class Camera {
         max: 1 * 1000 * 1000,
 
         offset: 8,
-        lerp: 0.1,
-
-        physicsRadius: 200
+        lerp: 0.1
     };
 
     manager = null;
@@ -42,7 +40,6 @@ class Camera {
         this.config.max = config.max || this.config.max;
         this.config.offset = config.offset || this.config.offset;
         this.config.lerp = config.lerp || this.config.lerp;
-        this.config.physicsRadius = config.physicsRadius || this.config.physicsRadius;
 
         this.#createRoot();
         this.#setupStates();

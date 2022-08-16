@@ -70,7 +70,7 @@ class Player {
 
     #createRoot() {
 
-        this.root = new BABYLON.Mesh( "player", this.scene );
+        this.root = new BABYLON.TransformNode( "player", this.scene );
         this.root.rotationQuaternion = this.root.rotation.toQuaternion();
     }
 
@@ -149,8 +149,6 @@ class Player {
     }
 
     #panPlayer( event ) {
-
-        this.root.physicsImpostor.setAngularVelocity( BABYLON.Vector3.Zero() );
 
         this.root.rotate( BABYLON.Axis.Y, event.event.movementX * this.controls.config.panning, BABYLON.Space.LOCAL );
         this.root.rotate( BABYLON.Axis.X, event.event.movementY * this.controls.config.panning, BABYLON.Space.LOCAL );

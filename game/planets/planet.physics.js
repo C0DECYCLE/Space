@@ -24,7 +24,7 @@ class PlanetPhysics {
             entity.physics.quaternionTowardsUpright( up, entity.config.standingup );
         }
         
-        entity.root.physicsImpostor.applyForce( up.scaleInPlace( -this.#planet.config.gravity * 10 ), BABYLON.Vector3.Zero() );
+        //up.scaleInPlace( -this.#planet.config.gravity * 10 )
     }
 
     collideHeightmap( entity ) {
@@ -47,7 +47,7 @@ class PlanetPhysics {
         
         if ( size == this.#planet.config.min ) {
 
-            mesh.physicsImpostor = new BABYLON.PhysicsImpostor( mesh, BABYLON.PhysicsImpostor.MeshImpostor, { mass: 0 }, this.#planet.scene );
+            
         }
     }
 
