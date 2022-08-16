@@ -21,6 +21,8 @@ class PhysicsEntity {
     constructor( parent ) {
 
         this.#parent = parent;
+
+        this.#enableCollisions();
     }
 
     quaternionTowardsUpright( up, stretch ) {
@@ -30,4 +32,9 @@ class PhysicsEntity {
         this.#parent.root.rotationQuaternion.copyFrom( BABYLON.Quaternion.Slerp( this.#parent.root.rotationQuaternion, look, stretch ) );
     }
     
+    #enableCollisions() {
+        
+        this.#parent.root.checkCollisions = true;
+    }
+
 }

@@ -17,6 +17,7 @@ class Manager {
 
     stage = null;
     scene = null;
+    physics = null;
     ambient = null;
     controls = null;
     camera = null;
@@ -46,6 +47,8 @@ class Manager {
         this.scene.clearColor = BABYLON.Color3.FromHexString( this.config.dark ).scale( 0.25 * 0.5 );
         this.scene.ambient = new Ambient( this.scene, this.config.dark, 0.25 * 1.25 );
         
+
+        this.physics = new Physics( this, {} );
         
         this.controls = new Controls( this, {} );
 
@@ -88,7 +91,8 @@ class Manager {
                 ////////////////////////////////////////////////////
     }
 
-    #run( delta ) {1
+    #run( delta ) {
+        
         if ( this.config.freeze == false ) {
 
             this.planets.update();

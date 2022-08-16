@@ -80,9 +80,9 @@ class EngineUtils {
         dummy.root.useLODScreenCoverage = true;
         dummy.root.addLODLevel( 0.0001, null );  
         dummy.root.isLODNull = () => dummy.root.getLOD( scene.activeCamera ) == null;
-        
+
         dummy.physics = new PhysicsEntity( dummy );
-        
+
         star.shadow.cast( dummy.root, true, false );
         star.shadow.receive( dummy.root, true, true );
 

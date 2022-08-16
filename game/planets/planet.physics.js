@@ -43,11 +43,11 @@ class PlanetPhysics {
         }
     }
     
-    createCollisionMesh( mesh, size ) {
+    enableCollisions( mesh, size ) {
         
         if ( size == this.#planet.config.min ) {
 
-            
+            mesh.checkCollisions = true;
         }
     }
 

@@ -36,10 +36,10 @@ class Player {
 
         this.config.speed = config.speed || this.config.speed;
 
+        this.#createMesh();    
         this.#createRoot();
         this.#setupInspector();
         this.#setupStates();
-        this.#createMesh();    
         this.#setupPhysics();
         this.#registerObservables();
     }
@@ -70,8 +70,7 @@ class Player {
 
     #createRoot() {
 
-        this.root = new BABYLON.TransformNode( "player", this.scene );
-        this.root.rotationQuaternion = this.root.rotation.toQuaternion();
+        this.root = this.mesh;
     }
 
     #setupInspector() {
@@ -104,16 +103,16 @@ class Player {
         let material = new BABYLON.StandardMaterial( "player_material", this.scene );
         material.setColorIntensity( "#ff226b", 0.5 );
 
-        this.mesh = BABYLON.MeshBuilder.CreateCapsule( "player_mesh", { height: 2, radius: 0.5, tessellation: 8, subdivisions: 1, capSubdivisions: 3 }, this.scene );
+        this.mesh = BABYLON.MeshBuilder.CreateCapsule( "player", { height: 2, radius: 0.5, tessellation: 8, subdivisions: 1, capSubdivisions: 3 }, this.scene );
+        this.mesh.rotationQuaternion = this.mesh.rotation.toQuaternion();
         this.mesh.convertToFlatShadedMesh();
         this.mesh.material = material;
-        this.mesh.parent = this.root;
         
         let head = BABYLON.MeshBuilder.CreateBox( "player_mesh_head", { width: 0.7, height: 0.35, depth: 0.3 }, this.scene );
         head.position.copyFromFloats( 0, 0.5, 0.4 );
         head.material = material;
         head.parent = this.mesh;
-
+    
         this.manager.star.shadow.cast( this.mesh, true, true );
         this.manager.star.shadow.receive( this.mesh, true, true );
     }

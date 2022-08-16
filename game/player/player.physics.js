@@ -17,7 +17,7 @@ class PlayerPhysics extends PhysicsEntity {
         
         this.#player = player;
 
-        this.#addPhysics();
+        this.#setupCollider();
     }
 
     setPlanet( value ) {
@@ -48,8 +48,10 @@ class PlayerPhysics extends PhysicsEntity {
         }
     }
 
-    #addPhysics() {
+    #setupCollider() {
 
+        this.#player.root.moveWithCollisions( BABYLON.Vector3.Zero() );
+        this.#player.root.collider._radius.scaleInPlace( 1.5 );
     }
 
     #spaceMovement() {
@@ -119,8 +121,8 @@ class PlayerPhysics extends PhysicsEntity {
         
         if ( translate.x != 0 || translate.y != 0 || translate.z != 0 ) {
 
-            this.#player.position.addInPlace( translate.applyRotationQuaternion( this.#player.rotationQuaternion ) );
-
+            this.#player.root.moveWithCollisions( translate.applyRotationQuaternion( this.#player.rotationQuaternion ) );
+            
         } else {
             
             
