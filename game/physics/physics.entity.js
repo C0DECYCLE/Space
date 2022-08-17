@@ -8,32 +8,57 @@
 
 class PhysicsEntity {
 
+    static TYPES = {
+
+        STATIC: 0,
+        DYNAMIC: 1
+    };
+
     static STATES = {
 
         FLOATING: 0,
-        PLANETGROUND: 1
+        GROUND: 1
+    };
+    
+    static collidable( mesh, type ) {
+
+        mesh.checkCollisions = true;
+        mesh.physicsEntityType = type;
     }
 
+    type = undefined;
     state = PhysicsEntity.STATES.FLOATING;
+
     delta = new BABYLON.Vector3( 0, 0, 0 );
 
     #mesh = null;
 
-    constructor( mesh ) {
+    constructor( mesh, type ) {
 
         this.#mesh = mesh;
 
-        PhysicsEntity.collidable( this.#mesh );
+        this.type = type;
+
+        PhysicsEntity.collidable( this.#mesh, this.type );
+
+        this.#bindObservables();
+    }
+    
+    get position() {
+        
+        return this.#mesh.position;
     }
 
-    static collidable( mesh ) {
-
-        mesh.checkCollisions = true;
+    get rotationQuaternion() {
+        
+        return this.#mesh.rotationQuaternion;
     }
 
     update() {
 
         if ( this.delta.x != 0 || this.delta.y != 0 || this.delta.z != 0 ) {
+
+            this.state = PhysicsEntity.STATES.FLOATING;
 
             this.#mesh.moveWithCollisions( this.delta );
         }
@@ -56,6 +81,22 @@ class PhysicsEntity {
         const look = BABYLON.Quaternion.FromLookDirectionRH( this.#mesh.forward, up );
 
         this.#mesh.rotationQuaternion.copyFrom( BABYLON.Quaternion.Slerp( this.#mesh.rotationQuaternion, look, stretch ) );
+    }
+
+    #bindObservables() {
+
+        if ( this.type == PhysicsEntity.TYPES.DYNAMIC ) {
+
+            this.#mesh.onCollideObservable.add( ( otherMesh ) => this.#onCollide( otherMesh ) );
+        }
+    }
+
+    #onCollide( otherMesh ) {
+
+        if ( otherMesh.physicsEntityType == PhysicsEntity.TYPES.STATIC ) {
+
+            this.state = PhysicsEntity.STATES.GROUND;
+        }
     }
 
 }

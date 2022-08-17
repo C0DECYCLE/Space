@@ -65,7 +65,7 @@ class Manager {
         this.planets.register( { key: 0, seed: new BABYLON.Vector3( -1123, 7237, -3943 ), radius: 1024, spin: 0.005, mountainy: 5, warp: 0.8 } );
         this.planets.register( { key: 1, seed: new BABYLON.Vector3( 8513, -9011, -5910 ), radius: 2048, spin: 0.005, variant: "1", mountainy: 3.5, warp: 1.0 } );
         this.planets.register( { key: 2, seed: new BABYLON.Vector3( -925, -2011, 7770 ), radius: 4096, spin: 0.0025 } );
-        this.planets.register( { key: 3, seed: new BABYLON.Vector3( 2253, 7001, 4099 ), radius: 256, spin: 0.01, mountainy: 2, warp: 0.6 } );
+        this.planets.register( { key: 3, seed: new BABYLON.Vector3( 2253, 7001, 4099 ), radius: 256, /*spin: 0.01,*/ mountainy: 2, warp: 0.6 } );
         
 
         return this.scene;
@@ -83,7 +83,9 @@ class Manager {
     
         this.camera.attachToPlayer( this.player );
 
-        this.scene.debugLayer.show();
+        this.scene.debugLayer.show( {
+            embedMode: true,
+        } );
 
 
                 ////////////////////////////////////////////////////
@@ -93,11 +95,16 @@ class Manager {
 
     #run( delta ) {
         
-        //have on each physics entity a delta vector which gets composed of all other movements and then at end of frame gets executed with moveWithCollisions
-        //planet gravity/movement next? (spin with planet system) 
+        //planet gravity: spin with planet system,
         //because no acceleration possible, just pull to planet more when distance smaller
-        //do state on planet ground how? babylon collisions internal? only be able to planet movement then
-        //bug: planet in out state always
+        //physicsentity property: ground resistance angle limit (till which angle of the ground wont it move down the slope (gravity applied))
+        //detect normal of ground beneth and calculate ground angle for ground restistance angle limit property
+        //fall trought ground bug?
+        //dummys dont collide right with ground
+        //improve planet movement, add jump and beeing able to proberly rotate the player
+        //player weird collision epsiloid
+        //bug: planet in out state always, make dynamic in and out of planets
+        //test out diffrent planets / their gravity config
         
         const dC = EngineUtils.getDeltaCorrection( delta );
         
@@ -114,7 +121,7 @@ class Manager {
 
 
                 ////////////////////////////////////////////////////
-                window.dummies.update();
+                window.dummies.update( dC );
                 ////////////////////////////////////////////////////
     }
 

@@ -129,6 +129,14 @@ class Planet {
 
         this.root = new BABYLON.TransformNode( `planet${ this.config.key }`, this.scene );
         this.root.rotationQuaternion = this.root.rotation.toQuaternion();
+
+        //////////////////////////////////////////////////
+        let debug = BABYLON.MeshBuilder.CreateSphere( "debug", { diameter: this.config.radius * 2 * ( 1 + this.config.influence ), segments: 32 }, this.scene );
+        debug.material = new BABYLON.StandardMaterial( "debug_material", this.scene );
+        debug.material.setColorIntensity( "#ff226b", 1.0 );
+        debug.material.wireframe = true;
+        debug.parent = this.root;
+        //////////////////////////////////////////////////
     }
 
     #addGenerator() {

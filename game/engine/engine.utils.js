@@ -41,7 +41,7 @@ class EngineUtils {
 
         for ( let i = 0; i < count; i++ ) {
 
-            const dummy = EngineUtils.createDummy( scene, undefined, material, star, 
+            const dummy = EngineUtils.createDummy( scene, i, undefined, material, star, 
                 new BABYLON.Vector3( Math.random() * 2 - 1, Math.random() * 2 - 1, Math.random() * 2 - 1 ).scaleInPlace( 30 ).addInPlace( center ), 
                 new BABYLON.Vector3( Math.random() * 2 - 1, Math.random() * 2 - 1, Math.random() * 2 - 1 ).scaleInPlace( Math.PI ) 
             );
@@ -50,22 +50,20 @@ class EngineUtils {
             dummies.push( dummy );
         }
 
-        dummies.update = () => {
+        dummies.update = ( deltaCorrection ) => {
 
             for ( let i = 0; i < dummies.length; i++ ) {
 
+                star.manager.planets.list.get( 3 ).physics.pull( dummies[i].physics, deltaCorrection );
+
                 dummies[i].physics.update();
-    
-                //this.planets.list.get( 0 ).physics.pullPhysicsEntity( dummies[i] );
-                //this.planets.list.get( 0 ).physics.collideHeightmap( dummies[i] );
-                //this.planets.list.get( 0 ).physics.collideGroundBox( dummies[i] );
             }
         };
 
         return dummies;
     }
     
-    static createDummy( scene, size = Math.round( Math.random() * 10 ) * 1, material, star, position, rotation ) {
+    static createDummy( scene, i, size = Math.round( Math.random() * 10 ) * 1, material, star, position, rotation ) {
 
         const dummy = {
 
@@ -80,7 +78,7 @@ class EngineUtils {
             }
         };
 
-        dummy.root = BABYLON.MeshBuilder.CreateBox( "dummy", { size: size }, scene );
+        dummy.root = BABYLON.MeshBuilder.CreateBox( `dummy${ i }`, { size: size }, scene );
         dummy.root.position.copyFrom( position );
         dummy.root.rotationQuaternion = BABYLON.Quaternion.FromEulerVector( rotation );
         dummy.root.material = material;
@@ -88,7 +86,7 @@ class EngineUtils {
         dummy.root.addLODLevel( 0.0001, null );  
         dummy.root.isLODNull = () => dummy.root.getLOD( scene.activeCamera ) == null;
 
-        dummy.physics = new PhysicsEntity( dummy.root );
+        dummy.physics = new PhysicsEntity( dummy.root, PhysicsEntity.TYPES.DYNAMIC );
 
         star.shadow.cast( dummy.root, true, false );
         star.shadow.receive( dummy.root, true, true );

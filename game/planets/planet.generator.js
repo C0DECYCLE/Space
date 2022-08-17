@@ -42,7 +42,7 @@ class PlanetGenerator {
         mesh.material = this.#planet.material;
         mesh.parent = this.#planet.root;
 
-        this.#planet.physics.enableCollisions( mesh, size );
+        this.#planet.physics.enable( mesh, size );
         
         this.#planet.manager.star.shadow.cast( mesh, true, false );        
         this.#planet.manager.star.shadow.receive( mesh, true, false );        

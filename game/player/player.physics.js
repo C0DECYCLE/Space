@@ -13,7 +13,7 @@ class PlayerPhysics extends PhysicsEntity {
 
     constructor( player ) {
 
-        super( player.root );
+        super( player.root, PhysicsEntity.TYPES.DYNAMIC );
         
         this.#player = player;
 
@@ -34,12 +34,12 @@ class PlayerPhysics extends PhysicsEntity {
 
         if ( this.#planet != null ) {
             
-            this.#planet.physics.pullPhysicsEntity( this.#player, true );
-            this.#planet.physics.collideHeightmap( this.#player );
+            const up = this.#planet.physics.pull( this, deltaCorrection );
 
-            if ( this.state != PhysicsEntity.STATES.FLOATING ) {
+            if ( this.state == PhysicsEntity.STATES.GROUND ) {
 
                 this.#planetMovement( deltaCorrection );
+                this.quaternionTowardsUpright( up, 1.0 );
             }
             
         } else {
