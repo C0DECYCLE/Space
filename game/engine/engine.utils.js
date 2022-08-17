@@ -8,8 +8,15 @@
 
 class EngineUtils {
 
+    static FPS_TARGET = 60;
+
     static toAngle = 180 / Math.PI;
     static toRadian = Math.PI / 180;
+
+    static getDeltaCorrection( delta ) {
+
+        return delta * EngineUtils.FPS_TARGET / 1000;
+    }
 
     static vectorRotation( vector, rotation ) {
 
@@ -27,14 +34,14 @@ class EngineUtils {
     
     static createDummyField( scene, count, center, material, star ) {
 
-        let dummies = [];
+        const dummies = [];
 
         dummies.root = new BABYLON.TransformNode( "dummies", scene );
         dummies.root.rotationQuaternion = dummies.root.rotation.toQuaternion();
 
         for ( let i = 0; i < count; i++ ) {
 
-            let dummy = EngineUtils.createDummy( scene, undefined, material, star, 
+            const dummy = EngineUtils.createDummy( scene, undefined, material, star, 
                 new BABYLON.Vector3( Math.random() * 2 - 1, Math.random() * 2 - 1, Math.random() * 2 - 1 ).scaleInPlace( 30 ).addInPlace( center ), 
                 new BABYLON.Vector3( Math.random() * 2 - 1, Math.random() * 2 - 1, Math.random() * 2 - 1 ).scaleInPlace( Math.PI ) 
             );
@@ -47,7 +54,7 @@ class EngineUtils {
 
             for ( let i = 0; i < dummies.length; i++ ) {
 
-                //dummies[i].physics.update();
+                dummies[i].physics.update();
     
                 //this.planets.list.get( 0 ).physics.pullPhysicsEntity( dummies[i] );
                 //this.planets.list.get( 0 ).physics.collideHeightmap( dummies[i] );
@@ -60,7 +67,7 @@ class EngineUtils {
     
     static createDummy( scene, size = Math.round( Math.random() * 10 ) * 1, material, star, position, rotation ) {
 
-        let dummy = {
+        const dummy = {
 
             get position() {
                 
@@ -81,7 +88,7 @@ class EngineUtils {
         dummy.root.addLODLevel( 0.0001, null );  
         dummy.root.isLODNull = () => dummy.root.getLOD( scene.activeCamera ) == null;
 
-        dummy.physics = new PhysicsEntity( dummy );
+        dummy.physics = new PhysicsEntity( dummy.root );
 
         star.shadow.cast( dummy.root, true, false );
         star.shadow.receive( dummy.root, true, true );

@@ -19,7 +19,7 @@ class LanguageKit {
         window.fetch( "assets/language.json" ).then( response => response.text() ).then( jsonWithComments => {
 
             
-            let jsonPure = jsonWithComments.replace( /\\"|"(?:\\"|[^"])*"|(\/\/.*|\/\*[\s\S]*?\*\/)/g, (m, g) => g ? "" : m );
+            const jsonPure = jsonWithComments.replace( /\\"|"(?:\\"|[^"])*"|(\/\/.*|\/\*[\s\S]*?\*\/)/g, (m, g) => g ? "" : m );
 
             this.dictionary = JSON.parse( jsonPure );
 

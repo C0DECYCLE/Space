@@ -24,7 +24,7 @@ class ManagerStage {
         this.#stage = stage;
         this.#run = run;
 
-        let scene = this.#install();
+        const scene = this.#install();
         
         scene.onReadyObservable.add( () => this.#onReadyObservable() );
     }

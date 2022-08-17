@@ -19,7 +19,7 @@ class PlanetGenerator {
 
     createMaterial() {
         
-        let material = new BABYLON.StandardMaterial( `planet${ this.#planet.config.key }_material`, this.#planet.scene );
+        const material = new BABYLON.StandardMaterial( `planet${ this.#planet.config.key }_material`, this.#planet.scene );
         material.setColorIntensity( "#534d5f", 1.0 );
 
         return material;
@@ -27,7 +27,7 @@ class PlanetGenerator {
 
     createCustomMaterial() {
         
-        let material = new BABYLON.CustomMaterial( `planet${ this.#planet.config.key }_custumMaterial`, this.#planet.scene );
+        const material = new BABYLON.CustomMaterial( `planet${ this.#planet.config.key }_custumMaterial`, this.#planet.scene );
         material.setColorIntensity( "#534d5f", 1.0 );
 
         return material;
@@ -35,7 +35,7 @@ class PlanetGenerator {
 
     createChunkMesh( nodeKey, position, fixRotation, size, resolution, distance ) {
         //maybe switch to tiledplane?
-        let mesh = BABYLON.MeshBuilder.CreateGround( `planet${ this.#planet.config.key }_chunk_${ nodeKey }`, { width: size, height: size, updatable: true, subdivisions: resolution }, this.#planet.scene );
+        const mesh = BABYLON.MeshBuilder.CreateGround( `planet${ this.#planet.config.key }_chunk_${ nodeKey }`, { width: size, height: size, updatable: true, subdivisions: resolution }, this.#planet.scene );
 
         this.updateChunkMesh( mesh, position, fixRotation );
 
@@ -52,7 +52,7 @@ class PlanetGenerator {
     
     updateChunkMesh( mesh, position, fixRotation ) {
         
-        let positions = mesh.getVerticesData( BABYLON.VertexBuffer.PositionKind );
+        const positions = mesh.getVerticesData( BABYLON.VertexBuffer.PositionKind );
 
         for ( let i = 0; i < positions.length / 3; i++ ) {
             
@@ -75,8 +75,8 @@ class PlanetGenerator {
 
     #createFaces( faces ) {
 
-        let suffix = "UDFBLR";
-        let rotations = [
+        const suffix = "UDFBLR";
+        const rotations = [
 
             new BABYLON.Vector3( 0, 0, 0 ), //Up
             new BABYLON.Vector3( 2, 0, 0 ), //Down

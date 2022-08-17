@@ -38,9 +38,9 @@ class Planets {
 
         this.list.forEach( ( planet, key ) => {
             
-            let distance = BABYLON.Vector3.Distance( planet.position, position );
-            let distanceRadiusFactor = distance / planet.config.radius;
-            let planetThreashold = 1 + planet.config.influence;
+            const distance = BABYLON.Vector3.Distance( planet.position, position );
+            const distanceRadiusFactor = distance / planet.config.radius;
+            const planetThreashold = 1 + planet.config.influence;
             
             /*
             if ( distanceRadiusFactor <= planetThreashold && this.player.state.is( "space" ) ) {

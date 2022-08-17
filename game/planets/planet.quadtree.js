@@ -67,7 +67,7 @@ class PlanetQuadtree {
 
     #recurse( params, nodeKey, position, size ) {
 
-        let factors = this.#getDistanceDot( params, position );
+        const factors = this.#getDistanceDot( params, position );
         
         if ( factors.distance < size * 1.5 && size > this.#planet.config.min ) {
 
@@ -91,7 +91,7 @@ class PlanetQuadtree {
 
         if ( factors.dot > params.occlusionFallOf ) {
                 
-            let resolution = this.#getResolution( params, size );
+            const resolution = this.#getResolution( params, size );
             
             if ( params.list.has( nodeKey ) == true ) {
 
@@ -106,7 +106,7 @@ class PlanetQuadtree {
 
     #keepNode( params, nodeKey, resolution ) {
 
-        let node = params.list.get( nodeKey );
+        const node = params.list.get( nodeKey );
             
         if ( node.resolution == resolution ) {
 
@@ -127,8 +127,8 @@ class PlanetQuadtree {
 
     #getDistanceDot( params, position ) {
 
-        let terrainifyPosition = PlanetUtils.terrainify( this.#planet, position.clone() );
-        let terrainifyOriginRotatePosition = BABYLON.Vector3.TransformCoordinates( terrainifyPosition, this.#planet.root.computeWorldMatrix( true ) );
+        const terrainifyPosition = PlanetUtils.terrainify( this.#planet, position.clone() );
+        const terrainifyOriginRotatePosition = BABYLON.Vector3.TransformCoordinates( terrainifyPosition, this.#planet.root.computeWorldMatrix( true ) );
         
         return {
 

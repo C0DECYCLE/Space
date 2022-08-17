@@ -66,6 +66,8 @@ class Player {
 
             this.physics.planet();
         }
+
+        this.physics.update();
     }
 
     #createRoot() {
@@ -101,14 +103,14 @@ class Player {
 
     #createMesh() {
 
-        let material = new BABYLON.StandardMaterial( "player_material", this.scene );
+        const material = new BABYLON.StandardMaterial( "player_material", this.scene );
         material.setColorIntensity( "#ff226b", 0.5 );
 
         this.mesh = BABYLON.MeshBuilder.CreateCapsule( "player", { height: 2, radius: 0.5, tessellation: 8, subdivisions: 1, capSubdivisions: 3 }, this.scene );
         this.mesh.convertToFlatShadedMesh();
         this.mesh.material = material;
         
-        let head = BABYLON.MeshBuilder.CreateBox( "player_mesh_head", { width: 0.7, height: 0.35, depth: 0.3 }, this.scene );
+        const head = BABYLON.MeshBuilder.CreateBox( "player_mesh_head", { width: 0.7, height: 0.35, depth: 0.3 }, this.scene );
         head.position.copyFromFloats( 0, 0.5, 0.4 );
         head.material = material;
         head.parent = this.mesh;

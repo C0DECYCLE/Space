@@ -81,7 +81,7 @@ class Star {
 
     #createMesh() {
 
-        let material = new BABYLON.StandardMaterial( "star_material", this.scene );
+        const material = new BABYLON.StandardMaterial( "star_material", this.scene );
         material.disableLighting = true;
         material.diffuseColor.set( 0, 0, 0 );
         material.specularColor.set( 0, 0, 0 );

@@ -13,11 +13,11 @@ class PlayerPhysics extends PhysicsEntity {
 
     constructor( player ) {
 
-        super( player );
+        super( player.root );
         
         this.#player = player;
 
-        this.#setupCollider();
+        this.#enlargeCollider();
     }
 
     setPlanet( value ) {
@@ -48,17 +48,16 @@ class PlayerPhysics extends PhysicsEntity {
         }
     }
 
-    #setupCollider() {
+    #enlargeCollider() {
 
-        this.#player.root.moveWithCollisions( BABYLON.Vector3.Zero() );
-        this.#player.root.collider._radius.scaleInPlace( 1.5 );
+        this.getCollider()._radius.y *= 1.25;
     }
 
     #spaceMovement() {
 
-        let controls = this.#player.controls;
-        let speed = this.#player.config.speed;
-        let translate = new BABYLON.Vector3( 0, 0, 0 );
+        const controls = this.#player.controls;
+        const speed = this.#player.config.speed;
+        const translate = new BABYLON.Vector3( 0, 0, 0 );
 
         if ( controls.activeKeys.has( "w" ) == true ) {
 
@@ -92,9 +91,9 @@ class PlayerPhysics extends PhysicsEntity {
 
     #planetMovement() {
 
-        let controls = this.#player.controls;
-        let speed = this.#player.config.speed;
-        let translate = new BABYLON.Vector3( 0, 0, 0 );
+        const controls = this.#player.controls;
+        const speed = this.#player.config.speed;
+        const translate = new BABYLON.Vector3( 0, 0, 0 );
 
         if ( controls.activeKeys.has( "w" ) == true ) {
 
@@ -121,11 +120,7 @@ class PlayerPhysics extends PhysicsEntity {
         
         if ( translate.x != 0 || translate.y != 0 || translate.z != 0 ) {
 
-            this.#player.root.moveWithCollisions( translate.applyRotationQuaternion( this.#player.rotationQuaternion ) );
-            
-        } else {
-            
-            
+            this.delta.addInPlace( translate.applyRotationQuaternion( this.#player.rotationQuaternion ) );   
         }
     }
     

@@ -52,11 +52,11 @@ class EngineExtensions {
 
         this.intensity = intensity;
 
-        let _ambient = this.getScene().ambient;
+        const ambient = this.getScene().ambient;
 
-        if ( typeof _ambient != "undefined" ) {
+        if ( typeof ambient != "undefined" ) {
 
-            this.intensity *= _ambient.lightFactor();
+            this.intensity *= ambient.lightFactor();
         }
     }
 
@@ -67,12 +67,12 @@ class EngineExtensions {
         this.emissiveColor = new BABYLON.Color3( 0, 0, 0 );
         this.ambientColor = new BABYLON.Color3( 0, 0, 0 );
 
-        let _ambient = this.getScene().ambient;
+        const ambient = this.getScene().ambient;
 
-        if ( typeof _ambient != "undefined" ) {
+        if ( typeof ambient != "undefined" ) {
 
-            this.diffuseColor.scale( _ambient.intensity );
-            this.ambientColor = new BABYLON.Color3.FromHexString( _ambient.color ).scale( _ambient.materialFactor() );
+            this.diffuseColor.scale( ambient.intensity );
+            this.ambientColor = new BABYLON.Color3.FromHexString( ambient.color ).scale( ambient.materialFactor() );
         }
     }
 

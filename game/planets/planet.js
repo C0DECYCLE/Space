@@ -100,7 +100,7 @@ class Planet {
             return;
         }
 
-        let insertionString = this.#getInsertionString( position );
+        const insertionString = this.#getInsertionString( position );
         
         if ( insertionString != this.#cachedInsertionString ) {
             
@@ -166,13 +166,13 @@ class Planet {
 
     #farInsertion() {
 
-        let farFarAway = EngineUtils.getFarAway();
+        const farFarAway = EngineUtils.getFarAway();
         this.insert( farFarAway, farFarAway.y, true );
     }
     
     #getInsertionString( position ) {
 
-        let diffrence = position.subtract( 
+        const diffrence = position.subtract( 
 
             BABYLON.Vector3.TransformCoordinates( 
 
@@ -182,7 +182,7 @@ class Planet {
             )
         );
 
-        let rdez = 10;
+        const rdez = 10;
 
         diffrence.copyFromFloats(
 
@@ -196,7 +196,7 @@ class Planet {
 
     #insertQuadtrees( position, distance ) {
 
-        let params = { 
+        const params = { 
             
             insertposition: position,
             

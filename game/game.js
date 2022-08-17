@@ -26,8 +26,8 @@ class Game {
 
     #greet() {
         
-        let name = document.title;
-        let year = new Date().getUTCFullYear();
+        const name = document.title;
+        const year = new Date().getUTCFullYear();
 
         console.log( `\n\n${ name }\n\nPalto Studio\nCopyright Noah Bussinger ${ year }\n\n` );
     }

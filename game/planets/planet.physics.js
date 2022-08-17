@@ -17,7 +17,7 @@ class PlanetPhysics {
 
     pullPhysicsEntity( entity, upright = false ) {
 
-        let up = this.#getDiffrence( entity.position ).normalize();
+        const up = this.#getDiffrence( entity.position ).normalize();
 
         if ( entity.physics.state == PhysicsEntity.STATES.PLANETGROUND && upright == true ) {
 
@@ -29,9 +29,9 @@ class PlanetPhysics {
 
     collideHeightmap( entity ) {
 
-        let diffrence = this.#getDiffrence( entity.position );
-        let displace = this.#upToDisplaced( diffrence.clone().normalize() );
-        let distance = diffrence.subtractInPlace( displace ).length();
+        const diffrence = this.#getDiffrence( entity.position );
+        const displace = this.#upToDisplaced( diffrence.clone().normalize() );
+        const distance = diffrence.subtractInPlace( displace ).length();
         
         if ( distance <= 2 ) {
             
@@ -47,7 +47,7 @@ class PlanetPhysics {
         
         if ( size == this.#planet.config.min ) {
 
-            mesh.checkCollisions = true;
+            PhysicsEntity.collidable( mesh );
         }
     }
 
@@ -58,7 +58,7 @@ class PlanetPhysics {
 
     #upToDisplaced( up ) {
 
-        let inPlanetRotation = up.rotateByQuaternionToRef( this.#planet.rotationQuaternion.invert(), BABYLON.Vector3.Zero() );
+        const inPlanetRotation = up.rotateByQuaternionToRef( this.#planet.rotationQuaternion.invert(), BABYLON.Vector3.Zero() );
 
         return PlanetUtils.displace( this.#planet, inPlanetRotation ).rotateByQuaternionToRef( this.#planet.rotationQuaternion, BABYLON.Vector3.Zero() );
     }
