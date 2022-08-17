@@ -28,10 +28,10 @@ class Planets {
         this.list.set( config.key, new Planet( this.manager, config ) );
     }
 
-    update() {
+    update( deltaCorrection ) {
 
         this.#insert( this.camera.position );
-        this.#update();
+        this.#update( deltaCorrection );
     }
 
     #insert( position ) {
@@ -59,9 +59,9 @@ class Planets {
         } );
     }
 
-    #update() {
+    #update( deltaCorrection ) {
 
-        this.list.forEach( ( planet, key ) => planet.update() );
+        this.list.forEach( ( planet, key ) => planet.update( deltaCorrection ) );
     }
 
 }

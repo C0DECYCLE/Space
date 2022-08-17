@@ -25,12 +25,12 @@ class PlayerPhysics extends PhysicsEntity {
         this.#planet = value;
     }
 
-    space() {
+    space( deltaCorrection ) {
 
-        this.#spaceMovement();
+        this.#spaceMovement( deltaCorrection );
     }
 
-    planet() {
+    planet( deltaCorrection ) {
 
         if ( this.#planet != null ) {
             
@@ -39,7 +39,7 @@ class PlayerPhysics extends PhysicsEntity {
 
             if ( this.state != PhysicsEntity.STATES.FLOATING ) {
 
-                this.#planetMovement();
+                this.#planetMovement( deltaCorrection );
             }
             
         } else {
@@ -53,10 +53,10 @@ class PlayerPhysics extends PhysicsEntity {
         this.getCollider()._radius.y *= 1.25;
     }
 
-    #spaceMovement() {
+    #spaceMovement( deltaCorrection ) {
 
         const controls = this.#player.controls;
-        const speed = this.#player.config.speed;
+        const speed = this.#player.config.speed * deltaCorrection;
         const translate = new BABYLON.Vector3( 0, 0, 0 );
 
         if ( controls.activeKeys.has( "w" ) == true ) {
@@ -89,10 +89,10 @@ class PlayerPhysics extends PhysicsEntity {
         this.#movementTranslate( translate );
     }
 
-    #planetMovement() {
+    #planetMovement( deltaCorrection ) {
 
         const controls = this.#player.controls;
-        const speed = this.#player.config.speed;
+        const speed = this.#player.config.speed * deltaCorrection;
         const translate = new BABYLON.Vector3( 0, 0, 0 );
 
         if ( controls.activeKeys.has( "w" ) == true ) {

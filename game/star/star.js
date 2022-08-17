@@ -61,6 +61,7 @@ class Star {
         this.#createPointLight( 0.25 );
         this.#createDirectionalLight( 0.75 );
         this.#createShadow();
+        this.manager.postprocess.godrays( this.mesh );
     }
 
     get position() {

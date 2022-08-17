@@ -110,10 +110,10 @@ class Planet {
         }
     }
 
-    update() {
+    update( deltaCorrection ) {
 
-        this.#updateSpin();
-        this.#updateOrbit();
+        this.#updateSpin( deltaCorrection );
+        this.#updateOrbit( deltaCorrection );
     }
 
     disposeAll() {
@@ -143,19 +143,19 @@ class Planet {
         this.physics = new PlanetPhysics( this );
     }
 
-    #updateSpin() {
+    #updateSpin( dC ) {
         
         if ( this.config.spin != false ) {
 
-            this.root.rotate( BABYLON.Axis.Y, this.config.spin * EngineUtils.toRadian, BABYLON.Space.LOCAL ); //make very movement speed * delta time
+            this.root.rotate( BABYLON.Axis.Y, this.config.spin * EngineUtils.toRadian * dC, BABYLON.Space.LOCAL ); //make very movement speed * delta time
         }
     }
     
-    #updateOrbit() {
+    #updateOrbit( dC ) {
 
         if ( this.config.orbit != false ) {
 
-            this.#angleAroundOrbit += this.config.orbit * EngineUtils.toRadian;
+            this.#angleAroundOrbit += this.config.orbit * EngineUtils.toRadian * dC;
 
             this.root.position
             .copyFromFloats( Math.cos( this.#angleAroundOrbit ), 0, Math.sin( this.#angleAroundOrbit ) )

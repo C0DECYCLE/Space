@@ -54,17 +54,17 @@ class Player {
         return this.root.rotationQuaternion;
     }
 
-    update() {
+    update( deltaCorrection ) {
 
         this.#updateFromInspector();
 
         if ( this.state.is( "space" ) == true ) {
 
-            this.physics.space();
+            this.physics.space( deltaCorrection );
 
         } else if ( this.state.is( "planet" ) == true ) {
 
-            this.physics.planet();
+            this.physics.planet( deltaCorrection );
         }
 
         this.physics.update();
