@@ -93,6 +93,14 @@ class Manager {
 
     #run( delta ) {
         
+        //make every movement delta
+        //finish pseudo physics, done with collisions? make just one moveWithCollisions call per frame... 
+        //have on each physics entity a delta vector which gets composed of all other movements and then at end of frame gets executed with moveWithCollisions
+        //planet gravity/movement next? (spin with planet system) 
+        //because no acceleration possible, just pull to planet more when distance smaller
+        //do state on planet ground how? babylon collisions internal? only be able to planet movement then
+        //bug: planet in out state always
+        
         if ( this.config.freeze == false ) {
 
             this.planets.update();

@@ -71,6 +71,7 @@ class Player {
     #createRoot() {
 
         this.root = this.mesh;
+        this.root.rotationQuaternion = this.root.rotation.toQuaternion();
     }
 
     #setupInspector() {
@@ -104,7 +105,6 @@ class Player {
         material.setColorIntensity( "#ff226b", 0.5 );
 
         this.mesh = BABYLON.MeshBuilder.CreateCapsule( "player", { height: 2, radius: 0.5, tessellation: 8, subdivisions: 1, capSubdivisions: 3 }, this.scene );
-        this.mesh.rotationQuaternion = this.mesh.rotation.toQuaternion();
         this.mesh.convertToFlatShadedMesh();
         this.mesh.material = material;
         
