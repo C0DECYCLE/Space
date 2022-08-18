@@ -64,9 +64,15 @@ class Manager {
         
         this.planets.register( { key: 0, seed: new BABYLON.Vector3( -1123, 7237, -3943 ), radius: 1024, spin: 0.005, mountainy: 5, warp: 0.8 } );
         this.planets.register( { key: 1, seed: new BABYLON.Vector3( 8513, -9011, -5910 ), radius: 2048, spin: 0.005, variant: "1", mountainy: 3.5, warp: 1.0 } );
-        this.planets.register( { key: 2, seed: new BABYLON.Vector3( -925, -2011, 7770 ), radius: 4096, spin: 0.0025 } );
+        this.planets.register( { key: 2, seed: new BABYLON.Vector3( -925, -2011, 7770 ), radius: 4096, /*spin: 0.0025*/ } );
         this.planets.register( { key: 3, seed: new BABYLON.Vector3( 2253, 7001, 4099 ), radius: 256, /*spin: 0.01,*/ mountainy: 2, warp: 0.6 } );
         
+        
+                ////////////////////////////////////////////////////
+                window.aspp = new AtmosphericScatteringPostProcess( "atmospherePostProcess", this.planets.list.get( 2 ), this.star, this.camera, this.scene );
+                aspp.samples = 3;
+                ////////////////////////////////////////////////////
+
 
         return this.scene;
     }
@@ -79,7 +85,6 @@ class Manager {
         this.planets.list.get( 3 ).place( this.planets.list.get( 2 ).position, 10 * 1000, 60 );
         
         this.player.position.copyFrom( this.planets.list.get( 3 ).position ).addInPlace( new BABYLON.Vector3( 1 * 1000, 0, 0 ) );
-        this.player.root.rotate( BABYLON.Axis.Y, -Math.PI / 1.5, BABYLON.Space.LOCAL );
     
         this.camera.attachToPlayer( this.player );
 
@@ -105,15 +110,16 @@ class Manager {
         //player weird collision epsiloid
         //bug: planet in out state always, make dynamic in and out of planets
         //test out diffrent planets / their gravity config
-        
-        const dC = EngineUtils.getDeltaCorrection( delta );
+
+        //fix camera on planet
+        //test out athmosphere
         
         if ( this.config.freeze == false ) {
 
-            this.planets.update( dC );
+            this.planets.update();
         }
 
-        this.player.update( dC );
+        this.player.update();
         
         this.camera.update();
 
@@ -121,7 +127,7 @@ class Manager {
 
 
                 ////////////////////////////////////////////////////
-                window.dummies.update( dC );
+                window.dummies.update();
                 ////////////////////////////////////////////////////
     }
 

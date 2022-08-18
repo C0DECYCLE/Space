@@ -134,7 +134,7 @@ class PlanetQuadtree {
 
             distance: BABYLON.Vector3.Distance( terrainifyOriginRotatePosition, params.insertposition ),
 
-            dot: BABYLON.Vector3.Dot( params.centerToInsertion, terrainifyOriginRotatePosition.subtract( this.#planet.root.position ).normalize() )
+            dot: BABYLON.Vector3.Dot( params.centerToInsertion, terrainifyOriginRotatePosition.subtract( this.#planet.position ).normalize() )
         };
     }
 

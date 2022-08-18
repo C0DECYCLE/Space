@@ -28,10 +28,10 @@ class Planets {
         this.list.set( config.key, new Planet( this.manager, config ) );
     }
 
-    update( deltaCorrection ) {
+    update() {
 
         this.#insert( this.camera.position );
-        this.#update( deltaCorrection );
+        this.#update();
     }
 
     #insert( position ) {
@@ -44,7 +44,7 @@ class Planets {
             
             if ( distanceRadiusFactor <= planetThreashold && this.player.state.is( "space" ) ) {
 
-                this.player.state.set( "planet", planet );
+                //this.player.state.set( "planet", planet );
                 //log(planet.config.key);
             }
 
@@ -59,9 +59,9 @@ class Planets {
         } );
     }
 
-    #update( deltaCorrection ) {
+    #update() {
 
-        this.list.forEach( ( planet, key ) => planet.update( deltaCorrection ) );
+        this.list.forEach( ( planet, key ) => planet.update() );
     }
 
 }

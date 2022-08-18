@@ -54,17 +54,17 @@ class Player {
         return this.root.rotationQuaternion;
     }
 
-    update( deltaCorrection ) {
+    update() {
 
         this.#updateFromInspector();
 
         if ( this.state.is( "space" ) == true ) {
 
-            this.physics.space( deltaCorrection );
+            this.physics.space();
 
         } else if ( this.state.is( "planet" ) == true ) {
 
-            this.physics.planet( deltaCorrection );
+            this.physics.planet();
         }
 
         this.physics.update();
@@ -135,12 +135,12 @@ class Player {
     }
 
     #onPointerMove( event ) {
-    
+        
         if ( this.controls.isPointerDown == true || this.config.experimentalPointerLock == true ) {
 
             if ( this.controls.isKeyboarding == true ) {
 
-                this.#panPlayer( event );
+                this.#followPointer( event );
 
             } else {
 
@@ -149,10 +149,12 @@ class Player {
         }
     }
 
-    #panPlayer( event ) {
-
-        this.root.rotate( BABYLON.Axis.Y, event.event.movementX * this.controls.config.panning, BABYLON.Space.LOCAL );
-        this.root.rotate( BABYLON.Axis.X, event.event.movementY * this.controls.config.panning, BABYLON.Space.LOCAL );
+    #followPointer( event ) {
+        
+        let deltaCorrection = Space.engine.deltaCorrection;
+        
+        this.root.rotate( BABYLON.Axis.Y, event.event.movementX * this.controls.config.panning * deltaCorrection, BABYLON.Space.LOCAL );
+        this.root.rotate( BABYLON.Axis.X, event.event.movementY * this.controls.config.panning * deltaCorrection, BABYLON.Space.LOCAL );
     }
 
     #onSpaceEnter( oldState ) {

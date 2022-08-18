@@ -87,7 +87,7 @@ class Planet {
         this.#distanceInOrbit = distanceInOrbit;
         this.#angleAroundOrbit = angleAroundOrbit * EngineUtils.toRadian;
 
-        this.root.position
+        this.position
         .copyFromFloats( Math.cos( this.#angleAroundOrbit ), 0, Math.sin( this.#angleAroundOrbit ) )
         .scaleInPlace( this.#distanceInOrbit )
         .addInPlace( this.#orbitCenter );
@@ -110,10 +110,10 @@ class Planet {
         }
     }
 
-    update( deltaCorrection ) {
+    update() {
 
-        this.#updateSpin( deltaCorrection );
-        this.#updateOrbit( deltaCorrection );
+        this.#updateSpin();
+        this.#updateOrbit();
     }
 
     disposeAll() {
@@ -131,11 +131,13 @@ class Planet {
         this.root.rotationQuaternion = this.root.rotation.toQuaternion();
 
         //////////////////////////////////////////////////
+        /*
         let debug = BABYLON.MeshBuilder.CreateSphere( "debug", { diameter: this.config.radius * 2 * ( 1 + this.config.influence ), segments: 32 }, this.scene );
         debug.material = new BABYLON.StandardMaterial( "debug_material", this.scene );
         debug.material.setColorIntensity( "#ff226b", 1.0 );
         debug.material.wireframe = true;
         debug.parent = this.root;
+        */
         //////////////////////////////////////////////////
     }
 
@@ -151,21 +153,25 @@ class Planet {
         this.physics = new PlanetPhysics( this );
     }
 
-    #updateSpin( dC ) {
+    #updateSpin() {
         
         if ( this.config.spin != false ) {
 
-            this.root.rotate( BABYLON.Axis.Y, this.config.spin * EngineUtils.toRadian * dC, BABYLON.Space.LOCAL ); //make very movement speed * delta time
+            const deltaCorrection = Space.engine.deltaCorrection;
+
+            this.root.rotate( BABYLON.Axis.Y, this.config.spin * EngineUtils.toRadian * deltaCorrection, BABYLON.Space.LOCAL ); //make very movement speed * delta time
         }
     }
     
-    #updateOrbit( dC ) {
+    #updateOrbit() {
 
         if ( this.config.orbit != false ) {
 
-            this.#angleAroundOrbit += this.config.orbit * EngineUtils.toRadian * dC;
+            const deltaCorrection = Space.engine.deltaCorrection;
 
-            this.root.position
+            this.#angleAroundOrbit += this.config.orbit * EngineUtils.toRadian * deltaCorrection;
+
+            this.position
             .copyFromFloats( Math.cos( this.#angleAroundOrbit ), 0, Math.sin( this.#angleAroundOrbit ) )
             .scaleInPlace( this.#distanceInOrbit )
             .addInPlace( this.#orbitCenter );
@@ -213,7 +219,7 @@ class Planet {
             distanceCenterInsertion: distance,
             distanceRadiusFactor: distance / this.config.radius,
 
-            centerToInsertion: position.subtract( this.root.position ).normalize(),
+            centerToInsertion: position.subtract( this.position ).normalize(),
             occlusionFallOf: ( 1 - ( (distance / this.config.radius) - 1 ) ).clamp( -1.05, 0.95 )
         };
         

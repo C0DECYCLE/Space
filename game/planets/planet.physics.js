@@ -23,10 +23,11 @@ class PlanetPhysics {
         }
     }
 
-    pull( physicsEntity, deltaCorrection ) {
+    pull( physicsEntity ) {
 
         const up = this.#getDiffrence( physicsEntity.position ).normalize();
-        
+        const deltaCorrection = Space.engine.deltaCorrection;
+
         physicsEntity.delta.addInPlace( up.scale( -this.#planet.config.gravity * 0.1 * deltaCorrection ) );
 
         return up;

@@ -24,12 +24,14 @@ class Camera {
     camera = null;
 
     state = new StateMachine();
-    target = null;
-
     origin = null;
 
-    #focusAlpha = -Math.PI / 2;
-    #focusBeta = Math.PI / 2;
+    targets = {};
+    target = {
+
+        object: null,
+        camera: null
+    };
 
     constructor( manager, config ) {
 
@@ -45,6 +47,7 @@ class Camera {
         this.#setupStates();
         this.#createCamera();
         this.#addOrigin();
+        this.#addTargets();
     }
 
     get position() {
@@ -67,28 +70,19 @@ class Camera {
         this.state.set( "spaceship", spaceship );
     }
 
-    focus() {
-
-        this.camera.alpha = BABYLON.Scalar.Lerp( this.camera.alpha, this.#focusAlpha, this.config.lerp );
-        this.camera.beta = BABYLON.Scalar.Lerp( this.camera.beta, this.#focusBeta, this.config.lerp );
-    }
-
     free( event ) {
 
-        this.camera.alpha -= event.event.movementX * this.controls.config.panning;
-        this.camera.beta -= event.event.movementY * this.controls.config.panning;
+        const deltaCorrection = Space.engine.deltaCorrection;
+
+        this.camera.alpha -= event.event.movementX * this.controls.config.panning * deltaCorrection;
+        this.camera.beta -= event.event.movementY * this.controls.config.panning * deltaCorrection;
     }
 
     update() {
 
-        if ( this.state.is( "player" ) == true ) {
-            
-            this.#syncWithTarget( this.target );
+        if ( this.target.object != null && this.target.camera != null ) {
 
-            if ( this.controls.isKeyboarding == true ) {
-
-                this.focus();
-            }
+            this.target.camera.update( this.target.object );
         }
     }
 
@@ -106,7 +100,7 @@ class Camera {
 
     #createCamera() {
 
-        this.camera = new BABYLON.ArcRotateCamera( "camera_camera", this.#focusAlpha, this.#focusBeta, this.config.offset, BABYLON.Vector3.Zero(), this.scene );
+        this.camera = new BABYLON.ArcRotateCamera( "camera_camera", -Math.PI / 2, Math.PI / 2, this.config.offset, BABYLON.Vector3.Zero(), this.scene );
         this.camera.maxZ = this.config.max;
         this.camera.parent = this.root;
     }
@@ -116,38 +110,51 @@ class Camera {
         this.origin = new CameraOrigin( this );
     }
 
-    #syncWithTarget( target ) {
+    #addTargets() {
 
-        this.origin.actualPosition.copyFrom( BABYLON.Vector3.Lerp( this.origin.actualPosition, target.position, this.config.lerp ) );
-        this.root.rotationQuaternion.copyFrom( BABYLON.Quaternion.Slerp( this.root.rotationQuaternion, target.rotationQuaternion, this.config.lerp ) );
+        this.targets.player = new CameraTargetPlayer( this );
+    }
+    
+    #enterTarget( object, camera ) {
+
+        this.target.object = object;
+        this.target.camera = camera;
+
+        this.target.camera.focus();
+    }
+
+    #leaveTarget() {
+
+        this.target.object = null;
+        this.target.camera = null;
     }
     
     #onPlayerEnter( oldState, player ) {
 
         log( "camera attached to player" );
 
-        this.target = player;
+        this.#enterTarget( player, this.targets.player );
     }
 
     #onPlayerLeave( newState ) {
         
         log( "camera detached from player" );
         
-        this.target = null;
+        this.#leaveTarget();
     }
     
     #onSpaceshipEnter( oldState, spaceship ) {
         
         log( "camera attached to spaceship" );
         
-        this.target = spaceship;
+        this.#enterTarget( spaceship, this.targets.spaceship );
     }
     
     #onSpaceshipLeave( newState ) {
         
         log( "camera detached from spaceship" );
         
-        this.target = null;
+        this.#leaveTarget();
     }
 
 }

@@ -1,6 +1,6 @@
 "use strict";
 class AtmosphericScatteringPostProcess extends BABYLON.PostProcess {
-    constructor(name, planet, sun, camera, scene) {
+    constructor(name, planet, star, camera, scene) {
         // you might need to change the path to the .fragment.fx file
         super(name, "../core/scattering/atmosphericScattering", [
             "sunPosition",
@@ -24,8 +24,8 @@ class AtmosphericScatteringPostProcess extends BABYLON.PostProcess {
             "depthSampler",
         ], 1, camera.camera, BABYLON.Texture.BILINEAR_SAMPLINGMODE, scene.getEngine());
         this.settings = {
-            planetRadius: planet.config.radius * 0.85,
-            atmosphereRadius: planet.config.radius * 1.5,
+            planetRadius: planet.config.radius * 0.5,
+            atmosphereRadius: planet.config.radius * 1.75,
             falloffFactor: 15,
             intensity: 15,
             scatteringStrength: 1,
@@ -36,7 +36,7 @@ class AtmosphericScatteringPostProcess extends BABYLON.PostProcess {
         };
 
         this.camera = camera;
-        this.sun = sun;
+        this.star = star;
         this.planet = planet;
         this.setCamera(this.camera);
         let depthRenderer = new BABYLON.DepthRenderer(scene);
@@ -45,9 +45,9 @@ class AtmosphericScatteringPostProcess extends BABYLON.PostProcess {
         this.onApply = (effect) => {
             effect.setTexture("depthSampler", depthMap);
             
-            effect.setVector3("sunPosition", this.sun.absolutePosition);
+            effect.setVector3("sunPosition", this.star.position);
             effect.setVector3("cameraPosition", this.camera.camera.globalPosition);
-            effect.setVector3("planetPosition", this.planet.entity.absolutePosition);
+            effect.setVector3("planetPosition", this.planet.position);
 
             effect.setMatrix("projection", this.camera.camera.getProjectionMatrix());
             effect.setMatrix("view", this.camera.camera.getViewMatrix());

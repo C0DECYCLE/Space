@@ -25,20 +25,20 @@ class PlayerPhysics extends PhysicsEntity {
         this.#planet = value;
     }
 
-    space( deltaCorrection ) {
+    space() {
 
-        this.#spaceMovement( deltaCorrection );
+        this.#spaceMovement();
     }
 
-    planet( deltaCorrection ) {
+    planet() {
 
         if ( this.#planet != null ) {
             
-            const up = this.#planet.physics.pull( this, deltaCorrection );
+            const up = this.#planet.physics.pull( this );
 
             if ( this.state == PhysicsEntity.STATES.GROUND ) {
 
-                this.#planetMovement( deltaCorrection );
+                this.#planetMovement();
                 this.quaternionTowardsUpright( up, 1.0 );
             }
             
@@ -50,12 +50,13 @@ class PlayerPhysics extends PhysicsEntity {
 
     #enlargeCollider() {
 
-        this.getCollider()._radius.y *= 1.25;
+        this.#player.mesh.ellipsoid.scaleInPlace( 1.5 );
     }
 
-    #spaceMovement( deltaCorrection ) {
+    #spaceMovement() {
 
         const controls = this.#player.controls;
+        const deltaCorrection = Space.engine.deltaCorrection;
         const speed = this.#player.config.speed * deltaCorrection;
         const translate = new BABYLON.Vector3( 0, 0, 0 );
 
@@ -89,9 +90,10 @@ class PlayerPhysics extends PhysicsEntity {
         this.#movementTranslate( translate );
     }
 
-    #planetMovement( deltaCorrection ) {
+    #planetMovement() {
 
         const controls = this.#player.controls;
+        const deltaCorrection = Space.engine.deltaCorrection;
         const speed = this.#player.config.speed * deltaCorrection;
         const translate = new BABYLON.Vector3( 0, 0, 0 );
 

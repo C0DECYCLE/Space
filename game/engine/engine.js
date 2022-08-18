@@ -16,6 +16,9 @@ class Engine {
 
     #update = function() {};
 
+    #fpsTarget = 60;
+    #deltaCorrection = 1.0;
+
     constructor() {
     
         this.#createCanvas();
@@ -29,6 +32,11 @@ class Engine {
 
             window.addEventListener( "resize", () => this.babylon.resize() );
         } );
+    }
+
+    get deltaCorrection() {
+
+        return this.#deltaCorrection;
     }
 
     set( update ) {
@@ -98,7 +106,11 @@ class Engine {
 
         this.stats.forEach( ( stat ) => stat.begin() );
         
-        this.#update( this.babylon.getDeltaTime() );
+        const deltaTime = this.babylon.getDeltaTime();
+        
+        this.#deltaCorrection = EngineUtils.getDeltaCorrection( deltaTime, this.#fpsTarget );
+
+        this.#update( deltaTime );
             
         if ( TWEEN ) {
             

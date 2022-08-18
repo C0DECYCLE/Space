@@ -8,14 +8,12 @@
 
 class EngineUtils {
 
-    static FPS_TARGET = 60;
-
     static toAngle = 180 / Math.PI;
     static toRadian = Math.PI / 180;
 
-    static getDeltaCorrection( delta ) {
+    static getDeltaCorrection( delta, fpsTarget ) {
 
-        return delta * EngineUtils.FPS_TARGET / 1000;
+        return delta * fpsTarget / 1000;
     }
 
     static vectorRotation( vector, rotation ) {
@@ -50,11 +48,11 @@ class EngineUtils {
             dummies.push( dummy );
         }
 
-        dummies.update = ( deltaCorrection ) => {
+        dummies.update = () => {
 
             for ( let i = 0; i < dummies.length; i++ ) {
 
-                star.manager.planets.list.get( 3 ).physics.pull( dummies[i].physics, deltaCorrection );
+                star.manager.planets.list.get( 3 ).physics.pull( dummies[i].physics );
 
                 dummies[i].physics.update();
             }
