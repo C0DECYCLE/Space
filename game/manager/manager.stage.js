@@ -24,8 +24,8 @@ class ManagerStage {
         this.#stage = stage;
         this.#run = run;
 
-        const scene = this.#install();
-        
+        const scene = this.#install( ( scene ) => this.#debugMaterial( scene ) );
+
         scene.onReadyObservable.add( () => this.#onReadyObservable() );
     }
 
@@ -41,6 +41,13 @@ class ManagerStage {
 
         this.#stage();
         this.#isStagingComplete = true;
+    }
+
+    #debugMaterial( scene ) {
+
+        scene.debugMaterial = new BABYLON.StandardMaterial( "debug_material", scene );
+        scene.debugMaterial.setColorIntensity( "#ff226b", 1.0 );
+        scene.debugMaterial.wireframe = true;
     }
 
 }

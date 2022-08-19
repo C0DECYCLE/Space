@@ -16,8 +16,6 @@ class PlayerPhysics extends PhysicsEntity {
         super( player.root, PhysicsEntity.TYPES.DYNAMIC );
         
         this.#player = player;
-
-        this.#enlargeCollider();
     }
 
     setPlanet( value ) {
@@ -46,11 +44,6 @@ class PlayerPhysics extends PhysicsEntity {
 
             console.error( "Planet Gravity: Planet is null!" );
         }
-    }
-
-    #enlargeCollider() {
-
-        this.#player.mesh.ellipsoid.scaleInPlace( 1.5 );
     }
 
     #spaceMovement() {

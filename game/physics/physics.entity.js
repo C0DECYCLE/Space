@@ -8,6 +8,8 @@
 
 class PhysicsEntity {
 
+    static ENLARGEMENT = ( 1 + ( 1 / Math.sin( Math.PI / 4 ) ) ) / 2;
+
     static TYPES = {
 
         STATIC: 0,
@@ -31,17 +33,22 @@ class PhysicsEntity {
 
     delta = new BABYLON.Vector3( 0, 0, 0 );
 
+    #scene = null;
     #mesh = null;
 
     constructor( mesh, type ) {
 
         this.#mesh = mesh;
+        this.#scene = this.#mesh.getScene();
 
         this.type = type;
 
         PhysicsEntity.collidable( this.#mesh, this.type );
 
         this.#bindObservables();
+        this.#fitCollider();
+
+        //this.debugCollider();
     }
     
     get position() {
@@ -76,6 +83,16 @@ class PhysicsEntity {
         return this.#mesh.collider;
     }
 
+    debugCollider() {
+
+        const ellipsoid = this.#mesh.ellipsoid;
+
+        const debug = BABYLON.MeshBuilder.CreateSphere( `${ this.#mesh.name }_debug_collider`, { diameterX: ellipsoid.x * 2, diameterY: ellipsoid.y * 2, diameterZ: ellipsoid.z * 2, segments: 8 }, this.#scene );
+        debug.position.copyFrom( this.#mesh.ellipsoidOffset );
+        debug.material = this.#scene.debugMaterial;
+        debug.parent = this.#mesh;
+    }
+
     quaternionTowardsUpright( up, stretch ) {
 
         const look = BABYLON.Quaternion.FromLookDirectionRH( this.#mesh.forward, up );
@@ -89,6 +106,15 @@ class PhysicsEntity {
 
             this.#mesh.onCollideObservable.add( ( otherMesh ) => this.#onCollide( otherMesh ) );
         }
+    }
+
+    #fitCollider() {
+
+        const info = this.#mesh.getBoundingInfo();
+
+        this.#mesh.ellipsoid
+        .copyFrom( info.boundingSphere.maximum )
+        .scaleInPlace( PhysicsEntity.ENLARGEMENT );
     }
 
     #onCollide( otherMesh ) {

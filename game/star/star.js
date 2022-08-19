@@ -12,7 +12,7 @@ class Star {
 
         color: "#fff9bc",
 
-        size: 12 * 1000,
+        size: 20 * 1000,
         resolution: 16,
 
         shadow: {

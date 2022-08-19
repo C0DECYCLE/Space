@@ -15,6 +15,7 @@ class PlanetGenerator {
         this.#planet = planet;
 
         this.#createFaces( faces );
+        this.#debugInfluence();
     }
 
     createMaterial() {
@@ -92,4 +93,11 @@ class PlanetGenerator {
         }
     }
     
+    #debugInfluence() {
+
+        const debug = BABYLON.MeshBuilder.CreateSphere( `planet${ this.#planet.config.key }_debug`, { diameter: this.#planet.config.radius * 2 * ( 1 + this.#planet.config.influence ), segments: 32 }, this.#planet.scene );
+        debug.material = this.#planet.scene.debugMaterial;
+        debug.parent = this.#planet.root;
+    }
+
 }

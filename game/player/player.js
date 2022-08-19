@@ -151,7 +151,7 @@ class Player {
 
     #followPointer( event ) {
         
-        let deltaCorrection = Space.engine.deltaCorrection;
+        const deltaCorrection = Space.engine.deltaCorrection;
         
         this.root.rotate( BABYLON.Axis.Y, event.event.movementX * this.controls.config.panning * deltaCorrection, BABYLON.Space.LOCAL );
         this.root.rotate( BABYLON.Axis.X, event.event.movementY * this.controls.config.panning * deltaCorrection, BABYLON.Space.LOCAL );

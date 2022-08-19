@@ -24,15 +24,15 @@ class AtmosphericScatteringPostProcess extends BABYLON.PostProcess {
             "depthSampler",
         ], 1, camera.camera, BABYLON.Texture.BILINEAR_SAMPLINGMODE, scene.getEngine());
         this.settings = {
-            planetRadius: planet.config.radius * 0.5,
-            atmosphereRadius: planet.config.radius * 1.75,
+            planetRadius: planet.config.radius * 0.85,
+            atmosphereRadius: planet.config.radius * 1.35,
             falloffFactor: 15,
             intensity: 15,
             scatteringStrength: 1,
             densityModifier: 1,
             redWaveLength: 700,
-            greenWaveLength: 530,
-            blueWaveLength: 440,
+            greenWaveLength: 700, //530,
+            blueWaveLength: 700, //440,
         };
 
         this.camera = camera;

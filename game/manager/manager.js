@@ -30,7 +30,7 @@ class Manager {
         this.config.dark = config.dark || this.config.dark;
         this.config.freeze = config.freeze || this.config.freeze;
 
-        this.stage = new ManagerStage( this, () => this.#install(), () => this.#stage(), ( delta ) => this.#run( delta ) );
+        this.stage = new ManagerStage( this, ( postScene ) => this.#install( postScene ), () => this.#stage(), ( delta ) => this.#run( delta ) );
 
         BABYLON.Logger.LogLevels = BABYLON.Logger.ErrorLogLevel;
     }
@@ -41,12 +41,14 @@ class Manager {
         this.scene.render();
     }
 
-    #install() {
+    #install( postScene ) {
         
         this.scene = new BABYLON.Scene( Space.engine.babylon );
         this.scene.clearColor = BABYLON.Color3.FromHexString( this.config.dark ).scale( 0.25 * 0.5 );
         this.scene.ambient = new Ambient( this.scene, this.config.dark, 0.25 * 1.25 );
         
+        postScene( this.scene );
+
 
         this.physics = new Physics( this, {} );
         
@@ -69,8 +71,9 @@ class Manager {
         
         
                 ////////////////////////////////////////////////////
-                window.aspp = new AtmosphericScatteringPostProcess( "atmospherePostProcess", this.planets.list.get( 2 ), this.star, this.camera, this.scene );
-                aspp.samples = 3;
+                //window.aspp = new AtmosphericScatteringPostProcess( "atmospherePostProcess", this.planets.list.get( 2 ), this.star, this.camera, this.scene );
+                //aspp.samples = 3;
+                //window.aspp2 = new AtmosphericScatteringPostProcess( "atmospherePostProcess2", this.planets.list.get( 3 ), this.star, this.camera, this.scene );
                 ////////////////////////////////////////////////////
 
 
@@ -104,15 +107,17 @@ class Manager {
         //because no acceleration possible, just pull to planet more when distance smaller
         //physicsentity property: ground resistance angle limit (till which angle of the ground wont it move down the slope (gravity applied))
         //detect normal of ground beneth and calculate ground angle for ground restistance angle limit property
-        //fall trought ground bug?
-        //dummys dont collide right with ground
+        //fall trought ground bug? stopping by heightmap? 
         //improve planet movement, add jump and beeing able to proberly rotate the player
-        //player weird collision epsiloid
         //bug: planet in out state always, make dynamic in and out of planets
-        //test out diffrent planets / their gravity config
 
         //fix camera on planet
-        //test out athmosphere
+        
+        //test out diffrent planets / their gravity config
+
+        //implement the athmosphere fix
+        //make athomsphere intensity by distance (baseIntesity / distance)
+        //make very planet athmosphere, with diffrent colors etc //http://hyperphysics.phy-astr.gsu.edu/hbase/vision/specol.html
         
         if ( this.config.freeze == false ) {
 
