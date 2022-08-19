@@ -103,15 +103,11 @@ class Manager {
 
     #run( delta ) {
         
-        //planet gravity: spin with planet system,
-        //because no acceleration possible, just pull to planet more when distance smaller
-        //physicsentity property: ground resistance angle limit (till which angle of the ground wont it move down the slope (gravity applied))
-        //detect normal of ground beneth and calculate ground angle for ground restistance angle limit property
-        //fall trought ground bug? stopping by heightmap? 
+        //planet gravity: spin with planet system
+        //planet gravity: accelerate by last time on ground
+        //fall trought ground bug? stopping by heightmap
         //improve planet movement, add jump and beeing able to proberly rotate the player
         //bug: planet in out state always, make dynamic in and out of planets
-
-        //fix camera on planet
         
         //test out diffrent planets / their gravity config
 

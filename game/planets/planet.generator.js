@@ -47,7 +47,7 @@ class PlanetGenerator {
         
         this.#planet.manager.star.shadow.cast( mesh, true, false );        
         this.#planet.manager.star.shadow.receive( mesh, true, false );        
-
+        //window.depthRenderList.push(mesh);
         return mesh;
     }
     

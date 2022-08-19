@@ -1,4 +1,5 @@
 "use strict";
+//window.depthRenderList = [];
 class AtmosphericScatteringPostProcess extends BABYLON.PostProcess {
     constructor(name, planet, star, camera, scene) {
         // you might need to change the path to the .fragment.fx file
@@ -42,6 +43,7 @@ class AtmosphericScatteringPostProcess extends BABYLON.PostProcess {
         let depthRenderer = new BABYLON.DepthRenderer(scene);
         scene.customRenderTargets.push(depthRenderer.getDepthMap());
         let depthMap = depthRenderer.getDepthMap();
+        //depthMap.renderList = window.depthRenderList;
         this.onApply = (effect) => {
             effect.setTexture("depthSampler", depthMap);
             
