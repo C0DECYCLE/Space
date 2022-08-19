@@ -34,8 +34,8 @@ class EngineUtils {
 
         const dummies = [];
 
-        dummies.root = new BABYLON.TransformNode( "dummies", scene );
-        dummies.root.rotationQuaternion = dummies.root.rotation.toQuaternion();
+        //dummies.root = new BABYLON.TransformNode( "dummies", scene );
+        //dummies.root.rotationQuaternion = dummies.root.rotation.toQuaternion();
 
         for ( let i = 0; i < count; i++ ) {
 
@@ -44,7 +44,7 @@ class EngineUtils {
                 new BABYLON.Vector3( Math.random() * 2 - 1, Math.random() * 2 - 1, Math.random() * 2 - 1 ).scaleInPlace( Math.PI ) 
             );
 
-            dummy.root.parent = dummies.root;
+            //dummy.root.parent = dummies.root;
             dummies.push( dummy );
         }
 
@@ -52,7 +52,7 @@ class EngineUtils {
 
             for ( let i = 0; i < dummies.length; i++ ) {
 
-                star.manager.planets.list.get( 3 ).physics.pull( dummies[i].physics );
+                //star.manager.planets.list.get( 3 ).physics.pull( dummies[i].physics );
 
                 dummies[i].physics.update();
             }

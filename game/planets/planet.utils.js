@@ -36,11 +36,14 @@ class PlanetUtils {
         return v;
     }
 
+    static noise( planet, v ) {
+
+        return PlanetUtilsHeightmap.get( planet, v.scale( planet.config.radius ).addInPlace( planet.config.seed ) );
+    }
+    
     static displace( planet, v ) {
         
-        const noise = PlanetUtilsHeightmap.get( planet, v.scale( planet.config.radius ).addInPlace( planet.config.seed ) );
-        
-        return v.scaleInPlace( planet.config.radius + noise );
+        return v.scaleInPlace( planet.config.radius + PlanetUtils.noise( planet, v ) );
     }
 
 }

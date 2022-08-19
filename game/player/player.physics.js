@@ -37,7 +37,7 @@ class PlayerPhysics extends PhysicsEntity {
             if ( this.state == PhysicsEntity.STATES.GROUND ) {
 
                 this.#planetMovement();
-                this.quaternionTowardsUpright( up, 1.0 );
+                this.quaternionTowardsUpright( up, 0.1 );
             }
             
         } else {

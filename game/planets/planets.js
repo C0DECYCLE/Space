@@ -44,7 +44,7 @@ class Planets {
             
             if ( distanceRadiusFactor <= planetThreashold && this.player.state.is( "space" ) ) {
 
-                //this.player.state.set( "planet", planet );
+                this.player.state.set( "planet", planet );
                 //log(planet.config.key);
             }
 

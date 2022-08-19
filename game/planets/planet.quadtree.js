@@ -128,13 +128,13 @@ class PlanetQuadtree {
     #getDistanceDot( params, position ) {
 
         const terrainifyPosition = PlanetUtils.terrainify( this.#planet, position.clone() );
-        const terrainifyOriginRotatePosition = BABYLON.Vector3.TransformCoordinates( terrainifyPosition, this.#planet.root.computeWorldMatrix( true ) );
+        const terrainifyWorldRotatePosition = BABYLON.Vector3.TransformCoordinates( terrainifyPosition, this.#planet.root.computeWorldMatrix( true ) );
         
         return {
 
-            distance: BABYLON.Vector3.Distance( terrainifyOriginRotatePosition, params.insertposition ),
+            distance: BABYLON.Vector3.Distance( terrainifyWorldRotatePosition, params.insertposition ),
 
-            dot: BABYLON.Vector3.Dot( params.centerToInsertion, terrainifyOriginRotatePosition.subtract( this.#planet.position ).normalize() )
+            dot: BABYLON.Vector3.Dot( params.centerToInsertion, terrainifyWorldRotatePosition.subtract( this.#planet.position ).normalize() )
         };
     }
 

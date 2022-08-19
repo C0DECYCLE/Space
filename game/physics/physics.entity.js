@@ -75,17 +75,12 @@ class PhysicsEntity {
 
     getCollider() {
 
-        if ( !this.#mesh.collider ) {
-
-            this.#mesh.moveWithCollisions( BABYLON.Vector3.Zero() );
-        }
-
-        return this.#mesh.collider;
+        return this.#mesh.ellipsoid;
     }
 
     debugCollider() {
 
-        const ellipsoid = this.#mesh.ellipsoid;
+        const ellipsoid = this.getCollider();
 
         const debug = BABYLON.MeshBuilder.CreateSphere( `${ this.#mesh.name }_debug_collider`, { diameterX: ellipsoid.x * 2, diameterY: ellipsoid.y * 2, diameterZ: ellipsoid.z * 2, segments: 8 }, this.#scene );
         debug.position.copyFrom( this.#mesh.ellipsoidOffset );
@@ -112,7 +107,7 @@ class PhysicsEntity {
 
         const info = this.#mesh.getBoundingInfo();
 
-        this.#mesh.ellipsoid
+        this.getCollider()
         .copyFrom( info.boundingSphere.maximum )
         .scaleInPlace( PhysicsEntity.ENLARGEMENT );
     }
