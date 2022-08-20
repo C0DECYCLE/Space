@@ -10,7 +10,12 @@ class Player {
 
     config = {
 
-        speed: 0.05, // 0.15 run 0.05 walk
+        float: 0.005,
+
+        walk: 0.005,
+        run: 0.015,
+        jump: 0.01,
+
         standingup: 0.05,
 
         experimentalPointerLock: true
@@ -78,12 +83,12 @@ class Player {
 
     #setupInspector() {
 
-        this.root._speed = this.config.speed;
+        this.root._speed = this.config.float;
 
         this.root.inspectableCustomProperties = [
 
             {
-                label: "Speed",
+                label: "Float",
                 propertyName: "_speed",
                 type: BABYLON.InspectableType.Slider,
                 min: 0.05,
@@ -131,7 +136,7 @@ class Player {
 
     #updateFromInspector() {
 
-        this.config.speed = this.root._speed;
+        this.config.float = this.root._speed;
     }
 
     #onPointerMove( event ) {

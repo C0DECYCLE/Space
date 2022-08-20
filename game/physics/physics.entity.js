@@ -19,7 +19,8 @@ class PhysicsEntity {
     static STATES = {
 
         FLOATING: 0,
-        GROUND: 1
+        ABOVEGROUND: 1,
+        GROUND: 2
     };
     
     static collidable( mesh, type ) {
@@ -28,20 +29,23 @@ class PhysicsEntity {
         mesh.physicsEntityType = type;
     }
 
-    type = undefined;
-    state = PhysicsEntity.STATES.FLOATING;
-
     delta = new BABYLON.Vector3( 0, 0, 0 );
+    velocity = new BABYLON.Vector3( 0, 0, 0 );
 
     #scene = null;
     #mesh = null;
+    
+    #typeValue = undefined;
+    #stateValue = PhysicsEntity.STATES.FLOATING;
+
+    #lastTimeOnGround = 0;
 
     constructor( mesh, type ) {
 
         this.#mesh = mesh;
         this.#scene = this.#mesh.getScene();
 
-        this.type = type;
+        this.#type = type;
 
         PhysicsEntity.collidable( this.#mesh, this.type );
 
@@ -61,14 +65,47 @@ class PhysicsEntity {
         return this.#mesh.rotationQuaternion;
     }
 
+    get type() {
+
+        return this.#typeValue;
+    }
+
+    set #type( value ) {
+
+        this.#typeValue = value;
+    }
+
+    get state() {
+
+        return this.#stateValue;
+    }
+
+    set state( value ) {
+
+        this.#stateValue = value;
+
+        if ( this.#stateValue == PhysicsEntity.STATES.GROUND ) {
+
+            this.#lastTimeOnGround = 0;
+        }
+    }
+
     update() {
+        
+        this.delta.addInPlace( this.velocity );
 
         if ( this.delta.x != 0 || this.delta.y != 0 || this.delta.z != 0 ) {
 
-            this.state = PhysicsEntity.STATES.FLOATING;
+            //this.state = PhysicsEntity.STATES.FLOATING;
 
             this.#mesh.moveWithCollisions( this.delta );
         }
+
+        /*log( 
+            this.state == PhysicsEntity.STATES.FLOATING ? "PhysicsEntity.STATES.FLOATING" : 
+            (this.state == PhysicsEntity.STATES.ABOVEGROUND ? "PhysicsEntity.STATES.ABOVEGROUND" : 
+            "PhysicsEntity.STATES.GROUND")
+        );*/
 
         this.delta.copyFromFloats( 0, 0, 0 );
     }
@@ -95,6 +132,33 @@ class PhysicsEntity {
         this.#mesh.rotationQuaternion.copyFrom( BABYLON.Quaternion.Slerp( this.#mesh.rotationQuaternion, look, stretch ) );
     }
 
+    registerPull( distanceAboveGround ) {
+        
+        this.#lastTimeOnGround++;
+
+        const collider = this.getCollider();
+        const bufferZone = 0;
+        
+        if ( distanceAboveGround < collider.length() + bufferZone ) {
+
+            //this.state = PhysicsEntity.STATES.ABOVEGROUND;
+
+            if ( distanceAboveGround < collider.y - bufferZone ) {
+
+                this.state = PhysicsEntity.STATES.GROUND;
+            }
+
+        } else {
+
+            this.state = PhysicsEntity.STATES.FLOATING;
+        }
+    }
+
+    getAcceleration() {
+
+        return this.#lastTimeOnGround / 100;
+    }
+
     #bindObservables() {
 
         if ( this.type == PhysicsEntity.TYPES.DYNAMIC ) {
@@ -113,10 +177,10 @@ class PhysicsEntity {
     }
 
     #onCollide( otherMesh ) {
-
+        
         if ( otherMesh.physicsEntityType == PhysicsEntity.TYPES.STATIC ) {
 
-            this.state = PhysicsEntity.STATES.GROUND;
+            //this.state = PhysicsEntity.STATES.GROUND;
         }
     }
 

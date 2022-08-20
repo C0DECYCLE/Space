@@ -27,10 +27,12 @@ class PlanetPhysics {
 
         const up = this.#getDelta( physicsEntity.position ).normalize();
         const distance = BABYLON.Vector3.Distance( this.#projectOnSurface( up ), physicsEntity.position );
-
-        this.#pullSpin( physicsEntity, distance );
-        this.#pullGravity( physicsEntity, up, distance );
         
+        this.#pullSpin( physicsEntity, distance );
+        this.#pullGravity( physicsEntity, up );
+        
+        physicsEntity.registerPull( distance );
+
         return up;
     }
 
@@ -51,7 +53,7 @@ class PlanetPhysics {
         if ( this.#planet.config.spin != false ) {
 
             const deltaCorrection = Space.engine.deltaCorrection;
-            const deltaAngle = this.#planet.config.spin * EngineUtils.toRadian * deltaCorrection * this.#getSpinFactor( distance );
+            const deltaAngle = this.#planet.config.spin * EngineUtils.toRadian * deltaCorrection * this.#getSpinFactor( physicsEntity, distance );
 
             physicsEntity.delta.addInPlace( 
                 physicsEntity.position
@@ -61,9 +63,11 @@ class PlanetPhysics {
         }
     }
 
-    #getSpinFactor( distance ) {
+    #getSpinFactor( physicsEntity, distance ) {
 
-        return Math.sqrt( 1 / distance ).clamp( 0, 1 )
+        const distanceAboveGround = ( distance - physicsEntity.getCollider().length() ).clamp( 0, Infinity );
+
+        return Math.sqrt( 1 / distanceAboveGround ).clamp( 0, 1 )
     }
 
     #deltaAngleToQuaternion( deltaAngle ) {
@@ -71,18 +75,12 @@ class PlanetPhysics {
         return BABYLON.Quaternion.FromEulerVector( BABYLON.Vector3.Up().scaleInPlace( deltaAngle ) );
     }
 
-    #pullGravity( physicsEntity, up, distance ) {
+    #pullGravity( physicsEntity, up ) {
 
-        if ( distance > physicsEntity.getCollider().length() ) {
-
-            const deltaCorrection = Space.engine.deltaCorrection;
-            
-            physicsEntity.delta.addInPlace( up.scale( -this.#planet.config.gravity * 0.1 * deltaCorrection ) );
-
-        } else {
-
-            physicsEntity.state = PhysicsEntity.STATES.GROUND;
-        }
+        const deltaCorrection = Space.engine.deltaCorrection;
+        const acceleration = physicsEntity.getAcceleration();
+        
+        physicsEntity.delta.addInPlace( up.scale( -this.#planet.config.gravity * 0.1 * acceleration * deltaCorrection ) );
     }
 
 }

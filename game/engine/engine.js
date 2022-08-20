@@ -17,7 +17,7 @@ class Engine {
     #update = function() {};
 
     #fpsTarget = 60;
-    #deltaCorrection = 1.0;
+    #deltaCorrectionValue = 1.0;
 
     constructor() {
     
@@ -36,7 +36,7 @@ class Engine {
 
     get deltaCorrection() {
 
-        return this.#deltaCorrection;
+        return this.#deltaCorrectionValue;
     }
 
     set( update ) {
@@ -108,7 +108,7 @@ class Engine {
         
         const deltaTime = this.babylon.getDeltaTime();
         
-        this.#deltaCorrection = EngineUtils.getDeltaCorrection( deltaTime, this.#fpsTarget );
+        this.#deltaCorrectionValue = EngineUtils.getDeltaCorrection( deltaTime, this.#fpsTarget );
 
         this.#update( deltaTime );
             
