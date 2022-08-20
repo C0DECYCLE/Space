@@ -27,7 +27,7 @@ class PlanetUtilsHeightmap {
     
     static variant0( planet, v ) {
         
-        const perlin = planet.config.perlin;
+        const perlin = planet.perlin;
         const fbm = PlanetUtilsHeightmap.fractionalBrownianMotion;
         const heightScale = planet.config.mountainy * 200;
         const warp = planet.config.warp;
@@ -40,7 +40,7 @@ class PlanetUtilsHeightmap {
 
     static variant1( planet, v ) {
 
-        const perlin = planet.config.perlin;
+        const perlin = planet.perlin;
         const fbm = PlanetUtilsHeightmap.fractionalBrownianMotion;
         const heightScale = planet.config.mountainy * 200;
         const warp = planet.config.warp;

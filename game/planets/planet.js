@@ -12,19 +12,17 @@ class Planet {
 
         key: undefined,
         radius: undefined,
+        spin: false,
+        //orbit: false,
 
         influence: 512,
         maxHeight: 512 * 0.75,
         gravity: 0.8,
-
-        spin: false,
-        orbit: false,
         
         min: 64,
         resolution: 16,
 
         seed: null,
-        perlin: new perlinNoise3d(),
         variant: "0", //"1"
         mountainy: 7.5, //3.5
         warp: 0.3 //1.0
@@ -38,6 +36,7 @@ class Planet {
 
     generator = null;
     material = null;
+    perlin = null;
 
     #faces = new Set();
 
@@ -58,17 +57,17 @@ class Planet {
         this.config.influence = config.influence || this.config.influence;
         this.config.maxHeight = config.maxHeight || this.config.maxHeight;
         this.config.spin = config.spin || this.config.spin;
-        this.config.orbit = config.orbit || this.config.orbit;
+        //this.config.orbit = config.orbit || this.config.orbit;
         this.config.min = config.min || this.config.min;
         this.config.resolution = config.resolution || this.config.resolution;
         this.config.seed = config.seed;
-        this.config.perlin.noiseSeed( this.config.seed.x );
         this.config.variant = config.variant || this.config.variant;
         this.config.mountainy = config.mountainy || this.config.mountainy;
         this.config.warp = config.warp || this.config.warp;
 
         this.#createRoot();
         this.#addGenerator();
+        this.#setupPerlin();
         this.#setupPhysics();
         this.#farInsertion();
     }
@@ -115,7 +114,7 @@ class Planet {
     update() {
 
         this.#updateSpin();
-        this.#updateOrbit();
+        //this.#update();
     }
 
     disposeAll() {
@@ -138,6 +137,12 @@ class Planet {
         this.generator = new PlanetGenerator( this, this.#faces );
         this.material = this.generator.createMaterial();
         //this.custumMaterial = this.generator.createCustomMaterial();
+    }
+
+    #setupPerlin() {
+
+        this.perlin = new perlinNoise3d();
+        this.perlin.noiseSeed( this.config.seed.x );
     }
 
     #setupPhysics() {

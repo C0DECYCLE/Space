@@ -64,11 +64,33 @@ class Manager {
 
         this.planets = new Planets( this );
         
-        this.planets.register( { key: 0, seed: new BABYLON.Vector3( -1123, 7237, -3943 ), radius: 1024, spin: 0.005, mountainy: 5, warp: 0.8 } );
-        this.planets.register( { key: 1, seed: new BABYLON.Vector3( 8513, -9011, -5910 ), radius: 2048, spin: 0.005, variant: "1", mountainy: 3.5, warp: 1.0 } );
-        this.planets.register( { key: 2, seed: new BABYLON.Vector3( -925, -2011, 7770 ), radius: 4096, spin: 0.0025, gravity: 0.5 } );
-        this.planets.register( { key: 3, seed: new BABYLON.Vector3( 2253, 7001, 4099 ), radius: 256, spin: 0.01, mountainy: 2, warp: 0.6 } );
-        
+        this.planets.registerFromConfigs( [
+
+            { 
+                key: 0, radius: 1024, spin: 0.005, 
+                gravity: 0.7,
+                seed: new BABYLON.Vector3( -1123, 7237, -3943 ), mountainy: 5, warp: 0.8 
+            },
+
+            { 
+                key: 1, radius: 2048, spin: 0.005, 
+                gravity: 0.7,
+                seed: new BABYLON.Vector3( 8513, -9011, -5910 ), variant: "1", mountainy: 3.5, warp: 1.0 
+            },
+
+            { 
+                key: 2, radius: 4096, spin: 0.0025, 
+                gravity: 0.8,
+                seed: new BABYLON.Vector3( -925, -2011, 7770 )
+            },
+
+            { 
+                key: 3, radius: 256, spin: 0.01, 
+                gravity: 0.5, 
+                seed: new BABYLON.Vector3( 2253, 7001, 4099 ), mountainy: 2, warp: 0.6 
+            }
+        ] );
+
         
                 ////////////////////////////////////////////////////
                 //window.aspp = new AtmosphericScatteringPostProcess( "atmospherePostProcess", this.planets.list.get( 2 ), this.star, this.camera, this.scene );
@@ -91,9 +113,7 @@ class Manager {
     
         this.camera.attachToPlayer( this.player );
 
-        this.scene.debugLayer.show( {
-            embedMode: true,
-        } );
+        this.scene.debugLayer.show( { embedMode: true } );
 
 
                 ////////////////////////////////////////////////////
@@ -103,9 +123,7 @@ class Manager {
 
     #run( delta ) {
         
-        //bug:fall through planet
-        
-        //test out diffrent planets / their gravity config
+        //bug: fall through planet
 
         //implement the athmosphere fix
         //make athomsphere intensity by distance (baseIntesity / distance)

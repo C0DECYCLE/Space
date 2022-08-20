@@ -138,7 +138,7 @@ class PlayerPhysics extends PhysicsEntity {
             this.velocity.addInPlace( translate.applyRotationQuaternion( this.#player.rotationQuaternion ) );   
         }
             
-        this.velocity.scaleInPlace( 0.9 );
+        this.velocity.scaleInPlace( 0.85 );
     }
     
 }

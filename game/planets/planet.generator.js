@@ -15,6 +15,7 @@ class PlanetGenerator {
         this.#planet = planet;
 
         this.#createFaces( faces );
+        this.#createMask();
         this.#debugInfluence();
     }
 
@@ -93,15 +94,27 @@ class PlanetGenerator {
         }
     }
     
+    #createMask() {
+
+        const mask = BABYLON.MeshBuilder.CreateSphere( "planet_mask", { diameter: this.#planet.config.radius * 2, segments: 16 }, this.scene );
+        
+        mask.material = new BABYLON.StandardMaterial( "planet_mask_material", this.scene );
+        mask.material.disableLighting = true;
+
+        this.#planet.manager.star.shadow.cast( mask, true, false );
+
+        mask.parent = this.#planet.root;
+    }
+
     #debugInfluence() {
 
-        const debug = BABYLON.MeshBuilder.CreateSphere( `planet${ this.#planet.config.key }_debug`, { diameter: ( this.#planet.config.radius + this.#planet.config.influence ) * 2, segments: 32 }, this.#planet.scene );
-        debug.material = this.#planet.scene.debugMaterial;
-        debug.parent = this.#planet.root;
+        const debug_influence = BABYLON.MeshBuilder.CreateSphere( "planet_debug_influence", { diameter: ( this.#planet.config.radius + this.#planet.config.influence ) * 2, segments: 32 }, this.#planet.scene );
+        debug_influence.material = this.#planet.scene.debugMaterial;
+        debug_influence.parent = this.#planet.root;
 
-        const debug2 = BABYLON.MeshBuilder.CreateSphere( `planet${ this.#planet.config.key }_debug2`, { diameter: ( this.#planet.config.radius + this.#planet.config.maxHeight ) * 2, segments: 32 }, this.#planet.scene );
-        debug2.material = this.#planet.scene.debugMaterial;
-        debug2.parent = this.#planet.root;
+        const debug_maxHeight = BABYLON.MeshBuilder.CreateSphere( "planet_debug_maxHeight", { diameter: ( this.#planet.config.radius + this.#planet.config.maxHeight ) * 2, segments: 32 }, this.#planet.scene );
+        debug_maxHeight.material = this.#planet.scene.debugMaterial;
+        debug_maxHeight.parent = this.#planet.root;
     }
 
 }
