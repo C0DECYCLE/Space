@@ -86,9 +86,9 @@ class Controls {
 
     #pointerLock() {
 
-        let canvas = Space.engine.babylon._renderingCanvas;
-        let mouseMove = ( event ) => this.onPointerMove.forEach( callback => callback( { event: event } ) );
-        let changeCallback = ( e ) => {
+        const canvas = Space.engine.babylon._renderingCanvas;
+        const mouseMove = ( event ) => this.onPointerMove.forEach( callback => callback( { event: event } ) );
+        const changeCallback = ( e ) => {
 
             if (document.pointerLockElement === canvas ||
                 document.mozPointerLockElement === canvas ||

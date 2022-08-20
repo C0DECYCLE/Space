@@ -12,18 +12,17 @@ class Planet {
 
         key: undefined,
         radius: undefined,
-
-        gravity: 0.8,
-        influence: 0.5,
-
         spin: false,
-        orbit: false,
+        //orbit: false,
+
+        influence: 512,
+        maxHeight: 512 * 0.75,
+        gravity: 0.8,
         
         min: 64,
         resolution: 16,
 
         seed: null,
-        perlin: new perlinNoise3d(),
         variant: "0", //"1"
         mountainy: 7.5, //3.5
         warp: 0.3 //1.0
@@ -37,6 +36,7 @@ class Planet {
 
     generator = null;
     material = null;
+    perlin = null;
 
     #faces = new Set();
 
@@ -55,18 +55,19 @@ class Planet {
         this.config.radius = config.radius;
         this.config.gravity = config.gravity || this.config.gravity;
         this.config.influence = config.influence || this.config.influence;
+        this.config.maxHeight = config.maxHeight || this.config.maxHeight;
         this.config.spin = config.spin || this.config.spin;
-        this.config.orbit = config.orbit || this.config.orbit;
+        //this.config.orbit = config.orbit || this.config.orbit;
         this.config.min = config.min || this.config.min;
         this.config.resolution = config.resolution || this.config.resolution;
         this.config.seed = config.seed;
-        this.config.perlin.noiseSeed( this.config.seed.x );
         this.config.variant = config.variant || this.config.variant;
         this.config.mountainy = config.mountainy || this.config.mountainy;
         this.config.warp = config.warp || this.config.warp;
 
         this.#createRoot();
         this.#addGenerator();
+        this.#setupPerlin();
         this.#setupPhysics();
         this.#farInsertion();
     }
@@ -87,7 +88,7 @@ class Planet {
         this.#distanceInOrbit = distanceInOrbit;
         this.#angleAroundOrbit = angleAroundOrbit * EngineUtils.toRadian;
 
-        this.root.position
+        this.position
         .copyFromFloats( Math.cos( this.#angleAroundOrbit ), 0, Math.sin( this.#angleAroundOrbit ) )
         .scaleInPlace( this.#distanceInOrbit )
         .addInPlace( this.#orbitCenter );
@@ -100,7 +101,7 @@ class Planet {
             return;
         }
 
-        let insertionString = this.#getInsertionString( position );
+        const insertionString = this.#getInsertionString( position );
         
         if ( insertionString != this.#cachedInsertionString ) {
             
@@ -113,13 +114,7 @@ class Planet {
     update() {
 
         this.#updateSpin();
-        this.#updateOrbit();
-
-        this.#list.forEach( ( data, nodeKey ) => {
-            
-            data.mesh.position.copyFrom( this.root.position );
-            data.mesh.rotationQuaternion.copyFrom( this.root.rotationQuaternion );
-        } ); 
+        //this.#update();
     }
 
     disposeAll() {
@@ -133,7 +128,7 @@ class Planet {
 
     #createRoot() {
 
-        this.root = new BABYLON.Mesh( `planet${ this.config.key }`, this.scene );
+        this.root = new BABYLON.TransformNode( `planet${ this.config.key }`, this.scene );
         this.root.rotationQuaternion = this.root.rotation.toQuaternion();
     }
 
@@ -144,6 +139,12 @@ class Planet {
         //this.custumMaterial = this.generator.createCustomMaterial();
     }
 
+    #setupPerlin() {
+
+        this.perlin = new perlinNoise3d();
+        this.perlin.noiseSeed( this.config.seed.x );
+    }
+
     #setupPhysics() {
 
         this.physics = new PlanetPhysics( this );
@@ -151,12 +152,11 @@ class Planet {
 
     #updateSpin() {
         
-        //bug: always going in and out of planet state bug
-        //make planet shader/color the planet
-
         if ( this.config.spin != false ) {
 
-            this.root.rotate( BABYLON.Axis.Y, this.config.spin * EngineUtils.toRadian, BABYLON.Space.LOCAL ); //make very movement speed * delta time
+            const deltaCorrection = Space.engine.deltaCorrection;
+
+            this.root.rotate( BABYLON.Axis.Y, this.config.spin * EngineUtils.toRadian * deltaCorrection, BABYLON.Space.LOCAL ); //make very movement speed * delta time
         }
     }
     
@@ -164,9 +164,11 @@ class Planet {
 
         if ( this.config.orbit != false ) {
 
-            this.#angleAroundOrbit += this.config.orbit * EngineUtils.toRadian;
+            const deltaCorrection = Space.engine.deltaCorrection;
 
-            this.root.position
+            this.#angleAroundOrbit += this.config.orbit * EngineUtils.toRadian * deltaCorrection;
+
+            this.position
             .copyFromFloats( Math.cos( this.#angleAroundOrbit ), 0, Math.sin( this.#angleAroundOrbit ) )
             .scaleInPlace( this.#distanceInOrbit )
             .addInPlace( this.#orbitCenter );
@@ -175,13 +177,13 @@ class Planet {
 
     #farInsertion() {
 
-        let farFarAway = EngineUtils.getFarAway();
+        const farFarAway = EngineUtils.getFarAway();
         this.insert( farFarAway, farFarAway.y, true );
     }
     
     #getInsertionString( position ) {
 
-        let diffrence = position.subtract( 
+        const diffrence = position.subtract( 
 
             BABYLON.Vector3.TransformCoordinates( 
 
@@ -191,7 +193,7 @@ class Planet {
             )
         );
 
-        let rdez = 10;
+        const rdez = 10;
 
         diffrence.copyFromFloats(
 
@@ -205,7 +207,7 @@ class Planet {
 
     #insertQuadtrees( position, distance ) {
 
-        let params = { 
+        const params = { 
             
             insertposition: position,
             
@@ -214,7 +216,7 @@ class Planet {
             distanceCenterInsertion: distance,
             distanceRadiusFactor: distance / this.config.radius,
 
-            centerToInsertion: position.subtract( this.root.position ).normalize(),
+            centerToInsertion: position.subtract( this.position ).normalize(),
             occlusionFallOf: ( 1 - ( (distance / this.config.radius) - 1 ) ).clamp( -1.05, 0.95 )
         };
         

@@ -13,16 +13,19 @@ class PlayerPhysics extends PhysicsEntity {
 
     constructor( player ) {
 
-        super( player );
+        super( player.root, PhysicsEntity.TYPES.DYNAMIC );
         
         this.#player = player;
-
-        this.#addPhysics();
     }
 
     setPlanet( value ) {
 
         this.#planet = value;
+    }
+    
+    getPlanet() {
+
+        return this.#planet;
     }
 
     space() {
@@ -32,33 +35,25 @@ class PlayerPhysics extends PhysicsEntity {
 
     planet() {
 
-        if ( this.#planet != null ) {
-            
-            this.#planet.physics.pullPhysicsEntity( this.#player, true );
-            this.#planet.physics.collideHeightmap( this.#player );
+        const up = this.#planet.physics.pull( this );
 
-            if ( this.state != PhysicsEntity.STATES.FLOATING ) {
+        if ( this.state == PhysicsEntity.STATES.GROUND ) {
 
-                this.#planetMovement();
-            }
-            
-        } else {
-
-            console.error( "Planet Gravity: Planet is null!" );
+            this.#planetMovement();
+            this.quaternionTowardsUpright( up, 0.1 );
         }
-    }
-
-    #addPhysics() {
-
-        this.#player.mesh.physicsImpostor = new BABYLON.PhysicsImpostor( this.#player.mesh, BABYLON.PhysicsImpostor.SphereImpostor, { mass: 0 }, this.#player.scene );
-        this.#player.root.physicsImpostor = new BABYLON.PhysicsImpostor( this.#player.root, BABYLON.PhysicsImpostor.NoImpostor, { mass: 4 }, this.#player.scene );
     }
 
     #spaceMovement() {
 
-        let controls = this.#player.controls;
-        let speed = this.#player.config.speed;
-        let translate = new BABYLON.Vector3( 0, 0, 0 );
+        const controls = this.#player.controls;
+        const floatConfig = this.#player.config.float;
+        const deltaCorrection = Space.engine.deltaCorrection;
+        const translate = new BABYLON.Vector3( 0, 0, 0 );
+
+        const float = floatConfig * deltaCorrection;
+
+        let speed = float;
 
         if ( controls.activeKeys.has( "w" ) == true ) {
 
@@ -92,9 +87,23 @@ class PlayerPhysics extends PhysicsEntity {
 
     #planetMovement() {
 
-        let controls = this.#player.controls;
-        let speed = this.#player.config.speed;
-        let translate = new BABYLON.Vector3( 0, 0, 0 );
+        const controls = this.#player.controls;
+        const walkConfig = this.#player.config.walk;
+        const runConfig = this.#player.config.run;
+        const jumpConfig = this.#player.config.jump;
+        const deltaCorrection = Space.engine.deltaCorrection;
+        const translate = new BABYLON.Vector3( 0, 0, 0 );
+
+        const walk = ( walkConfig / this.#planet.config.gravity ) * deltaCorrection;
+        const run = ( runConfig / this.#planet.config.gravity ) * deltaCorrection;
+        const jump = ( jumpConfig / this.#planet.config.gravity ) * deltaCorrection;
+
+        let speed = walk;
+
+        if ( controls.activeKeys.has( "shift" ) == true ) {
+
+            speed = run;
+        }
 
         if ( controls.activeKeys.has( "w" ) == true ) {
 
@@ -114,21 +123,22 @@ class PlayerPhysics extends PhysicsEntity {
             translate.x = -speed;
         }
 
+        if ( controls.activeKeys.has( " " ) == true ) {
+
+            translate.y = jump * deltaCorrection;
+        }
+
         this.#movementTranslate( translate );
     }
 
     #movementTranslate( translate ) {
-
-        let root = this.#player.root;
-
+        
         if ( translate.x != 0 || translate.y != 0 || translate.z != 0 ) {
 
-            root.physicsImpostor.applyImpulse( translate.applyRotationQuaternion( root.rotationQuaternion ), BABYLON.Vector3.Zero() );
-
-        } else {
-            
-            root.physicsImpostor.applyImpulse( root.physicsImpostor.getLinearVelocity().scaleInPlace( -0.1 ), BABYLON.Vector3.Zero() );
+            this.velocity.addInPlace( translate.applyRotationQuaternion( this.#player.rotationQuaternion ) );   
         }
+            
+        this.velocity.scaleInPlace( 0.85 );
     }
     
 }

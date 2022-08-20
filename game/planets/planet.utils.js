@@ -8,6 +8,11 @@
 
 class PlanetUtils {
 
+    static compare( planetA, planetB ) {
+
+        return planetA.config.key == planetB.config.key;
+    }
+
     static terrainify( planet, v ) {
 
         v = PlanetUtils.cubesphere( v, planet.config.radius );
@@ -19,11 +24,11 @@ class PlanetUtils {
         
         v.scaleInPlace( 1 / r );
         
-        let x2 = v._x * v._x;
-        let y2 = v._y * v._y;
-        let z2 = v._z * v._z;
+        const x2 = v._x * v._x;
+        const y2 = v._y * v._y;
+        const z2 = v._z * v._z;
         
-        let s = { x: 0, y: 0, z: 0 };
+        const s = { x: 0, y: 0, z: 0 };
         
         s.x = v._x * Math.sqrt( 1 - y2 / 2 - z2 / 2 + y2 * z2 / 3 );
         s.y = v._y * Math.sqrt( 1 - x2 / 2 - z2 / 2 + x2 * z2 / 3 );
@@ -32,17 +37,18 @@ class PlanetUtils {
         v._x = s.x;
         v._y = s.y;
         v._z = s.z;
-    
-        s = null;
         
         return v;
     }
 
+    static noise( planet, v ) {
+
+        return PlanetUtilsHeightmap.get( planet, v.scale( planet.config.radius ).addInPlace( planet.config.seed ) ).clamp( 0, planet.config.maxHeight );
+    }
+    
     static displace( planet, v ) {
         
-        let noise = PlanetUtilsHeightmap.get( planet, v.scale( planet.config.radius ).addInPlace( planet.config.seed ) );
-        
-        return v.scaleInPlace( planet.config.radius + noise );
+        return v.scaleInPlace( planet.config.radius + PlanetUtils.noise( planet, v ) );
     }
 
 }

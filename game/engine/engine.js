@@ -16,6 +16,9 @@ class Engine {
 
     #update = function() {};
 
+    #fpsTarget = 60;
+    #deltaCorrectionValue = 1.0;
+
     constructor() {
     
         this.#createCanvas();
@@ -29,6 +32,11 @@ class Engine {
 
             window.addEventListener( "resize", () => this.babylon.resize() );
         } );
+    }
+
+    get deltaCorrection() {
+
+        return this.#deltaCorrectionValue;
     }
 
     set( update ) {
@@ -85,9 +93,9 @@ class Engine {
 
     #createStat( i ) { // 0: fps, 1: ms, 2: mb, 3+: custom
 
-        let stat = new Stats();
-            stat.showPanel( i );
-            stat.dom.style.cssText = `position:absolute;top:0px;left:${ this.stats.length * 80 }px;`;
+        const stat = new Stats();
+        stat.showPanel( i );
+        stat.dom.style.cssText = `position:absolute;top:0px;left:${ this.stats.length * 80 }px;`;
 
         document.body.appendChild( stat.dom );
 
@@ -98,7 +106,11 @@ class Engine {
 
         this.stats.forEach( ( stat ) => stat.begin() );
         
-        this.#update( this.babylon.getDeltaTime() );
+        const deltaTime = this.babylon.getDeltaTime();
+        
+        this.#deltaCorrectionValue = EngineUtils.getDeltaCorrection( deltaTime, this.#fpsTarget );
+
+        this.#update( deltaTime );
             
         if ( TWEEN ) {
             

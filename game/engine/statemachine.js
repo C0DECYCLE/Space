@@ -15,6 +15,11 @@ class StateMachine {
 
     }
 
+    get current() {
+
+        return this.#current;
+    }
+
     add( state, onEnter = ( oldState, params ) => {}, onLeave = ( newState, params ) => {} ) {
 
         this.#list.set( state, {
@@ -33,7 +38,7 @@ class StateMachine {
                 this.#list.get( this.#current ).onLeave( state, params );
             }
 
-            let oldState = this.#current;
+            const oldState = this.#current;
 
             this.#current = state;
             this.#list.get( this.#current ).onEnter( oldState, params );

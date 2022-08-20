@@ -10,7 +10,12 @@ class Player {
 
     config = {
 
-        speed: 0.05, // 0.15 run 0.05 walk
+        float: 0.005,
+
+        walk: 0.005,
+        run: 0.015,
+        jump: 0.01,
+
         standingup: 0.05,
 
         experimentalPointerLock: true
@@ -36,10 +41,10 @@ class Player {
 
         this.config.speed = config.speed || this.config.speed;
 
+        this.#createMesh();    
         this.#createRoot();
         this.#setupInspector();
         this.#setupStates();
-        this.#createMesh();    
         this.#setupPhysics();
         this.#registerObservables();
     }
@@ -54,6 +59,11 @@ class Player {
         return this.root.rotationQuaternion;
     }
 
+    get planet() {
+
+        return this.physics.getPlanet();
+    }
+
     update() {
 
         this.#updateFromInspector();
@@ -66,23 +76,25 @@ class Player {
 
             this.physics.planet();
         }
+
+        this.physics.update();
     }
 
     #createRoot() {
 
-        this.root = new BABYLON.Mesh( "player", this.scene );
+        this.root = this.mesh;
         this.root.rotationQuaternion = this.root.rotation.toQuaternion();
     }
 
     #setupInspector() {
 
-        this.root._speed = this.config.speed;
+        this.root._float = this.config.float;
 
         this.root.inspectableCustomProperties = [
 
             {
-                label: "Speed",
-                propertyName: "_speed",
+                label: "Float",
+                propertyName: "_float",
                 type: BABYLON.InspectableType.Slider,
                 min: 0.05,
                 max: 10,
@@ -101,19 +113,18 @@ class Player {
 
     #createMesh() {
 
-        let material = new BABYLON.StandardMaterial( "player_material", this.scene );
+        const material = new BABYLON.StandardMaterial( "player_material", this.scene );
         material.setColorIntensity( "#ff226b", 0.5 );
 
-        this.mesh = BABYLON.MeshBuilder.CreateCapsule( "player_mesh", { height: 2, radius: 0.5, tessellation: 8, subdivisions: 1, capSubdivisions: 3 }, this.scene );
+        this.mesh = BABYLON.MeshBuilder.CreateCapsule( "player", { height: 2, radius: 0.5, tessellation: 8, subdivisions: 1, capSubdivisions: 3 }, this.scene );
         this.mesh.convertToFlatShadedMesh();
         this.mesh.material = material;
-        this.mesh.parent = this.root;
         
-        let head = BABYLON.MeshBuilder.CreateBox( "player_mesh_head", { width: 0.7, height: 0.35, depth: 0.3 }, this.scene );
+        const head = BABYLON.MeshBuilder.CreateBox( "player_mesh_head", { width: 0.7, height: 0.35, depth: 0.3 }, this.scene );
         head.position.copyFromFloats( 0, 0.5, 0.4 );
         head.material = material;
         head.parent = this.mesh;
-
+    
         this.manager.star.shadow.cast( this.mesh, true, true );
         this.manager.star.shadow.receive( this.mesh, true, true );
     }
@@ -130,16 +141,16 @@ class Player {
 
     #updateFromInspector() {
 
-        this.config.speed = this.root._speed;
+        this.config.float = this.root._float;
     }
 
     #onPointerMove( event ) {
-    
+        
         if ( this.controls.isPointerDown == true || this.config.experimentalPointerLock == true ) {
 
             if ( this.controls.isKeyboarding == true ) {
 
-                this.#panPlayer( event );
+                this.#followPointer( event );
 
             } else {
 
@@ -148,12 +159,12 @@ class Player {
         }
     }
 
-    #panPlayer( event ) {
-
-        this.root.physicsImpostor.setAngularVelocity( BABYLON.Vector3.Zero() );
-
-        this.root.rotate( BABYLON.Axis.Y, event.event.movementX * this.controls.config.panning, BABYLON.Space.LOCAL );
-        this.root.rotate( BABYLON.Axis.X, event.event.movementY * this.controls.config.panning, BABYLON.Space.LOCAL );
+    #followPointer( event ) {
+        
+        const deltaCorrection = Space.engine.deltaCorrection;
+        
+        this.root.rotate( BABYLON.Axis.Y, event.event.movementX * this.controls.config.panning * deltaCorrection, BABYLON.Space.LOCAL );
+        this.root.rotate( BABYLON.Axis.X, event.event.movementY * this.controls.config.panning * deltaCorrection, BABYLON.Space.LOCAL );
     }
 
     #onSpaceEnter( oldState ) {

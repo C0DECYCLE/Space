@@ -15,52 +15,86 @@ class PlanetPhysics {
         this.#planet = planet;
     }
 
-    pullPhysicsEntity( entity, upright = false ) {
-
-        let up = this.#getDiffrence( entity.position ).normalize();
-
-        if ( entity.physics.state == PhysicsEntity.STATES.PLANETGROUND && upright == true ) {
-
-            entity.physics.quaternionTowardsUpright( up, entity.config.standingup );
-        }
-        
-        entity.root.physicsImpostor.applyForce( up.scaleInPlace( -this.#planet.config.gravity * 10 ), BABYLON.Vector3.Zero() );
-    }
-
-    collideHeightmap( entity ) {
-
-        let diffrence = this.#getDiffrence( entity.position );
-        let displace = this.#upToDisplaced( diffrence.clone().normalize() );
-        let distance = diffrence.subtractInPlace( displace ).length();
-        
-        if ( distance <= 2 ) {
-            
-            entity.physics.state = PhysicsEntity.STATES.PLANETGROUND;
-
-        } else {
-
-            entity.physics.state = PhysicsEntity.STATES.FLOATING;
-        }
-    }
-    
-    createCollisionMesh( mesh, size ) {
+    enable( mesh, size ) {
         
         if ( size == this.#planet.config.min ) {
 
-            mesh.physicsImpostor = new BABYLON.PhysicsImpostor( mesh, BABYLON.PhysicsImpostor.MeshImpostor, { mass: 0 }, this.#planet.scene );
+            PhysicsEntity.collidable( mesh, PhysicsEntity.TYPES.STATIC );
         }
     }
 
-    #getDiffrence( position ) {
+    pull( physicsEntity ) {
+
+        const delta = this.#getDelta( physicsEntity.position );
+        const distanceCenter = delta.length(); 
+        const up = delta.clone().normalize();
+        const distance = BABYLON.Vector3.Distance( this.#projectOnSurface( up ), physicsEntity.position );
+        
+        this.#pullSpin( physicsEntity, distanceCenter );
+        this.#pullGravity( physicsEntity, up );
+        
+        physicsEntity.registerPull( distance );
+
+        return up;
+    }
+
+    spin( physicsEntity ) {
+
+        const delta = this.#getDelta( physicsEntity.position );
+        const distanceCenter = delta.length(); 
+        const up = delta.clone().normalize();
+
+        this.#pullSpin( physicsEntity, distanceCenter );
+
+        return up;
+    }
+
+    #getDelta( position ) {
 
         return position.subtract( this.#planet.position );
     }
 
-    #upToDisplaced( up ) {
+    #projectOnSurface( up ) {
 
-        let inPlanetRotation = up.rotateByQuaternionToRef( this.#planet.rotationQuaternion.invert(), BABYLON.Vector3.Zero() );
+        const noise = PlanetUtils.noise( this.#planet, up.rotateByQuaternionToRef( this.#planet.rotationQuaternion.invert(), BABYLON.Vector3.Zero() ) );
 
-        return PlanetUtils.displace( this.#planet, inPlanetRotation ).rotateByQuaternionToRef( this.#planet.rotationQuaternion, BABYLON.Vector3.Zero() );
+        return up.clone().scaleInPlace( this.#planet.config.radius + noise ).addInPlace( this.#planet.position );
+    }
+
+    #pullSpin( physicsEntity, distanceCenter ) {
+
+        if ( this.#planet.config.spin != false ) {
+
+            const deltaCorrection = Space.engine.deltaCorrection;
+            const deltaAngle = this.#planet.config.spin * EngineUtils.toRadian * deltaCorrection * this.#getSpinFactor( distanceCenter );
+
+            physicsEntity.delta.addInPlace( 
+                physicsEntity.position
+                .rotateByQuaternionAroundPointToRef( this.#deltaAngleToQuaternion( deltaAngle ), this.#planet.position.clone(), BABYLON.Vector3.Zero() )
+                .subtractInPlace( physicsEntity.position )
+            );
+        }
+    }
+
+    #getSpinFactor( distanceCenter ) {
+
+        const distanceAboveMaxHeight = distanceCenter - this.#planet.config.radius - this.#planet.config.maxHeight;
+        const distanceBetweenMaxHeight = this.#planet.config.influence - this.#planet.config.maxHeight;
+
+        return ( 1 - ( distanceAboveMaxHeight / distanceBetweenMaxHeight ) ).clamp( 0, 1 );
+    }
+
+    #deltaAngleToQuaternion( deltaAngle ) {
+
+        return BABYLON.Quaternion.FromEulerVector( BABYLON.Vector3.Up().scaleInPlace( deltaAngle ) );
+    }
+
+    #pullGravity( physicsEntity, up ) {
+
+        const deltaCorrection = Space.engine.deltaCorrection;
+        const acceleration = physicsEntity.getAcceleration();
+        
+        physicsEntity.delta.addInPlace( up.scale( -this.#planet.config.gravity * 0.1 * acceleration * deltaCorrection ) );
     }
 
 }

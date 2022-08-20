@@ -36,7 +36,7 @@ class CameraOrigin {
         node._actualPosition = new BABYLON.Vector3();
         node._relativePosition = new BABYLON.Vector3();
 
-        let insProps = this.#inspectorCustomProperties();
+        const insProps = this.#inspectorCustomProperties();
 
         node.inspectableCustomProperties = !node.inspectableCustomProperties ? insProps : node.inspectableCustomProperties.concat( insProps );
     }
@@ -50,8 +50,7 @@ class CameraOrigin {
 
     #registerObservables() {
 
-        this.#camera.scene.onBeforePhysicsObservable.add( () => this.#beforePhysics() );
-        this.#camera.scene.onAfterPhysicsObservable.add( () => this.#afterPhysics() );
+        this.#camera.scene.onBeforeRenderObservable.add( () => this.#beforeRender() );
         this.#camera.scene.onAfterRenderObservable.add( () => this.#afterRender() );
     }
 
@@ -73,9 +72,9 @@ class CameraOrigin {
         ];
     }
 
-    #beforePhysics() {
+    #beforeRender() {
 
-        let scene = this.#camera.scene;
+        const scene = this.#camera.scene;
 
         if ( scene.rootNodes[0].name != "camera" ) {
 
@@ -86,7 +85,7 @@ class CameraOrigin {
     
         for ( let i = 1; i < scene.rootNodes.length; i++ ) {
 
-            let node = scene.rootNodes[i];
+            const node = scene.rootNodes[i];
             
             if ( !node.position ) {
                 
@@ -106,30 +105,13 @@ class CameraOrigin {
         }
     }
 
-    #afterPhysics() {
-        
-        let scene = this.#camera.scene;
-
-        for ( let i = 1; i < scene.rootNodes.length; i++ ) {
-
-            let node = scene.rootNodes[i];
-
-            if ( node.physicsImpostor && node._actualPosition && node._relativePosition ) {
-                
-                let physicsStep = node.position.subtract( node._relativePosition );
-
-                node._actualPosition.addInPlace( physicsStep );
-            }
-        }
-    }
-
     #afterRender() {
         
-        let scene = this.#camera.scene;
+        const scene = this.#camera.scene;
 
         for ( let i = 1; i < scene.rootNodes.length; i++ ) {
 
-            let node = scene.rootNodes[i];
+            const node = scene.rootNodes[i];
 
             if ( node._actualPosition ) {
 

@@ -28,6 +28,14 @@ class Planets {
         this.list.set( config.key, new Planet( this.manager, config ) );
     }
 
+    registerFromConfigs( configs ) {
+
+        for ( let i = 0; i < configs.length; i++ ) {
+
+            this.register( configs[i] );
+        }
+    }
+
     update() {
 
         this.#insert( this.camera.position );
@@ -38,22 +46,18 @@ class Planets {
 
         this.list.forEach( ( planet, key ) => {
             
-            let distance = BABYLON.Vector3.Distance( planet.position, position );
-            let distanceRadiusFactor = distance / planet.config.radius;
-            let planetThreashold = 1 + planet.config.influence;
+            const distance = BABYLON.Vector3.Distance( planet.position, position );
+            const planetThreashold = planet.config.radius + planet.config.influence;
             
-            /*
-            if ( distanceRadiusFactor <= planetThreashold && this.player.state.is( "space" ) ) {
+            if ( distance <= planetThreashold && this.player.state.is( "space" ) == true ) {
 
                 this.player.state.set( "planet", planet );
             }
-            */
-            /*
-            if ( distanceRadiusFactor > planetThreashold && this.player.state.is( "planet" ) ) {
+
+            if ( this.player.state.is( "planet" ) == true && PlanetUtils.compare( this.player.planet, planet ) && distance > planetThreashold ) {
 
                 this.player.state.set( "space" );
             }
-            */
            
             planet.insert( position, distance );
         } );
