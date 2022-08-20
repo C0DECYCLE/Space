@@ -105,9 +105,7 @@ class PlanetGenerator {
     #createMask() {
 
         this.#planet.mask = BABYLON.MeshBuilder.CreateSphere( "planet_mask", { diameter: this.#planet.config.radius * 2, segments: 16 }, this.scene );
-        
-        this.#planet.mask.material = new BABYLON.StandardMaterial( "planet_mask_material", this.scene );
-        this.#planet.mask.material.disableLighting = true;
+        this.#planet.mask.material = this.#planet.manager.planets.getMaskMaterial();
         this.#planet.mask.parent = this.#planet.root;
 
         this.#planet.manager.star.shadow.cast( this.#planet.mask, true, false );

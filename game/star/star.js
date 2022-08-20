@@ -114,15 +114,15 @@ class Star {
         
         this.background.material = new BABYLON.StandardMaterial( "star_background_material", this.scene );
         this.background.material.disableLighting = true;
-
-        this.background.material.emissiveTexture = new BABYLON.Texture( "assets/textures/space.png", this.scene );
-        this.background.material.emissiveTexture.uScale = 6;
-        this.background.material.emissiveTexture.vScale = 6;
-
+        
         this.background.material.diffuseColor = new BABYLON.Color3( 0, 0, 0 );
         this.background.material.specularColor = new BABYLON.Color3( 0, 0, 0 );
         this.background.material.emissiveColor = new BABYLON.Color3( 0, 0, 0 );
         this.background.material.ambientColor = new BABYLON.Color3( 0, 0, 0 );
+
+        this.background.material.emissiveTexture = new BABYLON.Texture( "assets/textures/space.png", this.scene );
+        this.background.material.emissiveTexture.uScale = 6;
+        this.background.material.emissiveTexture.vScale = 6;
 
         this.manager.postprocess.register( this.background );
     }
