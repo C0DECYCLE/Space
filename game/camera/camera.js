@@ -39,9 +39,7 @@ class Camera {
         this.scene = this.manager.scene;
         this.controls = this.manager.controls;
 
-        this.config.max = config.max || this.config.max;
-        this.config.offset = config.offset || this.config.offset;
-        this.config.lerp = config.lerp || this.config.lerp;
+        EngineUtils.configure( this.config, config );
 
         this.#createRoot();
         this.#setupStates();

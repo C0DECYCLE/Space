@@ -8,11 +8,23 @@
 
 class StarShadow {
 
+    config = {
+
+        radius: 1.0 * 1000,
+        resolution: 2048,
+
+        bias: 0.005,
+        blend: 0.05,
+        lambda: 0.85,
+
+        filter: "PCF", //"NONE" "PCF" "CONHRD"
+        quality: "HIGH" //LOW MEDIUM HIGH
+    };
+
     generator = null;
 
     #star = null;
     #light = null;
-    #config = null;
 
     #debug = false;
     #frustumViewer = null;
@@ -21,7 +33,8 @@ class StarShadow {
         
         this.#star = star;
         this.#light = light;
-        this.#config = config;
+
+        EngineUtils.configure( this.config, config );
 
         this.#configureLight();
         this.#createGenerator();
@@ -65,13 +78,13 @@ class StarShadow {
         this.#light.autoCalcShadowZBounds = false;
         this.#light.autoUpdateExtends = false;
 
-        this.#light.orthoTop = -this.#config.radius;
-        this.#light.orthoBottom = this.#config.radius;
-        this.#light.orthoLeft = -this.#config.radius;
-        this.#light.orthoRight = this.#config.radius;
+        this.#light.orthoTop = -this.config.radius;
+        this.#light.orthoBottom = this.config.radius;
+        this.#light.orthoLeft = -this.config.radius;
+        this.#light.orthoRight = this.config.radius;
 
-        this.#light.shadowMinZ = -this.#config.radius;
-        this.#light.shadowMaxZ = this.#config.radius;
+        this.#light.shadowMinZ = -this.config.radius;
+        this.#light.shadowMaxZ = this.config.radius;
         
         this.#light.shadowOrthoScale = 0;
 
@@ -83,8 +96,8 @@ class StarShadow {
 
     #createGenerator() {
 
-        this.generator = new BABYLON.CascadedShadowGenerator( this.#config.resolution, this.#light );
-        this.generator.bias = this.#config.bias;
+        this.generator = new BABYLON.CascadedShadowGenerator( this.config.resolution, this.#light );
+        this.generator.bias = this.config.bias;
         this.generator.normalBias = 0.0;
 
         this.generator.setDarkness( 0.0 );
@@ -93,19 +106,19 @@ class StarShadow {
         this.generator.transparencyShadow = false;
         this.generator.enableSoftTransparentShadow = false;
 
-        this.generator.usePercentageCloserFiltering = this.#config.filter == "PCF";
-        this.generator.useContactHardeningShadow = this.#config.filter == "CONHRD";
+        this.generator.usePercentageCloserFiltering = this.config.filter == "PCF";
+        this.generator.useContactHardeningShadow = this.config.filter == "CONHRD";
         //this.generator.contactHardeningLightSizeUVRatio = 0-1;
-        this.generator.filteringQuality = BABYLON.ShadowGenerator[ `QUALITY_${ this.#config.quality }` ];
+        this.generator.filteringQuality = BABYLON.ShadowGenerator[ `QUALITY_${ this.config.quality }` ];
 
         this.generator.debug = this.#debug;
-        this.generator.lambda = this.#config.lambda;
+        this.generator.lambda = this.config.lambda;
         this.generator.numCascades = 4;
 
-        this.generator.cascadeBlendPercentage = this.#config.blend;
-        this.generator.stabilizeCascades = this.#config.stabilize;
+        this.generator.cascadeBlendPercentage = this.config.blend;
+        this.generator.stabilizeCascades = this.config.stabilize;
 
-        this.generator.shadowMaxZ = this.#config.radius;
+        this.generator.shadowMaxZ = this.config.radius;
         this.generator.penumbraDarkness = 1.0;
 
         //this.generator.depthClamp = true; //not PCSS

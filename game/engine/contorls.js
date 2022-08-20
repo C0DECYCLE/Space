@@ -31,7 +31,7 @@ class Controls {
         this.manager = manager;
         this.scene = this.manager.scene;
 
-        this.config.panning = config.panning || this.config.panning;
+        EngineUtils.configure( this.config, config );
 
         this.#bindKeyboard();
         this.#bindMouse();

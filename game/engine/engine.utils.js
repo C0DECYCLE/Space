@@ -16,6 +16,22 @@ class EngineUtils {
         return delta * fpsTarget / 1000;
     }
 
+    static configure( target, inject ) {
+
+        const keys = Object.keys( target );
+
+        for ( let i = 0; i < keys.length; i++ ) {
+
+            const key = keys[i];
+            const value = inject[ key ];
+
+            if ( value != undefined ) {
+
+                target[ key ] = value;
+            }
+        }
+    }
+
     static vectorRotation( vector, rotation ) {
 
         const quat = BABYLON.Quaternion.FromEulerVector( rotation );
@@ -84,6 +100,8 @@ class EngineUtils {
 
         star.shadow.cast( dummy.root, true, false );
         star.shadow.receive( dummy.root, true, true );
+
+        star.manager.postprocess.register( dummy.root );
 
         return dummy;
     }

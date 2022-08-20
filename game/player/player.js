@@ -39,7 +39,7 @@ class Player {
         this.camera = this.manager.camera;
         this.controls = this.manager.controls;
 
-        this.config.speed = config.speed || this.config.speed;
+        EngineUtils.configure( this.config, config );
 
         this.#createMesh();    
         this.#createRoot();
@@ -127,6 +127,9 @@ class Player {
     
         this.manager.star.shadow.cast( this.mesh, true, true );
         this.manager.star.shadow.receive( this.mesh, true, true );
+        
+        this.manager.postprocess.register( this.mesh );
+        this.manager.postprocess.register( head );
     }
 
     #setupPhysics() {
@@ -181,6 +184,7 @@ class Player {
         
         log( "player entered planet" );
 
+        planet.generator.toggleMask( true );
         this.physics.setPlanet( planet );
     }
     
@@ -188,6 +192,7 @@ class Player {
         
         log( "player left planet" );
 
+        this.physics.getPlanet().generator.toggleMask( false );
         this.physics.setPlanet( null );
     }
 

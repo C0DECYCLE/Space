@@ -16,7 +16,13 @@ class PlanetGenerator {
 
         this.#createFaces( faces );
         this.#createMask();
-        this.#debugInfluence();
+        this.toggleMask( false );
+        //this.#debugInfluence();
+    }
+
+    toggleMask( value ) {
+
+        this.#planet.mask.setEnabled( value );
     }
 
     createMaterial() {
@@ -47,8 +53,10 @@ class PlanetGenerator {
         this.#planet.physics.enable( mesh, size );
         
         this.#planet.manager.star.shadow.cast( mesh, true, false );        
-        this.#planet.manager.star.shadow.receive( mesh, true, false );        
-        //window.depthRenderList.push(mesh);
+        this.#planet.manager.star.shadow.receive( mesh, true, false );  
+        
+        this.#planet.manager.postprocess.register( mesh );
+
         return mesh;
     }
     
@@ -96,14 +104,15 @@ class PlanetGenerator {
     
     #createMask() {
 
-        const mask = BABYLON.MeshBuilder.CreateSphere( "planet_mask", { diameter: this.#planet.config.radius * 2, segments: 16 }, this.scene );
+        this.#planet.mask = BABYLON.MeshBuilder.CreateSphere( "planet_mask", { diameter: this.#planet.config.radius * 2, segments: 16 }, this.scene );
         
-        mask.material = new BABYLON.StandardMaterial( "planet_mask_material", this.scene );
-        mask.material.disableLighting = true;
+        this.#planet.mask.material = new BABYLON.StandardMaterial( "planet_mask_material", this.scene );
+        this.#planet.mask.material.disableLighting = true;
+        this.#planet.mask.parent = this.#planet.root;
 
-        this.#planet.manager.star.shadow.cast( mask, true, false );
-
-        mask.parent = this.#planet.root;
+        this.#planet.manager.star.shadow.cast( this.#planet.mask, true, false );
+        
+        this.#planet.manager.postprocess.register( this.#planet.mask );
     }
 
     #debugInfluence() {
