@@ -125,7 +125,7 @@ class Manager {
         this.camera.update();
 
         this.star.update();
-
+        
 
                 ////////////////////////////////////////////////////
                 window.dummies.update();

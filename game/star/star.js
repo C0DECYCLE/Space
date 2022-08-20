@@ -19,12 +19,14 @@ class Star {
     manager = null;
     scene = null;
 
-    mesh = null;
     pointLight = null;
     directionalLight = null;
     hemisphericLight = null;
-    shadow = null;
+
+    mesh = null;
     godrays = null;
+    shadow = null;
+    background = null;
 
     constructor( manager, config, config_shadow ) {
 
@@ -39,6 +41,7 @@ class Star {
         this.#createHemisphericLight( 0.1 );
         this.#createShadow( config_shadow );
         this.#addGodrays();
+        this.#createBackground();
     }
 
     get position() {
@@ -105,12 +108,33 @@ class Star {
         this.godrays = this.manager.postprocess.godrays( this.mesh );
     }
 
+    #createBackground() {
+
+        this.background = BABYLON.MeshBuilder.CreateSphere( "star_background", { diameter: this.manager.camera.config.max, segments: 4, sideOrientation: BABYLON.Mesh.BACKSIDE }, this.scene );
+        
+        this.background.material = new BABYLON.StandardMaterial( "star_background_material", this.scene );
+        this.background.material.disableLighting = true;
+
+        this.background.material.emissiveTexture = new BABYLON.Texture( "assets/textures/space.png", this.scene );
+        this.background.material.emissiveTexture.uScale = 6;
+        this.background.material.emissiveTexture.vScale = 6;
+
+        this.background.material.diffuseColor = new BABYLON.Color3( 0, 0, 0 );
+        this.background.material.specularColor = new BABYLON.Color3( 0, 0, 0 );
+        this.background.material.emissiveColor = new BABYLON.Color3( 0, 0, 0 );
+        this.background.material.ambientColor = new BABYLON.Color3( 0, 0, 0 );
+
+        this.manager.postprocess.register( this.background );
+    }
+
     #target( camera ) {
 
         this.directionalLight.position.copyFrom( camera.position );
         this.directionalLight.direction.copyFrom( camera.position ).normalize(); 
 
         this.hemisphericLight.direction.copyFrom( camera.root.up );
+        
+        this.background.position.copyFrom( camera.position );
     }
 
 }

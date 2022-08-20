@@ -85,7 +85,7 @@ class PostProcess {
         pipeline.samples = this.config.samples;
         pipeline.chromaticAberrationEnabled = true;
         pipeline.chromaticAberration.radialIntensity = 1;
-        pipeline.chromaticAberration.aberrationAmount = 20;
+        pipeline.chromaticAberration.aberrationAmount = 30;
 
         this.pipelines.push( pipeline );
     }

@@ -10,7 +10,7 @@ class Camera {
 
     config = {
 
-        max: 1 * 1000 * 1000,
+        max: 10 * 1000 * 1000,
 
         offset: 8,
         lerp: 0.1
