@@ -13,8 +13,9 @@ class Planet {
         key: undefined,
         radius: undefined,
 
+        influence: 512,
+        maxHeight: 512 * 0.75,
         gravity: 0.8,
-        influence: 0.5,
 
         spin: false,
         orbit: false,
@@ -55,6 +56,7 @@ class Planet {
         this.config.radius = config.radius;
         this.config.gravity = config.gravity || this.config.gravity;
         this.config.influence = config.influence || this.config.influence;
+        this.config.maxHeight = config.maxHeight || this.config.maxHeight;
         this.config.spin = config.spin || this.config.spin;
         this.config.orbit = config.orbit || this.config.orbit;
         this.config.min = config.min || this.config.min;

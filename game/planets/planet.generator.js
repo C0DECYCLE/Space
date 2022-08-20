@@ -95,9 +95,13 @@ class PlanetGenerator {
     
     #debugInfluence() {
 
-        const debug = BABYLON.MeshBuilder.CreateSphere( `planet${ this.#planet.config.key }_debug`, { diameter: this.#planet.config.radius * 2 * ( 1 + this.#planet.config.influence ), segments: 32 }, this.#planet.scene );
+        const debug = BABYLON.MeshBuilder.CreateSphere( `planet${ this.#planet.config.key }_debug`, { diameter: ( this.#planet.config.radius + this.#planet.config.influence ) * 2, segments: 32 }, this.#planet.scene );
         debug.material = this.#planet.scene.debugMaterial;
         debug.parent = this.#planet.root;
+
+        const debug2 = BABYLON.MeshBuilder.CreateSphere( `planet${ this.#planet.config.key }_debug2`, { diameter: ( this.#planet.config.radius + this.#planet.config.maxHeight ) * 2, segments: 32 }, this.#planet.scene );
+        debug2.material = this.#planet.scene.debugMaterial;
+        debug2.parent = this.#planet.root;
     }
 
 }

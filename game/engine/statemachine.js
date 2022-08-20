@@ -15,6 +15,11 @@ class StateMachine {
 
     }
 
+    get current() {
+
+        return this.#current;
+    }
+
     add( state, onEnter = ( oldState, params ) => {}, onLeave = ( newState, params ) => {} ) {
 
         this.#list.set( state, {

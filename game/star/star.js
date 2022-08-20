@@ -35,6 +35,7 @@ class Star {
     mesh = null;
     pointLight = null;
     directionalLight = null;
+    hemisphericLight = null;
     shadow = null;
 
     constructor( manager, config ) {
@@ -58,8 +59,9 @@ class Star {
         }
 
         this.#createMesh();
-        this.#createPointLight( 0.25 );
-        this.#createDirectionalLight( 0.75 );
+        this.#createPointLight( 0.2 );
+        this.#createDirectionalLight( 0.7 );
+        this.#createHemisphericLight( 0.1 );
         this.#createShadow();
         this.manager.postprocess.godrays( this.mesh );
     }
@@ -76,7 +78,7 @@ class Star {
 
     update() {
 
-        this.#target( this.manager.camera.position.clone() );
+        this.#target( this.manager.camera );
         this.shadow.update();
     }
 
@@ -96,16 +98,24 @@ class Star {
 
     #createPointLight( split ) {
 
-        this.pointLight = new BABYLON.PointLight( "sun_pointlight", BABYLON.Vector3.Zero(), this.scene );
+        this.pointLight = new BABYLON.PointLight( "star_pointLight", BABYLON.Vector3.Zero(), this.scene );
         this.pointLight.setColor( this.config.color );
         this.pointLight.setIntensity( 0.25 * split );
     }
 
     #createDirectionalLight( split ) {
 
-        this.directionalLight = new BABYLON.DirectionalLight( "sun_directionallight", BABYLON.Vector3.Zero(), this.scene );
+        this.directionalLight = new BABYLON.DirectionalLight( "star_directionalLight", BABYLON.Vector3.Zero(), this.scene );
         this.directionalLight.setColor( this.config.color );
         this.directionalLight.setIntensity( 0.25 * split );
+    }
+
+    #createHemisphericLight( split ) {
+
+        this.hemisphericLight = new BABYLON.HemisphericLight( "star_hemisphericLight", BABYLON.Vector3.Up(), this.scene );
+        this.hemisphericLight.setColor( this.config.color, this.scene.clearColor );
+        this.hemisphericLight.groundColor = new BABYLON.Color3( 0, 0, 0 );
+        this.hemisphericLight.setIntensity( 0.25 * split );
     }
 
     #createShadow() {
@@ -113,10 +123,12 @@ class Star {
         this.shadow = new StarShadow( this, this.directionalLight, this.config.shadow );
     }
 
-    #target( position ) {
+    #target( camera ) {
 
-        this.directionalLight.position.copyFrom( position );
-        this.directionalLight.direction = position.normalize(); 
+        this.directionalLight.position.copyFrom( camera.position );
+        this.directionalLight.direction.copyFrom( camera.position ).normalize(); 
+
+        this.hemisphericLight.direction.copyFrom( camera.root.up );
     }
 
 }

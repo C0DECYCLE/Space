@@ -39,21 +39,18 @@ class Planets {
         this.list.forEach( ( planet, key ) => {
             
             const distance = BABYLON.Vector3.Distance( planet.position, position );
-            const distanceRadiusFactor = distance / planet.config.radius;
-            const planetThreashold = 1 + planet.config.influence;
+            const planetThreashold = planet.config.radius + planet.config.influence;
             
-            if ( distanceRadiusFactor <= planetThreashold && this.player.state.is( "space" ) ) {
+            if ( distance <= planetThreashold && this.player.state.is( "space" ) ) {
 
                 this.player.state.set( "planet", planet );
-                //log(planet.config.key);
+
             }
 
-            /*
-            if ( distanceRadiusFactor > planetThreashold && this.player.state.is( "planet" ) ) {
+            if ( this.player.state.is( "planet" ) && PlanetUtils.compare( this.player.planet, planet ) && distance > planetThreashold ) {
 
                 this.player.state.set( "space" );
             }
-            */
            
             planet.insert( position, distance );
         } );

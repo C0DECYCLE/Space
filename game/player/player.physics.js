@@ -22,6 +22,11 @@ class PlayerPhysics extends PhysicsEntity {
 
         this.#planet = value;
     }
+    
+    getPlanet() {
+
+        return this.#planet;
+    }
 
     space() {
 
@@ -32,7 +37,7 @@ class PlayerPhysics extends PhysicsEntity {
 
         const up = this.#planet.physics.pull( this );
 
-        if ( this.state == PhysicsEntity.STATES.ABOVEGROUND || this.state == PhysicsEntity.STATES.GROUND ) {
+        if ( this.state == PhysicsEntity.STATES.GROUND ) {
 
             this.#planetMovement();
             this.quaternionTowardsUpright( up, 0.1 );
@@ -48,18 +53,20 @@ class PlayerPhysics extends PhysicsEntity {
 
         const float = floatConfig * deltaCorrection;
 
+        let speed = float;
+
         if ( controls.activeKeys.has( "w" ) == true ) {
 
-            translate.z = float;
+            translate.z = speed;
 
         } else if ( controls.activeKeys.has( "s" ) == true ) {
 
-            translate.z = -float;
+            translate.z = -speed;
         }
         
         if ( controls.activeKeys.has( "d" ) == true ) {
 
-            translate.x = float;
+            translate.x = speed;
 
         } else if ( controls.activeKeys.has( "a" ) == true ) {
 

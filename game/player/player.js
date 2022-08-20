@@ -59,6 +59,11 @@ class Player {
         return this.root.rotationQuaternion;
     }
 
+    get planet() {
+
+        return this.physics.getPlanet();
+    }
+
     update() {
 
         this.#updateFromInspector();
@@ -83,13 +88,13 @@ class Player {
 
     #setupInspector() {
 
-        this.root._speed = this.config.float;
+        this.root._float = this.config.float;
 
         this.root.inspectableCustomProperties = [
 
             {
                 label: "Float",
-                propertyName: "_speed",
+                propertyName: "_float",
                 type: BABYLON.InspectableType.Slider,
                 min: 0.05,
                 max: 10,
@@ -136,7 +141,7 @@ class Player {
 
     #updateFromInspector() {
 
-        this.config.float = this.root._speed;
+        this.config.float = this.root._float;
     }
 
     #onPointerMove( event ) {

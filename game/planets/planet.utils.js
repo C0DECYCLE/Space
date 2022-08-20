@@ -8,6 +8,11 @@
 
 class PlanetUtils {
 
+    static compare( planetA, planetB ) {
+
+        return planetA.config.key == planetB.config.key;
+    }
+
     static terrainify( planet, v ) {
 
         v = PlanetUtils.cubesphere( v, planet.config.radius );
@@ -38,7 +43,7 @@ class PlanetUtils {
 
     static noise( planet, v ) {
 
-        return PlanetUtilsHeightmap.get( planet, v.scale( planet.config.radius ).addInPlace( planet.config.seed ) );
+        return PlanetUtilsHeightmap.get( planet, v.scale( planet.config.radius ).addInPlace( planet.config.seed ) ).clamp( 0, planet.config.maxHeight );
     }
     
     static displace( planet, v ) {

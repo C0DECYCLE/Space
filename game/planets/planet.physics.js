@@ -25,13 +25,26 @@ class PlanetPhysics {
 
     pull( physicsEntity ) {
 
-        const up = this.#getDelta( physicsEntity.position ).normalize();
+        const delta = this.#getDelta( physicsEntity.position );
+        const distanceCenter = delta.length(); 
+        const up = delta.clone().normalize();
         const distance = BABYLON.Vector3.Distance( this.#projectOnSurface( up ), physicsEntity.position );
         
-        this.#pullSpin( physicsEntity, distance );
+        this.#pullSpin( physicsEntity, distanceCenter );
         this.#pullGravity( physicsEntity, up );
         
         physicsEntity.registerPull( distance );
+
+        return up;
+    }
+
+    spin( physicsEntity ) {
+
+        const delta = this.#getDelta( physicsEntity.position );
+        const distanceCenter = delta.length(); 
+        const up = delta.clone().normalize();
+
+        this.#pullSpin( physicsEntity, distanceCenter );
 
         return up;
     }
@@ -48,12 +61,12 @@ class PlanetPhysics {
         return up.clone().scaleInPlace( this.#planet.config.radius + noise ).addInPlace( this.#planet.position );
     }
 
-    #pullSpin( physicsEntity, distance ) {
+    #pullSpin( physicsEntity, distanceCenter ) {
 
         if ( this.#planet.config.spin != false ) {
 
             const deltaCorrection = Space.engine.deltaCorrection;
-            const deltaAngle = this.#planet.config.spin * EngineUtils.toRadian * deltaCorrection * this.#getSpinFactor( physicsEntity, distance );
+            const deltaAngle = this.#planet.config.spin * EngineUtils.toRadian * deltaCorrection * this.#getSpinFactor( distanceCenter );
 
             physicsEntity.delta.addInPlace( 
                 physicsEntity.position
@@ -63,11 +76,12 @@ class PlanetPhysics {
         }
     }
 
-    #getSpinFactor( physicsEntity, distance ) {
+    #getSpinFactor( distanceCenter ) {
 
-        const distanceAboveGround = ( distance - physicsEntity.getCollider().length() ).clamp( 0, Infinity );
+        const distanceAboveMaxHeight = distanceCenter - this.#planet.config.radius - this.#planet.config.maxHeight;
+        const distanceBetweenMaxHeight = this.#planet.config.influence - this.#planet.config.maxHeight;
 
-        return Math.sqrt( 1 / distanceAboveGround ).clamp( 0, 1 )
+        return ( 1 - ( distanceAboveMaxHeight / distanceBetweenMaxHeight ) ).clamp( 0, 1 );
     }
 
     #deltaAngleToQuaternion( deltaAngle ) {

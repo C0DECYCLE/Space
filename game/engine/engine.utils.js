@@ -34,9 +34,6 @@ class EngineUtils {
 
         const dummies = [];
 
-        //dummies.root = new BABYLON.TransformNode( "dummies", scene );
-        //dummies.root.rotationQuaternion = dummies.root.rotation.toQuaternion();
-
         for ( let i = 0; i < count; i++ ) {
 
             const dummy = EngineUtils.createDummy( scene, i, undefined, material, star, 
@@ -44,7 +41,6 @@ class EngineUtils {
                 new BABYLON.Vector3( Math.random() * 2 - 1, Math.random() * 2 - 1, Math.random() * 2 - 1 ).scaleInPlace( Math.PI ) 
             );
 
-            //dummy.root.parent = dummies.root;
             dummies.push( dummy );
         }
 

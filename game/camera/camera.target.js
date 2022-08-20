@@ -9,7 +9,7 @@
 class CameraTarget {
 
     focusAlpha = -Math.PI / 2;
-    focusBeta = Math.PI / 2;
+    focusBeta = Math.PI / 2; //2.5;
 
     offset = new BABYLON.Vector3( 0, 1, 0 );
 

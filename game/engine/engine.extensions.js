@@ -25,6 +25,9 @@ class EngineExtensions {
         this.#extend( "PointLight", "setColor", this.#lightColor );
         this.#extend( "PointLight", "setIntensity", this.#lightIntensity );
 
+        this.#extend( "HemisphericLight", "setColor", this.#lightColor );
+        this.#extend( "HemisphericLight", "setIntensity", this.#lightIntensity );
+
         this.#extend( "StandardMaterial", "setColorIntensity", this.#standardMaterialColorIntensity );
     }
 

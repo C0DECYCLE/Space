@@ -19,8 +19,7 @@ class PhysicsEntity {
     static STATES = {
 
         FLOATING: 0,
-        ABOVEGROUND: 1,
-        GROUND: 2
+        GROUND: 1
     };
     
     static collidable( mesh, type ) {
@@ -49,7 +48,7 @@ class PhysicsEntity {
 
         PhysicsEntity.collidable( this.#mesh, this.type );
 
-        this.#bindObservables();
+        //this.#bindObservables();
         this.#fitCollider();
 
         //this.debugCollider();
@@ -96,16 +95,8 @@ class PhysicsEntity {
 
         if ( this.delta.x != 0 || this.delta.y != 0 || this.delta.z != 0 ) {
 
-            //this.state = PhysicsEntity.STATES.FLOATING;
-
             this.#mesh.moveWithCollisions( this.delta );
         }
-
-        /*log( 
-            this.state == PhysicsEntity.STATES.FLOATING ? "PhysicsEntity.STATES.FLOATING" : 
-            (this.state == PhysicsEntity.STATES.ABOVEGROUND ? "PhysicsEntity.STATES.ABOVEGROUND" : 
-            "PhysicsEntity.STATES.GROUND")
-        );*/
 
         this.delta.copyFromFloats( 0, 0, 0 );
     }
@@ -136,17 +127,9 @@ class PhysicsEntity {
         
         this.#lastTimeOnGround++;
 
-        const collider = this.getCollider();
-        const bufferZone = 0;
-        
-        if ( distanceAboveGround < collider.length() + bufferZone ) {
+        if ( distanceAboveGround < this.getCollider().y ) {
 
-            //this.state = PhysicsEntity.STATES.ABOVEGROUND;
-
-            if ( distanceAboveGround < collider.y - bufferZone ) {
-
-                this.state = PhysicsEntity.STATES.GROUND;
-            }
+            this.state = PhysicsEntity.STATES.GROUND;
 
         } else {
 
@@ -159,14 +142,6 @@ class PhysicsEntity {
         return this.#lastTimeOnGround / 100;
     }
 
-    #bindObservables() {
-
-        if ( this.type == PhysicsEntity.TYPES.DYNAMIC ) {
-
-            this.#mesh.onCollideObservable.add( ( otherMesh ) => this.#onCollide( otherMesh ) );
-        }
-    }
-
     #fitCollider() {
 
         const info = this.#mesh.getBoundingInfo();
@@ -176,11 +151,18 @@ class PhysicsEntity {
         .scaleInPlace( PhysicsEntity.ENLARGEMENT );
     }
 
+    #bindObservables() {
+
+        if ( this.type == PhysicsEntity.TYPES.DYNAMIC ) {
+
+            //this.#mesh.onCollideObservable.add( ( otherMesh ) => this.#onCollide( otherMesh ) );
+        }
+    }
+
     #onCollide( otherMesh ) {
         
         if ( otherMesh.physicsEntityType == PhysicsEntity.TYPES.STATIC ) {
 
-            //this.state = PhysicsEntity.STATES.GROUND;
         }
     }
 
