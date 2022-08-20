@@ -27,8 +27,7 @@ class Manager {
 
     constructor( config ) {
 
-        this.config.dark = config.dark || this.config.dark;
-        this.config.freeze = config.freeze || this.config.freeze;
+        EngineUtils.configure( this.config, config );
 
         this.stage = new ManagerStage( this, ( postScene ) => this.#install( postScene ), () => this.#stage(), ( delta ) => this.#run( delta ) );
 
@@ -58,7 +57,7 @@ class Manager {
         
         this.postprocess = new PostProcess( this, {} );
 
-        this.star = new Star( this, {} );
+        this.star = new Star( this, {}, {} );
 
         this.player = new Player( this, {} );
 
@@ -68,35 +67,28 @@ class Manager {
 
             { 
                 key: 0, radius: 1024, spin: 0.005, 
-                gravity: 0.7,
+                gravity: 0.6, athmosphere: 256, waveLengths: new BABYLON.Color3( 450, 370, 420 ),
                 seed: new BABYLON.Vector3( -1123, 7237, -3943 ), mountainy: 5, warp: 0.8 
             },
 
             { 
                 key: 1, radius: 2048, spin: 0.005, 
-                gravity: 0.7,
+                gravity: 0.7, athmosphere: 512, waveLengths: new BABYLON.Color3( 450, 500, 680 ),
                 seed: new BABYLON.Vector3( 8513, -9011, -5910 ), variant: "1", mountainy: 3.5, warp: 1.0 
             },
 
             { 
                 key: 2, radius: 4096, spin: 0.0025, 
-                gravity: 0.8,
+                gravity: 0.8, athmosphere: 1024, waveLengths: new BABYLON.Color3( 700, 600, 500 ),
                 seed: new BABYLON.Vector3( -925, -2011, 7770 )
             },
 
             { 
                 key: 3, radius: 256, spin: 0.01, 
-                gravity: 0.5, 
+                gravity: 0.4, athmosphere: false,
                 seed: new BABYLON.Vector3( 2253, 7001, 4099 ), mountainy: 2, warp: 0.6 
             }
         ] );
-
-        
-                ////////////////////////////////////////////////////
-                //window.aspp = new AtmosphericScatteringPostProcess( "atmospherePostProcess", this.planets.list.get( 2 ), this.star, this.camera, this.scene );
-                //aspp.samples = 3;
-                //window.aspp2 = new AtmosphericScatteringPostProcess( "atmospherePostProcess2", this.planets.list.get( 3 ), this.star, this.camera, this.scene );
-                ////////////////////////////////////////////////////
 
 
         return this.scene;
@@ -123,10 +115,6 @@ class Manager {
 
     #run( delta ) {
         
-        //implement the athmosphere fix
-        //make athomsphere intensity by distance (baseIntesity / distance)
-        //make very planet athmosphere, with diffrent colors etc //http://hyperphysics.phy-astr.gsu.edu/hbase/vision/specol.html
-        
         if ( this.config.freeze == false ) {
 
             this.planets.update();
@@ -137,7 +125,7 @@ class Manager {
         this.camera.update();
 
         this.star.update();
-
+        
 
                 ////////////////////////////////////////////////////
                 window.dummies.update();

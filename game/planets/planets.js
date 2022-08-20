@@ -15,12 +15,16 @@ class Planets {
 
     list = new Map();
 
+    #maskMaterial = null;
+
     constructor( manager ) {
         
         this.manager = manager;
         this.scene = this.manager.scene;
         this.camera = this.manager.camera;
         this.player = this.manager.player;
+
+        this.#createMaskMaterial();
     }
 
     register( config ) {
@@ -34,6 +38,11 @@ class Planets {
 
             this.register( configs[i] );
         }
+    }
+
+    getMaskMaterial() {
+
+        return this.#maskMaterial;
     }
 
     update() {
@@ -68,4 +77,14 @@ class Planets {
         this.list.forEach( ( planet, key ) => planet.update() );
     }
 
+    #createMaskMaterial() {
+
+        this.#maskMaterial = new BABYLON.StandardMaterial( "planet_mask_material", this.scene );
+        this.#maskMaterial.disableLighting = true;
+        
+        this.#maskMaterial.diffuseColor = new BABYLON.Color3( 0, 0, 0 );
+        this.#maskMaterial.specularColor = new BABYLON.Color3( 0, 0, 0 );
+        this.#maskMaterial.emissiveColor = new BABYLON.Color3( 0, 0, 0 );
+        this.#maskMaterial.ambientColor = new BABYLON.Color3( 0, 0, 0 );
+    }
 }

@@ -114,6 +114,8 @@ class PhysicsEntity {
         debug.position.copyFrom( this.#mesh.ellipsoidOffset );
         debug.material = this.#scene.debugMaterial;
         debug.parent = this.#mesh;
+        
+        //star.manager.postprocess.register( dummy.root );
     }
 
     quaternionTowardsUpright( up, stretch ) {

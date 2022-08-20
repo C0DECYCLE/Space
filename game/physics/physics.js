@@ -20,6 +20,8 @@ class Physics {
         this.manager = manager;
         this.scene = this.manager.scene;
 
+        EngineUtils.configure( this.config, config );
+
         this.#setupCollisions();
     }
     

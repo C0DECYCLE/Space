@@ -13,57 +13,35 @@ class Star {
         color: "#fff9bc",
 
         size: 20 * 1000,
-        resolution: 16,
-
-        shadow: {
-
-            radius: 1.0 * 1000,
-            resolution: 2048,
-
-            bias: 0.005,
-            blend: 0.05,
-            lambda: 0.85,
-
-            filter: "PCF", //"NONE" "PCF" "CONHRD"
-            quality: "HIGH" //LOW MEDIUM HIGH
-        }
+        resolution: 16
     };
 
     manager = null;
     scene = null;
 
-    mesh = null;
     pointLight = null;
     directionalLight = null;
     hemisphericLight = null;
-    shadow = null;
 
-    constructor( manager, config ) {
+    mesh = null;
+    godrays = null;
+    shadow = null;
+    background = null;
+
+    constructor( manager, config, config_shadow ) {
 
         this.manager = manager;
         this.scene = this.manager.scene;
 
-        this.config.color = config.color || this.config.color;
-        this.config.size = config.size || this.config.size;
-        this.config.resolution = config.resolution || this.config.resolution;
-
-        if ( typeof config.shadow == "object" ) {
-
-            this.config.shadow.radius = config.shadow.radius || this.config.shadow.radius;
-            this.config.shadow.resolution = config.shadow.resolution || this.config.shadow.resolution;
-            this.config.shadow.bias = config.shadow.bias || this.config.shadow.bias;
-            this.config.shadow.blend = config.shadow.blend || this.config.shadow.blend;
-            this.config.shadow.lambda = config.shadow.lambda || this.config.shadow.lambda;
-            this.config.shadow.filter = config.shadow.filter || this.config.shadow.filter;
-            this.config.shadow.quality = config.shadow.quality || this.config.shadow.quality;
-        }
+        EngineUtils.configure( this.config, config );
 
         this.#createMesh();
         this.#createPointLight( 0.2 );
         this.#createDirectionalLight( 0.7 );
         this.#createHemisphericLight( 0.1 );
-        this.#createShadow();
-        this.manager.postprocess.godrays( this.mesh );
+        this.#createShadow( config_shadow );
+        this.#addGodrays();
+        this.#createBackground();
     }
 
     get position() {
@@ -94,6 +72,8 @@ class Star {
         this.mesh = BABYLON.MeshBuilder.CreateSphere( "star", { diameter: this.config.size, segments: this.config.resolution }, this.scene );
         this.mesh.rotationQuaternion = this.mesh.rotation.toQuaternion();
         this.mesh.material = material;
+        
+        this.manager.postprocess.register( this.mesh );
     }
 
     #createPointLight( split ) {
@@ -118,9 +98,33 @@ class Star {
         this.hemisphericLight.setIntensity( 0.25 * split );
     }
 
-    #createShadow() {
+    #createShadow( config ) {
 
-        this.shadow = new StarShadow( this, this.directionalLight, this.config.shadow );
+        this.shadow = new StarShadow( this, this.directionalLight, config );
+    }
+
+    #addGodrays() {
+
+        this.godrays = this.manager.postprocess.godrays( this.mesh );
+    }
+
+    #createBackground() {
+
+        this.background = BABYLON.MeshBuilder.CreateSphere( "star_background", { diameter: this.manager.camera.config.max, segments: 4, sideOrientation: BABYLON.Mesh.BACKSIDE }, this.scene );
+        
+        this.background.material = new BABYLON.StandardMaterial( "star_background_material", this.scene );
+        this.background.material.disableLighting = true;
+        
+        this.background.material.diffuseColor = new BABYLON.Color3( 0, 0, 0 );
+        this.background.material.specularColor = new BABYLON.Color3( 0, 0, 0 );
+        this.background.material.emissiveColor = new BABYLON.Color3( 0, 0, 0 );
+        this.background.material.ambientColor = new BABYLON.Color3( 0, 0, 0 );
+
+        this.background.material.emissiveTexture = new BABYLON.Texture( "assets/textures/space.png", this.scene );
+        this.background.material.emissiveTexture.uScale = 6;
+        this.background.material.emissiveTexture.vScale = 6;
+
+        this.manager.postprocess.register( this.background );
     }
 
     #target( camera ) {
@@ -129,6 +133,8 @@ class Star {
         this.directionalLight.direction.copyFrom( camera.position ).normalize(); 
 
         this.hemisphericLight.direction.copyFrom( camera.root.up );
+        
+        this.background.position.copyFrom( camera.position );
     }
 
 }

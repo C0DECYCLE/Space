@@ -10,14 +10,16 @@ class Planet {
 
     config = {
 
-        key: undefined,
-        radius: undefined,
+        key: UUIDv4(),
+        radius: 2048,
         spin: false,
         //orbit: false,
 
         influence: 512,
         maxHeight: 512 * 0.75,
         gravity: 0.8,
+        athmosphere: 512,
+        waveLengths: new BABYLON.Color3( 700, 530, 440 ),
         
         min: 64,
         resolution: 16,
@@ -37,6 +39,7 @@ class Planet {
     generator = null;
     material = null;
     perlin = null;
+    athmosphere = null;
 
     #faces = new Set();
 
@@ -51,24 +54,13 @@ class Planet {
         this.manager = manager;
         this.scene = manager.scene;
 
-        this.config.key = config.key;
-        this.config.radius = config.radius;
-        this.config.gravity = config.gravity || this.config.gravity;
-        this.config.influence = config.influence || this.config.influence;
-        this.config.maxHeight = config.maxHeight || this.config.maxHeight;
-        this.config.spin = config.spin || this.config.spin;
-        //this.config.orbit = config.orbit || this.config.orbit;
-        this.config.min = config.min || this.config.min;
-        this.config.resolution = config.resolution || this.config.resolution;
-        this.config.seed = config.seed;
-        this.config.variant = config.variant || this.config.variant;
-        this.config.mountainy = config.mountainy || this.config.mountainy;
-        this.config.warp = config.warp || this.config.warp;
+        EngineUtils.configure( this.config, config );
 
         this.#createRoot();
         this.#addGenerator();
         this.#setupPerlin();
         this.#setupPhysics();
+        this.#addAthmosphere();
         this.#farInsertion();
     }
 
@@ -121,8 +113,7 @@ class Planet {
 
         this.#list.forEach( ( data, nodeKey ) => {
         
-            data.mesh.dispose( !true, false );
-            this.#list.delete( nodeKey );
+            this.#disposeNode( nodeKey, data );
         } ); 
     }
 
@@ -148,6 +139,14 @@ class Planet {
     #setupPhysics() {
 
         this.physics = new PlanetPhysics( this );
+    }
+
+    #addAthmosphere() {
+
+        if ( this.config.athmosphere != false ) {
+
+            this.athmosphere = this.manager.postprocess.athmosphere( this );
+        }
     }
 
     #updateSpin() {
@@ -241,12 +240,18 @@ class Planet {
             
             if ( data.keep == false ) {
                 
-                data.mesh.dispose( !true, false );
-                this.#list.delete( nodeKey );
+                this.#disposeNode( nodeKey, data );
             }
         } ); 
         
         /*data.retired = true; data.mesh.setEnabled( false );*/ 
+    }
+
+    #disposeNode( nodeKey, data ) {
+
+        data.mesh.dispose( !true, false );
+        this.manager.postprocess.dispose( data.mesh );
+        this.#list.delete( nodeKey );
     }
 
 }
