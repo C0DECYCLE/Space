@@ -123,8 +123,6 @@ class Manager {
 
     #run( delta ) {
         
-        //bug: fall through planet
-
         //implement the athmosphere fix
         //make athomsphere intensity by distance (baseIntesity / distance)
         //make very planet athmosphere, with diffrent colors etc //http://hyperphysics.phy-astr.gsu.edu/hbase/vision/specol.html
