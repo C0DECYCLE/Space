@@ -38,6 +38,7 @@ class PhysicsEntity {
     #stateValue = PhysicsEntity.STATES.FLOATING;
 
     #lastTimeOnGround = 0;
+    #isPaused = false;
 
     constructor( mesh, type ) {
 
@@ -91,6 +92,11 @@ class PhysicsEntity {
 
     update() {
         
+        if ( this.#isPaused == true ) {
+
+            return;
+        }
+        
         this.delta.addInPlace( this.velocity );
 
         if ( this.delta.x != 0 || this.delta.y != 0 || this.delta.z != 0 ) {
@@ -99,6 +105,18 @@ class PhysicsEntity {
         }
 
         this.delta.copyFromFloats( 0, 0, 0 );
+    }
+
+    pause() {
+
+        this.#isPaused = true;
+        this.#mesh.checkCollisions = false;
+    }
+
+    resume() {
+
+        this.#mesh.checkCollisions = true;
+        this.#isPaused = false;
     }
 
     getCollider() {
@@ -112,6 +130,7 @@ class PhysicsEntity {
 
         const debug = BABYLON.MeshBuilder.CreateSphere( `${ this.#mesh.name }_debug_collider`, { diameterX: ellipsoid.x * 2, diameterY: ellipsoid.y * 2, diameterZ: ellipsoid.z * 2, segments: 8 }, this.#scene );
         debug.position.copyFrom( this.#mesh.ellipsoidOffset );
+        debug.scaling.divideInPlace( this.#mesh.scaling );
         debug.material = this.#scene.debugMaterial;
         debug.parent = this.#mesh;
         
@@ -147,9 +166,10 @@ class PhysicsEntity {
     #fitCollider() {
 
         const info = this.#mesh.getBoundingInfo();
-
+        
         this.getCollider()
         .copyFrom( info.boundingSphere.maximum )
+        .multiplyInPlace( this.#mesh.scaling )
         .scaleInPlace( PhysicsEntity.ENLARGEMENT );
     }
 

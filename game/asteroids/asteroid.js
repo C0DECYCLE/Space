@@ -65,7 +65,7 @@ class Asteroid {
         this.mesh.rotation.copyFromFloats( Math.random() * 2 - 1, Math.random() * 2 - 1, Math.random() * 2 - 1 ).scaleInPlace( Math.PI );
 
         this.manager.star.shadow.cast( this.mesh, true, false );
-        
+        //this.mesh.setEnabled( false );
         this.manager.postprocess.register( this.mesh );
     }
     
@@ -78,6 +78,7 @@ class Asteroid {
     #addPhysics() {
 
         this.physics = new PhysicsEntity( this.root, PhysicsEntity.TYPES.DYNAMIC );
+        this.physics.pause();
     }
 
 }
