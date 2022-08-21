@@ -23,6 +23,7 @@ class Manager {
     camera = null;
     star = null;
     planets = null;
+    asteroids = null;
     player = null;
 
     constructor( config ) {
@@ -37,6 +38,10 @@ class Manager {
     update( delta ) {
 
         this.stage.run( delta );
+    }
+
+    render() {
+
         this.scene.render();
     }
 
@@ -90,6 +95,12 @@ class Manager {
             }
         ] );
 
+        this.asteroids = new Asteroids( this, {} );
+
+        this.asteroids.register( "ring", { key: 0, radius: 4.0 * 1000, spread: 200, density: 0.01 } );
+        this.asteroids.register( "ring", { key: 1, radius: 5 * 1000, spread: 300, density: 0.03 } );
+        this.asteroids.register( "ring", { key: 2, radius: 5.6 * 1000, spread: 150, density: 0.01 } );
+        
 
         return this.scene;
     }
@@ -101,16 +112,15 @@ class Manager {
         this.planets.list.get( 2 ).place( this.star.position, 250 * 1000, 240 );
         this.planets.list.get( 3 ).place( this.planets.list.get( 2 ).position, 10 * 1000, 60 );
         
-        this.player.position.copyFrom( this.planets.list.get( 3 ).position ).addInPlace( new BABYLON.Vector3( 1 * 1000, 0, 0 ) );
-    
+        this.player.position.copyFrom( this.planets.list.get( 0 ).position ).addInPlace( new BABYLON.Vector3( 1 * 3000, 0, 0 ) );
+        
+        this.asteroids.list.get( 0 ).position.copyFrom( this.planets.list.get( 0 ).position );
+        this.asteroids.list.get( 1 ).position.copyFrom( this.planets.list.get( 0 ).position );
+        this.asteroids.list.get( 2 ).position.copyFrom( this.planets.list.get( 0 ).position );
+
         this.camera.attachToPlayer( this.player );
 
         this.scene.debugLayer.show( { embedMode: true } );
-
-
-                ////////////////////////////////////////////////////
-                window.dummies = EngineUtils.createDummyField( this.scene, 10, this.player.position, this.planets.list.get( 0 ).material, this.star );
-                ////////////////////////////////////////////////////
     }
 
     #run( delta ) {
@@ -120,16 +130,13 @@ class Manager {
             this.planets.update();
         }
 
+        this.asteroids.update();
+
         this.player.update();
         
         this.camera.update();
 
         this.star.update();
-        
-
-                ////////////////////////////////////////////////////
-                window.dummies.update();
-                ////////////////////////////////////////////////////
     }
 
 }

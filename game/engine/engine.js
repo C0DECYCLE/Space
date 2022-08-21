@@ -88,7 +88,7 @@ class Engine {
         this.stats.push( this.#createStat( 0 ) ); // fps
         this.stats.push( this.#createStat( 1 ) ); // ms
         this.stats.push( this.#createStat( 2 ) ); // mb
-        this.stats.push( this.#createStat( 3 ) ); // custom
+        this.stats.push( this.#createStat( 1 ) ); // custom
     }
 
     #createStat( i ) { // 0: fps, 1: ms, 2: mb, 3+: custom
@@ -104,7 +104,10 @@ class Engine {
 
     #render() {
 
-        this.stats.forEach( ( stat ) => stat.begin() );
+        for ( let i = 0; i < 3; i++ ) {
+
+            this.stats[i].begin();
+        }
         
         const deltaTime = this.babylon.getDeltaTime();
         
@@ -117,7 +120,10 @@ class Engine {
             TWEEN.update();
         }
         
-        this.stats.forEach( ( stat ) => stat.end() );
+        for ( let i = 0; i < 3; i++ ) {
+
+            this.stats[i].end();
+        }
     }
     
 }
