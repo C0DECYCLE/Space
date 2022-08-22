@@ -97,10 +97,16 @@ class Manager {
 
         this.asteroids = new Asteroids( this, {} );
 
-        this.asteroids.register( "ring", { key: 0, radius: 4.0 * 1000, spread: 200, density: 0.01 } );
-        this.asteroids.register( "ring", { key: 1, radius: 5 * 1000, spread: 300, density: 0.03 } );
-        this.asteroids.register( "ring", { key: 2, radius: 5.6 * 1000, spread: 150, density: 0.01 } );
+        this.asteroids.register( "ring", { key: 0, radius: 5 * 1000, spread: 400, height: 200, density: 0.02 } );
+        this.asteroids.register( "ring", { key: 1, radius: 5 * 1000, spread: 2 * 1000, height: 100, density: 0.03 } );
         
+        //copy the assets loading etc system from the old space project
+        //make asteroids out of models not boxes!
+        //make method which gets the distance to the camera by traversing the parents upwards adding all positions and then subtracting it by the camera position and then the length()
+        //make own lod system with screencoverage by distance and size (for the moment use naive distance of every lod enabled object but later use objectcontainers) enable lod system by default on every object? (in that case only the object self and enabled false when too small to see) when not manually set stages of lod (example: lod0, off or lod0, lod1, lod2, off )
+        //next: make private shadow function pause/resume (internaly adds/removes shadowcaster and toggls receive shadow, with the remebemered recurse children etc parameters) which get used when somethings out of the shadow radius bubble (for the moment use naive distance of every caster/receiver but later use objectcontainers). Also add parameter to public cast/receive function, bool to allow internal pause/resume when out of shadow radius
+        //next: make physics bubble (for the moment use naive distance of every physis entity but later use objectcontainers)
+        //later: object containers, port every naive distance to the object container system (shadow bubble, physics bubble, screencoverage) by port the primary distance function self to use the objectcontainers
 
         return this.scene;
     }
@@ -116,7 +122,6 @@ class Manager {
         
         this.asteroids.list.get( 0 ).position.copyFrom( this.planets.list.get( 0 ).position );
         this.asteroids.list.get( 1 ).position.copyFrom( this.planets.list.get( 0 ).position );
-        this.asteroids.list.get( 2 ).position.copyFrom( this.planets.list.get( 0 ).position );
 
         this.camera.attachToPlayer( this.player );
 

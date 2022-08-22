@@ -84,6 +84,11 @@ class Camera {
         }
     }
 
+    screenCoverage( node ) {
+
+        
+    }
+
     #createRoot() {
 
         this.root = new BABYLON.TransformNode( "camera", this.scene );

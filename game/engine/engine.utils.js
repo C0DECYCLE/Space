@@ -44,4 +44,35 @@ class EngineUtils {
         return new BABYLON.Vector3( 0, 1000 * 1000 * 1000, 0 );
     }
 
+    static getBounding( node ) {
+        
+        if ( node.boundingCache == undefined ) {
+
+            const minmax = node.getHierarchyBoundingVectors();
+
+            node.boundingCache = minmax.max.subtract( minmax.min );
+        }
+
+        return node.boundingCache.clone();
+    }
+
+    static getWorldPosition( node ) {
+        
+        const position = node.position.clone();
+        
+        EngineUtils.#recurseParentsPosition( position, node );
+        
+        return position;
+    }
+
+    static #recurseParentsPosition( result, node ) {
+
+        if ( node.parent != null ) {
+            
+            result.addInPlace( node.parent.position );
+
+            EngineUtils.#recurseParentsPosition( result, node.parent );
+        }
+    }
+
 }

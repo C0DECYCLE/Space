@@ -14,6 +14,7 @@ class AsteroidsRing {
 
         radius: 1000,
         spread: 200,
+        height: 200,
         density: 0.05,
     };
 
@@ -22,7 +23,7 @@ class AsteroidsRing {
 
     list = new Set(); 
     root = null;
-
+    
     constructor( manager, config ) {
 
         this.manager = manager;
@@ -44,9 +45,23 @@ class AsteroidsRing {
         return this.root.rotationQuaternion;
     }
 
+    get numberOfClusters() {
+
+        return this.list.size;
+    }
+
+    get numberOfAsteroids() {
+
+        let count = 0;
+
+        this.list.forEach( cluster => count += cluster.numberOfAsteroids );
+
+        return count;
+    }
+
     update() {
 
-        this.list.forEach( ( cluster ) => cluster.update() );
+        this.list.forEach( cluster => cluster.update() );
     }
 
     #createRoot() {
@@ -62,10 +77,10 @@ class AsteroidsRing {
         for ( let i = 0; i < count; i++ ) {
 
             const angle = ( 360 / count ) * i * EngineUtils.toRadian;
+            const offset = new BABYLON.Vector3( Math.cos( angle ), 0, Math.sin( angle ) ).scaleInPlace( this.config.radius );
 
-            const cluster = new AsteroidsCluster( this.manager, { key: i, radius: this.config.spread, density: this.config.density } );
-            cluster.position.copyFromFloats( Math.cos( angle ), 0, Math.sin( angle ) ).scaleInPlace( this.config.radius );
-            cluster.parent = this.root;
+            const cluster = new AsteroidsCluster( this.manager, { key: i, radius: this.config.spread, height: this.config.height, density: this.config.density }, this.root );
+            cluster.offsetAllAsteroids( offset );
 
             this.list.add( cluster );
         }

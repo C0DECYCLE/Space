@@ -165,10 +165,10 @@ class PhysicsEntity {
 
     #fitCollider() {
 
-        const info = this.#mesh.getBoundingInfo();
+        const bounding = EngineUtils.getBounding( this.#mesh );
         
         this.getCollider()
-        .copyFrom( info.boundingSphere.maximum )
+        .copyFrom( bounding.scaleInPlace( 0.5 ) )
         .multiplyInPlace( this.#mesh.scaling )
         .scaleInPlace( PhysicsEntity.ENLARGEMENT );
     }
