@@ -57,15 +57,12 @@ class SmartObjectArray extends ObjectArray {
     match( property, value ) {
 
         let i;
-        let object;
 
         for ( i = 0; i < this.len; i++ ) {
-            
-            object = this[i];
 
-            if ( object[ property ] === value ) {
+            if ( this[i][ property ] === value ) {
                 
-                return object;
+                return this[i];
             }
         }
     }
