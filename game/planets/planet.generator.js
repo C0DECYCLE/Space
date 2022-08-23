@@ -98,7 +98,7 @@ class PlanetGenerator {
 
         for ( let i = 0; i < rotations.length; i++ ) {
 
-            faces.add( new PlanetQuadtree( this.#planet, suffix[i], rotations[i] ) );
+            faces.push( new PlanetQuadtree( this.#planet, suffix[i], rotations[i] ) );
         }
     }
     

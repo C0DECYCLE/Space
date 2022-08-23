@@ -21,7 +21,7 @@ class AsteroidsRing {
     manager = null;
     scene = null;
 
-    list = new Set(); //swop out with [] array
+    list = [];
     root = null;
     
     constructor( manager, config ) {
@@ -47,21 +47,27 @@ class AsteroidsRing {
 
     get numberOfClusters() {
 
-        return this.list.size;
+        return this.list.length;
     }
 
     get numberOfAsteroids() {
 
         let count = 0;
 
-        this.list.forEach( cluster => count += cluster.numberOfAsteroids );
+        for ( let i = 0; i < this.list.length; i++ ) {
+
+            count += this.list[i].numberOfAsteroids;
+        }
 
         return count;
     }
 
     update() {
 
-        this.list.forEach( cluster => cluster.update() );
+        for ( let i = 0; i < this.list.length; i++ ) {
+
+            this.list[i].update();
+        }
     }
 
     #createRoot() {
@@ -82,7 +88,7 @@ class AsteroidsRing {
             const cluster = new AsteroidsCluster( this.manager, { key: i, radius: this.config.spread, height: this.config.height, density: this.config.density }, this.root );
             cluster.offsetAllAsteroids( offset );
 
-            this.list.add( cluster );
+            this.list.push( cluster );
         }
     }
 

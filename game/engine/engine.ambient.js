@@ -6,7 +6,7 @@
     2022
 */
 
-class Ambient {
+class EngineAmbient {
     
     scene = null;
 

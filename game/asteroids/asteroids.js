@@ -15,7 +15,7 @@ class Asteroids {
     manager = null;
     scene = null;
 
-    list = new Map(); //swop out with [] array
+    list = [];
     template = null;
 
     constructor( manager, config ) {
@@ -39,12 +39,15 @@ class Asteroids {
             case "ring": asteroids = new AsteroidsRing( this.manager, config ); break;
         }
 
-        this.list.set( config.key, asteroids );
+        this.list.push( asteroids );
     }
 
     update() {
 
-        this.list.forEach( ( asteroids, key ) => asteroids.update() );
+        for ( let i = 0; i < this.list.length; i++ ) {
+
+            this.list[i].update();
+        }
     }
 
     #createTemplate() {

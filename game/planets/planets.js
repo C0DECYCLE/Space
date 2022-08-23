@@ -13,7 +13,7 @@ class Planets {
     camera = null;
     player = null;
 
-    list = new Map(); //swop out with [] array
+    list = [];
 
     #maskMaterial = null;
 
@@ -29,7 +29,7 @@ class Planets {
 
     register( config ) {
 
-        this.list.set( config.key, new Planet( this.manager, config ) );
+        this.list.push( new Planet( this.manager, config ) );
     }
 
     registerFromConfigs( configs ) {
@@ -53,8 +53,9 @@ class Planets {
 
     #insert( position ) {
 
-        this.list.forEach( ( planet, key ) => {
-            
+        for ( let i = 0; i < this.list.length; i++ ) {
+
+            const planet = this.list[i];
             const distance = BABYLON.Vector3.Distance( planet.position, position );
             const planetThreashold = planet.config.radius + planet.config.influence;
             
@@ -69,12 +70,15 @@ class Planets {
             }
            
             planet.insert( position, distance );
-        } );
+        }
     }
 
     #update() {
 
-        this.list.forEach( ( planet, key ) => planet.update() );
+        for ( let i = 0; i < this.list.length; i++ ) {
+
+            this.list[i].update();
+        }
     }
 
     #createMaskMaterial() {

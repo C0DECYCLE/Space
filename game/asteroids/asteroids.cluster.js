@@ -20,7 +20,7 @@ class AsteroidsCluster {
     manager = null;
     scene = null;
 
-    list = new Set(); //swop out with [] array
+    list = [];
     root = null;
 
     #hasCustomParent = false;
@@ -62,7 +62,7 @@ class AsteroidsCluster {
 
     get numberOfAsteroids() {
 
-        return this.list.size;
+        return this.list.length;
     }
 
     set parent( value ) {
@@ -74,18 +74,28 @@ class AsteroidsCluster {
         } else {
 
             this.root = value;
-            this.list.forEach( asteroid => asteroid.parent = this.root );
+
+            for ( let i = 0; i < this.list.length; i++ ) {
+
+                this.list[i].parent = this.root;
+            }
         }
     }
     
     update() {
 
-        this.list.forEach( asteroid => asteroid.update() );
+        for ( let i = 0; i < this.list.length; i++ ) {
+
+            this.list[i].update();
+        }
     }
 
     offsetAllAsteroids( position ) {
 
-        this.list.forEach( asteroid => asteroid.position.addInPlace( position ) );
+        for ( let i = 0; i < this.list.length; i++ ) {
+
+            this.list[i].position.addInPlace( position );
+        }
     }
 
     #createRoot( customParent = null ) {
@@ -114,7 +124,7 @@ class AsteroidsCluster {
             asteroid.position.copyFromFloats( Math.random() * 2 - 1, Math.random() * 2 - 1, Math.random() * 2 - 1 ).multiplyInPlace( spread );
             asteroid.parent = this.root;
 
-            this.list.add( asteroid );
+            this.list.push( asteroid );
         }
     }
 

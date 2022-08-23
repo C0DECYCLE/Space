@@ -49,7 +49,7 @@ class Manager {
         
         this.scene = new BABYLON.Scene( Space.engine.babylon );
         this.scene.clearColor = BABYLON.Color3.FromHexString( this.config.dark ).scale( 0.25 * 0.5 );
-        this.scene.ambient = new Ambient( this.scene, this.config.dark, 0.25 * 1.25 );
+        this.scene.ambient = new EngineAmbient( this.scene, this.config.dark, 0.25 * 1.25 );
         
         postScene( this.scene );
 
@@ -120,15 +120,15 @@ class Manager {
 
     #stage() { 
         
-        this.planets.list.get( 0 ).place( this.star.position, 100 * 1000, 90 );
-        this.planets.list.get( 1 ).place( this.star.position, 200 * 1000, -45 );
-        this.planets.list.get( 2 ).place( this.star.position, 250 * 1000, 240 );
-        this.planets.list.get( 3 ).place( this.planets.list.get( 2 ).position, 10 * 1000, 60 );
+        this.planets.list[0].place( this.star.position, 100 * 1000, 90 );
+        this.planets.list[1].place( this.star.position, 200 * 1000, -45 );
+        this.planets.list[2].place( this.star.position, 250 * 1000, 240 );
+        this.planets.list[3].place( this.planets.list[2].position, 10 * 1000, 60 );
         
-        this.player.position.copyFrom( this.planets.list.get( 0 ).position ).addInPlace( new BABYLON.Vector3( 1 * 3000, 0, 0 ) );
+        this.player.position.copyFrom( this.planets.list[0].position ).addInPlace( new BABYLON.Vector3( 1 * 3000, 0, 0 ) );
         
-        this.asteroids.list.get( 0 ).position.copyFrom( this.planets.list.get( 0 ).position );
-        this.asteroids.list.get( 1 ).position.copyFrom( this.planets.list.get( 0 ).position );
+        this.asteroids.list[0].position.copyFrom( this.planets.list[0].position );
+        this.asteroids.list[1].position.copyFrom( this.planets.list[0].position );
 
         this.camera.attachToPlayer( this.player );
 
