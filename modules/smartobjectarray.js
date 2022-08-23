@@ -43,6 +43,7 @@ class SmartObjectArray extends ObjectArray {
 
             const object = this[ --this.len ];
             delete object[ this.uuid ];
+            this[ this.len ] = undefined;
 
             return object;
         }
