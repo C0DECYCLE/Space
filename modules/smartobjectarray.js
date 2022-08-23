@@ -10,6 +10,18 @@ class SmartObjectArray extends ObjectArray {
 
     len = 0;
 
+    /* override */ pop() {
+
+        if ( this.len > 0 ) {
+
+            const object = this[ --this.len ];
+            delete object[ this.uuid ];
+            this[ this.len ] = undefined;
+
+            return object;
+        }
+    }
+    
     /* override */ add( object ) {
 
         if ( object[ this.uuid ] === undefined ) {
@@ -32,45 +44,14 @@ class SmartObjectArray extends ObjectArray {
         }
     }
 
+    /* override */ match( property, value ) {
+
+        super.match( property, value, this.len );
+    }
+
     /* override */ delete( object ) {
 
         super.delete( object, this.len );
-    }
-
-    /* override */ pop() {
-
-        if ( this.len > 0 ) {
-
-            const object = this[ --this.len ];
-            delete object[ this.uuid ];
-            this[ this.len ] = undefined;
-
-            return object;
-        }
-    }
-
-    /* override */ clear() {
-
-        this.len = 0;
-    }
-
-    match( property, value ) {
-
-        let i;
-
-        for ( i = 0; i < this.len; i++ ) {
-
-            if ( this[i][ property ] === value ) {
-                
-                return this[i];
-            }
-        }
-    }
-
-    destroy() {
-
-        this.clear();
-        super.clear();
     }
 
 }

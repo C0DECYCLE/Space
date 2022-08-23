@@ -39,6 +39,19 @@ class ObjectArray extends Array {
         return this[ index ];
     }
 
+    match( property, value, len = this.length ) {
+
+        let i;
+
+        for ( i = 0; i < len; i++ ) {
+
+            if ( this[i][ property ] === value ) {
+                
+                return this[i];
+            }
+        }
+    }
+
     delete( object, len = this.length ) {
 
         if ( this.contains( object ) === true ) {
