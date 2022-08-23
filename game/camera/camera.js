@@ -78,7 +78,7 @@ class Camera {
 
     update() {
 
-        if ( this.target.object != null && this.target.camera != null ) {
+        if ( this.target.object !== null && this.target.camera !== null ) {
 
             this.target.camera.update( this.target.object );
         }
@@ -87,7 +87,7 @@ class Camera {
     screenCoverage( node ) {
 
         const distance = EngineUtils.getWorldPosition( node ).subtractInPlace( this.position ).length();
-        
+
     }
 
     #createRoot() {

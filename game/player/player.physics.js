@@ -37,7 +37,7 @@ class PlayerPhysics extends PhysicsEntity {
 
         const up = this.#planet.physics.pull( this );
 
-        if ( this.state == PhysicsEntity.STATES.GROUND ) {
+        if ( this.state === PhysicsEntity.STATES.GROUND ) {
 
             this.#planetMovement();
             this.quaternionTowardsUpright( up, 0.1 );
@@ -55,29 +55,29 @@ class PlayerPhysics extends PhysicsEntity {
 
         let speed = float;
 
-        if ( controls.activeKeys.has( "w" ) == true ) {
+        if ( controls.activeKeys.has( "w" ) === true ) {
 
             translate.z = speed;
 
-        } else if ( controls.activeKeys.has( "s" ) == true ) {
+        } else if ( controls.activeKeys.has( "s" ) === true ) {
 
             translate.z = -speed;
         }
         
-        if ( controls.activeKeys.has( "d" ) == true ) {
+        if ( controls.activeKeys.has( "d" ) === true ) {
 
             translate.x = speed;
 
-        } else if ( controls.activeKeys.has( "a" ) == true ) {
+        } else if ( controls.activeKeys.has( "a" ) === true ) {
 
             translate.x = -speed;
         }
         
-        if ( controls.activeKeys.has( "q" ) == true ) {
+        if ( controls.activeKeys.has( "q" ) === true ) {
 
             translate.y = speed;
 
-        } else if ( controls.activeKeys.has( "e" ) == true ) {
+        } else if ( controls.activeKeys.has( "e" ) === true ) {
 
             translate.y = -speed;
         }
@@ -100,30 +100,30 @@ class PlayerPhysics extends PhysicsEntity {
 
         let speed = walk;
 
-        if ( controls.activeKeys.has( "shift" ) == true ) {
+        if ( controls.activeKeys.has( "shift" ) === true ) {
 
             speed = run;
         }
 
-        if ( controls.activeKeys.has( "w" ) == true ) {
+        if ( controls.activeKeys.has( "w" ) === true ) {
 
             translate.z = speed;
 
-        } else if ( controls.activeKeys.has( "s" ) == true ) {
+        } else if ( controls.activeKeys.has( "s" ) === true ) {
 
             translate.z = -speed;
         }
         
-        if ( controls.activeKeys.has( "d" ) == true ) {
+        if ( controls.activeKeys.has( "d" ) === true ) {
 
             translate.x = speed;
 
-        } else if ( controls.activeKeys.has( "a" ) == true ) {
+        } else if ( controls.activeKeys.has( "a" ) === true ) {
 
             translate.x = -speed;
         }
 
-        if ( controls.activeKeys.has( " " ) == true ) {
+        if ( controls.activeKeys.has( " " ) === true ) {
 
             translate.y = jump * deltaCorrection;
         }
@@ -133,7 +133,7 @@ class PlayerPhysics extends PhysicsEntity {
 
     #movementTranslate( translate ) {
         
-        if ( translate.x != 0 || translate.y != 0 || translate.z != 0 ) {
+        if ( translate.x !== 0 || translate.y !== 0 || translate.z !== 0 ) {
 
             this.velocity.addInPlace( translate.applyRotationQuaternion( this.#player.rotationQuaternion ) );   
         }

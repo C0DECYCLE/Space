@@ -10,7 +10,7 @@ class PlanetUtils {
 
     static compare( planetA, planetB ) {
 
-        return planetA.config.key == planetB.config.key;
+        return planetA.config.key === planetB.config.key;
     }
 
     static terrainify( planet, v ) {

@@ -54,7 +54,7 @@ class Asteroids {
         this.template.material.setColorIntensity( "#534d5f", 1.0 );
         //this.template.useLODScreenCoverage = true;
         //this.template.addLODLevel( 0.00001, null );  
-        //this.template.isLODNull = () => dummy.root.getLOD( scene.activeCamera ) == null;
+        //this.template.isLODNull = () => dummy.root.getLOD( scene.activeCamera ) === null;
         this.template.setEnabled( false );
         
         this.manager.star.shadow.receive( this.template, true, false );

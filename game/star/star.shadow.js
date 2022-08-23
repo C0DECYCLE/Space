@@ -54,7 +54,7 @@ class StarShadow {
 
     update() {
 
-        if ( this.#debug == true && this.#frustumViewer != null ) {
+        if ( this.#debug === true && this.#frustumViewer !== null ) {
 
             this.#frustumViewer.update();
         }
@@ -75,7 +75,7 @@ class StarShadow {
         
         this.#light.shadowOrthoScale = 0;
 
-        if ( this.#debug == true ) {
+        if ( this.#debug === true ) {
 
             this.#frustumViewer = new BABYLON.DirectionalLightFrustumViewer( this.#light, this.#star.manager.camera.camera );
         } 
@@ -93,8 +93,8 @@ class StarShadow {
         this.generator.transparencyShadow = false;
         this.generator.enableSoftTransparentShadow = false;
 
-        this.generator.usePercentageCloserFiltering = this.config.filter == "PCF";
-        this.generator.useContactHardeningShadow = this.config.filter == "CONHRD";
+        this.generator.usePercentageCloserFiltering = this.config.filter === "PCF";
+        this.generator.useContactHardeningShadow = this.config.filter === "CONHRD";
         //this.generator.contactHardeningLightSizeUVRatio = 0-1;
         this.generator.filteringQuality = BABYLON.ShadowGenerator[ `QUALITY_${ this.config.quality }` ];
 
@@ -119,7 +119,7 @@ class StarShadow {
 
         call( mesh );
 
-        if ( recursiv == true ) {
+        if ( recursiv === true ) {
 
             for ( let i = 0, children = mesh.getChildMeshes(); i < children.length; i++ ) {
 
@@ -130,7 +130,7 @@ class StarShadow {
 
     #meshCast( mesh, value ) {
 
-        if ( value == true ) {
+        if ( value === true ) {
 
             this.#shadowMap.renderList.push( mesh );
 

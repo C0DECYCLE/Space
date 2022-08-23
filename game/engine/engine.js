@@ -41,7 +41,7 @@ class Engine {
 
     set( update ) {
 
-        if ( typeof update == "function" ) {
+        if ( typeof update === "function" ) {
 
             this.#update = update;
         }

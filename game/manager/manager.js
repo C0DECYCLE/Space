@@ -100,11 +100,7 @@ class Manager {
         this.asteroids.register( "ring", { key: 0, radius: 5 * 1000, spread: 400, height: 200, density: 0.02 } );
         this.asteroids.register( "ring", { key: 1, radius: 5 * 1000, spread: 2 * 1000, height: 100, density: 0.03 } );
         
-        //use ObjectArray with shadow generator as well, overwrite renderlist = new ObjectArray, instead of add/removeShadowCaster... add/delete to ObjectArray and dont give option to also do descendense (delete before mesh dispose for performance)
-        //check where to use the objectarray/smartobjectarray
-        //find solution for render target texture array hook
-        //only use push and pop for having O(1) but for them to actually have O(1) make like a smart array.
-        //when object array is like smart array then its not an extend of an array? or possible? when not then rendertargettexture problrm changes, make maybe 2 variants?
+        //check where to use the objectarray/smartobjectarray! only outside of babylon!
 
         //copy the assets loading etc system from the old space project
         //make asteroids out of models not boxes!
@@ -139,7 +135,7 @@ class Manager {
 
     #run( delta ) {
         
-        if ( this.config.freeze == false ) {
+        if ( this.config.freeze === false ) {
 
             this.planets.update();
         }

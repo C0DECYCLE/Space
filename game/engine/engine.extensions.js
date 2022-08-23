@@ -33,7 +33,7 @@ class EngineExtensions {
 
     #extend( parent, name, method ) {
 
-        if ( typeof BABYLON[ parent ].prototype[ name ] != "undefined" ) {
+        if ( typeof BABYLON[ parent ].prototype[ name ] !== "undefined" ) {
 
             console.warn( "EngineExtensions: Method " + name + " already exists in " + parent + "." );
  
@@ -57,7 +57,7 @@ class EngineExtensions {
 
         const ambient = this.getScene().ambient;
 
-        if ( typeof ambient != "undefined" ) {
+        if ( typeof ambient !== "undefined" ) {
 
             this.intensity *= ambient.lightFactor();
         }
@@ -72,7 +72,7 @@ class EngineExtensions {
 
         const ambient = this.getScene().ambient;
 
-        if ( typeof ambient != "undefined" ) {
+        if ( typeof ambient !== "undefined" ) {
 
             this.diffuseColor.scale( ambient.intensity );
             this.ambientColor = new BABYLON.Color3.FromHexString( ambient.color ).scale( ambient.materialFactor() );

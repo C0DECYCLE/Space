@@ -76,7 +76,7 @@ class CameraOrigin {
 
         const scene = this.#camera.scene;
 
-        if ( scene.rootNodes[0].name != "camera" ) {
+        if ( scene.rootNodes[0].name !== "camera" ) {
 
             console.error( "Camera node not at position 0 in scene.rootNodes!" );
 

@@ -88,14 +88,14 @@ class Planet {
 
     insert( position, distance, force = false ) {
         
-        if ( force == false && distance / this.config.radius > PlanetQuadtree.INSERT_LIMIT ) {
+        if ( force === false && distance / this.config.radius > PlanetQuadtree.INSERT_LIMIT ) {
 
             return;
         }
 
         const insertionString = this.#getInsertionString( position );
         
-        if ( insertionString != this.#cachedInsertionString ) {
+        if ( insertionString !== this.#cachedInsertionString ) {
             
             this.#insertQuadtrees( position, distance );
 
@@ -143,7 +143,7 @@ class Planet {
 
     #addAthmosphere() {
 
-        if ( this.config.athmosphere != false ) {
+        if ( this.config.athmosphere !== false ) {
 
             this.athmosphere = this.manager.postprocess.athmosphere( this );
         }
@@ -151,7 +151,7 @@ class Planet {
 
     #updateSpin() {
         
-        if ( this.config.spin != false ) {
+        if ( this.config.spin !== false ) {
 
             const deltaCorrection = Space.engine.deltaCorrection;
 
@@ -161,7 +161,7 @@ class Planet {
     
     #updateOrbit() {
 
-        if ( this.config.orbit != false ) {
+        if ( this.config.orbit !== false ) {
 
             const deltaCorrection = Space.engine.deltaCorrection;
 
@@ -238,7 +238,7 @@ class Planet {
 
         this.#list.forEach( ( data, nodeKey ) => {
             
-            if ( data.keep == false ) {
+            if ( data.keep === false ) {
                 
                 this.#disposeNode( nodeKey, data );
             }

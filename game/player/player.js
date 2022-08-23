@@ -68,11 +68,11 @@ class Player {
 
         this.#updateFromInspector();
 
-        if ( this.state.is( "space" ) == true ) {
+        if ( this.state.is( "space" ) === true ) {
 
             this.physics.space();
 
-        } else if ( this.state.is( "planet" ) == true ) {
+        } else if ( this.state.is( "planet" ) === true ) {
 
             this.physics.planet();
         }
@@ -149,9 +149,9 @@ class Player {
 
     #onPointerMove( event ) {
         
-        if ( this.controls.isPointerDown == true || this.config.experimentalPointerLock == true ) {
+        if ( this.controls.isPointerDown === true || this.config.experimentalPointerLock === true ) {
 
-            if ( this.controls.isKeyboarding == true ) {
+            if ( this.controls.isKeyboarding === true ) {
 
                 this.#followPointer( event );
 

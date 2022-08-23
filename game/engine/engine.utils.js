@@ -25,7 +25,7 @@ class EngineUtils {
             const key = keys[i];
             const value = inject[ key ];
 
-            if ( value != undefined ) {
+            if ( value !== undefined ) {
 
                 target[ key ] = value;
             }
@@ -46,7 +46,7 @@ class EngineUtils {
 
     static getBounding( node ) {
         
-        if ( node.boundingCache == undefined ) {
+        if ( node.boundingCache === undefined ) {
 
             const minmax = node.getHierarchyBoundingVectors();
 
@@ -67,7 +67,7 @@ class EngineUtils {
 
     static #recurseParentsPosition( result, node ) {
 
-        if ( node.parent != null ) {
+        if ( node.parent !== null ) {
             
             result.addInPlace( node.parent.position );
 

@@ -31,9 +31,9 @@ class StateMachine {
 
     set( state, params ) {
 
-        if ( this.#list.has( state ) == true ) {
+        if ( this.#list.has( state ) === true ) {
 
-            if ( this.#current != undefined ) {
+            if ( this.#current !== undefined ) {
 
                 this.#list.get( this.#current ).onLeave( state, params );
             }
@@ -51,7 +51,7 @@ class StateMachine {
 
     is( state ) {
 
-        return this.#current == state;
+        return this.#current === state;
     }
     
 }

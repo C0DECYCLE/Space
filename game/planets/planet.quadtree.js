@@ -93,7 +93,7 @@ class PlanetQuadtree {
                 
             const resolution = this.#getResolution( params, size );
             
-            if ( params.list.has( nodeKey ) == true ) {
+            if ( params.list.has( nodeKey ) === true ) {
 
                 this.#keepNode( params, nodeKey, resolution );
 
@@ -108,7 +108,7 @@ class PlanetQuadtree {
 
         const node = params.list.get( nodeKey );
             
-        if ( node.resolution == resolution ) {
+        if ( node.resolution === resolution ) {
 
             node.keep = true;
         }

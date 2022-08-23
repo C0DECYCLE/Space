@@ -84,7 +84,7 @@ class PhysicsEntity {
 
         this.#stateValue = value;
 
-        if ( this.#stateValue == PhysicsEntity.STATES.GROUND ) {
+        if ( this.#stateValue === PhysicsEntity.STATES.GROUND ) {
 
             this.#lastTimeOnGround = 0;
         }
@@ -92,14 +92,14 @@ class PhysicsEntity {
 
     update() {
         
-        if ( this.#isPaused == true ) {
+        if ( this.#isPaused === true ) {
 
             return;
         }
         
         this.delta.addInPlace( this.velocity );
 
-        if ( this.delta.x != 0 || this.delta.y != 0 || this.delta.z != 0 ) {
+        if ( this.delta.x !== 0 || this.delta.y !== 0 || this.delta.z !== 0 ) {
 
             this.#mesh.moveWithCollisions( this.delta );
         }
@@ -175,7 +175,7 @@ class PhysicsEntity {
 
     #bindObservables() {
 
-        if ( this.type == PhysicsEntity.TYPES.DYNAMIC ) {
+        if ( this.type === PhysicsEntity.TYPES.DYNAMIC ) {
 
             //this.#mesh.onCollideObservable.add( ( otherMesh ) => this.#onCollide( otherMesh ) );
         }
@@ -183,7 +183,7 @@ class PhysicsEntity {
 
     #onCollide( otherMesh ) {
         
-        if ( otherMesh.physicsEntityType == PhysicsEntity.TYPES.STATIC ) {
+        if ( otherMesh.physicsEntityType === PhysicsEntity.TYPES.STATIC ) {
 
         }
     }

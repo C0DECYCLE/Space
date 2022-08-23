@@ -31,7 +31,7 @@ class ManagerStage {
 
     run( delta ) {
 
-        if ( this.#isStagingComplete == true ) {
+        if ( this.#isStagingComplete === true ) {
 
             this.#run( delta );
         }

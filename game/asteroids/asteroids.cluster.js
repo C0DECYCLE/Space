@@ -38,7 +38,7 @@ class AsteroidsCluster {
 
     get position() {
         
-        if ( this.#hasCustomParent == false ) {
+        if ( this.#hasCustomParent === false ) {
 
             return this.root.position;     
 
@@ -50,7 +50,7 @@ class AsteroidsCluster {
 
     get rotationQuaternion() {
         
-        if ( this.#hasCustomParent == false ) {
+        if ( this.#hasCustomParent === false ) {
 
             return this.root.rotationQuaternion;     
 
@@ -67,7 +67,7 @@ class AsteroidsCluster {
 
     set parent( value ) {
 
-        if ( this.#hasCustomParent == false ) {
+        if ( this.#hasCustomParent === false ) {
 
             this.root.parent = value;     
 
@@ -90,9 +90,9 @@ class AsteroidsCluster {
 
     #createRoot( customParent = null ) {
 
-        this.#hasCustomParent = customParent != null;
+        this.#hasCustomParent = customParent !== null;
 
-        if ( this.#hasCustomParent == true ) {
+        if ( this.#hasCustomParent === true ) {
 
             this.root = customParent;
 

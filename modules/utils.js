@@ -23,7 +23,7 @@ Array.prototype.hasByProperty = function( property, value ) {
 
     for ( i = 0; i < len; i++ ) {
         
-        if ( this[i][property] == value ) {
+        if ( this[i][property] === value ) {
             
             return true;
         }
@@ -40,7 +40,7 @@ Array.prototype.getByProperty = function( property, value ) {
 
     for ( i = 0; i < len; i++ ) {
         
-        if ( this[i][property] == value ) {
+        if ( this[i][property] === value ) {
             
             return this[i];
         }
@@ -58,13 +58,13 @@ Array.prototype.removeByProperty = function( property, value ) {
     
     for ( i = 0; i < len; i++ ) {
         
-        if ( this[i][property] == value ) {
+        if ( this[i][property] === value ) {
 
             index = i;
         }
     }
     
-    if ( index != -1 ) {
+    if ( index !== -1 ) {
         
         this.splice( index, 1 );
     }
@@ -77,7 +77,7 @@ Array.prototype.remove = function( value ) {
     
     const index = this.indexOf( value );
     
-    if ( index != -1 ) {
+    if ( index !== -1 ) {
         
         this.splice( index, 1 );
     }

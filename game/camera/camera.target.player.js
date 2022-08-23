@@ -18,13 +18,13 @@ class CameraTargetPlayer extends CameraTarget {
         super( camera );
     }
 
-    update( player ) {
+    /* override */ update( player ) {
 
         this.#adaptFocus( player );
 
         super.update( player );
         
-        if ( this.camera.controls.isKeyboarding == true ) {
+        if ( this.camera.controls.isKeyboarding === true ) {
 
             this.#refocus( player );
             this.focus( this.camera.config.lerp );
@@ -37,11 +37,11 @@ class CameraTargetPlayer extends CameraTarget {
 
     #adaptFocus( player ) {
 
-        if ( player.state.is( "space" ) == true ) {
+        if ( player.state.is( "space" ) === true ) {
 
             this.focusBeta = this.#spaceFocusBeta;
 
-        } else if ( player.state.is( "planet" ) == true ) {
+        } else if ( player.state.is( "planet" ) === true ) {
 
             this.focusBeta = this.#planetFocusBeta;
         }
@@ -49,7 +49,7 @@ class CameraTargetPlayer extends CameraTarget {
 
     #refocus( player ) {
 
-        if ( this.#wasUnfocused == true ) {
+        if ( this.#wasUnfocused === true ) {
 
             this.#redirect( player );
             this.focus();

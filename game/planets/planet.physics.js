@@ -17,7 +17,7 @@ class PlanetPhysics {
 
     enable( mesh, size ) {
         
-        if ( size == this.#planet.config.min ) {
+        if ( size === this.#planet.config.min ) {
 
             PhysicsEntity.collidable( mesh, PhysicsEntity.TYPES.STATIC );
         }
@@ -63,7 +63,7 @@ class PlanetPhysics {
 
     #pullSpin( physicsEntity, distanceCenter ) {
 
-        if ( this.#planet.config.spin != false ) {
+        if ( this.#planet.config.spin !== false ) {
 
             const deltaCorrection = Space.engine.deltaCorrection;
             const deltaAngle = this.#planet.config.spin * EngineUtils.toRadian * deltaCorrection * this.#getSpinFactor( distanceCenter );
