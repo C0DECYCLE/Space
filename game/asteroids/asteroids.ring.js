@@ -21,7 +21,7 @@ class AsteroidsRing {
     manager = null;
     scene = null;
 
-    list = new Set(); 
+    list = new Set(); //swop out with [] array
     root = null;
     
     constructor( manager, config ) {

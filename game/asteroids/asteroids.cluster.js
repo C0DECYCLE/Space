@@ -20,7 +20,7 @@ class AsteroidsCluster {
     manager = null;
     scene = null;
 
-    list = new Set(); 
+    list = new Set(); //swop out with [] array
     root = null;
 
     #hasCustomParent = false;

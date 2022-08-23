@@ -10,19 +10,38 @@ class ObjectArray extends Array {
 
     uuid = UUIDv4();
 
+    /* override */ indexOf( object ) {
+
+        return object[ this.uuid ];
+    }
+
+    /* override */ contains( object ) {
+
+        return object[ this.uuid ] !== undefined;
+    }
+
     add( object ) {
 
-        if ( object[ this.uuid ] === undefined ) {
+        if ( this.contains( object ) === false ) {
 
             object[ this.uuid ] = this.length;
-
             this.push( object );
         }
     }
 
+    has( object ) {
+
+        return this.contains( object );
+    }
+
+    get( index ) {
+
+        return this[ index ];
+    }
+
     delete( object, len = this.length ) {
 
-        if ( object[ this.uuid ] !== undefined ) {
+        if ( this.contains( object ) === true ) {
 
             const uuid = this.uuid;
             const last_value = this[ len - 1 ];
@@ -34,9 +53,13 @@ class ObjectArray extends Array {
             this[ index ] = last_value;
 
             this.pop();
-
             delete object[ uuid ];
         }
+    }
+
+    clear() {
+
+        this.length = 0;
     }
 
 }

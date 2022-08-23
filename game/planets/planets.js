@@ -13,7 +13,7 @@ class Planets {
     camera = null;
     player = null;
 
-    list = new Map();
+    list = new Map(); //swop out with [] array
 
     #maskMaterial = null;
 

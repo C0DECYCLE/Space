@@ -15,7 +15,7 @@ class Asteroids {
     manager = null;
     scene = null;
 
-    list = new Map();
+    list = new Map(); //swop out with [] array
     template = null;
 
     constructor( manager, config ) {

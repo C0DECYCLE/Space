@@ -41,10 +41,10 @@ class Planet {
     perlin = null;
     athmosphere = null;
 
-    #faces = new Set();
+    #faces = new Set(); //swop out with [] array
 
     #cachedInsertionString = "";
-    #list = new Map();
+    #list = new Map(); //swop out with ? Map is good because of has(nodekey)/get(nodekey) fast but everything else SmartObjectArray with nodekey inside data would go and be faster, if would have to swop out, then would have to find fast solution for has/get by nodekey or else use the slow hasByProperty/getByProperty
     #orbitCenter = new BABYLON.Vector3( 0, 0, 0 );
     #distanceInOrbit = 0;
     #angleAroundOrbit = 0;
