@@ -100,10 +100,6 @@ class Manager {
         this.asteroids.register( "ring", { key: 0, radius: 5 * 1000, spread: 400, height: 200, density: 0.02 } );
         this.asteroids.register( "ring", { key: 1, radius: 5 * 1000, spread: 2 * 1000, height: 100, density: 0.03 } );
         
-        //try replace all set/map with either array or objectarray or smartobjectarray
-        //Search for all with "//swop out with"
-        //check where to use the smartobjectarray/objectarray! only outside of babylon!
-
         //copy the assets loading etc system from the old space project
         //make asteroids out of models not boxes!
         

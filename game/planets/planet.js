@@ -109,14 +109,6 @@ class Planet {
         //this.#update();
     }
 
-    disposeAll() {
-
-        this.#list.forEach( ( data, nodeKey ) => {
-        
-            this.#disposeNode( nodeKey, data );
-        } ); 
-    }
-
     #createRoot() {
 
         this.root = new BABYLON.TransformNode( `planet${ this.config.key }`, this.scene );
