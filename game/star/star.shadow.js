@@ -23,6 +23,8 @@ class StarShadow {
 
     generator = null;
 
+    #shadowMap = null;
+
     #star = null;
     #light = null;
 
@@ -42,27 +44,12 @@ class StarShadow {
 
     cast( mesh, value = true, recursiv = false ) {
 
-        if ( value == true ) {
-
-            this.generator.addShadowCaster( mesh, recursiv );
-
-        } else {
-
-            this.generator.removeShadowCaster( mesh, recursiv );
-        }
+        this.#meshRecurse( mesh, ( m ) => this.#meshCast( m, value ), recursiv );
     }
  
     receive( mesh, value = true, recursiv = false ) {
 
-        mesh.receiveShadows = value;
-
-        if ( recursiv == true ) {
-
-            for ( let i = 0, children = mesh.getChildMeshes(); i < children.length; i++ ) {
-
-                children[i].receiveShadows = value;
-            }
-        }
+        this.#meshRecurse( mesh, ( m ) => this.#meshReceive( m, value ), recursiv );
     }
 
     update() {
@@ -124,6 +111,38 @@ class StarShadow {
         //this.generator.depthClamp = true; //not PCSS
         //this.generator.autoCalcDepthBounds = false; //what is that?
         //this.generator.autoCalcDepthBoundsRefreshRate = 2 //every second frame;
+
+        this.#shadowMap = this.generator.getShadowMap();
+    }
+
+    #meshRecurse( mesh, call, recursiv = false ) {
+
+        call( mesh );
+
+        if ( recursiv == true ) {
+
+            for ( let i = 0, children = mesh.getChildMeshes(); i < children.length; i++ ) {
+
+                call( children[i] );
+            }
+        }
+    }
+
+    #meshCast( mesh, value ) {
+
+        if ( value == true ) {
+
+            this.#shadowMap.renderList.push( mesh );
+
+        } else {
+
+            this.#shadowMap.renderList.remove( mesh );
+        }
+    }
+
+    #meshReceive( mesh, value ) {
+
+        mesh.receiveShadows = value;
     }
 
 }

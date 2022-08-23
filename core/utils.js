@@ -19,8 +19,9 @@ function UUIDv4() {
 Array.prototype.hasByProperty = function( property, value ) {
     
     let i;
+    const len = this.length;
 
-    for ( i = 0; i < this.length; i++ ) {
+    for ( i = 0; i < len; i++ ) {
         
         if ( this[i][property] == value ) {
             
@@ -35,8 +36,9 @@ Array.prototype.hasByProperty = function( property, value ) {
 Array.prototype.getByProperty = function( property, value ) {
     
     let i;
+    const len = this.length;
 
-    for ( i = 0; i < this.length; i++ ) {
+    for ( i = 0; i < len; i++ ) {
         
         if ( this[i][property] == value ) {
             
@@ -50,20 +52,21 @@ Array.prototype.getByProperty = function( property, value ) {
 
 Array.prototype.removeByProperty = function( property, value ) {
     
-    let id = -1;
+    let index = -1;
     let i;
+    const len = this.length;
     
-    for ( i = 0; i < this.length; i++ ) {
+    for ( i = 0; i < len; i++ ) {
         
         if ( this[i][property] == value ) {
 
-            id = i;
+            index = i;
         }
     }
     
-    if ( id != -1 ) {
+    if ( index != -1 ) {
         
-        this.splice( id, 1 );
+        this.splice( index, 1 );
     }
 
     return this;
@@ -72,21 +75,26 @@ Array.prototype.removeByProperty = function( property, value ) {
 
 Array.prototype.remove = function( value ) {
     
-    let id = -1;
-    let i;
+    const index = this.indexOf( value );
     
-    for ( i = 0; i < this.length; i++ ) {
+    if ( index != -1 ) {
         
-        if ( this[i] == value ) {
+        this.splice( index, 1 );
+    }
 
-            id = i;
-        }
-    }
-    
-    if ( id != -1 ) {
-        
-        this.splice( id, 1 );
-    }
+    return this;
+};
+
+
+Array.prototype.quick_remove = function( index ) {
+
+    const len = this.length;
+    const last_value = this[ len - 1 ];
+
+    this[ len - 1 ] = this[ index ];
+    this[ index ] = last_value;
+
+    this.pop();
 
     return this;
 };

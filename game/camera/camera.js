@@ -86,6 +86,7 @@ class Camera {
 
     screenCoverage( node ) {
 
+        const distance = EngineUtils.getWorldPosition( node ).subtractInPlace( this.position ).length();
         
     }
 

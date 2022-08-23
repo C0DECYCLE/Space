@@ -249,8 +249,8 @@ class Planet {
 
     #disposeNode( nodeKey, data ) {
 
-        data.mesh.dispose( !true, false );
         this.manager.postprocess.dispose( data.mesh );
+        data.mesh.dispose( !true, false );
         this.#list.delete( nodeKey );
     }
 

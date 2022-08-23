@@ -100,13 +100,22 @@ class Manager {
         this.asteroids.register( "ring", { key: 0, radius: 5 * 1000, spread: 400, height: 200, density: 0.02 } );
         this.asteroids.register( "ring", { key: 1, radius: 5 * 1000, spread: 2 * 1000, height: 100, density: 0.03 } );
         
+        //use ObjectArray with shadow generator as well, overwrite renderlist = new ObjectArray, instead of add/removeShadowCaster... add/delete to ObjectArray and dont give option to also do descendense (delete before mesh dispose for performance)
+        //check where to use the objectarray/smartobjectarray
+        //find solution for render target texture array hook
+        //only use push and pop for having O(1) but for them to actually have O(1) make like a smart array.
+        //when object array is like smart array then its not an extend of an array? or possible? when not then rendertargettexture problrm changes, make maybe 2 variants?
+
         //copy the assets loading etc system from the old space project
         //make asteroids out of models not boxes!
+        
         //make method which gets the distance to the camera by traversing the parents upwards adding all positions and then subtracting it by the camera position and then the length()
         //make own lod system with screencoverage by distance and size (for the moment use naive distance of every lod enabled object but later use objectcontainers) enable lod system by default on every object? (in that case only the object self and enabled false when too small to see) when not manually set stages of lod (example: lod0, off or lod0, lod1, lod2, off )
+        
         //next: make private shadow function pause/resume (internaly adds/removes shadowcaster and toggls receive shadow, with the remebemered recurse children etc parameters) which get used when somethings out of the shadow radius bubble (for the moment use naive distance of every caster/receiver but later use objectcontainers). Also add parameter to public cast/receive function, bool to allow internal pause/resume when out of shadow radius
         //next: make physics bubble (for the moment use naive distance of every physis entity but later use objectcontainers)
-        //later: object containers, port every naive distance to the object container system (shadow bubble, physics bubble, screencoverage) by port the primary distance function self to use the objectcontainers
+        
+        //later: object containers, port every naive distance to the object container system (shadow bubble, physics bubble, screencoverage) by port the primary distance function self to use the objectcontainers. Every time the object container the camera is in changed switch the bool camera.containerChanged = true for one frame and then false again, nodes can ask for an aproximate distance to the camera (aproximate = error between 0 and size of an object container), the function checks if there is a cached distance of the container the object is in and if the camera.containerChanged for that frame is false then return the cached aproximate distance else recompute. If they are in the same container calculate the exact distance. (debug and compare the aproximate accuracy/speed with the naive direct distance calculation) After this try to get rid of all naive distance (length() / BABYLON.Vector3.Distance()) calculations and test before after perforance!
 
         return this.scene;
     }
