@@ -53,6 +53,22 @@ class SmartObjectArray extends ObjectArray {
         this.len = 0;
     }
 
+    match( property, value ) {
+
+        let i;
+        let object;
+
+        for ( i = 0; i < this.len; i++ ) {
+            
+            object = this[i];
+
+            if ( object[ property ] === value ) {
+                
+                return object;
+            }
+        }
+    }
+
     destroy() {
 
         this.clear();
