@@ -20,11 +20,11 @@ class ObjectArray extends Array {
         return object[ this.uuid ] !== undefined;
     }
 
-    add( object ) {
+    add( object, len = this.length ) {
 
         if ( this.contains( object ) === false ) {
 
-            object[ this.uuid ] = this.length;
+            object[ this.uuid ] = len;
             this.push( object );
         }
     }

@@ -10,6 +10,16 @@ class SmartObjectArray extends ObjectArray {
 
     len = 0;
 
+    /* override */ push( object ) {
+        
+        this[ this.len++ ] = object;
+
+        if ( this.len >= this.length ) {
+
+            this.length *= 2;
+        }
+    }
+
     /* override */ pop() {
 
         if ( this.len > 0 ) {
@@ -24,16 +34,7 @@ class SmartObjectArray extends ObjectArray {
     
     /* override */ add( object ) {
 
-        if ( object[ this.uuid ] === undefined ) {
-                
-            object[ this.uuid ] = this.len;
-            this[ this.len++ ] = object;
-
-            if ( this.len >= this.length ) {
-
-                this.length *= 2;
-            }
-        }
+        super.add( object, this.len );
     }
 
     /* override */ get( index ) {
