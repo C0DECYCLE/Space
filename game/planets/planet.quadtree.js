@@ -92,8 +92,8 @@ class PlanetQuadtree {
         if ( factors.dot > params.occlusionFallOf ) {
                 
             const resolution = this.#getResolution( params, size );
-            const node = params.list.match( "key", nodeKey );
-            
+            const node = params.list.get( nodeKey );
+
             if ( node !== undefined ) {
 
                 this.#keepNode( node, resolution );
@@ -106,8 +106,8 @@ class PlanetQuadtree {
     }
 
     #keepNode( node, resolution ) {
-            
-        if ( node.resolution === resolution ) {
+
+        if ( node.resolution == resolution ) {
 
             node.keep = true;
         }
@@ -115,9 +115,8 @@ class PlanetQuadtree {
 
     #makeNode( params, nodeKey, position, size, factors, resolution ) {
 
-        params.list.add( {
+        params.list.set( nodeKey, {
 
-            key: nodeKey,
             keep: true,
 
             resolution: resolution,

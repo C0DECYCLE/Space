@@ -44,7 +44,7 @@ class Planet {
     #faces = [];
 
     #cachedInsertionString = "";
-    #list = new SmartObjectArray( 400 );
+    #list = new Map();
     #orbitCenter = new BABYLON.Vector3( 0, 0, 0 );
     #distanceInOrbit = 0;
     #angleAroundOrbit = 0;
@@ -223,30 +223,30 @@ class Planet {
 
     #unkeepAll() {
 
-        for ( let i = 0; i < this.#list.len; i++ ) {
-
-            this.#list[i].keep = false;
-        }
+        this.#list.forEach( ( data, nodeKey ) => {
+            
+            data.keep = false;
+        } );
     }
 
     #disposeUnkept() {
 
-        for ( let i = 0; i < this.#list.len; i++ ) {
-
-            if ( this.#list[i].keep === false ) {
+        this.#list.forEach( ( data, nodeKey ) => {
+            
+            if ( data.keep === false ) {
                 
-                this.#disposeNode( this.#list[i] );
+                this.#disposeNode( nodeKey, data );
             }
-        }
+        } ); 
         
         /*data.retired = true; data.mesh.setEnabled( false );*/ 
     }
 
-    #disposeNode( node ) {
+    #disposeNode( nodeKey, data ) {
 
-        this.manager.postprocess.dispose( node.mesh );
-        node.mesh.dispose( !true, false );
-        this.#list.delete( node );
+        this.manager.postprocess.dispose( data.mesh );
+        data.mesh.dispose( !true, false );
+        this.#list.delete( nodeKey );
     }
 
 }
