@@ -122,30 +122,3 @@ Number.prototype.clamp = function( min, max ) {
 
     return Math.min( Math.max( this, min ), max );
 };
-
-    
-function SetupAwait( length, callback ) {
-        
-    return {
-
-        memory: length || 0,
-
-        callback: callback || function(){}
-    };
-};
-
-
-function ReduceAwait( setup ) {
-    
-    setup.memory--;
-    
-    if ( setup.memory <= 0 ) {
-        
-        setup.callback();
-
-        delete setup.memory;
-        delete setip.callback;
-
-        setup = null;
-    }
-};

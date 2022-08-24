@@ -11,10 +11,6 @@ class StateMachine {
     #list = new Map();
     #current = undefined;
 
-    constructor() {
-
-    }
-
     get current() {
 
         return this.#current;

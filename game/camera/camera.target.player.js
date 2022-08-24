@@ -13,11 +13,6 @@ class CameraTargetPlayer extends CameraTarget {
 
     #wasUnfocused = false;
 
-    constructor( camera ) {
-
-        super( camera );
-    }
-
     /* override */ update( player ) {
 
         this.#adaptFocus( player );
