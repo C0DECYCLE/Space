@@ -10,6 +10,12 @@ class ObjectArray extends Array {
 
     uuid = UUIDv4();
 
+    /* override */ push( object ) {
+
+        object[ this.uuid ] = this.length;
+        super.push( object );
+    }
+
     /* override */ indexOf( object ) {
 
         return object[ this.uuid ];
@@ -20,11 +26,18 @@ class ObjectArray extends Array {
         return object[ this.uuid ] !== undefined;
     }
 
-    add( object, len = this.length ) {
+    /* override */ pop() {
+
+        const object = super.pop();
+        delete object[ this.uuid ];
+
+        return object;
+    }
+
+    add( object ) {
 
         if ( this.contains( object ) === false ) {
 
-            object[ this.uuid ] = len;
             this.push( object );
         }
     }
@@ -56,17 +69,10 @@ class ObjectArray extends Array {
 
         if ( this.contains( object ) === true ) {
 
-            const uuid = this.uuid;
-            const last_value = this[ len - 1 ];
-            const index = object[ uuid ];
-
-            last_value[ uuid ] = index;
-
-            this[ len - 1 ] = this[ index ];
-            this[ index ] = last_value;
+            this[ len - 1 ][ this.uuid ] = object[ this.uuid ];
+            this[ object[ this.uuid ] ] = this[ len - 1 ];
 
             this.pop();
-            delete object[ uuid ];
         }
     }
 

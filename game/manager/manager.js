@@ -100,9 +100,6 @@ class Manager {
         this.asteroids.register( "ring", { key: 0, radius: 5 * 1000, spread: 400, height: 200, density: 0.02 } );
         this.asteroids.register( "ring", { key: 1, radius: 5 * 1000, spread: 2 * 1000, height: 100, density: 0.03 } );
         
-        //investigate why smartobjectarray has so big memory leak
-        //look which one is best for entitymanager?
-
         //rework the glb/cinema4d file structure
         //copy the assets loading etc system from the old space project, but rework the file system
         //make asteroids out of models not boxes!
