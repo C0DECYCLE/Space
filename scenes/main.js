@@ -13,10 +13,10 @@ Space.addOnReady( () => {
     Space.engine.set( ( delta ) => {
         
         Space.engine.stats[3].begin();
-        window.manager.update( delta );
+        window.manager.stage.run( delta );
         Space.engine.stats[3].end();
 
-        window.manager.render();
+        window.manager.stage.render();
     } );
 
 } );

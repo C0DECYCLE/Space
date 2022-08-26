@@ -30,30 +30,31 @@ class Manager {
 
         EngineUtils.configure( this.config, config );
 
-        this.stage = new ManagerStage( this, ( postScene ) => this.#install( postScene ), () => this.#stage(), ( delta ) => this.#run( delta ) );
-
+        this.stage = new ManagerStage( this, ( beginStaging ) => this.#load( beginStaging ), () => this.#stage(), ( delta ) => this.#run( delta ) );
+        
         BABYLON.Logger.LogLevels = BABYLON.Logger.ErrorLogLevel;
     }
 
-    update( delta ) {
-
-        this.stage.run( delta );
-    }
-
-    render() {
-
-        this.scene.render();
-    }
-
-    #install( postScene ) {
+    #load( beginStaging ) {
         
         this.scene = new BABYLON.Scene( Space.engine.babylon );
         this.scene.clearColor = BABYLON.Color3.FromHexString( this.config.dark ).scale( 0.25 * 0.5 );
         this.scene.ambient = new EngineAmbient( this.scene, this.config.dark, 0.25 * 1.25 );
+
         
-        postScene( this.scene );
+        this.scene.load( [
 
+            { key: "asteroid", path: "assets/models/asteroid.glb" },
+            { key: "tree", path: "assets/models/tree.glb" },
+            { key: "rock", path: "assets/models/rock.glb" }
 
+        ], assets => { this.#install(); beginStaging(); } );
+
+        return this.scene;
+    }
+
+    #install() {
+        
         this.physics = new Physics( this, {} );
         
         this.controls = new Controls( this, {} );
@@ -100,10 +101,6 @@ class Manager {
         this.asteroids.register( "ring", { key: 0, radius: 5 * 1000, spread: 400, height: 200, density: 0.02 } );
         this.asteroids.register( "ring", { key: 1, radius: 5 * 1000, spread: 2 * 1000, height: 100, density: 0.03 } );
         
-        //rework the glb/cinema4d file structure
-        //copy the assets loading etc system from the old space project, but rework the file system
-        //make asteroids out of models not boxes!
-        
         //make method which gets the distance to the camera by traversing the parents upwards adding all positions and then subtracting it by the camera position and then the length()
         //make own lod system with screencoverage by distance and size (for the moment use naive distance of every lod enabled object but later use objectcontainers) enable lod system by default on every object? (in that case only the object self and enabled false when too small to see) when not manually set stages of lod (example: lod0, off or lod0, lod1, lod2, off )
         
@@ -111,8 +108,6 @@ class Manager {
         //next: make physics bubble (for the moment use naive distance of every physis entity but later use objectcontainers)
         
         //later: object containers, port every naive distance to the object container system (shadow bubble, physics bubble, screencoverage) by port the primary distance function self to use the objectcontainers. Every time the object container the camera is in changed switch the bool camera.containerChanged = true for one frame and then false again, nodes can ask for an aproximate distance to the camera (aproximate = error between 0 and size of an object container), the function checks if there is a cached distance of the container the object is in and if the camera.containerChanged for that frame is false then return the cached aproximate distance else recompute. If they are in the same container calculate the exact distance. (debug and compare the aproximate accuracy/speed with the naive direct distance calculation) After this try to get rid of all naive distance (length() / BABYLON.Vector3.Distance()) calculations and test before after perforance!
-
-        return this.scene;
     }
 
     #stage() { 

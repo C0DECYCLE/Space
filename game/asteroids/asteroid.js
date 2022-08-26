@@ -59,14 +59,15 @@ class Asteroid {
     }
 
     #createMesh() {
+        
+        this.mesh = this.scene.instance( this.asteroids.asteroidModels[0], mesh => {
 
-        this.mesh = this.asteroids.template.createInstance( "asteroid" );
+            this.manager.star.shadow.cast( mesh, true, false );
+            this.manager.postprocess.register( mesh );
+        } );
+
         this.mesh.scaling.copyFromFloats( this.config.width, this.config.height, this.config.depth ).scaleInPlace( this.config.scale );
         this.mesh.rotation.copyFromFloats( Math.random() * 2 - 1, Math.random() * 2 - 1, Math.random() * 2 - 1 ).scaleInPlace( Math.PI );
-
-        this.manager.star.shadow.cast( this.mesh, true, false );
-        //this.mesh.setEnabled( false );
-        this.manager.postprocess.register( this.mesh );
     }
     
     #createRoot() {
@@ -78,7 +79,7 @@ class Asteroid {
     #addPhysics() {
 
         this.physics = new PhysicsEntity( this.root, PhysicsEntity.TYPES.DYNAMIC );
-        this.physics.pause();
+        //this.physics.pause();
     }
 
 }

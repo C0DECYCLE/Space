@@ -29,6 +29,12 @@ class EngineExtensions {
         this.#extend( "HemisphericLight", "setIntensity", this.#lightIntensity );
 
         this.#extend( "StandardMaterial", "setColorIntensity", this.#standardMaterialColorIntensity );
+
+        const context = this.#engine.loader;
+        
+        this.#extend( "Scene", "load", function () { return context.load( ...arguments, this ); } );
+        this.#extend( "Scene", "traverse", function () { return context.traverse( ...arguments, this, context ); } );
+        this.#extend( "Scene", "instance", function () { return context.instance( ...arguments, context ); } );
     }
 
     #extend( parent, name, method ) {

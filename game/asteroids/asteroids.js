@@ -16,7 +16,7 @@ class Asteroids {
     scene = null;
 
     list = [];
-    template = null;
+    asteroidModels = [];
 
     constructor( manager, config ) {
 
@@ -25,7 +25,7 @@ class Asteroids {
 
         EngineUtils.configure( this.config, config );
 
-        this.#createTemplate();
+        this.#setupModels();
     }
 
     register( type, config ) {
@@ -50,17 +50,24 @@ class Asteroids {
         }
     }
 
-    #createTemplate() {
+    #setupModels() {
+        
+        const importLods = this.scene.assets.get("asteroid").getChildren();
+        
+        for ( let i = 0; i < importLods.length; i++ ) {
+            
+            const lod = this.scene.traverse( importLods[i], mesh => {
+            
+                this.manager.star.shadow.receive( mesh, true, false );
+            } );
+            
+            lod.setEnabled( false );
+            this.asteroidModels.push( lod );
+        }
 
-        this.template = BABYLON.MeshBuilder.CreateBox( "asteroids_template", { size: 1 }, this.scene );
-        this.template.material = new BABYLON.StandardMaterial( "asteroids_template_material", this.scene );
-        this.template.material.setColorIntensity( "#534d5f", 1.0 );
         //this.template.useLODScreenCoverage = true;
         //this.template.addLODLevel( 0.00001, null );  
         //this.template.isLODNull = () => dummy.root.getLOD( scene.activeCamera ) === null;
-        this.template.setEnabled( false );
-        
-        this.manager.star.shadow.receive( this.template, true, false );
     }
 
 }

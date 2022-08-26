@@ -121,7 +121,9 @@ class StarShadow {
 
         if ( recursiv === true ) {
 
-            for ( let i = 0, children = mesh.getChildMeshes(); i < children.length; i++ ) {
+            const children = mesh.getChildMeshes();
+
+            for ( let i = 0; i < children.length; i++ ) {
 
                 call( children[i] );
             }
