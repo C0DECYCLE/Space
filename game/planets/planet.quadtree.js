@@ -142,7 +142,7 @@ class PlanetQuadtree {
         
         if ( size >= this.#size ) { 
             
-            if ( params.distanceRadiusFactor > PlanetQuadtree.INSERT_LIMIT - 1 ) {
+            if ( params.distanceRadiusFactor > PlanetQuadtree.INSERT_LIMIT ) {
 
                 return this.#planet.config.resolution / 4;
                 

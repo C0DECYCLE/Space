@@ -45,6 +45,7 @@ class Planet {
     #faces = [];
 
     #cachedInsertionString = "";
+    #oversteppedInsertLimit = false;
     #list = new Map();
     #orbitCenter = new BABYLON.Vector3( 0, 0, 0 );
     #distanceInOrbit = 0;
@@ -90,18 +91,27 @@ class Planet {
 
     insert( position, distance, force = false ) {
         
-        if ( force === false && distance / this.config.radius > PlanetQuadtree.INSERT_LIMIT ) {
+        if ( force === true ) {
 
+            this.#evalInsertionWithString( position, distance );
             return;
         }
 
-        const insertionString = this.#getInsertionString( position );
-        
-        if ( insertionString !== this.#cachedInsertionString ) {
-            
-            this.#insertQuadtrees( position, distance );
+        if ( distance / this.config.radius > PlanetQuadtree.INSERT_LIMIT ) {
 
-            this.#cachedInsertionString = insertionString;
+            if ( this.#oversteppedInsertLimit === false ) {
+                
+                this.#oversteppedInsertLimit = true;
+                //two times: first time removes half limit resolution chunk,
+                //second makes the lowest resolution chunk for outside of the limit
+                this.#insertQuadtrees( position, distance );
+                this.#insertQuadtrees( position, distance );
+            }
+            
+        } else {
+
+            this.#oversteppedInsertLimit = false;
+            this.#evalInsertionWithString( position, distance );
         }
     }
 
@@ -203,6 +213,18 @@ class Planet {
         EngineUtils.getBounding( this.root, true );
     }
     
+    #evalInsertionWithString( position, distance ) {
+
+        const insertionString = this.#getInsertionString( position );
+        
+        if ( insertionString !== this.#cachedInsertionString ) {
+            
+            this.#insertQuadtrees( position, distance );
+            
+            this.#cachedInsertionString = insertionString;
+        }
+    }
+
     #getInsertionString( position ) {
 
         const diffrence = position.subtract( 
