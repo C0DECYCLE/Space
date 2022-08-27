@@ -10,7 +10,7 @@ class Player {
 
     config = {
 
-        float: 10.005,
+        float: 100.005,
 
         walk: 0.005,
         run: 0.015,
@@ -26,7 +26,6 @@ class Player {
     camera = null;
     controls = null;
 
-    root = null;
     mesh = null;
     physics = null;
 
@@ -42,11 +41,15 @@ class Player {
         EngineUtils.configure( this.config, config );
 
         this.#createMesh();    
-        this.#createRoot();
         this.#setupInspector();
         this.#setupStates();
         this.#setupPhysics();
         this.#registerObservables();
+    }
+
+    get root() {
+
+        return this.mesh;
     }
 
     get position() {
@@ -78,12 +81,6 @@ class Player {
         }
 
         this.physics.update();
-    }
-
-    #createRoot() {
-
-        this.root = this.mesh;
-        this.root.rotationQuaternion = this.root.rotation.toQuaternion();
     }
 
     #setupInspector() {
@@ -119,6 +116,7 @@ class Player {
         this.mesh = BABYLON.MeshBuilder.CreateCapsule( "player", { height: 2, radius: 0.5, tessellation: 8, subdivisions: 1, capSubdivisions: 3 }, this.scene );
         this.mesh.convertToFlatShadedMesh();
         this.mesh.material = material;
+        this.mesh.rotationQuaternion = this.mesh.rotation.toQuaternion();
         
         const head = BABYLON.MeshBuilder.CreateBox( "player_mesh_head", { width: 0.7, height: 0.35, depth: 0.3 }, this.scene );
         head.position.copyFromFloats( 0, 0.5, 0.4 );

@@ -119,7 +119,7 @@ class AsteroidsCluster {
         const spread = new BABYLON.Vector3( this.config.radius, this.config.height, this.config.radius );
 
         for ( let i = 0; i < count; i++ ) {
-
+            
             const asteroid = new Asteroid( this.manager, {} );
             asteroid.position.copyFromFloats( Math.random() * 2 - 1, Math.random() * 2 - 1, Math.random() * 2 - 1 ).multiplyInPlace( spread );
             asteroid.parent = this.root;

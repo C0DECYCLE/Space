@@ -15,8 +15,9 @@ class Asteroids {
     manager = null;
     scene = null;
 
+    models = [];
+    
     list = [];
-    asteroidModels = [];
 
     constructor( manager, config ) {
 
@@ -62,12 +63,8 @@ class Asteroids {
             } );
             
             lod.setEnabled( false );
-            this.asteroidModels.push( lod );
+            this.models.push( lod );
         }
-
-        //this.template.useLODScreenCoverage = true;
-        //this.template.addLODLevel( 0.00001, null );  
-        //this.template.isLODNull = () => dummy.root.getLOD( scene.activeCamera ) === null;
     }
 
 }

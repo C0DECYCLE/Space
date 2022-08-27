@@ -34,6 +34,7 @@ class Planet {
     scene = null;
     
     root = null;
+    lod = null;
     physics = null;
 
     generator = null;
@@ -57,6 +58,7 @@ class Planet {
         EngineUtils.configure( this.config, config );
 
         this.#createRoot();
+        this.#createLod();
         this.#addGenerator();
         this.#setupPerlin();
         this.#setupPhysics();
@@ -105,6 +107,7 @@ class Planet {
 
     update() {
 
+        this.#updateLod();
         this.#updateSpin();
         //this.#update();
     }
@@ -113,6 +116,12 @@ class Planet {
 
         this.root = new BABYLON.TransformNode( `planet${ this.config.key }`, this.scene );
         this.root.rotationQuaternion = this.root.rotation.toQuaternion();
+    }
+
+    #createLod() {
+
+        this.lod = new LOD( this.manager );
+        this.lod.fromSingle( this.root );
     }
 
     #addGenerator() {
@@ -138,6 +147,26 @@ class Planet {
         if ( this.config.athmosphere !== false ) {
 
             this.athmosphere = this.manager.postprocess.athmosphere( this );
+        }
+    }
+
+    #updateLod() {
+
+        this.lod.update();
+
+        if ( this.config.athmosphere !== false ) {
+
+            if ( this.root.isEnabled( false ) === false ) {
+
+                if ( this.athmosphere.settings.densityModifier === 1 ) {
+    
+                    this.athmosphere.settings.densityModifier = 0;
+                }
+    
+            } else if ( this.athmosphere.settings.densityModifier === 0 ) {
+    
+                this.athmosphere.settings.densityModifier = 1;
+            }
         }
     }
 
@@ -167,9 +196,11 @@ class Planet {
     }
 
     #farInsertion() {
-
+        
         const farFarAway = EngineUtils.getFarAway();
         this.insert( farFarAway, farFarAway.y, true );
+        
+        EngineUtils.getBounding( this.root, true );
     }
     
     #getInsertionString( position ) {
