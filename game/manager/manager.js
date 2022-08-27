@@ -23,32 +23,38 @@ class Manager {
     camera = null;
     star = null;
     planets = null;
+    asteroids = null;
     player = null;
 
     constructor( config ) {
 
         EngineUtils.configure( this.config, config );
 
-        this.stage = new ManagerStage( this, ( postScene ) => this.#install( postScene ), () => this.#stage(), ( delta ) => this.#run( delta ) );
-
+        this.stage = new ManagerStage( this, ( beginStaging ) => this.#load( beginStaging ), () => this.#stage(), ( delta ) => this.#run( delta ) );
+        
         BABYLON.Logger.LogLevels = BABYLON.Logger.ErrorLogLevel;
     }
 
-    update( delta ) {
-
-        this.stage.run( delta );
-        this.scene.render();
-    }
-
-    #install( postScene ) {
+    #load( beginStaging ) {
         
         this.scene = new BABYLON.Scene( Space.engine.babylon );
         this.scene.clearColor = BABYLON.Color3.FromHexString( this.config.dark ).scale( 0.25 * 0.5 );
-        this.scene.ambient = new Ambient( this.scene, this.config.dark, 0.25 * 1.25 );
+        this.scene.ambient = new EngineAmbient( this.scene, this.config.dark, 0.25 * 1.25 );
+
         
-        postScene( this.scene );
+        this.scene.load( [
 
+            { key: "asteroid", path: "assets/models/asteroid.glb" },
+            //{ key: "tree", path: "assets/models/tree.glb" },
+            //{ key: "rock", path: "assets/models/rock.glb" }
 
+        ], assets => { this.#install(); beginStaging(); } );
+
+        return this.scene;
+    }
+
+    #install() {
+        
         this.physics = new Physics( this, {} );
         
         this.controls = new Controls( this, {} );
@@ -90,46 +96,43 @@ class Manager {
             }
         ] );
 
+        this.asteroids = new Asteroids( this, {} );
 
-        return this.scene;
+        this.asteroids.register( "ring", { key: 0, radius: 5 * 1000, spread: 400, height: 200, density: 0.02 } );
+        this.asteroids.register( "ring", { key: 1, radius: 5 * 1000, spread: 2 * 1000, height: 100, density: 0.03 } );
     }
 
     #stage() { 
         
-        this.planets.list.get( 0 ).place( this.star.position, 100 * 1000, 90 );
-        this.planets.list.get( 1 ).place( this.star.position, 200 * 1000, -45 );
-        this.planets.list.get( 2 ).place( this.star.position, 250 * 1000, 240 );
-        this.planets.list.get( 3 ).place( this.planets.list.get( 2 ).position, 10 * 1000, 60 );
+        this.planets.list[0].place( this.star.position, 100 * 1000, 90 );
+        this.planets.list[1].place( this.star.position, 200 * 1000, -45 );
+        this.planets.list[2].place( this.star.position, 250 * 1000, 240 );
+        this.planets.list[3].place( this.planets.list[2].position, 10 * 1000, 60 );
         
-        this.player.position.copyFrom( this.planets.list.get( 3 ).position ).addInPlace( new BABYLON.Vector3( 1 * 1000, 0, 0 ) );
-    
+        this.player.position.copyFrom( this.planets.list[0].position ).addInPlace( new BABYLON.Vector3( 5 * 1000, 0, 0 ) );
+        
+        this.asteroids.list[0].position.copyFrom( this.planets.list[0].position );
+        this.asteroids.list[1].position.copyFrom( this.planets.list[0].position );
+
         this.camera.attachToPlayer( this.player );
 
         this.scene.debugLayer.show( { embedMode: true } );
-
-
-                ////////////////////////////////////////////////////
-                window.dummies = EngineUtils.createDummyField( this.scene, 10, this.player.position, this.planets.list.get( 0 ).material, this.star );
-                ////////////////////////////////////////////////////
     }
 
     #run( delta ) {
         
-        if ( this.config.freeze == false ) {
+        if ( this.config.freeze === false ) {
 
             this.planets.update();
         }
+
+        this.asteroids.update();
 
         this.player.update();
         
         this.camera.update();
 
         this.star.update();
-        
-
-                ////////////////////////////////////////////////////
-                window.dummies.update();
-                ////////////////////////////////////////////////////
     }
 
 }

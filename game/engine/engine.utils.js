@@ -25,7 +25,7 @@ class EngineUtils {
             const key = keys[i];
             const value = inject[ key ];
 
-            if ( value != undefined ) {
+            if ( value !== undefined ) {
 
                 target[ key ] = value;
             }
@@ -43,67 +43,40 @@ class EngineUtils {
 
         return new BABYLON.Vector3( 0, 1000 * 1000 * 1000, 0 );
     }
-    
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-    
-    static createDummyField( scene, count, center, material, star ) {
 
-        const dummies = [];
+    static getBounding( node, force = false ) {
+        
+        if ( node.boundingCache === undefined || force === true ) {
 
-        for ( let i = 0; i < count; i++ ) {
+            const minmax = node.getHierarchyBoundingVectors();
 
-            const dummy = EngineUtils.createDummy( scene, i, undefined, material, star, 
-                new BABYLON.Vector3( Math.random() * 2 - 1, Math.random() * 2 - 1, Math.random() * 2 - 1 ).scaleInPlace( 30 ).addInPlace( center ), 
-                new BABYLON.Vector3( Math.random() * 2 - 1, Math.random() * 2 - 1, Math.random() * 2 - 1 ).scaleInPlace( Math.PI ) 
-            );
-
-            dummies.push( dummy );
+            node.boundingCache = minmax.max.subtract( minmax.min );
+            node.boundingCache.size = node.boundingCache.length();
         }
 
-        dummies.update = () => {
+        const bounding = node.boundingCache.clone();
+        bounding.size = node.boundingCache.size;
 
-            for ( let i = 0; i < dummies.length; i++ ) {
-
-                //star.manager.planets.list.get( 3 ).physics.pull( dummies[i].physics );
-
-                dummies[i].physics.update();
-            }
-        };
-
-        return dummies;
+        return bounding;
     }
-    
-    static createDummy( scene, i, size = Math.round( Math.random() * 10 ) * 1, material, star, position, rotation ) {
 
-        const dummy = {
+    static getWorldPosition( node ) {
+        
+        const position = node.position.clone();
+        
+        EngineUtils.#recurseParentsPosition( position, node );
+        
+        return position;
+    }
 
-            get position() {
-                
-                return dummy.root.position;
-            },
+    static #recurseParentsPosition( result, node ) {
 
-            get rotationQuaternion() {
-                
-                return dummy.root.rotationQuaternion;
-            }
-        };
+        if ( node.parent !== null ) {
+            
+            result.addInPlace( node.parent.position );
 
-        dummy.root = BABYLON.MeshBuilder.CreateBox( `dummy${ i }`, { size: size }, scene );
-        dummy.root.position.copyFrom( position );
-        dummy.root.rotationQuaternion = BABYLON.Quaternion.FromEulerVector( rotation );
-        dummy.root.material = material;
-        dummy.root.useLODScreenCoverage = true;
-        dummy.root.addLODLevel( 0.0001, null );  
-        dummy.root.isLODNull = () => dummy.root.getLOD( scene.activeCamera ) == null;
-
-        dummy.physics = new PhysicsEntity( dummy.root, PhysicsEntity.TYPES.DYNAMIC );
-
-        star.shadow.cast( dummy.root, true, false );
-        star.shadow.receive( dummy.root, true, true );
-
-        star.manager.postprocess.register( dummy.root );
-
-        return dummy;
+            EngineUtils.#recurseParentsPosition( result, node.parent );
+        }
     }
 
 }

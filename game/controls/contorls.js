@@ -44,11 +44,11 @@ class Controls {
 
     #onKeyboardObservable( kbInfo ) {
 
-        if ( kbInfo.type == BABYLON.KeyboardEventTypes.KEYDOWN ) {
+        if ( kbInfo.type === BABYLON.KeyboardEventTypes.KEYDOWN ) {
                 
             this.activeKeys.add( kbInfo.event.key.toLowerCase() );
 
-        } else if ( kbInfo.type == BABYLON.KeyboardEventTypes.KEYUP ) {
+        } else if ( kbInfo.type === BABYLON.KeyboardEventTypes.KEYUP ) {
 
             this.activeKeys.delete( kbInfo.event.key.toLowerCase() );
         }
@@ -60,7 +60,7 @@ class Controls {
 
         this.scene.onPointerObservable.add( pointerInfo => this.#onPointerObservable( pointerInfo ) );
 
-        if ( this.config.experimentalPointerLock == true ) {
+        if ( this.config.experimentalPointerLock === true ) {
 
             this.#pointerLock();
         }
@@ -68,17 +68,17 @@ class Controls {
 
     #onPointerObservable( pointerInfo ) {
 
-        if ( pointerInfo.type == BABYLON.PointerEventTypes.POINTERDOWN ) {
+        if ( pointerInfo.type === BABYLON.PointerEventTypes.POINTERDOWN ) {
 
             this.isPointerDown = true;
             this.onPointerDown.forEach( callback => callback( pointerInfo ) );
 
-        } else if ( pointerInfo.type == BABYLON.PointerEventTypes.POINTERUP ) {
+        } else if ( pointerInfo.type === BABYLON.PointerEventTypes.POINTERUP ) {
 
             this.isPointerDown = false;
             this.onPointerUp.forEach( callback => callback( pointerInfo ) );
 
-        } else if ( pointerInfo.type == BABYLON.PointerEventTypes.POINTERMOVE && this.config.experimentalPointerLock == false ) {
+        } else if ( pointerInfo.type === BABYLON.PointerEventTypes.POINTERMOVE && this.config.experimentalPointerLock === false ) {
 
             this.onPointerMove.forEach( callback => callback( pointerInfo ) );
         }

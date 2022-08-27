@@ -9,6 +9,7 @@
 class ManagerStage {
 
     #manager = null;
+    #scene = null;
 
     #install = undefined;
     #stage = undefined;
@@ -24,30 +25,37 @@ class ManagerStage {
         this.#stage = stage;
         this.#run = run;
 
-        const scene = this.#install( ( scene ) => this.#debugMaterial( scene ) );
-
-        scene.onReadyObservable.add( () => this.#onReadyObservable() );
+        this.#scene = this.#install( () => this.#beginStaging() );
+        this.#debugMaterial();
     }
 
     run( delta ) {
 
-        if ( this.#isStagingComplete == true ) {
+        if ( this.#isStagingComplete === true ) {
 
             this.#run( delta );
         }
     }
 
-    #onReadyObservable() {
+    render() {
+
+        if ( this.#isStagingComplete === true ) {
+
+            this.#scene.render();
+        }
+    }
+
+    #debugMaterial() {
+
+        this.#scene.debugMaterial = new BABYLON.StandardMaterial( "debug_material", this.#scene );
+        this.#scene.debugMaterial.setColorIntensity( "#ff226b", 1.0 );
+        this.#scene.debugMaterial.wireframe = true;
+    }
+
+    #beginStaging() {
 
         this.#stage();
         this.#isStagingComplete = true;
-    }
-
-    #debugMaterial( scene ) {
-
-        scene.debugMaterial = new BABYLON.StandardMaterial( "debug_material", scene );
-        scene.debugMaterial.setColorIntensity( "#ff226b", 1.0 );
-        scene.debugMaterial.wireframe = true;
     }
 
 }

@@ -6,12 +6,17 @@
     2022
 */
 
-Space.addOnReady( /*async*/ () => {
-
-    //await Ammo();
+Space.addOnReady( () => {
 
     window.manager = new Manager( {} );
+    
+    Space.engine.set( ( delta ) => {
+        
+        Space.engine.stats[3].begin();
+        window.manager.stage.run( delta );
+        Space.engine.stats[3].end();
 
-    Space.engine.set( ( delta ) => window.manager.update( delta ) );
+        window.manager.stage.render();
+    } );
 
 } );

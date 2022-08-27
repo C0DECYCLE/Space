@@ -29,11 +29,17 @@ class EngineExtensions {
         this.#extend( "HemisphericLight", "setIntensity", this.#lightIntensity );
 
         this.#extend( "StandardMaterial", "setColorIntensity", this.#standardMaterialColorIntensity );
+
+        const context = this.#engine.loader;
+        
+        this.#extend( "Scene", "load", function () { return context.load( ...arguments, this ); } );
+        this.#extend( "Scene", "traverse", function () { return context.traverse( ...arguments, this, context ); } );
+        this.#extend( "Scene", "instance", function () { return context.instance( ...arguments, context ); } );
     }
 
     #extend( parent, name, method ) {
 
-        if ( typeof BABYLON[ parent ].prototype[ name ] != "undefined" ) {
+        if ( typeof BABYLON[ parent ].prototype[ name ] !== "undefined" ) {
 
             console.warn( "EngineExtensions: Method " + name + " already exists in " + parent + "." );
  
@@ -57,7 +63,7 @@ class EngineExtensions {
 
         const ambient = this.getScene().ambient;
 
-        if ( typeof ambient != "undefined" ) {
+        if ( typeof ambient !== "undefined" ) {
 
             this.intensity *= ambient.lightFactor();
         }
@@ -72,7 +78,7 @@ class EngineExtensions {
 
         const ambient = this.getScene().ambient;
 
-        if ( typeof ambient != "undefined" ) {
+        if ( typeof ambient !== "undefined" ) {
 
             this.diffuseColor.scale( ambient.intensity );
             this.ambientColor = new BABYLON.Color3.FromHexString( ambient.color ).scale( ambient.materialFactor() );

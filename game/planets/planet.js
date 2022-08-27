@@ -34,6 +34,7 @@ class Planet {
     scene = null;
     
     root = null;
+    lod = null;
     physics = null;
 
     generator = null;
@@ -41,9 +42,10 @@ class Planet {
     perlin = null;
     athmosphere = null;
 
-    #faces = new Set();
+    #faces = [];
 
     #cachedInsertionString = "";
+    #oversteppedInsertLimit = false;
     #list = new Map();
     #orbitCenter = new BABYLON.Vector3( 0, 0, 0 );
     #distanceInOrbit = 0;
@@ -57,6 +59,7 @@ class Planet {
         EngineUtils.configure( this.config, config );
 
         this.#createRoot();
+        this.#createLod();
         this.#addGenerator();
         this.#setupPerlin();
         this.#setupPhysics();
@@ -88,39 +91,47 @@ class Planet {
 
     insert( position, distance, force = false ) {
         
-        if ( force == false && distance / this.config.radius > PlanetQuadtree.INSERT_LIMIT ) {
+        if ( force === true ) {
 
+            this.#evalInsertionWithString( position, distance );
             return;
         }
 
-        const insertionString = this.#getInsertionString( position );
-        
-        if ( insertionString != this.#cachedInsertionString ) {
-            
-            this.#insertQuadtrees( position, distance );
+        if ( distance / this.config.radius > PlanetQuadtree.INSERT_LIMIT ) {
 
-            this.#cachedInsertionString = insertionString;
+            if ( this.#oversteppedInsertLimit === false ) {
+                
+                this.#oversteppedInsertLimit = true;
+                //two times: first time removes half limit resolution chunk,
+                //second makes the lowest resolution chunk for outside of the limit
+                this.#insertQuadtrees( position, distance );
+                this.#insertQuadtrees( position, distance );
+            }
+            
+        } else {
+
+            this.#oversteppedInsertLimit = false;
+            this.#evalInsertionWithString( position, distance );
         }
     }
 
     update() {
 
+        this.#updateLod();
         this.#updateSpin();
         //this.#update();
-    }
-
-    disposeAll() {
-
-        this.#list.forEach( ( data, nodeKey ) => {
-        
-            this.#disposeNode( nodeKey, data );
-        } ); 
     }
 
     #createRoot() {
 
         this.root = new BABYLON.TransformNode( `planet${ this.config.key }`, this.scene );
         this.root.rotationQuaternion = this.root.rotation.toQuaternion();
+    }
+
+    #createLod() {
+
+        this.lod = new LOD( this.manager );
+        this.lod.fromSingle( this.root );
     }
 
     #addGenerator() {
@@ -143,15 +154,35 @@ class Planet {
 
     #addAthmosphere() {
 
-        if ( this.config.athmosphere != false ) {
+        if ( this.config.athmosphere !== false ) {
 
             this.athmosphere = this.manager.postprocess.athmosphere( this );
         }
     }
 
+    #updateLod() {
+
+        this.lod.update();
+
+        if ( this.config.athmosphere !== false ) {
+
+            if ( this.root.isEnabled( false ) === false ) {
+
+                if ( this.athmosphere.settings.densityModifier === 1 ) {
+    
+                    this.athmosphere.settings.densityModifier = 0;
+                }
+    
+            } else if ( this.athmosphere.settings.densityModifier === 0 ) {
+    
+                this.athmosphere.settings.densityModifier = 1;
+            }
+        }
+    }
+
     #updateSpin() {
         
-        if ( this.config.spin != false ) {
+        if ( this.config.spin !== false ) {
 
             const deltaCorrection = Space.engine.deltaCorrection;
 
@@ -161,7 +192,7 @@ class Planet {
     
     #updateOrbit() {
 
-        if ( this.config.orbit != false ) {
+        if ( this.config.orbit !== false ) {
 
             const deltaCorrection = Space.engine.deltaCorrection;
 
@@ -175,11 +206,25 @@ class Planet {
     }
 
     #farInsertion() {
-
+        
         const farFarAway = EngineUtils.getFarAway();
         this.insert( farFarAway, farFarAway.y, true );
+        
+        EngineUtils.getBounding( this.root, true );
     }
     
+    #evalInsertionWithString( position, distance ) {
+
+        const insertionString = this.#getInsertionString( position );
+        
+        if ( insertionString !== this.#cachedInsertionString ) {
+            
+            this.#insertQuadtrees( position, distance );
+            
+            this.#cachedInsertionString = insertionString;
+        }
+    }
+
     #getInsertionString( position ) {
 
         const diffrence = position.subtract( 
@@ -221,7 +266,10 @@ class Planet {
         
         this.#unkeepAll();
 
-        this.#faces.forEach( quadtree => quadtree.insert( params ) );
+        for ( let i = 0; i < this.#faces.length; i++ ) {
+
+            this.#faces[i].insert( params );
+        }
 
         this.#disposeUnkept();
     }
@@ -238,7 +286,7 @@ class Planet {
 
         this.#list.forEach( ( data, nodeKey ) => {
             
-            if ( data.keep == false ) {
+            if ( data.keep === false ) {
                 
                 this.#disposeNode( nodeKey, data );
             }
@@ -249,8 +297,8 @@ class Planet {
 
     #disposeNode( nodeKey, data ) {
 
-        data.mesh.dispose( !true, false );
         this.manager.postprocess.dispose( data.mesh );
+        data.mesh.dispose( !true, false );
         this.#list.delete( nodeKey );
     }
 

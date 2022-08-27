@@ -34,7 +34,7 @@ class Game {
     
     addOnReady( callback ) {
 
-        if ( typeof callback == "function" ) {
+        if ( typeof callback === "function" ) {
 
             window.addEventListener( "ready", callback );
         }

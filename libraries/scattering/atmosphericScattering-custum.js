@@ -20,7 +20,7 @@ class AtmosphericScatteringPostProcess extends BABYLON.PostProcess {
 
     constructor( name, planet, star, camera, depthMap, scene ) {
         
-        super( name, "../core/scattering/atmosphericScattering", [
+        super( name, "../libraries/scattering/atmosphericScattering", [
 
             "sunPosition",
             "cameraPosition",

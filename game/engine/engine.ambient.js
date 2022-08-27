@@ -6,7 +6,7 @@
     2022
 */
 
-class Ambient {
+class EngineAmbient {
     
     scene = null;
 
@@ -20,7 +20,7 @@ class Ambient {
         this.color = color;
         this.intensity = intensity;
 
-        if ( typeof this.scene.ambient != "undefined" ) {
+        if ( typeof this.scene.ambient !== "undefined" ) {
 
             console.warn( "Ambient: Already exists for this scene." );
 

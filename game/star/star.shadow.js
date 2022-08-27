@@ -23,6 +23,8 @@ class StarShadow {
 
     generator = null;
 
+    #shadowMap = null;
+
     #star = null;
     #light = null;
 
@@ -42,32 +44,17 @@ class StarShadow {
 
     cast( mesh, value = true, recursiv = false ) {
 
-        if ( value == true ) {
-
-            this.generator.addShadowCaster( mesh, recursiv );
-
-        } else {
-
-            this.generator.removeShadowCaster( mesh, recursiv );
-        }
+        this.#meshRecurse( mesh, ( m ) => this.#meshCast( m, value ), recursiv );
     }
  
     receive( mesh, value = true, recursiv = false ) {
 
-        mesh.receiveShadows = value;
-
-        if ( recursiv == true ) {
-
-            for ( let i = 0, children = mesh.getChildMeshes(); i < children.length; i++ ) {
-
-                children[i].receiveShadows = value;
-            }
-        }
+        this.#meshRecurse( mesh, ( m ) => this.#meshReceive( m, value ), recursiv );
     }
 
     update() {
 
-        if ( this.#debug == true && this.#frustumViewer != null ) {
+        if ( this.#debug === true && this.#frustumViewer !== null ) {
 
             this.#frustumViewer.update();
         }
@@ -88,7 +75,7 @@ class StarShadow {
         
         this.#light.shadowOrthoScale = 0;
 
-        if ( this.#debug == true ) {
+        if ( this.#debug === true ) {
 
             this.#frustumViewer = new BABYLON.DirectionalLightFrustumViewer( this.#light, this.#star.manager.camera.camera );
         } 
@@ -106,8 +93,8 @@ class StarShadow {
         this.generator.transparencyShadow = false;
         this.generator.enableSoftTransparentShadow = false;
 
-        this.generator.usePercentageCloserFiltering = this.config.filter == "PCF";
-        this.generator.useContactHardeningShadow = this.config.filter == "CONHRD";
+        this.generator.usePercentageCloserFiltering = this.config.filter === "PCF";
+        this.generator.useContactHardeningShadow = this.config.filter === "CONHRD";
         //this.generator.contactHardeningLightSizeUVRatio = 0-1;
         this.generator.filteringQuality = BABYLON.ShadowGenerator[ `QUALITY_${ this.config.quality }` ];
 
@@ -124,6 +111,40 @@ class StarShadow {
         //this.generator.depthClamp = true; //not PCSS
         //this.generator.autoCalcDepthBounds = false; //what is that?
         //this.generator.autoCalcDepthBoundsRefreshRate = 2 //every second frame;
+
+        this.#shadowMap = this.generator.getShadowMap();
+    }
+
+    #meshRecurse( mesh, call, recursiv = false ) {
+
+        call( mesh );
+
+        if ( recursiv === true ) {
+
+            const children = mesh.getChildMeshes();
+
+            for ( let i = 0; i < children.length; i++ ) {
+
+                call( children[i] );
+            }
+        }
+    }
+
+    #meshCast( mesh, value ) {
+
+        if ( value === true ) {
+
+            this.#shadowMap.renderList.push( mesh );
+
+        } else {
+
+            this.#shadowMap.renderList.remove( mesh );
+        }
+    }
+
+    #meshReceive( mesh, value ) {
+
+        mesh.receiveShadows = value;
     }
 
 }
