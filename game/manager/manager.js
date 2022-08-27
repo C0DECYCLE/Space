@@ -100,13 +100,6 @@ class Manager {
 
         this.asteroids.register( "ring", { key: 0, radius: 5 * 1000, spread: 400, height: 200, density: 0.02 } );
         this.asteroids.register( "ring", { key: 1, radius: 5 * 1000, spread: 2 * 1000, height: 100, density: 0.03 } );
-        
-        //bug of false insertion with little planet
-
-        //next: make private shadow function pause/resume (internaly adds/removes shadowcaster and toggls receive shadow, with the remebemered recurse children etc parameters) which get used when somethings out of the shadow radius bubble (for the moment use naive distance of every caster/receiver but later use objectcontainers). Also add parameter to public cast/receive function, bool to allow internal pause/resume when out of shadow radius
-        //next: make physics bubble (for the moment use naive distance of every physis entity but later use objectcontainers)
-        
-        //later: object containers, port every naive distance to the object container system (shadow bubble, physics bubble, screencoverage) by port the primary distance function self to use the objectcontainers. Every time the object container the camera is in changed switch the bool camera.containerChanged = true for one frame and then false again, nodes can ask for an aproximate distance to the camera (aproximate = error between 0 and size of an object container), the function checks if there is a cached distance of the container the object is in and if the camera.containerChanged for that frame is false then return the cached aproximate distance else recompute. If they are in the same container calculate the exact distance. (debug and compare the aproximate accuracy/speed with the naive direct distance calculation) After this try to get rid of all naive distance (length() / BABYLON.Vector3.Distance()) calculations and test before after perforance! especialy port lod system
     }
 
     #stage() { 
@@ -116,7 +109,7 @@ class Manager {
         this.planets.list[2].place( this.star.position, 250 * 1000, 240 );
         this.planets.list[3].place( this.planets.list[2].position, 10 * 1000, 60 );
         
-        this.player.position.copyFrom( this.planets.list[0].position ).addInPlace( new BABYLON.Vector3( 1 * 3000, 0, 0 ) );
+        this.player.position.copyFrom( this.planets.list[0].position ).addInPlace( new BABYLON.Vector3( 5 * 1000, 0, 0 ) );
         
         this.asteroids.list[0].position.copyFrom( this.planets.list[0].position );
         this.asteroids.list[1].position.copyFrom( this.planets.list[0].position );
