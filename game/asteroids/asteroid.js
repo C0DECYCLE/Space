@@ -33,7 +33,13 @@ class Asteroid {
         EngineUtils.configure( this.config, config );
         
         this.#createLod();   
+        this.#makeUnique();
         this.#addPhysics();
+    }
+
+    get root() {
+
+        return this.lod.root;
     }
 
     get position() {
@@ -44,6 +50,11 @@ class Asteroid {
     get rotationQuaternion() {
         
         return this.lod.rotationQuaternion;
+    }
+
+    get scaling() {
+        
+        return this.lod.scaling;
     }
 
     set parent( value ) {
@@ -65,14 +76,17 @@ class Asteroid {
             this.manager.star.shadow.cast( mesh, true, false );
             this.manager.postprocess.register( mesh );
         } );
+    }
 
-        this.lod.scaling.copyFromFloats( this.config.width, this.config.height, this.config.depth ).scaleInPlace( this.config.scale );
-        this.lod.rotationQuaternion.copyFrom( new BABYLON.Vector3( Math.random() * 2 - 1, Math.random() * 2 - 1, Math.random() * 2 - 1 ).scaleInPlace( Math.PI ).toQuaternion() );
+    #makeUnique() {
+
+        this.rotationQuaternion.copyFrom( new BABYLON.Vector3( Math.random() * 2 - 1, Math.random() * 2 - 1, Math.random() * 2 - 1 ).scaleInPlace( Math.PI ).toQuaternion() );
+        this.scaling.copyFromFloats( this.config.width, this.config.height, this.config.depth ).scaleInPlace( this.config.scale );
     }
 
     #addPhysics() {
 
-        this.physics = new PhysicsEntity( this.lod.root, PhysicsEntity.TYPES.DYNAMIC );
+        this.physics = new PhysicsEntity( this.root, PhysicsEntity.TYPES.DYNAMIC );
         //this.physics.pause();
     }
 

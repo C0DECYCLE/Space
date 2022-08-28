@@ -53,7 +53,7 @@ class Asteroids {
 
     #setupModels() {
         
-        const importLods = this.scene.assets.get("asteroid").getChildren();
+        const importLods = this.scene.assets.get( "asteroid" ).getChildren();
         
         for ( let i = 0; i < importLods.length; i++ ) {
             
