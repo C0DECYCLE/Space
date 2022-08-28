@@ -6,20 +6,16 @@
     2022
 */
 
-class Asteroid {
+class Spaceship {
 
     config = {
 
-        width: Math.ceil( Math.random() * 5 ) + 5,
-        height: Math.ceil( Math.random() * 5 ) + 5,
-        depth: Math.ceil( Math.random() * 5 ) + 5,
-
-        scale: Math.ceil( Math.random() * 5 )
+        key: UUIDv4()
     };
 
     manager = null;
     scene = null;
-    asteroids = null;
+    spaceships = null;
 
     lod = null;
     physics = null;
@@ -28,12 +24,11 @@ class Asteroid {
 
         this.manager = manager;
         this.scene = this.manager.scene;
-        this.asteroids = this.manager.asteroids;
+        this.spaceships = this.manager.spaceships;
 
         EngineUtils.configure( this.config, config );
         
         this.#createLod();   
-        this.#makeUnique();
         this.#addPhysics();
     }
 
@@ -52,16 +47,6 @@ class Asteroid {
         return this.lod.rotationQuaternion;
     }
 
-    get scaling() {
-        
-        return this.lod.scaling;
-    }
-
-    set parent( value ) {
-
-        this.lod.parent = value;
-    }
-
     update() {
 
         this.lod.update();
@@ -71,17 +56,11 @@ class Asteroid {
     #createLod() {
         
         this.lod = new LOD( this.manager );
-        this.lod.fromModels( this.asteroids.models, mesh => {
+        this.lod.fromModels( this.spaceships.model, mesh => {
 
             this.manager.star.shadow.cast( mesh, true, false );
             this.manager.postprocess.register( mesh );
         } );
-    }
-
-    #makeUnique() {
-
-        this.rotationQuaternion.copyFrom( new BABYLON.Vector3( Math.random() * 2 - 1, Math.random() * 2 - 1, Math.random() * 2 - 1 ).scaleInPlace( Math.PI ).toQuaternion() );
-        this.scaling.copyFromFloats( this.config.width, this.config.height, this.config.depth ).scaleInPlace( this.config.scale );
     }
 
     #addPhysics() {

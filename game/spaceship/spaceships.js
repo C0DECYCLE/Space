@@ -6,7 +6,7 @@
     2022
 */
 
-class Asteroids {
+class Spaceships {
 
     config = {
 
@@ -15,7 +15,7 @@ class Asteroids {
     manager = null;
     scene = null;
 
-    models = [];
+    model = [];
     
     list = [];
 
@@ -26,21 +26,12 @@ class Asteroids {
 
         EngineUtils.configure( this.config, config );
 
-        this.#setupModels();
+        this.#setupModel();
     }
 
-    register( type, config ) {
+    register( config ) {
 
-        let asteroids = null;
-
-        switch ( type ) {
-
-            case "cluster": asteroids = new AsteroidsCluster( this.manager, config ); break;
-
-            case "ring": asteroids = new AsteroidsRing( this.manager, config ); break;
-        }
-
-        this.list.push( asteroids );
+        this.list.push( new Spaceship( this.manager, config ) );
     }
 
     update() {
@@ -51,9 +42,9 @@ class Asteroids {
         }
     }
 
-    #setupModels() {
+    #setupModel() {
         
-        const importLods = this.scene.assets.get( "asteroid" ).getChildren();
+        const importLods = this.scene.assets.get( "spaceship" ).getChildren();
         
         for ( let i = 0; i < importLods.length; i++ ) {
             
@@ -63,7 +54,7 @@ class Asteroids {
             } );
             
             lod.setEnabled( false );
-            this.models.push( lod );
+            this.model.push( lod );
         }
     }
 
