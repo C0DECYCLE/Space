@@ -24,6 +24,7 @@ class Manager {
     star = null;
     planets = null;
     asteroids = null;
+    spaceships = null;
     player = null;
 
     constructor( config ) {
@@ -45,8 +46,7 @@ class Manager {
         this.scene.load( [
 
             { key: "asteroid", path: "assets/models/asteroid.glb" },
-            //{ key: "tree", path: "assets/models/tree.glb" },
-            //{ key: "rock", path: "assets/models/rock.glb" }
+            { key: "spaceship", path: "assets/models/spaceship.glb" },
 
         ], assets => { this.#install(); beginStaging(); } );
 
@@ -100,6 +100,10 @@ class Manager {
 
         this.asteroids.register( "ring", { key: 0, radius: 5 * 1000, spread: 400, height: 200, density: 0.02 } );
         this.asteroids.register( "ring", { key: 1, radius: 5 * 1000, spread: 2 * 1000, height: 100, density: 0.03 } );
+
+        this.spaceships = new Spaceships( this, {} );
+
+        this.spaceships.register( { key: 0 } );
     }
 
     #stage() { 
@@ -114,6 +118,8 @@ class Manager {
         this.asteroids.list[0].position.copyFrom( this.planets.list[0].position );
         this.asteroids.list[1].position.copyFrom( this.planets.list[0].position );
 
+        this.spaceships.list[0].position.copyFrom( this.player.position ).addInPlace( new BABYLON.Vector3( 0, 0, 10 ) );
+
         this.camera.attachToPlayer( this.player );
 
         this.scene.debugLayer.show( { embedMode: true } );
@@ -127,6 +133,8 @@ class Manager {
         }
 
         this.asteroids.update();
+
+        this.spaceships.update();
 
         this.player.update();
         
