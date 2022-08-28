@@ -28,6 +28,7 @@ class Player {
 
     mesh = null;
     physics = null;
+    interaction = null;
 
     state = new StateMachine();
 
@@ -44,6 +45,7 @@ class Player {
         this.#setupInspector();
         this.#setupStates();
         this.#setupPhysics();
+        this.#setupInteraction();
         this.#registerObservables();
     }
 
@@ -81,6 +83,11 @@ class Player {
         }
 
         this.physics.update();
+
+        if ( this.state.is( "spaceship" ) === false ) {
+
+            this.interaction.update();
+        }
     }
 
     #setupInspector() {
@@ -104,6 +111,7 @@ class Player {
 
         this.state.add( "space", ( oldState ) => this.#onSpaceEnter( oldState ), ( newState ) => this.#onSpaceLeave( newState ) );
         this.state.add( "planet",( oldState, planet ) => this.#onPlanetEnter( oldState, planet ), ( newState ) => this.#onPlanetLeave( newState ) );
+        this.state.add( "spaceship",( oldState, spaceship ) => this.#onSpaceshipEnter( oldState, spaceship ), ( newState ) => this.#onSpaceshipLeave( newState ) );
 
         this.state.set( "space" );
     }
@@ -133,6 +141,11 @@ class Player {
     #setupPhysics() {
 
         this.physics = new PlayerPhysics( this );
+    }
+    
+    #setupInteraction() {
+
+        this.interaction = new PlayerInteraction( this );
     }
 
     #registerObservables() {
@@ -192,6 +205,18 @@ class Player {
 
         this.physics.getPlanet().generator.toggleMask( false );
         this.physics.setPlanet( null );
+    }
+
+    #onSpaceshipEnter( oldState, spaceship ) {
+        
+        log( "player entered planet" );
+
+        //spaceship
+    }
+    
+    #onSpaceshipLeave( newState ) {
+        
+        log( "player left planet" );
     }
 
 }

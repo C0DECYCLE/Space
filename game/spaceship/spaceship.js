@@ -30,6 +30,7 @@ class Spaceship {
         
         this.#createLod();   
         this.#addPhysics();
+        this.#registerInteractable();
     }
 
     get root() {
@@ -67,6 +68,13 @@ class Spaceship {
 
         this.physics = new PhysicsEntity( this.root, PhysicsEntity.TYPES.DYNAMIC );
         //this.physics.pause();
+    }
+
+    #registerInteractable() {
+
+        const cockpit = this.root.getChildMeshes( false, mesh => mesh.name == "glass_instance" )[0];
+
+        this.manager.player.interaction.register( cockpit, () => log( "spaceship cockpit interaction test" ) );
     }
 
 }
