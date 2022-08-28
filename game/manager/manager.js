@@ -42,13 +42,15 @@ class Manager {
         this.scene.clearColor = BABYLON.Color3.FromHexString( this.config.dark ).scale( 0.25 * 0.5 );
         this.scene.ambient = new EngineAmbient( this.scene, this.config.dark, 0.25 * 1.25 );
 
-        
+        /*
         this.scene.load( [
 
             { key: "asteroid", path: "assets/models/asteroid.glb" },
             { key: "spaceship", path: "assets/models/spaceship.glb" },
 
         ], assets => { this.#install(); beginStaging(); } );
+        */
+        this.#install(); beginStaging();
 
         return this.scene;
     }
@@ -95,7 +97,7 @@ class Manager {
                 seed: new BABYLON.Vector3( 2253, 7001, 4099 ), mountainy: 2, warp: 0.6 
             }
         ] );
-
+        /*
         this.asteroids = new Asteroids( this, {} );
 
         this.asteroids.register( "ring", { key: 0, radius: 5 * 1000, spread: 400, height: 200, density: 0.02 } );
@@ -103,7 +105,7 @@ class Manager {
 
         this.spaceships = new Spaceships( this, {} );
 
-        this.spaceships.register( { key: 0 } );
+        this.spaceships.register( { key: 0 } );*/
     }
 
     #stage() { 
@@ -114,13 +116,15 @@ class Manager {
         this.planets.list[3].place( this.planets.list[2].position, 10 * 1000, 60 );
         
         this.player.position.copyFrom( this.planets.list[0].position ).addInPlace( new BABYLON.Vector3( 5 * 1000, 0, 0 ) );
-        
+        /*
         this.asteroids.list[0].position.copyFrom( this.planets.list[0].position );
         this.asteroids.list[1].position.copyFrom( this.planets.list[0].position );
 
         this.spaceships.list[0].position.copyFrom( this.player.position ).addInPlace( new BABYLON.Vector3( 0, 0, 10 ) );
-
+*/
         this.camera.attachToPlayer( this.player );
+
+        this.postprocess.build();
 
         this.scene.debugLayer.show( { embedMode: true } );
     }
@@ -131,11 +135,11 @@ class Manager {
 
             this.planets.update();
         }
-
+        /*
         this.asteroids.update();
 
         this.spaceships.update();
-
+        */
         this.player.update();
         
         this.camera.update();

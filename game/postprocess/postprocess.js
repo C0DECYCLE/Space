@@ -17,7 +17,7 @@ class PostProcess {
     scene = null;
     camera = null;
 
-    pipelines = [];
+    postprocesses = [];
 
     #depthRenderer = null;
     #depthMap = null;
@@ -30,10 +30,7 @@ class PostProcess {
 
         EngineUtils.configure( this.config, config );
 
-        this.scene.clearColor = this.scene.clearColor.toLinearSpace();
-
         this.#createDepthRenderer();
-        this.#defaultPipeline();
     }
 
     register( mesh ) {
@@ -48,25 +45,40 @@ class PostProcess {
 
     godrays( mesh ) {
 
-        const postprocess = new BABYLON.VolumetricLightScatteringPostProcess( `${ mesh.name }_godrays`, 1.0, this.camera, mesh, 100, BABYLON.Texture.BILINEAR_SAMPLINGMODE, Space.engine.babylon, false );
+        const postprocess = new BABYLON.VolumetricLightScatteringPostProcess( `${ mesh.name }_godrays`, 1.0, null, mesh, 100, BABYLON.Texture.BILINEAR_SAMPLINGMODE, Space.engine.babylon, false, this.scene );
         postprocess.weight = 0.1;
 
-        this.pipelines.push( postprocess );
+        this.postprocesses.push( postprocess );
 
         return postprocess;
     }
 
     athmosphere( planet ) {
 
-        const postprocess = new AtmosphericScatteringPostProcess( `${ planet.root.name }_athmosphere`, planet, this.manager.star, this.manager.camera, this.#depthMap, this.scene );
+        const postprocess = new AtmosphericScatteringPostProcess( `${ planet.root.name }_athmosphere`, planet, this.manager.star, this.manager.camera, this.#depthMap, Space.engine.babylon );
 
         postprocess.settings.redWaveLength = planet.config.waveLengths.r;
         postprocess.settings.greenWaveLength = planet.config.waveLengths.g;
         postprocess.settings.blueWaveLength = planet.config.waveLengths.b;
 
-        this.pipelines.push( postprocess );
+        this.postprocesses.push( postprocess );
 
         return postprocess;
+    }
+
+    build() {
+
+        const pipeline = new BABYLON.PostProcessRenderPipeline( Space.engine.babylon, "postprocess_pipeline" );
+        const effect = new BABYLON.PostProcessRenderEffect( Space.engine.babylon, "postprocess_effect", () => this.postprocesses );
+        
+        pipeline.addEffect( effect );
+
+        this.scene.postProcessRenderPipelineManager.addPipeline( pipeline );
+        this.scene.postProcessRenderPipelineManager.attachCamerasToRenderPipeline( "postprocess_pipeline", this.camera );
+        
+        this.scene.clearColor = this.scene.clearColor.toLinearSpace();
+
+        const pipeline2 = this.#defaultPipeline();
     }
 
     #createDepthRenderer() {
@@ -81,13 +93,14 @@ class PostProcess {
 
     #defaultPipeline() {
 
-        const pipeline = new BABYLON.DefaultRenderingPipeline( "postprocess_default", true, this.scene, [ this.camera ] );
-        pipeline.samples = this.config.samples;
+        const pipeline = new BABYLON.DefaultRenderingPipeline( "postprocess_pipeline_image", true, this.scene, [ this.camera ] );
+        //pipeline.samples = this.config.samples;
+
         pipeline.chromaticAberrationEnabled = true;
         pipeline.chromaticAberration.radialIntensity = 1;
         pipeline.chromaticAberration.aberrationAmount = 30;
 
-        this.pipelines.push( pipeline );
+        return pipeline;
     }
 
 }

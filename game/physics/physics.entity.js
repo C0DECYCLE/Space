@@ -24,8 +24,15 @@ class PhysicsEntity {
     
     static collidable( mesh, type ) {
 
-        mesh.checkCollisions = true;
         mesh.physicsEntityType = type;
+        mesh.checkCollisions = true;
+
+        const subs = mesh.getChildMeshes();
+
+        for ( let i = 0; i < subs.length; i++ ) {
+
+            subs[i].checkCollisions = true;
+        }
     }
 
     delta = new BABYLON.Vector3( 0, 0, 0 );
