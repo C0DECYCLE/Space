@@ -119,6 +119,7 @@ class Camera {
     #addTargets() {
 
         this.targets.player = new CameraTargetPlayer( this );
+        this.targets.spaceship = new CameraTargetSpaceship( this );
     }
     
     #enterTarget( object, camera ) {

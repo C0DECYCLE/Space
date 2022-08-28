@@ -66,21 +66,17 @@ class Player {
 
     get planet() {
 
-        return this.physics.getPlanet();
+        return this.physics.planet;
+    }
+
+    get spaceship() {
+
+        return this.physics.spaceship;
     }
 
     update() {
 
         this.#updateFromInspector();
-
-        if ( this.state.is( "space" ) === true ) {
-
-            this.physics.space();
-
-        } else if ( this.state.is( "planet" ) === true ) {
-
-            this.physics.planet();
-        }
 
         this.physics.update();
 
@@ -196,22 +192,28 @@ class Player {
         log( "player entered planet" );
 
         planet.generator.toggleMask( true );
-        this.physics.setPlanet( planet );
+        this.physics.planet = planet;
     }
     
     #onPlanetLeave( newState ) {
         
         log( "player left planet" );
 
-        this.physics.getPlanet().generator.toggleMask( false );
-        this.physics.setPlanet( null );
+        this.physics.planet.generator.toggleMask( false );
+        this.physics.planet = null;
     }
 
     #onSpaceshipEnter( oldState, spaceship ) {
         
         log( "player entered planet" );
 
-        //spaceship
+        this.physics.spaceship = spaceship;
+        //this.camera.attachToSpaceship( spaceship );
+
+        //spaceship:
+        //make camera spaceship
+        //check all state stuff
+        //make leavable with f?
     }
     
     #onSpaceshipLeave( newState ) {

@@ -10,6 +10,7 @@ class PlayerPhysics extends PhysicsEntity {
 
     #player = null;
     #planet = null;
+    #spaceship = null;
 
     constructor( player ) {
 
@@ -18,22 +19,50 @@ class PlayerPhysics extends PhysicsEntity {
         this.#player = player;
     }
 
-    setPlanet( value ) {
+    set planet( value ) {
 
         this.#planet = value;
     }
     
-    getPlanet() {
+    get planet() {
 
         return this.#planet;
     }
 
-    space() {
+    set spaceship( value ) {
+
+        this.#spaceship = value;
+    }
+    
+    get spaceship() {
+
+        return this.#spaceship;
+    }
+
+    /* override */ update() {
+
+        if ( this.#player.state.is( "space" ) === true ) {
+
+            this.#spaceUpdate();
+
+        } else if ( this.#player.state.is( "planet" ) === true ) {
+
+            this.#planetUpdate();
+
+        } else if ( this.#player.state.is( "spaceship" ) === true ) {
+
+            //this.#spaceshipUpdate();
+        }
+
+        super.update();
+    }
+
+    #spaceUpdate() {
 
         this.#spaceMovement();
     }
 
-    planet() {
+    #planetUpdate() {
 
         const up = this.#planet.physics.pull( this );
 
@@ -42,6 +71,12 @@ class PlayerPhysics extends PhysicsEntity {
             this.#planetMovement();
             this.quaternionTowardsUpright( up, 0.1 );
         }
+    }
+
+    #spaceshipUpdate() {
+        
+        this.#player.position.copyFrom( this.spaceship.position );
+        this.#player.rotationQuaternion.copyFrom( this.spaceship.rotationQuaternion );
     }
 
     #spaceMovement() {
