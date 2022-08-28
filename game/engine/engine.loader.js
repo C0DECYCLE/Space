@@ -83,6 +83,7 @@ class EngineLoader {
                 
             const material = new BABYLON.StandardMaterial( `Color_${ color }`, scene );
             material.setColorIntensity( color, 0.5 );
+            material.alpha = importMesh.material.alpha;
             context.materials.set( color, material );
         }
         

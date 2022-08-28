@@ -105,9 +105,11 @@ class Manager {
 
         this.spaceships.register( { key: 0 } );
 
-        //make player interaction system
+        //make import material transparency
+        //make player interaction system, go into ship trough cockpit, highlight interactable mesh: interaction system: makeMeshInteractable( event ) -> glow when near, event when clicked / interacted
         //make go into control of spaceship of player system
-        //make spaceship model look good from the side
+        //make spaceship landing gear
+        //make spaceship planet physics, logic, landable
     }
 
     #stage() { 
