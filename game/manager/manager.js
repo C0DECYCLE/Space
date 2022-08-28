@@ -104,6 +104,10 @@ class Manager {
         this.spaceships = new Spaceships( this, {} );
 
         this.spaceships.register( { key: 0 } );
+
+        //make player interaction system
+        //make go into control of spaceship of player system
+        //make spaceship model look good from the side
     }
 
     #stage() { 
