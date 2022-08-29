@@ -106,7 +106,8 @@ class Manager {
         this.spaceships.register( { key: 0 } );
         
         //movement bug which poped up? look through changes
-        //move camera offset (8) to camera target and make bigger in spaceship as well as influenced by speed
+        //collider not fitting bug
+        //move camera offset (8) to camera target and make bigger in spaceship as well as influenced by speed (lerp offset)
         //make spaceship variant which contains all the specific model stuff extending the spaceship base class for specific ships
         //make go into control of spaceship of player system
         //https://playground.babylonjs.com/#1OH09K#1403

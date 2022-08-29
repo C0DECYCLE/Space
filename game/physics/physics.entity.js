@@ -59,7 +59,7 @@ class PhysicsEntity {
         //this.#bindObservables();
         this.#fitCollider();
 
-        //this.debugCollider();
+        this.debugCollider();
     }
     
     get position() {
@@ -176,7 +176,7 @@ class PhysicsEntity {
         
         this.getCollider()
         .copyFrom( bounding.scaleInPlace( 0.5 ) )
-        .multiplyInPlace( this.#mesh.scaling )
+        //.multiplyInPlace( this.#mesh.scaling )
         .scaleInPlace( PhysicsEntity.ENLARGEMENT );
     }
 
