@@ -40,7 +40,7 @@ class PlayerPhysics extends PhysicsEntity {
     }
 
     /* override */ update() {
-
+        
         if ( this.#player.state.is( "space" ) === true ) {
 
             this.#spaceUpdate();
@@ -51,7 +51,7 @@ class PlayerPhysics extends PhysicsEntity {
 
         } else if ( this.#player.state.is( "spaceship" ) === true ) {
 
-            //this.#spaceshipUpdate();
+            this.#spaceshipUpdate();
         }
 
         super.update();

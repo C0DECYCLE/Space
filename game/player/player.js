@@ -205,10 +205,10 @@ class Player {
 
     #onSpaceshipEnter( oldState, spaceship ) {
         
-        log( "player entered planet" );
+        log( "player entered spaceship" );
 
         this.physics.spaceship = spaceship;
-        //this.camera.attachToSpaceship( spaceship );
+        this.camera.attachToSpaceship( spaceship );
 
         //spaceship:
         //make camera spaceship
@@ -218,7 +218,9 @@ class Player {
     
     #onSpaceshipLeave( newState ) {
         
-        log( "player left planet" );
+        log( "player left spaceship" );
+
+        this.physics.spaceship = null;
     }
 
 }

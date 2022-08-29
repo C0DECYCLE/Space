@@ -31,6 +31,11 @@ class ManagerStage {
 
     run( delta ) {
 
+        if ( this.#scene.assets !== undefined ) {
+
+            this.#scene.assets.update();
+        }
+
         if ( this.#isStagingComplete === true ) {
 
             this.#run( delta );

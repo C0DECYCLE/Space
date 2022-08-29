@@ -57,7 +57,7 @@ class LOD {
         
         for ( let i = 0; i < models.length; i++ ) {
             
-            this.add( this.#manager.scene.instance( models[i], onEveryMesh ), Number( models[i].name.split( "_" )[2] ) );
+            this.add( this.#manager.scene.assets.instance( models[i], onEveryMesh ), Number( models[i].name.split( "_" )[2] ) );
         }
     }
 

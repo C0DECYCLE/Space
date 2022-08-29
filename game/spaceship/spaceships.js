@@ -44,11 +44,11 @@ class Spaceships {
 
     #setupModel() {
         
-        const importLods = this.scene.assets.get( "spaceship" ).getChildren();
+        const importLods = this.scene.assets.list.get( "spaceship" ).getChildren();
         
         for ( let i = 0; i < importLods.length; i++ ) {
             
-            const lod = this.scene.traverse( importLods[i], mesh => {
+            const lod = this.scene.assets.traverse( importLods[i], mesh => {
             
                 this.manager.star.shadow.receive( mesh, true, false );
             } );

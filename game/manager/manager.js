@@ -42,13 +42,13 @@ class Manager {
         this.scene.clearColor = BABYLON.Color3.FromHexString( this.config.dark ).scale( 0.25 * 0.5 );
         this.scene.ambient = new EngineAmbient( this.scene, this.config.dark, 0.25 * 1.25 );
 
-        
-        this.scene.load( [
+        this.scene.assets = new EngineAssets( this.scene );
+        this.scene.assets.onLoadObservable.addOnce( () => { this.#install(); beginStaging(); } );
+        this.scene.assets.load( [
 
             { key: "asteroid", path: "assets/models/asteroid.glb" },
-            { key: "spaceship", path: "assets/models/spaceship.glb" },
-
-        ], assets => { this.#install(); beginStaging(); } );
+            { key: "spaceship", path: "assets/models/spaceship.glb" }
+        ] );
 
         return this.scene;
     }
@@ -100,12 +100,13 @@ class Manager {
 
         this.asteroids.register( "ring", { key: 0, radius: 5 * 1000, spread: 400, height: 200, density: 0.02 } );
         this.asteroids.register( "ring", { key: 1, radius: 5 * 1000, spread: 2 * 1000, height: 100, density: 0.03 } );
-
+        
         this.spaceships = new Spaceships( this, {} );
 
         this.spaceships.register( { key: 0 } );
-
+        
         //make go into control of spaceship of player system
+        //https://playground.babylonjs.com/#1OH09K#1403
     }
 
     #stage() { 
