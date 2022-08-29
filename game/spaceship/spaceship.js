@@ -20,6 +20,8 @@ class Spaceship {
     lod = null;
     physics = null;
 
+    seatOffset = new BABYLON.Vector3( -1.2, 1.5, 0 );
+
     constructor( manager, config ) {
 
         this.manager = manager;

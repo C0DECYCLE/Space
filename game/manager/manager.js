@@ -105,6 +105,9 @@ class Manager {
 
         this.spaceships.register( { key: 0 } );
         
+        //movement bug which poped up? look through changes
+        //move camera offset (8) to camera target and make bigger in spaceship as well as influenced by speed
+        //make spaceship variant which contains all the specific model stuff extending the spaceship base class for specific ships
         //make go into control of spaceship of player system
         //https://playground.babylonjs.com/#1OH09K#1403
     }
@@ -121,7 +124,8 @@ class Manager {
         this.asteroids.list[0].position.copyFrom( this.planets.list[0].position );
         this.asteroids.list[1].position.copyFrom( this.planets.list[0].position );
 
-        this.spaceships.list[0].position.copyFrom( this.player.position ).addInPlace( new BABYLON.Vector3( 0, 0, 10 ) );
+        this.spaceships.list[0].position.copyFrom( this.player.position ).addInPlace( new BABYLON.Vector3( 0, 0, 12 ) );
+        this.spaceships.list[0].root.rotate( BABYLON.Axis.Y, 90 * EngineUtils.toRadian, BABYLON.Space.LOCAL );
 
         this.camera.attachToPlayer( this.player );
 

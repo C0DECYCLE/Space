@@ -75,7 +75,7 @@ class PlayerPhysics extends PhysicsEntity {
 
     #spaceshipUpdate() {
         
-        this.#player.position.copyFrom( this.spaceship.position );
+        this.#player.position.copyFrom( this.spaceship.position ).addInPlace( this.spaceship.seatOffset );
         this.#player.rotationQuaternion.copyFrom( this.spaceship.rotationQuaternion );
     }
 
