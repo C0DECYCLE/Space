@@ -48,13 +48,10 @@ class Spaceships {
         
         for ( let i = 0; i < importLods.length; i++ ) {
             
-            const lod = this.scene.assets.traverse( importLods[i], mesh => {
+            this.model.push( this.scene.assets.traverse( importLods[i], mesh => {
             
                 this.manager.star.shadow.receive( mesh, true, false );
-            } );
-            
-            lod.setEnabled( false );
-            this.model.push( lod );
+            } ) );
         }
     }
 

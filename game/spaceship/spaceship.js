@@ -20,7 +20,7 @@ class Spaceship {
     lod = null;
     physics = null;
 
-    seatOffset = new BABYLON.Vector3( -1.2, 1.5, 0 );
+    seatOffset = new BABYLON.Vector3( 0, 1.5, -1.2 );
 
     constructor( manager, config ) {
 
@@ -64,6 +64,8 @@ class Spaceship {
             this.manager.star.shadow.cast( mesh, true, false );
             this.manager.postprocess.register( mesh );
         } );
+
+        this.root.name = `spaceships_spaceship${ this.config.key }`;
     }
 
     #addPhysics() {
@@ -73,7 +75,7 @@ class Spaceship {
 
     #registerInteractable() {
 
-        const cockpit = this.root.getChildMeshes( false, mesh => mesh.name == "glass_instance" )[0];
+        const cockpit = this.root.getChildMeshes( false, mesh => mesh.name == "i-glass" )[0];
 
         this.manager.player.interaction.register( cockpit, () => {
 

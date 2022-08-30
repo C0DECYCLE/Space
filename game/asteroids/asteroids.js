@@ -57,13 +57,10 @@ class Asteroids {
         
         for ( let i = 0; i < importLods.length; i++ ) {
             
-            const lod = this.scene.assets.traverse( importLods[i], mesh => {
+            this.models.push( this.scene.assets.traverse( importLods[i], mesh => {
             
                 this.manager.star.shadow.receive( mesh, true, false );
-            } );
-            
-            lod.setEnabled( false );
-            this.models.push( lod );
+            } ) );
         }
     }
 

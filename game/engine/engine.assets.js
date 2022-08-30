@@ -9,6 +9,7 @@
 class EngineAssets {
     
     scene = null;
+    cache = null;
 
     list = new Map();
     materials = new Map();
@@ -19,6 +20,8 @@ class EngineAssets {
     constructor( scene ) {
         
         this.scene = scene;
+
+        this.#createCache();
     }
     
     load( list ) {
@@ -53,6 +56,9 @@ class EngineAssets {
             this.#traverseMesh( subs[i], onEveryMesh ).parent = lod;
         }
 
+        lod.parent = this.cache;
+        lod.setEnabled( false );
+
         return lod;
     }
 
@@ -66,6 +72,9 @@ class EngineAssets {
             this.#instanceMesh( subs[i], onEveryInstance ).parent = instance;
         }
 
+        instance.parent = null;
+        instance.setEnabled( true );
+
         return instance;
     }
     
@@ -78,6 +87,12 @@ class EngineAssets {
         }
     }
 
+    #createCache() {
+
+        this.cache = new BABYLON.Node( "EngineAssets_cache", this.scene );
+        this.cache.setEnabled( false );
+    }
+
     #traverseMesh( importMesh, onMesh = undefined ) {
         
         const mesh = new BABYLON.Mesh( importMesh.name, this.scene );
@@ -85,7 +100,7 @@ class EngineAssets {
         
         if ( this.materials.has( color ) === false ) {
                 
-            const material = new BABYLON.StandardMaterial( `Color_${ color }`, this.scene );
+            const material = new BABYLON.StandardMaterial( `c-${ color }`, this.scene );
             material.setColorIntensity( color, 0.5 );
             material.alpha = importMesh.material.alpha;
             this.materials.set( color, material );
@@ -108,7 +123,7 @@ class EngineAssets {
 
     #instanceMesh( mesh, onInstance = undefined ) {
 
-        const instance = mesh.createInstance( `${ mesh.name }_instance` );
+        const instance = mesh.createInstance( `i-${ mesh.name }` );
 
         if ( typeof onInstance === "function" ) {
 

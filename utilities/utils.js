@@ -88,12 +88,7 @@ Array.prototype.remove = function( value ) {
 
 Array.prototype.quick_remove = function( index ) {
 
-    const len = this.length;
-    const last_value = this[ len - 1 ];
-
-    this[ len - 1 ] = this[ index ];
-    this[ index ] = last_value;
-
+    this[ index ] = this[ this.length - 1 ];
     this.pop();
 
     return this;

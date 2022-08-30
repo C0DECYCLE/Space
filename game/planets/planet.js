@@ -124,7 +124,7 @@ class Planet {
 
     #createRoot() {
 
-        this.root = new BABYLON.TransformNode( `planet${ this.config.key }`, this.scene );
+        this.root = new BABYLON.TransformNode( `planets_planet${ this.config.key }`, this.scene );
         this.root.rotationQuaternion = this.root.rotation.toQuaternion();
     }
 

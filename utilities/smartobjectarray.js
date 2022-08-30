@@ -10,6 +10,10 @@ class SmartObjectArray extends ObjectArray {
 
     len = 0;
 
+    //////////////////////////
+    constructor() { console.error( "SmartObjectArray is out of date! refactor from ObjectArray!" ); }
+    //////////////////////////
+
     /* override */ push( object ) {
         
         object[ this.uuid ] = this.len;

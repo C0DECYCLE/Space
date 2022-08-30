@@ -38,12 +38,12 @@ class PostProcess {
 
     register( mesh ) {
 
-        this.#depthMap.renderList.push( mesh );
+        this.#depthMap.renderList.add( mesh );
     }
 
     dispose( mesh ) {
 
-        this.#depthMap.renderList.remove( mesh );
+        this.#depthMap.renderList.delete( mesh );
     }
 
     godrays( mesh ) {
@@ -74,7 +74,7 @@ class PostProcess {
         this.#depthRenderer = new BABYLON.DepthRenderer( this.scene );
 
         this.#depthMap = this.#depthRenderer.getDepthMap();
-        this.#depthMap.renderList = [];
+        this.#depthMap.renderList = new ObjectArray();
 
         this.scene.customRenderTargets.push( this.#depthMap );
     }

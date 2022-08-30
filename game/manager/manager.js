@@ -111,6 +111,9 @@ class Manager {
         //make spaceship variant which contains all the specific model stuff extending the spaceship base class for specific ships
         //make go into control of spaceship of player system
         //https://playground.babylonjs.com/#1OH09K#1403
+
+        //use objectarray in rtt
+        //rename manager
     }
 
     #stage() { 

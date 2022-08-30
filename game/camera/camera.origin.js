@@ -75,23 +75,16 @@ class CameraOrigin {
     #beforeRender() {
 
         const scene = this.#camera.scene;
-
-        if ( scene.rootNodes[0].name !== "camera" ) {
-
-            console.error( "Camera node not at position 0 in scene.rootNodes!" );
-
-            return;
-        }
-    
-        for ( let i = 1; i < scene.rootNodes.length; i++ ) {
+        
+        for ( let i = 0; i < scene.rootNodes.length; i++ ) {
 
             const node = scene.rootNodes[i];
-            
-            if ( !node.position ) {
+
+            if ( node.name === "camera" || node.isEnabled( false ) === false || !node.position ) {
                 
                 continue;
             }
-
+            
             if ( !node._actualPosition && !node._relativePosition ) {
 
                 this.setupNode( node );
@@ -109,11 +102,11 @@ class CameraOrigin {
         
         const scene = this.#camera.scene;
 
-        for ( let i = 1; i < scene.rootNodes.length; i++ ) {
+        for ( let i = 0; i < scene.rootNodes.length; i++ ) {
 
             const node = scene.rootNodes[i];
 
-            if ( node._actualPosition ) {
+            if ( node.name !== "camera" && node.isEnabled( false ) === true && node._actualPosition ) {
 
                 node.position.copyFrom( node._actualPosition );
             }

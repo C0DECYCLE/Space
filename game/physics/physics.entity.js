@@ -24,14 +24,14 @@ class PhysicsEntity {
     
     static collidable( mesh, type ) {
 
-        mesh.physicsEntityType = type;
-        mesh.checkCollisions = true;
+        //mesh.physicsEntityType = type;
+        //mesh.checkCollisions = true;
 
         const subs = mesh.getChildMeshes();
 
         for ( let i = 0; i < subs.length; i++ ) {
 
-            subs[i].checkCollisions = true;
+            //subs[i].checkCollisions = true;
         }
     }
 
@@ -59,7 +59,7 @@ class PhysicsEntity {
         //this.#bindObservables();
         this.#fitCollider();
 
-        this.debugCollider();
+        //this.debugCollider();
     }
     
     get position() {
