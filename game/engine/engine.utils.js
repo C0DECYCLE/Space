@@ -73,8 +73,9 @@ class EngineUtils {
 
         if ( node.parent !== null ) {
             
-            result.applyRotationQuaternionInPlace( node.parent.rotationQuaternion || node.parent.rotation.toQuaternion() );
-            result.addInPlace( node.parent.position );
+            result.multiplyInPlace( node.parent.scaling )
+            .applyRotationQuaternionInPlace( node.parent.rotationQuaternion )
+            .addInPlace( node.parent.position );
 
             EngineUtils.#recurseParentsPosition( result, node.parent );
         }

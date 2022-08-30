@@ -96,7 +96,7 @@ class Spaceship {
 
     #addPhysics() {
 
-        this.physics = new PhysicsEntity( this.root, PhysicsEntity.TYPES.DYNAMIC );
+        this.physics = new SpaceshipPhysics( this );
     }
 
     #registerInteractable() {
