@@ -21,7 +21,7 @@ class Player {
         experimentalPointerLock: true
     };
 
-    manager = null;
+    game = null;
     scene = null;
     camera = null;
     controls = null;
@@ -32,12 +32,12 @@ class Player {
 
     state = new StateMachine();
 
-    constructor( manager, config ) {
+    constructor( game, config ) {
 
-        this.manager = manager;
-        this.scene = this.manager.scene;
-        this.camera = this.manager.camera;
-        this.controls = this.manager.controls;
+        this.game = game;
+        this.scene = this.game.scene;
+        this.camera = this.game.camera;
+        this.controls = this.game.controls;
 
         EngineUtils.configure( this.config, config );
 
@@ -127,11 +127,11 @@ class Player {
         head.material = material;
         head.parent = this.mesh;
     
-        this.manager.star.shadow.cast( this.mesh, true, true );
-        this.manager.star.shadow.receive( this.mesh, true, true );
+        this.game.star.shadow.cast( this.mesh, true, true );
+        this.game.star.shadow.receive( this.mesh, true, true );
         
-        this.manager.postprocess.register( this.mesh );
-        this.manager.postprocess.register( head );
+        this.game.postprocess.register( this.mesh );
+        this.game.postprocess.register( head );
     }
 
     #setupPhysics() {
@@ -171,7 +171,7 @@ class Player {
 
     #followPointer( event ) {
         
-        const deltaCorrection = Space.engine.deltaCorrection;
+        const deltaCorrection = this.game.engine.deltaCorrection;
         
         this.root.rotate( BABYLON.Axis.Y, event.event.movementX * this.controls.config.panning * deltaCorrection, BABYLON.Space.LOCAL );
         this.root.rotate( BABYLON.Axis.X, event.event.movementY * this.controls.config.panning * deltaCorrection, BABYLON.Space.LOCAL );

@@ -77,7 +77,7 @@ class StarShadow {
 
         if ( this.#debug === true ) {
 
-            this.#frustumViewer = new BABYLON.DirectionalLightFrustumViewer( this.#light, this.#star.manager.camera.camera );
+            this.#frustumViewer = new BABYLON.DirectionalLightFrustumViewer( this.#light, this.#star.game.camera.camera );
         } 
     }
 

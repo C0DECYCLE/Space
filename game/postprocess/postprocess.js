@@ -13,7 +13,7 @@ class PostProcess {
         samples: 3
     };
 
-    manager = null;
+    game = null;
     scene = null;
     camera = null;
 
@@ -22,11 +22,11 @@ class PostProcess {
     #depthRenderer = null;
     #depthMap = null;
 
-    constructor( manager, config ) {
+    constructor( game, config ) {
 
-        this.manager = manager;
-        this.scene = this.manager.scene;
-        this.camera = this.manager.camera.camera;
+        this.game = game;
+        this.scene = this.game.scene;
+        this.camera = this.game.camera.camera;
 
         EngineUtils.configure( this.config, config );
 
@@ -48,7 +48,7 @@ class PostProcess {
 
     godrays( mesh ) {
 
-        const postprocess = new BABYLON.VolumetricLightScatteringPostProcess( `${ mesh.name }_godrays`, 1.0, this.camera, mesh, 100, BABYLON.Texture.BILINEAR_SAMPLINGMODE, Space.engine.babylon, false );
+        const postprocess = new BABYLON.VolumetricLightScatteringPostProcess( `${ mesh.name }_godrays`, 1.0, this.camera, mesh, 100, BABYLON.Texture.BILINEAR_SAMPLINGMODE, this.game.engine.babylon, false );
         postprocess.weight = 0.1;
 
         this.pipelines.push( postprocess );
@@ -58,7 +58,7 @@ class PostProcess {
 
     athmosphere( planet ) {
 
-        const postprocess = new AtmosphericScatteringPostProcess( `${ planet.root.name }_athmosphere`, planet, this.manager.star, this.manager.camera, this.#depthMap, this.scene );
+        const postprocess = new AtmosphericScatteringPostProcess( `${ planet.root.name }_athmosphere`, planet, this.game.star, this.game.camera, this.#depthMap, this.scene );
 
         postprocess.settings.redWaveLength = planet.config.waveLengths.r;
         postprocess.settings.greenWaveLength = planet.config.waveLengths.g;

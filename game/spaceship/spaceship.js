@@ -13,7 +13,7 @@ class Spaceship {
         key: UUIDv4()
     };
 
-    manager = null;
+    game = null;
     scene = null;
     spaceships = null;
 
@@ -22,11 +22,11 @@ class Spaceship {
 
     seatOffset = new BABYLON.Vector3( 0, 1.5, -1.2 );
 
-    constructor( manager, config ) {
+    constructor( game, config ) {
 
-        this.manager = manager;
-        this.scene = this.manager.scene;
-        this.spaceships = this.manager.spaceships;
+        this.game = game;
+        this.scene = this.game.scene;
+        this.spaceships = this.game.spaceships;
 
         EngineUtils.configure( this.config, config );
         
@@ -58,11 +58,11 @@ class Spaceship {
 
     #createLod() {
         
-        this.lod = new LOD( this.manager );
+        this.lod = new LOD( this.game );
         this.lod.fromModels( this.spaceships.model, mesh => {
 
-            this.manager.star.shadow.cast( mesh, true, false );
-            this.manager.postprocess.register( mesh );
+            this.game.star.shadow.cast( mesh, true, false );
+            this.game.postprocess.register( mesh );
         } );
 
         this.root.name = `spaceships_spaceship${ this.config.key }`;
@@ -77,9 +77,9 @@ class Spaceship {
 
         const cockpit = this.root.getChildMeshes( false, mesh => mesh.name == "i-glass" )[0];
 
-        this.manager.player.interaction.register( cockpit, () => {
+        this.game.player.interaction.register( cockpit, () => {
 
-            this.manager.player.state.set( "spaceship", this );
+            this.game.player.state.set( "spaceship", this );
         } );
     }
 

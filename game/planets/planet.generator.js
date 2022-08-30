@@ -52,10 +52,10 @@ class PlanetGenerator {
 
         this.#planet.physics.enable( mesh, size );
         
-        this.#planet.manager.star.shadow.cast( mesh, true, false );        
-        this.#planet.manager.star.shadow.receive( mesh, true, false );  
+        this.#planet.game.star.shadow.cast( mesh, true, false );        
+        this.#planet.game.star.shadow.receive( mesh, true, false );  
         
-        this.#planet.manager.postprocess.register( mesh );
+        this.#planet.game.postprocess.register( mesh );
 
         return mesh;
     }
@@ -105,12 +105,12 @@ class PlanetGenerator {
     #createMask() {
 
         this.#planet.mask = BABYLON.MeshBuilder.CreateSphere( "planet_mask", { diameter: this.#planet.config.radius * 2, segments: 16 }, this.scene );
-        this.#planet.mask.material = this.#planet.manager.planets.getMaskMaterial();
+        this.#planet.mask.material = this.#planet.game.planets.getMaskMaterial();
         this.#planet.mask.parent = this.#planet.root;
 
-        this.#planet.manager.star.shadow.cast( this.#planet.mask, true, false );
+        this.#planet.game.star.shadow.cast( this.#planet.mask, true, false );
         
-        this.#planet.manager.postprocess.register( this.#planet.mask );
+        this.#planet.game.postprocess.register( this.#planet.mask );
     }
 
     #debugInfluence() {

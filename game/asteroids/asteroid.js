@@ -17,18 +17,18 @@ class Asteroid {
         scale: Math.ceil( Math.random() * 5 )
     };
 
-    manager = null;
+    game = null;
     scene = null;
     asteroids = null;
 
     lod = null;
     physics = null;
 
-    constructor( manager, config ) {
+    constructor( game, config ) {
 
-        this.manager = manager;
-        this.scene = this.manager.scene;
-        this.asteroids = this.manager.asteroids;
+        this.game = game;
+        this.scene = this.game.scene;
+        this.asteroids = this.game.asteroids;
 
         EngineUtils.configure( this.config, config );
         
@@ -70,11 +70,11 @@ class Asteroid {
 
     #createLod() {
         
-        this.lod = new LOD( this.manager );
+        this.lod = new LOD( this.game );
         this.lod.fromModels( this.asteroids.models, mesh => {
 
-            this.manager.star.shadow.cast( mesh, true, false );
-            this.manager.postprocess.register( mesh );
+            this.game.star.shadow.cast( mesh, true, false );
+            this.game.postprocess.register( mesh );
         } );
     }
 

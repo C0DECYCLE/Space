@@ -12,17 +12,17 @@ class Spaceships {
 
     };
 
-    manager = null;
+    game = null;
     scene = null;
 
     model = [];
     
     list = [];
 
-    constructor( manager, config ) {
+    constructor( game, config ) {
 
-        this.manager = manager;
-        this.scene = this.manager.scene;
+        this.game = game;
+        this.scene = this.game.scene;
 
         EngineUtils.configure( this.config, config );
 
@@ -31,7 +31,7 @@ class Spaceships {
 
     register( config ) {
 
-        this.list.push( new Spaceship( this.manager, config ) );
+        this.list.push( new Spaceship( this.game, config ) );
     }
 
     update() {
@@ -50,7 +50,7 @@ class Spaceships {
             
             this.model.push( this.scene.assets.traverse( importLods[i], mesh => {
             
-                this.manager.star.shadow.receive( mesh, true, false );
+                this.game.star.shadow.receive( mesh, true, false );
             } ) );
         }
     }

@@ -83,7 +83,7 @@ class PlayerPhysics extends PhysicsEntity {
 
         const controls = this.#player.controls;
         const floatConfig = this.#player.config.float;
-        const deltaCorrection = Space.engine.deltaCorrection;
+        const deltaCorrection = this.#player.game.engine.deltaCorrection;
         const translate = new BABYLON.Vector3( 0, 0, 0 );
 
         const float = floatConfig * deltaCorrection;
@@ -126,7 +126,7 @@ class PlayerPhysics extends PhysicsEntity {
         const walkConfig = this.#player.config.walk;
         const runConfig = this.#player.config.run;
         const jumpConfig = this.#player.config.jump;
-        const deltaCorrection = Space.engine.deltaCorrection;
+        const deltaCorrection = this.#player.game.engine.deltaCorrection;
         const translate = new BABYLON.Vector3( 0, 0, 0 );
 
         const walk = ( walkConfig / this.#planet.config.gravity ) * deltaCorrection;

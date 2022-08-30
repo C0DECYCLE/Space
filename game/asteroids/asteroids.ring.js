@@ -18,16 +18,16 @@ class AsteroidsRing {
         density: 0.05,
     };
 
-    manager = null;
+    game = null;
     scene = null;
 
     list = [];
     root = null;
     
-    constructor( manager, config ) {
+    constructor( game, config ) {
 
-        this.manager = manager;
-        this.scene = this.manager.scene;
+        this.game = game;
+        this.scene = this.game.scene;
 
         EngineUtils.configure( this.config, config );
 
@@ -85,7 +85,7 @@ class AsteroidsRing {
             const angle = ( 360 / count ) * i * EngineUtils.toRadian;
             const offset = new BABYLON.Vector3( Math.cos( angle ), 0, Math.sin( angle ) ).scaleInPlace( this.config.radius );
 
-            const cluster = new AsteroidsCluster( this.manager, { key: i, radius: this.config.spread, height: this.config.height, density: this.config.density }, this.root );
+            const cluster = new AsteroidsCluster( this.game, { key: i, radius: this.config.spread, height: this.config.height, density: this.config.density }, this.root );
             cluster.offsetAllAsteroids( offset );
 
             this.list.push( cluster );

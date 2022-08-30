@@ -12,17 +12,17 @@ class Asteroids {
 
     };
 
-    manager = null;
+    game = null;
     scene = null;
 
     models = [];
     
     list = [];
 
-    constructor( manager, config ) {
+    constructor( game, config ) {
 
-        this.manager = manager;
-        this.scene = this.manager.scene;
+        this.game = game;
+        this.scene = this.game.scene;
 
         EngineUtils.configure( this.config, config );
 
@@ -35,9 +35,9 @@ class Asteroids {
 
         switch ( type ) {
 
-            case "cluster": asteroids = new AsteroidsCluster( this.manager, config ); break;
+            case "cluster": asteroids = new AsteroidsCluster( this.game, config ); break;
 
-            case "ring": asteroids = new AsteroidsRing( this.manager, config ); break;
+            case "ring": asteroids = new AsteroidsRing( this.game, config ); break;
         }
 
         this.list.push( asteroids );
@@ -59,7 +59,7 @@ class Asteroids {
             
             this.models.push( this.scene.assets.traverse( importLods[i], mesh => {
             
-                this.manager.star.shadow.receive( mesh, true, false );
+                this.game.star.shadow.receive( mesh, true, false );
             } ) );
         }
     }

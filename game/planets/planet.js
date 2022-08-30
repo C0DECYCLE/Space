@@ -30,7 +30,7 @@ class Planet {
         warp: 0.3 //1.0
     };
 
-    manager = null;
+    game = null;
     scene = null;
     
     root = null;
@@ -51,10 +51,10 @@ class Planet {
     #distanceInOrbit = 0;
     #angleAroundOrbit = 0;
 
-    constructor( manager, config ) {
+    constructor( game, config ) {
 
-        this.manager = manager;
-        this.scene = manager.scene;
+        this.game = game;
+        this.scene = game.scene;
 
         EngineUtils.configure( this.config, config );
 
@@ -130,7 +130,7 @@ class Planet {
 
     #createLod() {
 
-        this.lod = new LOD( this.manager );
+        this.lod = new LOD( this.game );
         this.lod.fromSingle( this.root );
     }
 
@@ -156,7 +156,7 @@ class Planet {
 
         if ( this.config.athmosphere !== false ) {
 
-            this.athmosphere = this.manager.postprocess.athmosphere( this );
+            this.athmosphere = this.game.postprocess.athmosphere( this );
         }
     }
 
@@ -184,7 +184,7 @@ class Planet {
         
         if ( this.config.spin !== false ) {
 
-            const deltaCorrection = Space.engine.deltaCorrection;
+            const deltaCorrection = this.game.engine.deltaCorrection;
 
             this.root.rotate( BABYLON.Axis.Y, this.config.spin * EngineUtils.toRadian * deltaCorrection, BABYLON.Space.LOCAL ); //make very movement speed * delta time
         }
@@ -194,7 +194,7 @@ class Planet {
 
         if ( this.config.orbit !== false ) {
 
-            const deltaCorrection = Space.engine.deltaCorrection;
+            const deltaCorrection = this.game.engine.deltaCorrection;
 
             this.#angleAroundOrbit += this.config.orbit * EngineUtils.toRadian * deltaCorrection;
 
@@ -297,7 +297,7 @@ class Planet {
 
     #disposeNode( nodeKey, data ) {
 
-        this.manager.postprocess.dispose( data.mesh );
+        this.game.postprocess.dispose( data.mesh );
         data.mesh.dispose( !true, false );
         this.#list.delete( nodeKey );
     }

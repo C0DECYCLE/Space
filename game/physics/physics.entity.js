@@ -141,7 +141,7 @@ class PhysicsEntity {
         debug.material = this.#scene.debugMaterial;
         debug.parent = this.#mesh;
         
-        //star.manager.postprocess.register( dummy.root );
+        //star.game.postprocess.register( dummy.root );
     }
 
     quaternionTowardsUpright( up, stretch ) {

@@ -22,6 +22,7 @@ class EngineAssets {
         this.scene = scene;
 
         this.#createCache();
+        this.#listen();
     }
     
     load( list ) {
@@ -77,20 +78,23 @@ class EngineAssets {
 
         return instance;
     }
-    
-    update() {
-
-        if ( this.#notify === true ) {
-
-            this.#notify = false;
-            this.onLoadObservable.notifyObservers();
-        }
-    }
 
     #createCache() {
 
         this.cache = new BABYLON.Node( "EngineAssets_cache", this.scene );
         this.cache.setEnabled( false );
+    }
+
+    #listen() {
+
+        const id = setInterval( () => {
+
+            if ( this.#notify === true ) {
+
+                clearInterval( id );
+                this.onLoadObservable.notifyObservers();
+            }
+        }, 100 );
     }
 
     #traverseMesh( importMesh, onMesh = undefined ) {

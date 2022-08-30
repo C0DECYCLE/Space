@@ -79,4 +79,13 @@ class EngineUtils {
         }
     }
 
+    static makeDebugMaterial( scene ) {
+
+        const debugMaterial = new BABYLON.StandardMaterial( "debug", scene );
+        debugMaterial.setColorIntensity( "#ff226b", 1.0 );
+        debugMaterial.wireframe = true;
+
+        return debugMaterial;
+    }
+
 }
