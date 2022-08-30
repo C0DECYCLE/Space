@@ -12,7 +12,6 @@ class Camera {
 
         max: 10 * 1000 * 1000,
 
-        offset: 8,
         lerp: 0.1
     };
 
@@ -106,7 +105,7 @@ class Camera {
 
     #createCamera() {
 
-        this.camera = new BABYLON.ArcRotateCamera( "camera_camera", -Math.PI / 2, Math.PI / 2, this.config.offset, BABYLON.Vector3.Zero(), this.scene );
+        this.camera = new BABYLON.ArcRotateCamera( "camera_camera", -Math.PI / 2, Math.PI / 2, 0, BABYLON.Vector3.Zero(), this.scene );
         this.camera.maxZ = this.config.max;
         this.camera.parent = this.root;
     }

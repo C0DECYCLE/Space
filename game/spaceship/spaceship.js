@@ -8,6 +8,21 @@
 
 class Spaceship {
 
+    static load( game ) {
+        
+        this.model = [];
+        
+        const importLods = game.scene.assets.list.get( "spaceship"/*`spaceship_${ this.name }`*/ ).getChildren();
+        
+        for ( let i = 0; i < importLods.length; i++ ) {
+            
+            this.model.push( game.scene.assets.traverse( importLods[i], mesh => {
+            
+                game.star.shadow.receive( mesh, true, false );
+            } ) );
+        }
+    }
+
     config = {
 
         key: UUIDv4()
@@ -20,7 +35,8 @@ class Spaceship {
     lod = null;
     physics = null;
 
-    seatOffset = new BABYLON.Vector3( 0, 1.5, -1.2 );
+    seatOffset = new BABYLON.Vector3( 0, 0, 0 );
+    seatDiffrence = new BABYLON.Vector3();
 
     constructor( game, config ) {
 
@@ -56,10 +72,20 @@ class Spaceship {
         this.physics.update();
     }
 
+    enter( player ) {
+
+        this.seatDiffrence.copyFrom( this.position ).subtractInPlace( player.position ).applyRotationQuaternionInPlace( this.rotationQuaternion.invert() );
+    } 
+
+    leave( player ) {
+
+        player.position.copyFrom( this.position ).subtractInPlace( this.seatDiffrence.applyRotationQuaternionInPlace( this.rotationQuaternion ) );
+    }
+
     #createLod() {
-        
+
         this.lod = new LOD( this.game );
-        this.lod.fromModels( this.spaceships.model, mesh => {
+        this.lod.fromModels( this.constructor.model, mesh => {
 
             this.game.star.shadow.cast( mesh, true, false );
             this.game.postprocess.register( mesh );

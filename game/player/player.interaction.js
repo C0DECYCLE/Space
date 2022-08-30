@@ -29,7 +29,35 @@ class PlayerInteraction {
         this.list.push( { mesh: mesh, highlight: false, event: event } );
     }
 
+    unhighlightAll() {
+
+        for ( let i = 0; i < this.list.length; i++ ) {
+
+            this.#unhighlight( this.list[i] );
+        }
+    }
+
     update() {
+
+        if ( this.#player.state.is( "spaceship" ) === true ) {
+
+            this.#spaceshipUpdate();
+
+        } else {
+
+            this.#defaultUpdate();
+        }
+    }
+
+    #spaceshipUpdate() {
+
+        if ( this.#player.controls.activeKeys.has( "x" ) === true ) {
+
+            this.#player.state.set( "space" );
+        }
+    }
+
+    #defaultUpdate() {
 
         for ( let i = 0; i < this.list.length; i++ ) {
 
@@ -43,11 +71,7 @@ class PlayerInteraction {
 
         if ( distance <= PlayerInteraction.RADIUS ) {
 
-            if ( interaction.highlight === false ) {
-
-                interaction.mesh.enableEdgesRendering();
-                interaction.highlight = true;
-            }
+            this.#highlight( interaction );
 
             if ( this.#player.controls.activeKeys.has( "f" ) === true ) {
 
@@ -56,11 +80,25 @@ class PlayerInteraction {
 
         } else {
 
-            if ( interaction.highlight === true ) {
+            this.#unhighlight( interaction );
+        }
+    }
 
-                interaction.mesh.disableEdgesRendering();
-                interaction.highlight = false;
-            }
+    #highlight( interaction ) {
+
+        if ( interaction.highlight === false ) {
+
+            interaction.mesh.enableEdgesRendering();
+            interaction.highlight = true;
+        }
+    }
+
+    #unhighlight( interaction ) {
+
+        if ( interaction.highlight === true ) {
+                
+            interaction.mesh.disableEdgesRendering();
+            interaction.highlight = false;
         }
     }
 

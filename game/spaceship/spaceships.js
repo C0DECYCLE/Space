@@ -15,8 +15,7 @@ class Spaceships {
     game = null;
     scene = null;
 
-    model = [];
-    
+    variants = new Map();
     list = [];
 
     constructor( game, config ) {
@@ -26,12 +25,14 @@ class Spaceships {
 
         EngineUtils.configure( this.config, config );
 
-        this.#setupModel();
+        this.#setupVariants();
     }
 
-    register( config ) {
+    register( variant, config ) {
 
-        this.list.push( new Spaceship( this.game, config ) );
+        const variantClass = this.variants.get( variant );
+
+        this.list.push( new variantClass( this.game, config ) );
     }
 
     update() {
@@ -42,17 +43,15 @@ class Spaceships {
         }
     }
 
-    #setupModel() {
+    #setupVariants() {
         
-        const importLods = this.scene.assets.list.get( "spaceship" ).getChildren();
-        
-        for ( let i = 0; i < importLods.length; i++ ) {
-            
-            this.model.push( this.scene.assets.traverse( importLods[i], mesh => {
-            
-                this.game.star.shadow.receive( mesh, true, false );
-            } ) );
-        }
+        this.#setupVariant( SpaceshipVulcan );
+    }
+
+    #setupVariant( variantClass ) {
+
+        variantClass.load( this.game );
+        this.variants.set( variantClass.name.toLowerCase(), variantClass );
     }
 
 }

@@ -12,7 +12,7 @@ class PlayerPhysics extends PhysicsEntity {
     #planet = null;
     #spaceship = null;
 
-    constructor( player ) {
+    /* override */ constructor( player ) {
 
         super( player.root, PhysicsEntity.TYPES.DYNAMIC );
         
@@ -170,7 +170,7 @@ class PlayerPhysics extends PhysicsEntity {
         
         if ( translate.x !== 0 || translate.y !== 0 || translate.z !== 0 ) {
 
-            this.velocity.addInPlace( translate.applyRotationQuaternion( this.#player.rotationQuaternion ) );   
+            this.velocity.addInPlace( translate.applyRotationQuaternionInPlace( this.#player.rotationQuaternion ) );   
         }
             
         this.velocity.scaleInPlace( 0.85 );

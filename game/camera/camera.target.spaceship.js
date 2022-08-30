@@ -8,41 +8,20 @@
 
 class CameraTargetSpaceship extends CameraTarget {
 
-    focusBeta = Math.PI / 2.5;
+    /* override */ focusBeta = Math.PI / 2.2;
 
-    #wasUnfocused = false;
+    /* override */ offsetRadius = 18;
 
     /* override */ update( spaceship ) {
 
+        this.#adaptOffsetRadius( spaceship );
+
         super.update( spaceship );
-        
-        if ( this.camera.controls.isKeyboarding === true ) {
-
-            this.#refocus( spaceship );
-            this.focus( this.camera.config.lerp );
-
-        } else {
-
-            this.#wasUnfocused = true;
-        }
     }
 
-    #refocus( spaceship ) {
+    #adaptOffsetRadius( spaceship ) {
 
-        if ( this.#wasUnfocused === true ) {
-
-            this.#redirect( spaceship );
-            this.focus();
-
-            this.#wasUnfocused = false;
-        }
+        this.offsetRadius = EngineUtils.getBounding( spaceship.root ).size;
     }
 
-    #redirect( spaceship ) {
-
-        spaceship.root.rotate( BABYLON.Axis.Y, this.focusAlpha - this.camera.camera.alpha, BABYLON.Space.LOCAL );
-        spaceship.root.rotate( BABYLON.Axis.X, this.focusBeta - this.camera.camera.beta, BABYLON.Space.LOCAL );
-
-        this.camera.rotationQuaternion.copyFrom( spaceship.rotationQuaternion );
-    }
 }

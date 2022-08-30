@@ -23,7 +23,7 @@ Space.addOnReady( function() {
     this.scene.assets.load( [
 
         { key: "asteroid", path: "assets/models/asteroid.glb" },
-        { key: "spaceship", path: "assets/models/spaceship.glb" }
+        { key: "spaceship"/*_vulcan*/, path: "assets/models/spaceship.glb"/*_vulcan*/ }
     ] );
     
 
@@ -80,13 +80,12 @@ Space.add( "install", function() {
     
     this.spaceships = new Spaceships( this, {} );
 
-    this.spaceships.register( { key: 0 } );
+    this.spaceships.register( "vulcan", { key: 0 } );
     
 
     //movement bug which poped up? look through changes
     //collider not fitting bug
-    //move camera offset (8) to camera target and make bigger in spaceship as well as influenced by speed (lerp offset)
-    //make spaceship variant which contains all the specific model stuff extending the spaceship base class for specific ships
+
     //make go into control of spaceship of player system
     //https://playground.babylonjs.com/#1OH09K#1403
 
@@ -109,11 +108,9 @@ Space.add( "stage", function() {
     this.spaceships.list[0].position.copyFrom( this.player.position ).addInPlace( new BABYLON.Vector3( 0, 0, 12 ) );
     this.spaceships.list[0].root.rotate( BABYLON.Axis.Y, 90 * EngineUtils.toRadian, BABYLON.Space.LOCAL );
 
-    this.camera.attachToPlayer( this.player );
-
     this.scene.debugLayer.show( { embedMode: true } );
     
-    
+
 } );
 
 Space.add( "run", function( delta ) {
