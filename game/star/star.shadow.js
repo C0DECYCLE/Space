@@ -113,6 +113,7 @@ class StarShadow {
         //this.generator.autoCalcDepthBoundsRefreshRate = 2 //every second frame;
 
         this.#shadowMap = this.generator.getShadowMap();
+        this.#shadowMap.renderList = new ObjectArray();
     }
 
     #meshRecurse( mesh, call, recursiv = false ) {
@@ -134,11 +135,11 @@ class StarShadow {
 
         if ( value === true ) {
 
-            this.#shadowMap.renderList.push( mesh );
+            this.#shadowMap.renderList.add( mesh );
 
         } else {
 
-            this.#shadowMap.renderList.remove( mesh );
+            this.#shadowMap.renderList.delete( mesh );
         }
     }
 

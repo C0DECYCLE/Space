@@ -112,7 +112,6 @@ class Manager {
         //make go into control of spaceship of player system
         //https://playground.babylonjs.com/#1OH09K#1403
 
-        //use objectarray in rtt
         //rename manager
     }
 
