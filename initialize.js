@@ -86,9 +86,8 @@ Space.add( "install", function() {
     //movement bug which poped up? look through changes
     //collider not fitting bug
 
-    //make go into control of spaceship of player system
     //https://playground.babylonjs.com/#1OH09K#1403
-
+    //spaceship truster effect?
 
 } );
 

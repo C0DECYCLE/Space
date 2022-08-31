@@ -108,16 +108,25 @@ class PlayerPhysics extends PhysicsEntity {
             translate.x = -speed;
         }
         
-        if ( controls.activeKeys.has( "q" ) === true ) {
+        if ( controls.activeKeys.has( "x" ) === true ) {
 
             translate.y = speed;
 
-        } else if ( controls.activeKeys.has( "e" ) === true ) {
+        } else if ( controls.activeKeys.has( "y" ) === true ) {
 
             translate.y = -speed;
         }
 
         this.#movementTranslate( translate );
+
+        if ( controls.activeKeys.has( "q" ) === true ) {
+
+            this.#player.root.rotate( BABYLON.Axis.Z, speed * deltaCorrection, BABYLON.Space.LOCAL );
+
+        } else if ( controls.activeKeys.has( "e" ) === true ) {
+
+            this.#player.root.rotate( BABYLON.Axis.Z, -speed * deltaCorrection, BABYLON.Space.LOCAL );
+        }
     }
 
     #planetMovement() {

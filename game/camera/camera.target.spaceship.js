@@ -17,6 +17,26 @@ class CameraTargetSpaceship extends CameraTarget {
         this.#adaptOffsetRadius( spaceship );
 
         super.update( spaceship );
+
+        if ( this.camera.controls.activeKeys.has( "r" ) === false ) {
+
+            this.focus( this.camera.config.lerp );
+        }
+    }
+
+    /* override */ onPointerMove( spaceship, event ) {
+
+        if ( this.camera.controls.isPointerDown === true || this.camera.config.experimentalPointerLock === true ) {
+
+            if ( this.camera.controls.activeKeys.has( "r" ) === true ) {
+
+                this.free( event );
+
+            } else {
+
+                this.followPointer( spaceship, event );
+            }
+        }
     }
 
     #adaptOffsetRadius( spaceship ) {

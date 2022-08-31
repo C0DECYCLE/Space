@@ -37,6 +37,7 @@ class Spaceship {
 
     seatOffset = new BABYLON.Vector3( 0, 0, 0 );
     seatDiffrence = new BABYLON.Vector3();
+    isGettingControlled = false;
 
     constructor( game, config ) {
 
@@ -74,12 +75,14 @@ class Spaceship {
 
     enter( player ) {
 
-        this.seatDiffrence.copyFrom( this.position ).subtractInPlace( player.position ).applyRotationQuaternionInPlace( this.rotationQuaternion.invert() );
-    } 
+        this.#rememberSeat( player );
+        this.isGettingControlled = true;
+    }
 
     leave( player ) {
 
-        player.position.copyFrom( this.position ).subtractInPlace( this.seatDiffrence.applyRotationQuaternionInPlace( this.rotationQuaternion ) );
+        this.isGettingControlled = false;
+        this.#putOutOfSeat( player );
     }
 
     #createLod() {
@@ -106,6 +109,16 @@ class Spaceship {
 
             this.game.player.state.set( "spaceship", this );
         } );
+    }
+
+    #rememberSeat( player ) {
+
+        this.seatDiffrence.copyFrom( this.position ).subtractInPlace( player.position ).applyRotationQuaternionInPlace( this.rotationQuaternion.invert() );
+    }
+
+    #putOutOfSeat( player ) {
+
+        player.position.copyFrom( this.position ).subtractInPlace( this.seatDiffrence.applyRotationQuaternionInPlace( this.rotationQuaternion ) );
     }
 
 }

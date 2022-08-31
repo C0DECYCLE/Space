@@ -16,9 +16,7 @@ class Player {
         run: 0.015,
         jump: 0.01,
 
-        standingup: 0.05,
-
-        experimentalPointerLock: true
+        standingup: 0.05
     };
 
     game = null;
@@ -46,7 +44,6 @@ class Player {
         this.#setupStates();
         this.#setupPhysics();
         this.#setupInteraction();
-        this.#registerObservables();
     }
 
     get root() {
@@ -137,37 +134,9 @@ class Player {
         this.interaction = new PlayerInteraction( this );
     }
 
-    #registerObservables() {
-
-        this.controls.onPointerMove.add( event => this.#onPointerMove( event ) );
-    }
-
     #updateFromInspector() {
 
         this.config.float = this.root._float;
-    }
-
-    #onPointerMove( event ) {
-        
-        if ( this.controls.isPointerDown === true || this.config.experimentalPointerLock === true ) {
-
-            if ( this.controls.isKeyboarding === true ) {
-
-                this.#followPointer( event );
-
-            } else {
-
-                this.camera.free( event );
-            }
-        }
-    }
-
-    #followPointer( event ) {
-        
-        const deltaCorrection = this.game.engine.deltaCorrection;
-        
-        this.root.rotate( BABYLON.Axis.Y, event.event.movementX * this.controls.config.panning * deltaCorrection, BABYLON.Space.LOCAL );
-        this.root.rotate( BABYLON.Axis.X, event.event.movementY * this.controls.config.panning * deltaCorrection, BABYLON.Space.LOCAL );
     }
 
     #onSpaceEnter( oldState ) {
@@ -205,7 +174,7 @@ class Player {
         this.interaction.unhighlightAll();
         this.physics.spaceship = spaceship;
         this.physics.spaceship.enter( this );
-        this.camera.attachToSpaceship( spaceship );
+        this.camera.attachToSpaceship( this.physics.spaceship );
     }
     
     #onSpaceshipLeave( newState ) {

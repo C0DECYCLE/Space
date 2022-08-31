@@ -51,7 +51,7 @@ class PlayerInteraction {
 
     #spaceshipUpdate() {
 
-        if ( this.#player.controls.activeKeys.has( "x" ) === true ) {
+        if ( this.#player.controls.activeKeys.has( "p" ) === true ) {
 
             this.#player.state.set( "space" );
         }
