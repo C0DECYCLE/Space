@@ -68,8 +68,7 @@ class PlanetGenerator {
             
             let vertex = new BABYLON.Vector3( positions[ i * 3 ], positions[ i * 3 + 1 ], positions[ i * 3 + 2 ] );
             
-            vertex = EngineUtils.vectorRotation( vertex, fixRotation );
-            
+            vertex.applyRotationQuaternionInPlace( fixRotation.toQuaternion() );
             vertex.addInPlace( position );
     
             vertex = PlanetUtils.terrainify( this.#planet, vertex );
