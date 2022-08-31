@@ -50,25 +50,25 @@ Space.add( "install", function() {
 
         { 
             key: 0, radius: 1024, spin: 0.005, 
-            gravity: 0.6, athmosphere: 256, waveLengths: new BABYLON.Color3( 450, 370, 420 ),
+            gravity: 0.6, atmosphere: 256, waveLengths: new BABYLON.Color3( 450, 370, 420 ),
             seed: new BABYLON.Vector3( -1123, 7237, -3943 ), mountainy: 5, warp: 0.8 
         },
 
         { 
             key: 1, radius: 2048, spin: 0.005, 
-            gravity: 0.7, athmosphere: 512, waveLengths: new BABYLON.Color3( 450, 500, 680 ),
+            gravity: 0.7, atmosphere: 512, waveLengths: new BABYLON.Color3( 450, 500, 680 ),
             seed: new BABYLON.Vector3( 8513, -9011, -5910 ), variant: "1", mountainy: 3.5, warp: 1.0 
         },
 
         { 
             key: 2, radius: 4096, spin: 0.0025, 
-            gravity: 0.8, athmosphere: 1024, waveLengths: new BABYLON.Color3( 700, 600, 500 ),
+            gravity: 0.8, atmosphere: 1024, waveLengths: new BABYLON.Color3( 700, 600, 500 ),
             seed: new BABYLON.Vector3( -925, -2011, 7770 )
         },
 
         { 
             key: 3, radius: 256, spin: 0.01, 
-            gravity: 0.4, athmosphere: false,
+            gravity: 0.4, atmosphere: false,
             seed: new BABYLON.Vector3( 2253, 7001, 4099 ), mountainy: 2, warp: 0.6 
         }
     ] );
