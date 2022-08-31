@@ -32,6 +32,13 @@ class EngineUtils {
         }
     }
 
+    static vectorRotation( vector, rotation ) {
+
+        const quat = BABYLON.Quaternion.FromEulerVector( rotation );
+
+        return vector.rotateByQuaternionToRef( quat, BABYLON.Vector3.Zero() );
+    }
+
     static getFarAway() {
 
         return new BABYLON.Vector3( 0, 1000 * 1000 * 1000, 0 );
