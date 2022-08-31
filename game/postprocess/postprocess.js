@@ -56,9 +56,9 @@ class PostProcess {
         return postprocess;
     }
 
-    athmosphere( planet ) {
+    atmosphere( planet ) {
 
-        const postprocess = new AtmosphericScatteringPostProcess( `${ planet.root.name }_athmosphere`, planet, this.game.star, this.game.camera, this.#depthMap, this.scene );
+        const postprocess = new AtmosphericScatteringPostProcess( `${ planet.root.name }_atmosphere`, planet, this.game.star, this.game.camera, this.#depthMap, this.scene );
 
         postprocess.settings.redWaveLength = planet.config.waveLengths.r;
         postprocess.settings.greenWaveLength = planet.config.waveLengths.g;

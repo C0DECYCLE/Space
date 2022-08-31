@@ -54,8 +54,8 @@ class AtmosphericScatteringPostProcess extends BABYLON.PostProcess {
         this.star = star;
         this.planet = planet;
 
-        this.settings.planetRadius = planet.config.radius - planet.config.athmosphere * 1,
-        this.settings.atmosphereRadius = planet.config.radius + planet.config.athmosphere * 2,
+        this.settings.planetRadius = planet.config.radius - planet.config.atmosphere * 1,
+        this.settings.atmosphereRadius = planet.config.radius + planet.config.atmosphere * 2,
 
         this.setCamera( this.camera );
 
