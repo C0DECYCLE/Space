@@ -72,8 +72,6 @@ class Star {
         this.mesh = BABYLON.MeshBuilder.CreateSphere( "star", { diameter: this.config.size, segments: this.config.resolution }, this.scene );
         this.mesh.rotationQuaternion = this.mesh.rotation.toQuaternion();
         this.mesh.material = material;
-        
-        this.game.postprocess.register( this.mesh );
     }
 
     #createPointLight( split ) {
@@ -123,8 +121,6 @@ class Star {
         this.background.material.emissiveTexture = new BABYLON.Texture( "assets/textures/space.png", this.scene );
         this.background.material.emissiveTexture.uScale = 6;
         this.background.material.emissiveTexture.vScale = 6;
-
-        this.game.postprocess.register( this.background );
     }
 
     #target( camera ) {

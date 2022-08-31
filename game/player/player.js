@@ -125,9 +125,6 @@ class Player {
     
         this.game.star.shadow.cast( this.mesh, true, true );
         this.game.star.shadow.receive( this.mesh, true, true );
-        
-        this.game.postprocess.register( this.mesh );
-        this.game.postprocess.register( head );
     }
 
     #setupPhysics() {

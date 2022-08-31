@@ -54,8 +54,6 @@ class PlanetGenerator {
         
         this.#planet.game.star.shadow.cast( mesh, true, false );        
         this.#planet.game.star.shadow.receive( mesh, true, false );  
-        
-        this.#planet.game.postprocess.register( mesh );
 
         return mesh;
     }
@@ -108,8 +106,6 @@ class PlanetGenerator {
         this.#planet.mask.parent = this.#planet.root;
 
         this.#planet.game.star.shadow.cast( this.#planet.mask, true, false );
-        
-        this.#planet.game.postprocess.register( this.#planet.mask );
     }
 
     #debugInfluence() {

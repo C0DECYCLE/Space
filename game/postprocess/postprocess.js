@@ -19,9 +19,6 @@ class PostProcess {
 
     pipelines = [];
 
-    #depthRenderer = null;
-    #depthMap = null;
-
     constructor( game, config ) {
 
         this.game = game;
@@ -32,18 +29,7 @@ class PostProcess {
 
         this.scene.clearColor = this.scene.clearColor.toLinearSpace();
 
-        this.#createDepthRenderer();
         this.#defaultPipeline();
-    }
-
-    register( mesh ) {
-
-        this.#depthMap.renderList.add( mesh );
-    }
-
-    dispose( mesh ) {
-
-        this.#depthMap.renderList.delete( mesh );
     }
 
     godrays( mesh ) {
@@ -58,7 +44,7 @@ class PostProcess {
 
     atmosphere( planet ) {
 
-        const postprocess = new AtmosphericScatteringPostProcess( `${ planet.root.name }_atmosphere`, planet, this.game.star, this.game.camera, this.#depthMap, this.scene );
+        const postprocess = new AtmosphericScatteringPostProcess( `${ planet.root.name }_atmosphere`, planet, this.game.star, this.game.camera, this.scene );
 
         postprocess.settings.redWaveLength = planet.config.waveLengths.r;
         postprocess.settings.greenWaveLength = planet.config.waveLengths.g;
@@ -67,16 +53,6 @@ class PostProcess {
         this.pipelines.push( postprocess );
 
         return postprocess;
-    }
-
-    #createDepthRenderer() {
-
-        this.#depthRenderer = new BABYLON.DepthRenderer( this.scene );
-
-        this.#depthMap = this.#depthRenderer.getDepthMap();
-        this.#depthMap.renderList = new ObjectArray();
-
-        this.scene.customRenderTargets.push( this.#depthMap );
     }
 
     #defaultPipeline() {

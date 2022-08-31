@@ -88,7 +88,6 @@ class Spaceship {
         this.lod.fromModels( this.constructor.model, mesh => {
 
             this.game.star.shadow.cast( mesh, true, false );
-            this.game.postprocess.register( mesh );
         } );
 
         this.root.name = `spaceships_spaceship${ this.config.key }`;

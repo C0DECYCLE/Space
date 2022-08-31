@@ -140,8 +140,6 @@ class PhysicsEntity {
         debug.scaling.divideInPlace( this.#mesh.scaling );
         debug.material = this.#scene.debugMaterial;
         debug.parent = this.#mesh;
-        
-        //star.game.postprocess.register( dummy.root );
     }
 
     quaternionTowardsUpright( up, stretch ) {

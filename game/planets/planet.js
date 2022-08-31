@@ -297,7 +297,6 @@ class Planet {
 
     #disposeNode( nodeKey, data ) {
 
-        this.game.postprocess.dispose( data.mesh );
         data.mesh.dispose( !true, false );
         this.#list.delete( nodeKey );
     }
