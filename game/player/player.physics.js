@@ -10,30 +10,59 @@ class PlayerPhysics extends PhysicsEntity {
 
     #player = null;
     #planet = null;
+    #spaceship = null;
 
-    constructor( player ) {
+    /* override */ constructor( player ) {
 
         super( player.root, PhysicsEntity.TYPES.DYNAMIC );
         
         this.#player = player;
     }
 
-    setPlanet( value ) {
+    set planet( value ) {
 
         this.#planet = value;
     }
     
-    getPlanet() {
+    get planet() {
 
         return this.#planet;
     }
 
-    space() {
+    set spaceship( value ) {
+
+        this.#spaceship = value;
+    }
+    
+    get spaceship() {
+
+        return this.#spaceship;
+    }
+
+    /* override */ update() {
+        
+        if ( this.#player.state.is( "space" ) === true ) {
+
+            this.#spaceUpdate();
+
+        } else if ( this.#player.state.is( "planet" ) === true ) {
+
+            this.#planetUpdate();
+
+        } else if ( this.#player.state.is( "spaceship" ) === true ) {
+
+            this.#spaceshipUpdate();
+        }
+
+        super.update();
+    }
+
+    #spaceUpdate() {
 
         this.#spaceMovement();
     }
 
-    planet() {
+    #planetUpdate() {
 
         const up = this.#planet.physics.pull( this );
 
@@ -44,11 +73,17 @@ class PlayerPhysics extends PhysicsEntity {
         }
     }
 
+    #spaceshipUpdate() {
+        
+        this.#player.position.copyFrom( this.spaceship.position ).addInPlace( this.spaceship.seatOffset.applyRotationQuaternion( this.spaceship.rotationQuaternion ) );
+        this.#player.rotationQuaternion.copyFrom( this.spaceship.rotationQuaternion );
+    }
+
     #spaceMovement() {
 
         const controls = this.#player.controls;
         const floatConfig = this.#player.config.float;
-        const deltaCorrection = Space.engine.deltaCorrection;
+        const deltaCorrection = this.#player.game.engine.deltaCorrection;
         const translate = new BABYLON.Vector3( 0, 0, 0 );
 
         const float = floatConfig * deltaCorrection;
@@ -91,7 +126,7 @@ class PlayerPhysics extends PhysicsEntity {
         const walkConfig = this.#player.config.walk;
         const runConfig = this.#player.config.run;
         const jumpConfig = this.#player.config.jump;
-        const deltaCorrection = Space.engine.deltaCorrection;
+        const deltaCorrection = this.#player.game.engine.deltaCorrection;
         const translate = new BABYLON.Vector3( 0, 0, 0 );
 
         const walk = ( walkConfig / this.#planet.config.gravity ) * deltaCorrection;
@@ -135,7 +170,7 @@ class PlayerPhysics extends PhysicsEntity {
         
         if ( translate.x !== 0 || translate.y !== 0 || translate.z !== 0 ) {
 
-            this.velocity.addInPlace( translate.applyRotationQuaternion( this.#player.rotationQuaternion ) );   
+            this.velocity.addInPlace( translate.applyRotationQuaternionInPlace( this.#player.rotationQuaternion ) );   
         }
             
         this.velocity.scaleInPlace( 0.85 );

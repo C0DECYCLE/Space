@@ -12,24 +12,30 @@ class ObjectArray extends Array {
 
     /* override */ push( object ) {
 
-        object[ this.uuid ] = this.length;
+        if ( object.oaMeta === undefined ) {
+
+            object.oaMeta = new Map();  
+        }
+        
+        object.oaMeta.set( this.uuid, this.length );
+
         super.push( object );
     }
 
     /* override */ indexOf( object ) {
 
-        return object[ this.uuid ];
+        return object.oaMeta.get( this.uuid );
     }
 
     /* override */ contains( object ) {
 
-        return object[ this.uuid ] !== undefined;
+        return object.oaMeta === undefined ? false : object.oaMeta.has( this.uuid );
     }
 
     /* override */ pop() {
 
         const object = super.pop();
-        delete object[ this.uuid ];
+        object.oaMeta.delete( this.uuid );
 
         return object;
     }
@@ -37,7 +43,7 @@ class ObjectArray extends Array {
     add( object ) {
 
         if ( this.contains( object ) === false ) {
-
+            
             this.push( object );
         }
     }
@@ -69,10 +75,12 @@ class ObjectArray extends Array {
 
         if ( this.contains( object ) === true ) {
 
-            this[ len - 1 ][ this.uuid ] = object[ this.uuid ];
-            this[ object[ this.uuid ] ] = this[ len - 1 ];
+            this[ len - 1 ].oaMeta.set( this.uuid, this.indexOf( object ) );
+            this[ this.indexOf( object ) ] = this[ len - 1 ];
+            this[ len - 1 ] = object;
 
             this.pop();
+            this.splice( len, 0 ); //for babylon rtt hook
         }
     }
 

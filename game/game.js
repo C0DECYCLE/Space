@@ -10,34 +10,44 @@ class Game {
 
     engine = null;
 
-    #ready = new Event( "ready" );
-
     constructor() {
 
+        const ready = new Event( "ready" );
+
         window.addEventListener( "load", ( event ) => {
-            
-            this.#greet();
+
+            console.log( `\n\n${ document.title }\n\nPalto Studio\nCopyright Noah Bussinger ${ new Date().getUTCFullYear() }\n\n` );
 
             this.engine = new Engine();
 
-            window.dispatchEvent( this.#ready );
+            window.dispatchEvent( ready );
         } );
-    }
-
-    #greet() {
-        
-        const name = document.title;
-        const year = new Date().getUTCFullYear();
-
-        console.log( `\n\n${ name }\n\nPalto Studio\nCopyright Noah Bussinger ${ year }\n\n` );
     }
     
     addOnReady( callback ) {
 
         if ( typeof callback === "function" ) {
 
-            window.addEventListener( "ready", callback );
+            window.addEventListener( "ready", () => callback.call( this ) );
         }
     }
 
+    add( key, callback ) {
+
+        this[ key ] = () => callback.call( this );
+    }
+
+    update( scene, update ) {
+
+        this.engine.set( delta => {
+        
+            this.engine.stats[3].begin();
+
+            update( delta );
+
+            this.engine.stats[3].end();
+    
+            scene.render();
+        } );
+    }
 }

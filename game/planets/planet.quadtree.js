@@ -49,8 +49,8 @@ class PlanetQuadtree {
 
     #setup1D() {
 
-        this.#right = EngineUtils.vectorRotation( BABYLON.Vector3.Right(), this.#fixRotation );
-        this.#up = EngineUtils.vectorRotation( BABYLON.Vector3.Up(), this.#fixRotation );
+        this.#right = BABYLON.Vector3.Right().applyRotationQuaternionInPlace( this.#fixRotation.toQuaternion() );
+        this.#up = BABYLON.Vector3.Up().applyRotationQuaternionInPlace( this.#fixRotation.toQuaternion() );
         
         this.#forward = BABYLON.Vector3.Cross( this.#right, this.#up );
         this.#left = this.#right.negate();

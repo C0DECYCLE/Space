@@ -15,7 +15,7 @@ class Controls {
         experimentalPointerLock: true
     };
 
-    manager = null;
+    game = null;
     scene = null;
 
     isKeyboarding = false;
@@ -26,10 +26,10 @@ class Controls {
     onPointerUp = new Set();
     onPointerMove = new Set();
 
-    constructor( manager, config ) {
+    constructor( game, config ) {
 
-        this.manager = manager;
-        this.scene = this.manager.scene;
+        this.game = game;
+        this.scene = this.game.scene;
 
         EngineUtils.configure( this.config, config );
 
@@ -86,7 +86,7 @@ class Controls {
 
     #pointerLock() {
 
-        const canvas = Space.engine.babylon._renderingCanvas;
+        const canvas = this.game.engine.babylon._renderingCanvas;
         const mouseMove = ( event ) => this.onPointerMove.forEach( callback => callback( { event: event } ) );
         const changeCallback = ( e ) => {
 

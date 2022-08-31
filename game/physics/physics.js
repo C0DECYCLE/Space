@@ -12,13 +12,13 @@ class Physics {
 
     };
 
-    manager = null;
+    game = null;
     scene = null;
 
-    constructor( manager, config ) {
+    constructor( game, config ) {
 
-        this.manager = manager;
-        this.scene = this.manager.scene;
+        this.game = game;
+        this.scene = this.game.scene;
 
         EngineUtils.configure( this.config, config );
 

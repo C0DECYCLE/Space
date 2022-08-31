@@ -32,13 +32,6 @@ class EngineUtils {
         }
     }
 
-    static vectorRotation( vector, rotation ) {
-
-        const quat = BABYLON.Quaternion.FromEulerVector( rotation );
-
-        return vector.rotateByQuaternionToRef( quat, BABYLON.Vector3.Zero() );
-    }
-
     static getFarAway() {
 
         return new BABYLON.Vector3( 0, 1000 * 1000 * 1000, 0 );
@@ -73,10 +66,21 @@ class EngineUtils {
 
         if ( node.parent !== null ) {
             
-            result.addInPlace( node.parent.position );
+            result.multiplyInPlace( node.parent.scaling )
+            .applyRotationQuaternionInPlace( node.parent.rotationQuaternion )
+            .addInPlace( node.parent.position );
 
             EngineUtils.#recurseParentsPosition( result, node.parent );
         }
+    }
+
+    static makeDebugMaterial( scene ) {
+
+        const debugMaterial = new BABYLON.StandardMaterial( "debug", scene );
+        debugMaterial.setColorIntensity( "#ff226b", 1.0 );
+        debugMaterial.wireframe = true;
+
+        return debugMaterial;
     }
 
 }

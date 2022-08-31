@@ -17,7 +17,7 @@ class AsteroidsCluster {
         density: 0.1,
     };
 
-    manager = null;
+    game = null;
     scene = null;
 
     list = [];
@@ -25,10 +25,10 @@ class AsteroidsCluster {
 
     #hasCustomParent = false;
 
-    constructor( manager, config, customParent = null ) {
+    constructor( game, config, customParent = null ) {
 
-        this.manager = manager;
-        this.scene = this.manager.scene;
+        this.game = game;
+        this.scene = this.game.scene;
 
         EngineUtils.configure( this.config, config );
 
@@ -120,7 +120,7 @@ class AsteroidsCluster {
 
         for ( let i = 0; i < count; i++ ) {
             
-            const asteroid = new Asteroid( this.manager, {} );
+            const asteroid = new Asteroid( this.game, {} );
             asteroid.position.copyFromFloats( Math.random() * 2 - 1, Math.random() * 2 - 1, Math.random() * 2 - 1 ).multiplyInPlace( spread );
             asteroid.parent = this.root;
 

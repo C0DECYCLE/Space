@@ -12,26 +12,27 @@ class Spaceships {
 
     };
 
-    manager = null;
+    game = null;
     scene = null;
 
-    model = [];
-    
+    variants = new Map();
     list = [];
 
-    constructor( manager, config ) {
+    constructor( game, config ) {
 
-        this.manager = manager;
-        this.scene = this.manager.scene;
+        this.game = game;
+        this.scene = this.game.scene;
 
         EngineUtils.configure( this.config, config );
 
-        this.#setupModel();
+        this.#setupVariants();
     }
 
-    register( config ) {
+    register( variant, config ) {
 
-        this.list.push( new Spaceship( this.manager, config ) );
+        const variantClass = this.variants.get( variant );
+
+        this.list.push( new variantClass( this.game, config ) );
     }
 
     update() {
@@ -42,20 +43,15 @@ class Spaceships {
         }
     }
 
-    #setupModel() {
+    #setupVariants() {
         
-        const importLods = this.scene.assets.get( "spaceship" ).getChildren();
-        
-        for ( let i = 0; i < importLods.length; i++ ) {
-            
-            const lod = this.scene.traverse( importLods[i], mesh => {
-            
-                this.manager.star.shadow.receive( mesh, true, false );
-            } );
-            
-            lod.setEnabled( false );
-            this.model.push( lod );
-        }
+        this.#setupVariant( SpaceshipVulcan );
+    }
+
+    #setupVariant( variantClass ) {
+
+        variantClass.load( this.game );
+        this.variants.set( variantClass.name.toLowerCase(), variantClass );
     }
 
 }

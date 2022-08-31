@@ -12,11 +12,10 @@ class Camera {
 
         max: 10 * 1000 * 1000,
 
-        offset: 8,
         lerp: 0.1
     };
 
-    manager = null;
+    game = null;
     scene = null;
     controls = null;
     
@@ -33,11 +32,11 @@ class Camera {
         camera: null
     };
 
-    constructor( manager, config ) {
+    constructor( game, config ) {
 
-        this.manager = manager;
-        this.scene = this.manager.scene;
-        this.controls = this.manager.controls;
+        this.game = game;
+        this.scene = this.game.scene;
+        this.controls = this.game.controls;
 
         EngineUtils.configure( this.config, config );
 
@@ -70,7 +69,7 @@ class Camera {
 
     free( event ) {
 
-        const deltaCorrection = Space.engine.deltaCorrection;
+        const deltaCorrection = this.game.engine.deltaCorrection;
 
         this.camera.alpha -= event.event.movementX * this.controls.config.panning * deltaCorrection;
         this.camera.beta -= event.event.movementY * this.controls.config.panning * deltaCorrection;
@@ -106,7 +105,7 @@ class Camera {
 
     #createCamera() {
 
-        this.camera = new BABYLON.ArcRotateCamera( "camera_camera", -Math.PI / 2, Math.PI / 2, this.config.offset, BABYLON.Vector3.Zero(), this.scene );
+        this.camera = new BABYLON.ArcRotateCamera( "camera_camera", -Math.PI / 2, Math.PI / 2, 0, BABYLON.Vector3.Zero(), this.scene );
         this.camera.maxZ = this.config.max;
         this.camera.parent = this.root;
     }
@@ -119,6 +118,7 @@ class Camera {
     #addTargets() {
 
         this.targets.player = new CameraTargetPlayer( this );
+        this.targets.spaceship = new CameraTargetSpaceship( this );
     }
     
     #enterTarget( object, camera ) {

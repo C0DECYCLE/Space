@@ -21,22 +21,23 @@ class Player {
         experimentalPointerLock: true
     };
 
-    manager = null;
+    game = null;
     scene = null;
     camera = null;
     controls = null;
 
     mesh = null;
     physics = null;
+    interaction = null;
 
     state = new StateMachine();
 
-    constructor( manager, config ) {
+    constructor( game, config ) {
 
-        this.manager = manager;
-        this.scene = this.manager.scene;
-        this.camera = this.manager.camera;
-        this.controls = this.manager.controls;
+        this.game = game;
+        this.scene = this.game.scene;
+        this.camera = this.game.camera;
+        this.controls = this.game.controls;
 
         EngineUtils.configure( this.config, config );
 
@@ -44,6 +45,7 @@ class Player {
         this.#setupInspector();
         this.#setupStates();
         this.#setupPhysics();
+        this.#setupInteraction();
         this.#registerObservables();
     }
 
@@ -64,23 +66,20 @@ class Player {
 
     get planet() {
 
-        return this.physics.getPlanet();
+        return this.physics.planet;
+    }
+
+    get spaceship() {
+
+        return this.physics.spaceship;
     }
 
     update() {
 
         this.#updateFromInspector();
 
-        if ( this.state.is( "space" ) === true ) {
-
-            this.physics.space();
-
-        } else if ( this.state.is( "planet" ) === true ) {
-
-            this.physics.planet();
-        }
-
         this.physics.update();
+        this.interaction.update();
     }
 
     #setupInspector() {
@@ -104,6 +103,7 @@ class Player {
 
         this.state.add( "space", ( oldState ) => this.#onSpaceEnter( oldState ), ( newState ) => this.#onSpaceLeave( newState ) );
         this.state.add( "planet",( oldState, planet ) => this.#onPlanetEnter( oldState, planet ), ( newState ) => this.#onPlanetLeave( newState ) );
+        this.state.add( "spaceship",( oldState, spaceship ) => this.#onSpaceshipEnter( oldState, spaceship ), ( newState ) => this.#onSpaceshipLeave( newState ) );
 
         this.state.set( "space" );
     }
@@ -123,16 +123,18 @@ class Player {
         head.material = material;
         head.parent = this.mesh;
     
-        this.manager.star.shadow.cast( this.mesh, true, true );
-        this.manager.star.shadow.receive( this.mesh, true, true );
-        
-        this.manager.postprocess.register( this.mesh );
-        this.manager.postprocess.register( head );
+        this.game.star.shadow.cast( this.mesh, true, true );
+        this.game.star.shadow.receive( this.mesh, true, true );
     }
 
     #setupPhysics() {
 
         this.physics = new PlayerPhysics( this );
+    }
+    
+    #setupInteraction() {
+
+        this.interaction = new PlayerInteraction( this );
     }
 
     #registerObservables() {
@@ -162,7 +164,7 @@ class Player {
 
     #followPointer( event ) {
         
-        const deltaCorrection = Space.engine.deltaCorrection;
+        const deltaCorrection = this.game.engine.deltaCorrection;
         
         this.root.rotate( BABYLON.Axis.Y, event.event.movementX * this.controls.config.panning * deltaCorrection, BABYLON.Space.LOCAL );
         this.root.rotate( BABYLON.Axis.X, event.event.movementY * this.controls.config.panning * deltaCorrection, BABYLON.Space.LOCAL );
@@ -171,6 +173,8 @@ class Player {
     #onSpaceEnter( oldState ) {
 
         log( "player entered space" );
+
+        this.camera.attachToPlayer( this );
     }
 
     #onSpaceLeave( newState ) {
@@ -182,16 +186,34 @@ class Player {
         
         log( "player entered planet" );
 
-        planet.generator.toggleMask( true );
-        this.physics.setPlanet( planet );
+        this.physics.planet = planet;
+        this.physics.planet.generator.toggleMask( true );
     }
     
     #onPlanetLeave( newState ) {
         
         log( "player left planet" );
 
-        this.physics.getPlanet().generator.toggleMask( false );
-        this.physics.setPlanet( null );
+        this.physics.planet.generator.toggleMask( false );
+        this.physics.planet = null;
+    }
+
+    #onSpaceshipEnter( oldState, spaceship ) {
+        
+        log( "player entered spaceship" );
+
+        this.interaction.unhighlightAll();
+        this.physics.spaceship = spaceship;
+        this.physics.spaceship.enter( this );
+        this.camera.attachToSpaceship( spaceship );
+    }
+    
+    #onSpaceshipLeave( newState ) {
+        
+        log( "player left spaceship" );
+
+        this.physics.spaceship.leave( this );
+        this.physics.spaceship = null;
     }
 
 }

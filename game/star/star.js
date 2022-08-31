@@ -16,7 +16,7 @@ class Star {
         resolution: 16
     };
 
-    manager = null;
+    game = null;
     scene = null;
 
     pointLight = null;
@@ -28,10 +28,10 @@ class Star {
     shadow = null;
     background = null;
 
-    constructor( manager, config, config_shadow ) {
+    constructor( game, config, config_shadow ) {
 
-        this.manager = manager;
-        this.scene = this.manager.scene;
+        this.game = game;
+        this.scene = this.game.scene;
 
         EngineUtils.configure( this.config, config );
 
@@ -56,7 +56,7 @@ class Star {
 
     update() {
 
-        this.#target( this.manager.camera );
+        this.#target( this.game.camera );
         this.shadow.update();
     }
 
@@ -72,8 +72,6 @@ class Star {
         this.mesh = BABYLON.MeshBuilder.CreateSphere( "star", { diameter: this.config.size, segments: this.config.resolution }, this.scene );
         this.mesh.rotationQuaternion = this.mesh.rotation.toQuaternion();
         this.mesh.material = material;
-        
-        this.manager.postprocess.register( this.mesh );
     }
 
     #createPointLight( split ) {
@@ -105,12 +103,12 @@ class Star {
 
     #addGodrays() {
 
-        this.godrays = this.manager.postprocess.godrays( this.mesh );
+        this.godrays = this.game.postprocess.godrays( this.mesh );
     }
 
     #createBackground() {
 
-        this.background = BABYLON.MeshBuilder.CreateSphere( "star_background", { diameter: this.manager.camera.config.max, segments: 4, sideOrientation: BABYLON.Mesh.BACKSIDE }, this.scene );
+        this.background = BABYLON.MeshBuilder.CreateSphere( "star_background", { diameter: this.game.camera.config.max, segments: 4, sideOrientation: BABYLON.Mesh.BACKSIDE }, this.scene );
         
         this.background.material = new BABYLON.StandardMaterial( "star_background_material", this.scene );
         this.background.material.disableLighting = true;
@@ -123,8 +121,6 @@ class Star {
         this.background.material.emissiveTexture = new BABYLON.Texture( "assets/textures/space.png", this.scene );
         this.background.material.emissiveTexture.uScale = 6;
         this.background.material.emissiveTexture.vScale = 6;
-
-        this.manager.postprocess.register( this.background );
     }
 
     #target( camera ) {

@@ -18,7 +18,7 @@ class AtmosphericScatteringPostProcess extends BABYLON.PostProcess {
     star = null;
     planet = null;
 
-    constructor( name, planet, star, camera, depthMap, scene ) {
+    constructor( name, planet, star, camera, scene ) {
         
         super( name, "../libraries/scattering/atmosphericScattering", [
 
@@ -54,14 +54,14 @@ class AtmosphericScatteringPostProcess extends BABYLON.PostProcess {
         this.star = star;
         this.planet = planet;
 
-        this.settings.planetRadius = planet.config.radius - planet.config.athmosphere * 1,
-        this.settings.atmosphereRadius = planet.config.radius + planet.config.athmosphere * 2,
+        this.settings.planetRadius = planet.config.radius - planet.config.atmosphere * 1;
+        this.settings.atmosphereRadius = planet.config.radius + planet.config.atmosphere * 2;
 
-        this.setCamera( this.camera );
-
+        this.depthMap = scene.enableDepthRenderer().getDepthMap();
+        
         this.onApply = ( effect ) => {
 
-            effect.setTexture( "depthSampler", depthMap );
+            effect.setTexture( "depthSampler", this.depthMap );
             
             effect.setVector3( "sunPosition", this.star.position );
             effect.setVector3( "cameraPosition", this.camera.camera.globalPosition );
@@ -86,11 +86,4 @@ class AtmosphericScatteringPostProcess extends BABYLON.PostProcess {
         };
     }
 
-    setCamera( camera ) {
-
-        this.camera.camera.detachPostProcess(this);
-        this.camera = camera;
-
-        camera.camera.attachPostProcess(this);
-    }
 }

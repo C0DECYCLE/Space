@@ -13,11 +13,11 @@ class LOD {
     levels = [];
     coverage = undefined;
 
-    #manager = null;
+    #game = null;
 
-    constructor( manager ) {
+    constructor( game ) {
 
-        this.#manager = manager;
+        this.#game = game;
     }
     
     get root() {
@@ -57,7 +57,7 @@ class LOD {
         
         for ( let i = 0; i < models.length; i++ ) {
             
-            this.add( this.#manager.scene.instance( models[i], onEveryMesh ), Number( models[i].name.split( "_" )[2] ) );
+            this.add( this.#game.scene.assets.instance( models[i], onEveryMesh ), Number( models[i].name.split( "_" )[2] ) );
         }
     }
 
@@ -79,7 +79,7 @@ class LOD {
 
     update() {
         
-        this.coverage = this.#manager.camera.screenCoverage( this.root );
+        this.coverage = this.#game.camera.screenCoverage( this.root );
 
         for ( let i = 0; i < this.levels.length; i++ ) {
 

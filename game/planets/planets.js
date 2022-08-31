@@ -8,7 +8,7 @@
 
 class Planets {
 
-    manager = null;
+    game = null;
     scene = null;
     camera = null;
     player = null;
@@ -17,19 +17,19 @@ class Planets {
 
     #maskMaterial = null;
 
-    constructor( manager ) {
+    constructor( game ) {
         
-        this.manager = manager;
-        this.scene = this.manager.scene;
-        this.camera = this.manager.camera;
-        this.player = this.manager.player;
+        this.game = game;
+        this.scene = this.game.scene;
+        this.camera = this.game.camera;
+        this.player = this.game.player;
 
         this.#createMaskMaterial();
     }
 
     register( config ) {
 
-        this.list.push( new Planet( this.manager, config ) );
+        this.list.push( new Planet( this.game, config ) );
     }
 
     registerFromConfigs( configs ) {
