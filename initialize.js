@@ -23,7 +23,7 @@ Space.addOnReady( function() {
     this.scene.assets.load( [
 
         { key: "asteroid", path: "assets/models/asteroid.glb" },
-        { key: "spaceship"/*_vulcan*/, path: "assets/models/spaceship.glb"/*_vulcan*/ }
+        { key: "spaceship_vulcan", path: "assets/models/spaceship_vulcan.glb" }
     ] );
     
 

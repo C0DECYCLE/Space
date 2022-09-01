@@ -12,7 +12,7 @@ class Spaceship {
         
         this.model = [];
         
-        const importLods = game.scene.assets.list.get( "spaceship"/*`spaceship_${ this.name }`*/ ).getChildren();
+        const importLods = game.scene.assets.list.get( `spaceship_${ this.name.toLowerCase() }` ).getChildren();
         
         for ( let i = 0; i < importLods.length; i++ ) {
             
