@@ -112,8 +112,8 @@ class Camera {
 
     #addTargets() {
 
-        this.targets.player = new CameraTargetPlayer( this );
-        this.targets.spaceship = new CameraTargetSpaceship( this );
+        this.targets.player = new CameraTargetPlayer( this, {} );
+        this.targets.spaceship = new CameraTargetSpaceship( this, {} );
     }
     
     #registerObservables() {

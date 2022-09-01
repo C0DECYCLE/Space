@@ -8,9 +8,20 @@
 
 class CameraTargetSpaceship extends CameraTarget {
 
-    /* override */ focusBeta = Math.PI / 2.2;
+    /* override */ config = {
 
-    /* override */ offsetRadius = 18;
+        offset: new BABYLON.Vector3( 0, 0, 0 ),
+        offsetRadius: 18,
+
+        focusBeta: Math.PI / 2.2
+    };
+
+    /* override */ constructor( camera, config ) {
+
+        super( camera, config );
+        
+        EngineUtils.configure( this.config, config );
+    }
 
     /* override */ update( spaceship ) {
 
@@ -41,7 +52,7 @@ class CameraTargetSpaceship extends CameraTarget {
 
     #adaptOffsetRadius( spaceship ) {
 
-        this.offsetRadius = EngineUtils.getBounding( spaceship.root ).size;
+        this.config.offsetRadius = EngineUtils.getBounding( spaceship.root ).size;
     }
 
 }

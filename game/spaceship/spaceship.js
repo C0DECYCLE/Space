@@ -25,7 +25,15 @@ class Spaceship {
 
     config = {
 
-        key: UUIDv4()
+        key: UUIDv4(),
+
+        seat: new BABYLON.Vector3( 0, 0, 0 ),
+
+        mainAcceleration: 0,
+        mainVelocityLimit: 0,
+        
+        minorAcceleration: 0,
+        minorVelocityLimit: 0
     };
 
     game = null;
@@ -35,16 +43,15 @@ class Spaceship {
     lod = null;
     physics = null;
 
-    seatOffset = new BABYLON.Vector3( 0, 0, 0 );
-    seatDiffrence = new BABYLON.Vector3();
-    isGettingControlled = false;
+    #seatDiffrence = new BABYLON.Vector3();
+    #hasController = false;
 
     constructor( game, config ) {
 
         this.game = game;
         this.scene = this.game.scene;
         this.spaceships = this.game.spaceships;
-
+        
         EngineUtils.configure( this.config, config );
         
         this.#createLod();   
@@ -67,6 +74,11 @@ class Spaceship {
         return this.lod.rotationQuaternion;
     }
 
+    get hasController() {
+
+        return this.#hasController;
+    }
+
     update() {
 
         this.lod.update();
@@ -76,12 +88,12 @@ class Spaceship {
     enter( player ) {
 
         this.#rememberSeat( player );
-        this.isGettingControlled = true;
+        this.#hasController = true;
     }
 
     leave( player ) {
 
-        this.isGettingControlled = false;
+        this.#hasController = false;
         this.#putOutOfSeat( player );
     }
 
@@ -113,12 +125,12 @@ class Spaceship {
 
     #rememberSeat( player ) {
 
-        this.seatDiffrence.copyFrom( this.position ).subtractInPlace( player.position ).applyRotationQuaternionInPlace( this.rotationQuaternion.invert() );
+        this.#seatDiffrence.copyFrom( this.position ).subtractInPlace( player.position ).applyRotationQuaternionInPlace( this.rotationQuaternion.invert() );
     }
 
     #putOutOfSeat( player ) {
 
-        player.position.copyFrom( this.position ).subtractInPlace( this.seatDiffrence.applyRotationQuaternionInPlace( this.rotationQuaternion ) );
+        player.position.copyFrom( this.position ).subtractInPlace( this.#seatDiffrence.applyRotationQuaternionInPlace( this.rotationQuaternion ) );
     }
 
 }

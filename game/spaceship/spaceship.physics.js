@@ -19,7 +19,7 @@ class SpaceshipPhysics extends PhysicsEntity {
 
     /* override */ update() {
         
-        if ( this.#spaceship.isGettingControlled === true ) {
+        if ( this.#spaceship.hasController === true ) {
 
             this.#movement();
         }

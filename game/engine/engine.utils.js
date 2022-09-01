@@ -30,6 +30,16 @@ class EngineUtils {
                 target[ key ] = value;
             }
         }
+        
+        if ( this.__config === undefined ) {
+
+            this.__config = target;
+            
+        } else {
+
+            target = Object.assign( this.__config, target );
+        }
+        log(this);
     }
 
     static getFarAway() {

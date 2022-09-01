@@ -8,10 +8,23 @@
 
 class CameraTargetPlayer extends CameraTarget {
 
-    #spaceFocusBeta = Math.PI / 2;
-    #planetFocusBeta = Math.PI / 2.5;
+    /* override */ config = {
+
+        offset: new BABYLON.Vector3( 0, 1, 0 ),
+        offsetRadius: 8,
+
+        spaceFocusBeta: Math.PI / 2,
+        planetFocusBeta: Math.PI / 2.5
+    };
     
     #wasUnfocused = false;
+
+    /* override */ constructor( camera, config ) {
+
+        super( camera, config );
+        
+        EngineUtils.configure( this.config, config );
+    }
 
     /* override */ update( player ) {
 
@@ -48,12 +61,12 @@ class CameraTargetPlayer extends CameraTarget {
     #adaptFocus( player ) {
 
         if ( player.state.is( "space" ) === true ) {
-
-            this.focusBeta = this.#spaceFocusBeta;
+            
+            this.config.focusBeta = this.config.spaceFocusBeta;
 
         } else if ( player.state.is( "planet" ) === true ) {
 
-            this.focusBeta = this.#planetFocusBeta;
+            this.config.focusBeta = this.config.planetFocusBeta;
         }
     }
 

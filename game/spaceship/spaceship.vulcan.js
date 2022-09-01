@@ -10,6 +10,24 @@ class SpaceshipVulcan extends Spaceship {
 
     static name = "Vulcan";
 
-    /* override */ seatOffset = new BABYLON.Vector3( 0, 1.5, -1.2 );
+    /* override */ config = {
+
+        key: UUIDv4(),
+
+        seat: new BABYLON.Vector3( 0, 1.5, -1.2 ),
+
+        mainAcceleration: 0.2,
+        mainVelocityLimit: 5,
+        
+        minorAcceleration: 0.05,
+        minorVelocityLimit: 0.5
+    };
+
+    /* override */ constructor( game, config ) {
+
+        super( game, config );
+        
+        EngineUtils.configure( this.config, config );
+    }
 
 }
