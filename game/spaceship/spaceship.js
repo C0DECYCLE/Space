@@ -25,15 +25,7 @@ class Spaceship {
 
     config = {
 
-        key: UUIDv4(),
-
-        seat: new BABYLON.Vector3( 0, 0, 0 ),
-
-        mainAcceleration: 0,
-        mainVelocityLimit: 0,
-        
-        minorAcceleration: 0,
-        minorVelocityLimit: 0
+        key: UUIDv4()
     };
 
     game = null;

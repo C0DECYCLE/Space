@@ -12,8 +12,6 @@ class SpaceshipVulcan extends Spaceship {
 
     /* override */ config = {
 
-        key: UUIDv4(),
-
         seat: new BABYLON.Vector3( 0, 1.5, -1.2 ),
 
         mainAcceleration: 0.2,
