@@ -23,7 +23,7 @@ class CameraTargetPlayer extends CameraTarget {
 
         super( camera, config );
         
-        EngineUtils.configure( this.config, config );
+        EngineUtils.configure.call( this, config );
     }
 
     /* override */ update( player ) {
@@ -45,7 +45,7 @@ class CameraTargetPlayer extends CameraTarget {
 
     /* override */ onPointerMove( player, event ) {
 
-        if ( this.camera.controls.isPointerDown === true || this.camera.config.experimentalPointerLock === true ) {
+        if ( this.camera.controls.isPointerDown === true || this.camera.controls.config.experimentalPointerLock === true ) {
 
             if ( this.camera.controls.isKeyboarding === true ) {
 

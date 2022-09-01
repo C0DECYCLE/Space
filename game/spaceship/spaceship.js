@@ -52,7 +52,7 @@ class Spaceship {
         this.scene = this.game.scene;
         this.spaceships = this.game.spaceships;
         
-        EngineUtils.configure( this.config, config );
+        EngineUtils.configure.call( this, config );
         
         this.#createLod();   
         this.#addPhysics();

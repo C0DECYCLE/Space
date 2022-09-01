@@ -22,8 +22,8 @@ class CameraTarget {
     constructor( camera, config ) {
 
         this.camera = camera;
-        
-        EngineUtils.configure( this.config, config );
+
+        EngineUtils.configure.call( this, config );
     }
 
     update( target ) {

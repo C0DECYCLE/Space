@@ -36,7 +36,7 @@ class StarShadow {
         this.#star = star;
         this.#light = light;
 
-        EngineUtils.configure( this.config, config );
+        EngineUtils.configure.call( this, config );
 
         this.#configureLight();
         this.#createGenerator();

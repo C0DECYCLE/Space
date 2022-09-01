@@ -56,7 +56,7 @@ class Planet {
         this.game = game;
         this.scene = game.scene;
 
-        EngineUtils.configure( this.config, config );
+        EngineUtils.configure.call( this, config );
 
         this.#createRoot();
         this.#createLod();

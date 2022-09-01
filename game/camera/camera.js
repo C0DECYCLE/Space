@@ -12,9 +12,7 @@ class Camera {
 
         max: 10 * 1000 * 1000,
 
-        lerp: 0.1,
-        
-        experimentalPointerLock: true
+        lerp: 0.1
     };
 
     game = null;
@@ -40,7 +38,7 @@ class Camera {
         this.scene = this.game.scene;
         this.controls = this.game.controls;
 
-        EngineUtils.configure( this.config, config );
+        EngineUtils.configure.call( this, config );
 
         this.#createRoot();
         this.#setupStates();

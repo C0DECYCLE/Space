@@ -27,7 +27,7 @@ class SpaceshipVulcan extends Spaceship {
 
         super( game, config );
         
-        EngineUtils.configure( this.config, config );
+        EngineUtils.configure.call( this, config );
     }
 
 }

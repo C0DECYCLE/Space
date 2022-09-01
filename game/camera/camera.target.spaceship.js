@@ -20,7 +20,7 @@ class CameraTargetSpaceship extends CameraTarget {
 
         super( camera, config );
         
-        EngineUtils.configure( this.config, config );
+        EngineUtils.configure.call( this, config );
     }
 
     /* override */ update( spaceship ) {
@@ -37,7 +37,7 @@ class CameraTargetSpaceship extends CameraTarget {
 
     /* override */ onPointerMove( spaceship, event ) {
 
-        if ( this.camera.controls.isPointerDown === true || this.camera.config.experimentalPointerLock === true ) {
+        if ( this.camera.controls.isPointerDown === true || this.camera.controls.config.experimentalPointerLock === true ) {
 
             if ( this.camera.controls.activeKeys.has( "r" ) === true ) {
 

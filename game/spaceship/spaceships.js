@@ -23,7 +23,7 @@ class Spaceships {
         this.game = game;
         this.scene = this.game.scene;
 
-        EngineUtils.configure( this.config, config );
+        EngineUtils.configure.call( this, config );
 
         this.#setupVariants();
     }

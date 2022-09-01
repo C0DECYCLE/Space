@@ -16,9 +16,9 @@ class EngineUtils {
         return delta * fpsTarget / 1000;
     }
 
-    static configure( target, inject ) {
+    static configure( inject ) {
 
-        const keys = Object.keys( target );
+        const keys = Object.keys( this.config );
 
         for ( let i = 0; i < keys.length; i++ ) {
 
@@ -27,19 +27,18 @@ class EngineUtils {
 
             if ( value !== undefined ) {
 
-                target[ key ] = value;
+                this.config[ key ] = value;
             }
         }
         
         if ( this.__config === undefined ) {
 
-            this.__config = target;
+            this.__config = this.config;
             
         } else {
 
-            target = Object.assign( this.__config, target );
+            this.config = Object.assign( this.__config, this.config );
         }
-        log(this);
     }
 
     static getFarAway() {

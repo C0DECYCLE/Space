@@ -37,7 +37,7 @@ class Player {
         this.camera = this.game.camera;
         this.controls = this.game.controls;
 
-        EngineUtils.configure( this.config, config );
+        EngineUtils.configure.call( this, config );
 
         this.#createMesh();    
         this.#setupInspector();

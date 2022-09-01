@@ -30,7 +30,7 @@ class Asteroid {
         this.scene = this.game.scene;
         this.asteroids = this.game.asteroids;
 
-        EngineUtils.configure( this.config, config );
+        EngineUtils.configure.call( this, config );
         
         this.#createLod();   
         this.#makeUnique();
