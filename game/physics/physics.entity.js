@@ -103,8 +103,11 @@ class PhysicsEntity {
 
             return;
         }
-        
-        this.delta.addInPlace( this.velocity );
+
+        if ( this.velocity.x !== 0 || this.velocity.y !== 0 || this.velocity.z !== 0 ) {
+
+            this.delta.addInPlace( this.velocity );
+        }
 
         if ( this.delta.x !== 0 || this.delta.y !== 0 || this.delta.z !== 0 ) {
 

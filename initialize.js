@@ -86,6 +86,8 @@ Space.add( "install", function() {
     //movement bug which poped up? look through changes
     //collider not fitting bug
 
+    //bug that with no lerp camera position bugs
+    //bug that when player enters spaceship moving, then the spaceship moves
     //https://playground.babylonjs.com/#1OH09K#1403
     //spaceship truster effect?
 
@@ -99,12 +101,13 @@ Space.add( "stage", function() {
     this.planets.list[2].place( this.star.position, 250 * 1000, 240 );
     this.planets.list[3].place( this.planets.list[2].position, 10 * 1000, 60 );
     
-    this.player.position.copyFrom( this.planets.list[0].position ).addInPlace( new BABYLON.Vector3( 5 * 1000, 0, 0 ) );
+    this.player.position.copyFrom( this.planets.list[1].position ).addInPlace( new BABYLON.Vector3( 0, 0, 3 * 1000 ) );
+    this.player.root.rotate( BABYLON.Axis.Y, 180 * EngineUtils.toRadian, BABYLON.Space.LOCAL );
     
     this.asteroids.list[0].position.copyFrom( this.planets.list[0].position );
     this.asteroids.list[1].position.copyFrom( this.planets.list[0].position );
 
-    this.spaceships.list[0].position.copyFrom( this.player.position ).addInPlace( new BABYLON.Vector3( 0, 0, 12 ) );
+    this.spaceships.list[0].position.copyFrom( this.player.position ).addInPlace( new BABYLON.Vector3( 0, 0, -10 ) );
     this.spaceships.list[0].root.rotate( BABYLON.Axis.Y, 90 * EngineUtils.toRadian, BABYLON.Space.LOCAL );
 
     this.scene.debugLayer.show( { embedMode: true } );

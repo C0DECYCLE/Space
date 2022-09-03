@@ -14,11 +14,10 @@ class SpaceshipVulcan extends Spaceship {
 
         seat: new BABYLON.Vector3( 0, 1.5, -1.2 ),
 
-        mainAcceleration: 0.2,
-        mainVelocityLimit: 5,
-        
-        minorAcceleration: 0.05,
-        minorVelocityLimit: 0.5
+        mainAcceleration: 0.02,
+        minorAcceleration: 0.01,
+
+        velocityLimit: 2
     };
 
     /* override */ constructor( game, config ) {

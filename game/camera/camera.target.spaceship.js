@@ -50,6 +50,11 @@ class CameraTargetSpaceship extends CameraTarget {
         }
     }
 
+    /* override syncPosition( target ) {
+        
+        this.camera.position.copyFrom( target.position ).addInPlace( this.config.offset.applyRotationQuaternion( target.rotationQuaternion ) );
+    }*/
+
     #adaptOffsetRadius( spaceship ) {
 
         this.config.offsetRadius = EngineUtils.getBounding( spaceship.root ).size;

@@ -66,9 +66,14 @@ class CameraTarget {
         target.root.rotate( BABYLON.Axis.X, event.event.movementY * this.camera.controls.config.panning * deltaCorrection, BABYLON.Space.LOCAL );
     }
 
-    #syncWithTarget( target ) {
+    syncPosition( target ) {
 
         this.camera.position.copyFrom( BABYLON.Vector3.Lerp( this.camera.position, target.position.add( this.config.offset.applyRotationQuaternion( target.rotationQuaternion ) ), this.camera.config.lerp ) );
+    }
+
+    #syncWithTarget( target ) {
+
+        this.syncPosition( target );
         this.camera.rotationQuaternion.copyFrom( BABYLON.Quaternion.Slerp( this.camera.rotationQuaternion, target.rotationQuaternion, this.camera.config.lerp ) );
 
         this.camera.camera.radius = BABYLON.Scalar.Lerp( this.camera.camera.radius, this.config.offsetRadius, this.camera.config.lerp );

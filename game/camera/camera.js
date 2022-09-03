@@ -12,7 +12,7 @@ class Camera {
 
         max: 10 * 1000 * 1000,
 
-        lerp: 0.1
+        lerp: 1.0
     };
 
     game = null;
