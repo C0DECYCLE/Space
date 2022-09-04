@@ -10,7 +10,7 @@ class SpaceshipPhysics extends PhysicsEntity {
 
     #spaceship = null;
 
-    //#localVelocity = new BABYLON.Vector3();
+    #localVelocity = new BABYLON.Vector3();
 
     /* override */ constructor( spaceship ) {
 
@@ -33,7 +33,9 @@ class SpaceshipPhysics extends PhysicsEntity {
 
         const controls = this.#spaceship.game.controls;
         const mainAcceleration = this.#spaceship.config.mainAcceleration;
+        const brakeScale = 1 - this.#spaceship.config.brakeAcceleration;
         const minorAcceleration = this.#spaceship.config.minorAcceleration;
+        const rollSpeed = this.#spaceship.config.rollSpeed;
         const deltaCorrection = this.#spaceship.game.engine.deltaCorrection;
         const acceleration = new BABYLON.Vector3( 0, 0, 0 );
 
@@ -43,7 +45,7 @@ class SpaceshipPhysics extends PhysicsEntity {
 
         } else if ( controls.activeKeys.has( "s" ) === true ) {
 
-            acceleration.z = -minorAcceleration;
+            this.#localVelocity.scaleInPlace( brakeScale );
         }
         
         if ( controls.activeKeys.has( "d" ) === true ) {
@@ -64,40 +66,34 @@ class SpaceshipPhysics extends PhysicsEntity {
             acceleration.y = -minorAcceleration;
         }
 
-        this.#movementTranslate( acceleration );
-
         if ( controls.activeKeys.has( "q" ) === true ) {
 
-            this.#spaceship.root.rotate( BABYLON.Axis.Z, 0.05 * deltaCorrection, BABYLON.Space.LOCAL );
+            this.#spaceship.root.rotate( BABYLON.Axis.Z, rollSpeed * deltaCorrection, BABYLON.Space.LOCAL );
 
         } else if ( controls.activeKeys.has( "e" ) === true ) {
 
-            this.#spaceship.root.rotate( BABYLON.Axis.Z, -0.05 * deltaCorrection, BABYLON.Space.LOCAL );
+            this.#spaceship.root.rotate( BABYLON.Axis.Z, -rollSpeed * deltaCorrection, BABYLON.Space.LOCAL );
         }
+
+        this.#movementTranslate( acceleration );
     }
 
     #movementTranslate( acceleration ) {
         
-        /*
+        const velocityLimit = this.#spaceship.config.velocityLimit;
+        const velocityDrag = this.#spaceship.config.velocityDrag;
+        
         if ( acceleration.x !== 0 || acceleration.y !== 0 || acceleration.z !== 0 ) {
 
-            const velocityLimit = this.#spaceship.config.velocityLimit;
-            const testVelocity = this.#localVelocity.scaleInPlace( 0.8 ).add( acceleration.applyRotationQuaternionInPlace( this.#spaceship.rotationQuaternion ) );
-
-            if ( testVelocity.length() <= velocityLimit ) {
-                
-                testVelocity.normalize().scaleInPlace( velocityLimit );
-            }
-
-            this.#localVelocity.copyFrom( testVelocity );   
-
-        } else {
-
-            this.#localVelocity.applyRotationQuaternionInPlace( this.#spaceship.rotationQuaternion );
+            this.#localVelocity.addInPlace( acceleration );
         }
-
-        this.velocity.copyFrom( this.#localVelocity );
-        */
+        
+        if ( this.#localVelocity.length() > velocityLimit ) {
+                
+            this.#localVelocity.normalize().scaleInPlace( velocityLimit );
+        }
+        
+        this.velocity.copyFrom( BABYLON.Vector3.Lerp( this.velocity, this.#localVelocity.applyRotationQuaternion( this.#spaceship.rotationQuaternion ), velocityDrag ) );
     }
     
 }

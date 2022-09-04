@@ -95,7 +95,7 @@ class LOD {
 
         for ( let i = 0; i < this.levels.length; i++ ) {
 
-            this.levels[i][0].setEnabled( this.coverage < ( i - 1 < 0 ? Infinity : this.levels[ i - 1 ][1] ) && this.coverage >= this.levels[i][1] );
+            this.levels[i][0].setEnabled( ( i - 1 < 0 ? this.coverage <= Infinity : this.coverage < this.levels[ i - 1 ][1] ) && this.coverage >= this.levels[i][1] );
 
             this.#isVisible = this.levels[i][0].isEnabled( false ) === true ? true : this.#isVisible;
         }

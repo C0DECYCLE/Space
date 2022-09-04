@@ -10,7 +10,7 @@ class StarShadow {
 
     config = {
 
-        radius: 1.0 * 1000,
+        radius: 0.5 * 1000,
         resolution: 2048,
 
         bias: 0.005,

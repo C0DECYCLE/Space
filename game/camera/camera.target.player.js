@@ -35,7 +35,7 @@ class CameraTargetPlayer extends CameraTarget {
         if ( this.camera.controls.isKeyboarding === true ) {
 
             this.#refocus( player );
-            this.focus( this.camera.config.lerp );
+            this.focus();
 
         } else {
 
@@ -75,7 +75,7 @@ class CameraTargetPlayer extends CameraTarget {
         if ( this.#wasUnfocused === true ) {
 
             this.redirect( player );
-            this.focus();
+            this.focus( 1.0 );
 
             this.#wasUnfocused = false;
         }

@@ -13,7 +13,12 @@ class CameraTargetSpaceship extends CameraTarget {
         offset: new BABYLON.Vector3( 0, 0, 0 ),
         offsetRadius: 18,
 
-        focusBeta: Math.PI / 2.2
+        focusBeta: Math.PI / 2.2,
+
+        lerpPos: 0.1,
+        lerpRot: 0.025,
+
+        follow: 0.0015
     };
 
     /* override */ constructor( camera, config ) {
@@ -31,7 +36,7 @@ class CameraTargetSpaceship extends CameraTarget {
 
         if ( this.camera.controls.activeKeys.has( "r" ) === false ) {
 
-            this.focus( this.camera.config.lerp );
+            this.focus();
         }
     }
 
@@ -49,11 +54,6 @@ class CameraTargetSpaceship extends CameraTarget {
             }
         }
     }
-
-    /* override syncPosition( target ) {
-        
-        this.camera.position.copyFrom( target.position ).addInPlace( this.config.offset.applyRotationQuaternion( target.rotationQuaternion ) );
-    }*/
 
     #adaptOffsetRadius( spaceship ) {
 

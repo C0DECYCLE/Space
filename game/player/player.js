@@ -16,7 +16,8 @@ class Player {
         run: 0.015,
         jump: 0.01,
 
-        standingup: 0.05
+        standingup: 0.05,
+        deceleration: 0.15
     };
 
     game = null;

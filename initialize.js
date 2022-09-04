@@ -86,8 +86,6 @@ Space.add( "install", function() {
     //movement bug which poped up? look through changes
     //collider not fitting bug
 
-    //bug that with no lerp camera position bugs
-    //bug that when player enters spaceship moving, then the spaceship moves
     //https://playground.babylonjs.com/#1OH09K#1403
     //spaceship truster effect?
 

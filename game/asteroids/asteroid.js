@@ -22,7 +22,6 @@ class Asteroid {
     asteroids = null;
 
     lod = null;
-    physics = null;
 
     constructor( game, config ) {
 
@@ -65,7 +64,6 @@ class Asteroid {
     update() {
 
         this.lod.update();
-        this.physics.update();
     }
 
     #createLod() {
@@ -85,8 +83,7 @@ class Asteroid {
 
     #addPhysics() {
 
-        this.physics = new PhysicsEntity( this.root, PhysicsEntity.TYPES.DYNAMIC );
-        //this.physics.pause();
+        PhysicsEntity.collidable( this.root, PhysicsEntity.TYPES.STATIC );
     }
 
 }

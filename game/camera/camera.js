@@ -10,9 +10,7 @@ class Camera {
 
     config = {
 
-        max: 10 * 1000 * 1000,
-
-        lerp: 1.0
+        max: 10 * 1000 * 1000
     };
 
     game = null;
@@ -132,7 +130,7 @@ class Camera {
         this.target.object = object;
         this.target.camera = camera;
 
-        this.target.camera.focus();
+        this.target.camera.focus( 1.0 );
     }
 
     #leaveTarget() {

@@ -69,7 +69,7 @@ class PlayerPhysics extends PhysicsEntity {
         if ( this.state === PhysicsEntity.STATES.GROUND ) {
 
             this.#planetMovement();
-            this.quaternionTowardsUpright( up, 0.1 );
+            this.quaternionTowardsUpright( up, this.#player.config.standingup );
         }
     }
 
@@ -90,45 +90,43 @@ class PlayerPhysics extends PhysicsEntity {
 
         const float = floatConfig * deltaCorrection;
 
-        let speed = float;
-
         if ( controls.activeKeys.has( "w" ) === true ) {
 
-            translate.z = speed;
+            translate.z = float;
 
         } else if ( controls.activeKeys.has( "s" ) === true ) {
 
-            translate.z = -speed;
+            translate.z = -float;
         }
         
         if ( controls.activeKeys.has( "d" ) === true ) {
 
-            translate.x = speed;
+            translate.x = float;
 
         } else if ( controls.activeKeys.has( "a" ) === true ) {
 
-            translate.x = -speed;
+            translate.x = -float;
         }
         
         if ( controls.activeKeys.has( "x" ) === true ) {
 
-            translate.y = speed;
+            translate.y = float;
 
         } else if ( controls.activeKeys.has( "y" ) === true ) {
 
-            translate.y = -speed;
+            translate.y = -float;
         }
-
-        this.#movementTranslate( translate );
 
         if ( controls.activeKeys.has( "q" ) === true ) {
 
-            this.#player.root.rotate( BABYLON.Axis.Z, speed * deltaCorrection, BABYLON.Space.LOCAL );
+            this.#player.root.rotate( BABYLON.Axis.Z, float, BABYLON.Space.LOCAL );
 
         } else if ( controls.activeKeys.has( "e" ) === true ) {
 
-            this.#player.root.rotate( BABYLON.Axis.Z, -speed * deltaCorrection, BABYLON.Space.LOCAL );
+            this.#player.root.rotate( BABYLON.Axis.Z, -float, BABYLON.Space.LOCAL );
         }
+
+        this.#movementTranslate( translate );
     }
 
     #planetMovement() {
@@ -171,7 +169,7 @@ class PlayerPhysics extends PhysicsEntity {
 
         if ( controls.activeKeys.has( " " ) === true ) {
 
-            translate.y = jump * deltaCorrection;
+            translate.y = jump;
         }
 
         this.#movementTranslate( translate );
@@ -179,12 +177,14 @@ class PlayerPhysics extends PhysicsEntity {
 
     #movementTranslate( translate ) {
         
+        const deceleration = 1 - this.#player.config.deceleration;
+
         if ( translate.x !== 0 || translate.y !== 0 || translate.z !== 0 ) {
 
             this.velocity.addInPlace( translate.applyRotationQuaternionInPlace( this.#player.rotationQuaternion ) );   
         }
             
-        this.velocity.scaleInPlace( 0.85 );
+        this.velocity.scaleInPlace( deceleration );
     }
     
 }

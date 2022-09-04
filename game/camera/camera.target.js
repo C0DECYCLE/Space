@@ -14,7 +14,12 @@ class CameraTarget {
         offsetRadius: 10,
 
         focusAlpha: -Math.PI / 2,
-        focusBeta: Math.PI / 2
+        focusBeta: Math.PI / 2,
+
+        lerpPos: 0.075,
+        lerpRot: 0.05,
+
+        follow: 0.0025
     };
 
     camera = null;
@@ -44,7 +49,7 @@ class CameraTarget {
         this.camera.rotationQuaternion.copyFrom( target.rotationQuaternion );
     }
 
-    focus( lerp = 1.0 ) {
+    focus( lerp = this.config.lerpRot ) {
         
         this.camera.camera.alpha = BABYLON.Scalar.Lerp( this.camera.camera.alpha, this.config.focusAlpha, lerp );
         this.camera.camera.beta = BABYLON.Scalar.Lerp( this.camera.camera.beta, this.config.focusBeta, lerp );
@@ -62,21 +67,30 @@ class CameraTarget {
         
         const deltaCorrection = this.camera.game.engine.deltaCorrection;
         
-        target.root.rotate( BABYLON.Axis.Y, event.event.movementX * this.camera.controls.config.panning * deltaCorrection, BABYLON.Space.LOCAL );
-        target.root.rotate( BABYLON.Axis.X, event.event.movementY * this.camera.controls.config.panning * deltaCorrection, BABYLON.Space.LOCAL );
+        target.root.rotate( BABYLON.Axis.Y, event.event.movementX * this.config.follow * deltaCorrection, BABYLON.Space.LOCAL );
+        target.root.rotate( BABYLON.Axis.X, event.event.movementY * this.config.follow * deltaCorrection, BABYLON.Space.LOCAL );
     }
 
     syncPosition( target ) {
 
-        this.camera.position.copyFrom( BABYLON.Vector3.Lerp( this.camera.position, target.position.add( this.config.offset.applyRotationQuaternion( target.rotationQuaternion ) ), this.camera.config.lerp ) );
+        return BABYLON.Vector3.Lerp( this.camera.position, target.position.add( this.config.offset.applyRotationQuaternion( target.rotationQuaternion ) ), this.config.lerpPos );
+    }
+    
+    syncRotationQuaternion( target ) {
+
+        return BABYLON.Quaternion.Slerp( this.camera.rotationQuaternion, target.rotationQuaternion, this.config.lerpRot );
+    }
+
+    syncRadius( target ) {
+
+        return BABYLON.Scalar.Lerp( this.camera.camera.radius, this.config.offsetRadius, this.config.lerpPos );
     }
 
     #syncWithTarget( target ) {
 
-        this.syncPosition( target );
-        this.camera.rotationQuaternion.copyFrom( BABYLON.Quaternion.Slerp( this.camera.rotationQuaternion, target.rotationQuaternion, this.camera.config.lerp ) );
-
-        this.camera.camera.radius = BABYLON.Scalar.Lerp( this.camera.camera.radius, this.config.offsetRadius, this.camera.config.lerp );
+        this.camera.position.copyFrom( this.syncPosition( target ) );
+        this.camera.rotationQuaternion.copyFrom( this.syncRotationQuaternion( target ) );
+        this.camera.camera.radius = this.syncRadius( target );
     }
 
 }
