@@ -12,6 +12,7 @@ class Planets {
     scene = null;
     camera = null;
     player = null;
+    spaceships = null;
 
     list = [];
 
@@ -23,6 +24,7 @@ class Planets {
         this.scene = this.game.scene;
         this.camera = this.game.camera;
         this.player = this.game.player;
+        this.spaceships = this.game.spaceships;
 
         this.#createMaskMaterial();
     }
@@ -59,15 +61,8 @@ class Planets {
             const distance = BABYLON.Vector3.Distance( planet.position, position );
             const planetThreashold = planet.config.radius + planet.config.influence;
             
-            if ( distance <= planetThreashold && this.player.state.is( "space" ) === true ) {
-
-                this.player.state.set( "planet", planet );
-            }
-
-            if ( this.player.state.is( "planet" ) === true && PlanetUtils.compare( this.player.planet, planet ) && distance > planetThreashold ) {
-
-                this.player.state.set( "space" );
-            }
+            this.player.planetInsert( planet, distance, planetThreashold );
+            this.spaceships.planetInsert( planet, distance, planetThreashold );
            
             planet.insert( position, distance );
         }

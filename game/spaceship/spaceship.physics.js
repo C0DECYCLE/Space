@@ -25,6 +25,12 @@ class SpaceshipPhysics extends PhysicsEntity {
 
             this.#movement();
         }
+        
+        if ( this.#spaceship.nearPlanet !== null ) {
+
+            const up = this.#spaceship.nearPlanet.physics.spin( this );
+            this.quaternionTowardsUpright( up, this.#spaceship.config.atmosphereup );
+        }
 
         super.update();
     }

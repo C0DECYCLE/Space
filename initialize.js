@@ -44,6 +44,10 @@ Space.add( "install", function() {
 
     this.player = new Player( this, {} );
 
+    this.spaceships = new Spaceships( this, {} );
+
+    this.spaceships.register( "vulcan", { key: 0 } );
+
     this.planets = new Planets( this );
     
     this.planets.registerFromConfigs( [
@@ -78,10 +82,6 @@ Space.add( "install", function() {
     this.asteroids.register( "ring", { key: 0, radius: 5 * 1000, spread: 400, height: 200, density: 0.02 } );
     this.asteroids.register( "ring", { key: 1, radius: 5 * 1000, spread: 2 * 1000, height: 100, density: 0.03 } );
     
-    this.spaceships = new Spaceships( this, {} );
-
-    this.spaceships.register( "vulcan", { key: 0 } );
-    
 
     //movement bug which poped up? look through changes
     //collider not fitting bug
@@ -99,7 +99,7 @@ Space.add( "stage", function() {
     this.planets.list[2].place( this.star.position, 250 * 1000, 240 );
     this.planets.list[3].place( this.planets.list[2].position, 10 * 1000, 60 );
     
-    this.player.position.copyFrom( this.planets.list[1].position ).addInPlace( new BABYLON.Vector3( 0, 0, 3 * 1000 ) );
+    this.player.position.copyFrom( this.planets.list[3].position ).addInPlace( new BABYLON.Vector3( 5 * 1000, 0, 0 ) );
     this.player.root.rotate( BABYLON.Axis.Y, 180 * EngineUtils.toRadian, BABYLON.Space.LOCAL );
     
     this.asteroids.list[0].position.copyFrom( this.planets.list[0].position );

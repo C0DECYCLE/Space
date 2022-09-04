@@ -25,7 +25,9 @@ class Spaceship {
 
     config = {
 
-        key: UUIDv4()
+        key: UUIDv4(),
+
+        atmosphereup: 0.005
     };
 
     game = null;
@@ -37,6 +39,7 @@ class Spaceship {
 
     #seatDiffrence = new BABYLON.Vector3();
     #hasController = false;
+    #nearPlanet = null;
 
     constructor( game, config ) {
 
@@ -71,10 +74,28 @@ class Spaceship {
         return this.#hasController;
     }
 
+    get nearPlanet() {
+
+        return this.#nearPlanet;
+    }
+
     update() {
 
         this.lod.update();
         this.physics.update();
+    }
+
+    planetInsert( planet, distance, planetThreashold ) {
+
+        if ( distance <= planetThreashold && this.#nearPlanet === null ) {
+
+            this.#nearPlanet = planet;
+        }
+
+        if ( this.#nearPlanet !== null && PlanetUtils.compare( this.#nearPlanet, planet ) && distance > planetThreashold ) {
+
+            this.#nearPlanet = null;
+        }
     }
 
     enter( player ) {

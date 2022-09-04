@@ -42,6 +42,14 @@ class Spaceships {
             this.list[i].update();
         }
     }
+    
+    planetInsert( planet, distance, planetThreashold ) {
+
+        for ( let i = 0; i < this.list.length; i++ ) {
+
+            this.list[i].planetInsert( planet, distance, planetThreashold );
+        }
+    }
 
     #setupVariants() {
         

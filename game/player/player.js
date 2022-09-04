@@ -80,6 +80,19 @@ class Player {
         this.interaction.update();
     }
 
+    planetInsert( planet, distance, planetThreashold ) {
+
+        if ( distance <= planetThreashold && this.state.is( "space" ) === true ) {
+
+            this.state.set( "planet", planet );
+        }
+
+        if ( this.state.is( "planet" ) === true && PlanetUtils.compare( this.planet, planet ) && distance > planetThreashold ) {
+
+            this.state.set( "space" );
+        }
+    }
+
     #setupInspector() {
 
         this.root._float = this.config.float;
