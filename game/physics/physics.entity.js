@@ -22,9 +22,9 @@ class PhysicsEntity {
         GROUND: 1
     };
     
-    static collidable( mesh, type ) {
+    static collidable( mesh, type = PhysicsEntity.TYPES.STATIC ) {
 
-        //mesh.physicsEntityType = type;
+        mesh.physicsEntityType = type;
         //mesh.checkCollisions = true;
 
         const subs = mesh.getChildMeshes();
@@ -47,7 +47,7 @@ class PhysicsEntity {
     #lastTimeOnGround = 0;
     #isPaused = false;
 
-    constructor( mesh, type ) {
+    constructor( mesh, type = PhysicsEntity.TYPES.DYNAMIC ) {
 
         this.#mesh = mesh;
         this.#scene = this.#mesh.getScene();
@@ -59,7 +59,7 @@ class PhysicsEntity {
         //this.#bindObservables();
         this.#fitCollider();
 
-        //this.debugCollider();
+        this.debugCollider();
     }
     
     get position() {
@@ -177,7 +177,6 @@ class PhysicsEntity {
         
         this.getCollider()
         .copyFrom( bounding.scaleInPlace( 0.5 ) )
-        //.multiplyInPlace( this.#mesh.scaling )
         .scaleInPlace( PhysicsEntity.ENLARGEMENT );
     }
 
