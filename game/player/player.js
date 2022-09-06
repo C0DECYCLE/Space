@@ -121,18 +121,18 @@ class Player {
 
     #createMesh() {
 
-        const material = new BABYLON.StandardMaterial( "player_material", this.scene );
-        material.setColorIntensity( "#ff226b", 0.5 );
-
-        this.mesh = BABYLON.MeshBuilder.CreateCapsule( "player", { height: 2, radius: 0.5, tessellation: 8, subdivisions: 1, capSubdivisions: 3 }, this.scene );
-        this.mesh.convertToFlatShadedMesh();
-        this.mesh.material = material;
-        this.mesh.rotationQuaternion = this.mesh.rotation.toQuaternion();
+        const body = BABYLON.MeshBuilder.CreateCapsule( "player_mesh_body", { height: 2, radius: 0.5, tessellation: 8, subdivisions: 1, capSubdivisions: 3 }, this.scene );
+        body.convertToFlatShadedMesh();
         
         const head = BABYLON.MeshBuilder.CreateBox( "player_mesh_head", { width: 0.7, height: 0.35, depth: 0.3 }, this.scene );
         head.position.copyFromFloats( 0, 0.5, 0.4 );
-        head.material = material;
-        head.parent = this.mesh;
+
+        this.mesh = BABYLON.Mesh.MergeMeshes( [ body, head ], true );
+        this.mesh.id = "player";
+        this.mesh.name = this.mesh.id;
+        this.mesh.material = new BABYLON.StandardMaterial( "player_material", this.scene );
+        this.mesh.material.setColorIntensity( "#ff226b", 0.5 );
+        this.mesh.rotationQuaternion = this.mesh.rotation.toQuaternion();
     
         this.game.star.shadow.cast( this.mesh, true, true );
         this.game.star.shadow.receive( this.mesh, true, true );
