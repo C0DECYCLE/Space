@@ -25,7 +25,7 @@ class PostProcess {
         this.scene = this.game.scene;
         this.camera = this.game.camera.camera;
 
-        EngineUtils.configure( this.config, config );
+        EngineUtils.configure.call( this, config );
 
         this.scene.clearColor = this.scene.clearColor.toLinearSpace();
 

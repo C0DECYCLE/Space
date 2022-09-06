@@ -12,7 +12,7 @@ class Spaceship {
         
         this.model = [];
         
-        const importLods = game.scene.assets.list.get( "spaceship"/*`spaceship_${ this.name }`*/ ).getChildren();
+        const importLods = game.scene.assets.list.get( `spaceship_${ this.name.toLowerCase() }` ).getChildren();
         
         for ( let i = 0; i < importLods.length; i++ ) {
             
@@ -25,7 +25,9 @@ class Spaceship {
 
     config = {
 
-        key: UUIDv4()
+        key: UUIDv4(),
+
+        atmosphereup: 0.005
     };
 
     game = null;
@@ -35,16 +37,17 @@ class Spaceship {
     lod = null;
     physics = null;
 
-    seatOffset = new BABYLON.Vector3( 0, 0, 0 );
-    seatDiffrence = new BABYLON.Vector3();
+    #seatDiffrence = new BABYLON.Vector3();
+    #hasController = false;
+    #nearPlanet = null;
 
     constructor( game, config ) {
 
         this.game = game;
         this.scene = this.game.scene;
         this.spaceships = this.game.spaceships;
-
-        EngineUtils.configure( this.config, config );
+        
+        EngineUtils.configure.call( this, config );
         
         this.#createLod();   
         this.#addPhysics();
@@ -66,20 +69,45 @@ class Spaceship {
         return this.lod.rotationQuaternion;
     }
 
+    get hasController() {
+
+        return this.#hasController;
+    }
+
+    get nearPlanet() {
+
+        return this.#nearPlanet;
+    }
+
     update() {
 
         this.lod.update();
         this.physics.update();
     }
 
+    planetInsert( planet, distance, planetThreashold ) {
+
+        if ( distance <= planetThreashold && this.#nearPlanet === null ) {
+
+            this.#nearPlanet = planet;
+        }
+
+        if ( this.#nearPlanet !== null && PlanetUtils.compare( this.#nearPlanet, planet ) && distance > planetThreashold ) {
+
+            this.#nearPlanet = null;
+        }
+    }
+
     enter( player ) {
 
-        this.seatDiffrence.copyFrom( this.position ).subtractInPlace( player.position ).applyRotationQuaternionInPlace( this.rotationQuaternion.invert() );
-    } 
+        this.#rememberSeat( player );
+        this.#hasController = true;
+    }
 
     leave( player ) {
 
-        player.position.copyFrom( this.position ).subtractInPlace( this.seatDiffrence.applyRotationQuaternionInPlace( this.rotationQuaternion ) );
+        this.#hasController = false;
+        this.#putOutOfSeat( player );
     }
 
     #createLod() {
@@ -106,6 +134,16 @@ class Spaceship {
 
             this.game.player.state.set( "spaceship", this );
         } );
+    }
+
+    #rememberSeat( player ) {
+
+        this.#seatDiffrence.copyFrom( this.position ).subtractInPlace( player.position ).applyRotationQuaternionInPlace( this.rotationQuaternion.invert() );
+    }
+
+    #putOutOfSeat( player ) {
+
+        player.position.copyFrom( this.position ).subtractInPlace( this.#seatDiffrence.applyRotationQuaternionInPlace( this.rotationQuaternion ) );
     }
 
 }

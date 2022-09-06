@@ -10,7 +10,7 @@ class StarShadow {
 
     config = {
 
-        radius: 1.0 * 1000,
+        radius: 0.5 * 1000,
         resolution: 2048,
 
         bias: 0.005,
@@ -36,7 +36,7 @@ class StarShadow {
         this.#star = star;
         this.#light = light;
 
-        EngineUtils.configure( this.config, config );
+        EngineUtils.configure.call( this, config );
 
         this.#configureLight();
         this.#createGenerator();

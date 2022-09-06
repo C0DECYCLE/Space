@@ -10,9 +10,7 @@ class Camera {
 
     config = {
 
-        max: 10 * 1000 * 1000,
-
-        lerp: 0.1
+        max: 10 * 1000 * 1000
     };
 
     game = null;
@@ -38,13 +36,14 @@ class Camera {
         this.scene = this.game.scene;
         this.controls = this.game.controls;
 
-        EngineUtils.configure( this.config, config );
+        EngineUtils.configure.call( this, config );
 
         this.#createRoot();
         this.#setupStates();
         this.#createCamera();
         this.#addOrigin();
         this.#addTargets();
+        this.#registerObservables();
     }
 
     get position() {
@@ -65,14 +64,6 @@ class Camera {
     attachToSpaceship( spaceship ) {
 
         this.state.set( "spaceship", spaceship );
-    }
-
-    free( event ) {
-
-        const deltaCorrection = this.game.engine.deltaCorrection;
-
-        this.camera.alpha -= event.event.movementX * this.controls.config.panning * deltaCorrection;
-        this.camera.beta -= event.event.movementY * this.controls.config.panning * deltaCorrection;
     }
 
     update() {
@@ -117,8 +108,21 @@ class Camera {
 
     #addTargets() {
 
-        this.targets.player = new CameraTargetPlayer( this );
-        this.targets.spaceship = new CameraTargetSpaceship( this );
+        this.targets.player = new CameraTargetPlayer( this, {} );
+        this.targets.spaceship = new CameraTargetSpaceship( this, {} );
+    }
+    
+    #registerObservables() {
+
+        this.controls.onPointerMove.add( event => this.#onPointerMove( event ) );
+    }
+
+    #onPointerMove( event ) {
+        
+        if ( this.target.object !== null && this.target.camera !== null ) {
+
+            this.target.camera.onPointerMove( this.target.object, event );
+        }
     }
     
     #enterTarget( object, camera ) {
@@ -126,7 +130,7 @@ class Camera {
         this.target.object = object;
         this.target.camera = camera;
 
-        this.target.camera.focus();
+        this.target.camera.focus( 1.0 );
     }
 
     #leaveTarget() {

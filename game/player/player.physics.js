@@ -69,13 +69,15 @@ class PlayerPhysics extends PhysicsEntity {
         if ( this.state === PhysicsEntity.STATES.GROUND ) {
 
             this.#planetMovement();
-            this.quaternionTowardsUpright( up, 0.1 );
+            this.quaternionTowardsUpright( up, this.#player.config.standingup );
         }
     }
 
     #spaceshipUpdate() {
         
-        this.#player.position.copyFrom( this.spaceship.position ).addInPlace( this.spaceship.seatOffset.applyRotationQuaternion( this.spaceship.rotationQuaternion ) );
+        this.velocity.copyFromFloats( 0, 0, 0 );
+        
+        this.#player.position.copyFrom( this.spaceship.position ).addInPlace( this.spaceship.config.seat.applyRotationQuaternion( this.spaceship.rotationQuaternion ) );
         this.#player.rotationQuaternion.copyFrom( this.spaceship.rotationQuaternion );
     }
 
@@ -88,33 +90,40 @@ class PlayerPhysics extends PhysicsEntity {
 
         const float = floatConfig * deltaCorrection;
 
-        let speed = float;
-
         if ( controls.activeKeys.has( "w" ) === true ) {
 
-            translate.z = speed;
+            translate.z = float;
 
         } else if ( controls.activeKeys.has( "s" ) === true ) {
 
-            translate.z = -speed;
+            translate.z = -float;
         }
         
         if ( controls.activeKeys.has( "d" ) === true ) {
 
-            translate.x = speed;
+            translate.x = float;
 
         } else if ( controls.activeKeys.has( "a" ) === true ) {
 
-            translate.x = -speed;
+            translate.x = -float;
         }
         
+        if ( controls.activeKeys.has( "x" ) === true ) {
+
+            translate.y = float;
+
+        } else if ( controls.activeKeys.has( "y" ) === true ) {
+
+            translate.y = -float;
+        }
+
         if ( controls.activeKeys.has( "q" ) === true ) {
 
-            translate.y = speed;
+            this.#player.root.rotate( BABYLON.Axis.Z, float, BABYLON.Space.LOCAL );
 
         } else if ( controls.activeKeys.has( "e" ) === true ) {
 
-            translate.y = -speed;
+            this.#player.root.rotate( BABYLON.Axis.Z, -float, BABYLON.Space.LOCAL );
         }
 
         this.#movementTranslate( translate );
@@ -160,7 +169,7 @@ class PlayerPhysics extends PhysicsEntity {
 
         if ( controls.activeKeys.has( " " ) === true ) {
 
-            translate.y = jump * deltaCorrection;
+            translate.y = jump;
         }
 
         this.#movementTranslate( translate );
@@ -168,12 +177,14 @@ class PlayerPhysics extends PhysicsEntity {
 
     #movementTranslate( translate ) {
         
+        const deceleration = 1 - this.#player.config.deceleration;
+
         if ( translate.x !== 0 || translate.y !== 0 || translate.z !== 0 ) {
 
             this.velocity.addInPlace( translate.applyRotationQuaternionInPlace( this.#player.rotationQuaternion ) );   
         }
             
-        this.velocity.scaleInPlace( 0.85 );
+        this.velocity.scaleInPlace( deceleration );
     }
     
 }

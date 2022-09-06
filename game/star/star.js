@@ -33,7 +33,7 @@ class Star {
         this.game = game;
         this.scene = this.game.scene;
 
-        EngineUtils.configure( this.config, config );
+        EngineUtils.configure.call( this, config );
 
         this.#createMesh();
         this.#createPointLight( 0.2 );

@@ -23,8 +23,8 @@ class ObjectArray extends Array {
     }
 
     /* override */ indexOf( object ) {
-
-        return object.oaMeta.get( this.uuid );
+        
+        return object.oaMeta === undefined ? -1 : object.oaMeta.get( this.uuid ) || -1;
     }
 
     /* override */ contains( object ) {

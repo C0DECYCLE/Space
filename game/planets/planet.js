@@ -56,7 +56,7 @@ class Planet {
         this.game = game;
         this.scene = game.scene;
 
-        EngineUtils.configure( this.config, config );
+        EngineUtils.configure.call( this, config );
 
         this.#createRoot();
         this.#createLod();
@@ -90,7 +90,9 @@ class Planet {
     }
 
     insert( position, distance, force = false ) {
-        
+
+        this.#updateAtmosphereDensity( distance );
+
         if ( force === true ) {
 
             this.#evalInsertionWithString( position, distance );
@@ -119,7 +121,7 @@ class Planet {
 
         this.#updateLod();
         this.#updateSpin();
-        //this.#update();
+        //this.#updateOrbit();
     }
 
     #createRoot() {
@@ -163,19 +165,26 @@ class Planet {
     #updateLod() {
 
         this.lod.update();
+    }
+
+    #updateAtmosphereDensity( distance ) {
 
         if ( this.config.atmosphere !== false ) {
 
-            if ( this.root.isEnabled( false ) === false ) {
+            if ( this.lod.isVisible === false ) {
 
-                if ( this.atmosphere.settings.densityModifier === 1 ) {
+                if ( this.atmosphere.settings.densityModifier !== 0 ) {
     
                     this.atmosphere.settings.densityModifier = 0;
                 }
-    
-            } else if ( this.atmosphere.settings.densityModifier === 0 ) {
-    
-                this.atmosphere.settings.densityModifier = 1;
+            
+            } else {
+
+                const distanceCenterInfluence = this.config.radius + this.config.maxHeight;
+                const distanceToInfluence = distance - distanceCenterInfluence;
+                const distanceInfluenceLimit = ( PlanetQuadtree.INSERT_LIMIT * this.config.radius ) - distanceCenterInfluence;
+
+                this.atmosphere.settings.densityModifier = ( 1 - ( ( distanceToInfluence / distanceInfluenceLimit ).clamp( 0, 1 ) * 0.8 ) );
             }
         }
     }

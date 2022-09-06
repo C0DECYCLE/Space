@@ -23,7 +23,7 @@ Space.addOnReady( function() {
     this.scene.assets.load( [
 
         { key: "asteroid", path: "assets/models/asteroid.glb" },
-        { key: "spaceship"/*_vulcan*/, path: "assets/models/spaceship.glb"/*_vulcan*/ }
+        { key: "spaceship_vulcan", path: "assets/models/spaceship_vulcan.glb" }
     ] );
     
 
@@ -43,6 +43,10 @@ Space.add( "install", function() {
     this.star = new Star( this, {}, {} );
 
     this.player = new Player( this, {} );
+
+    this.spaceships = new Spaceships( this, {} );
+
+    this.spaceships.register( "vulcan", { key: 0 } );
 
     this.planets = new Planets( this );
     
@@ -78,17 +82,6 @@ Space.add( "install", function() {
     this.asteroids.register( "ring", { key: 0, radius: 5 * 1000, spread: 400, height: 200, density: 0.02 } );
     this.asteroids.register( "ring", { key: 1, radius: 5 * 1000, spread: 2 * 1000, height: 100, density: 0.03 } );
     
-    this.spaceships = new Spaceships( this, {} );
-
-    this.spaceships.register( "vulcan", { key: 0 } );
-    
-
-    //movement bug which poped up? look through changes
-    //collider not fitting bug
-
-    //make go into control of spaceship of player system
-    //https://playground.babylonjs.com/#1OH09K#1403
-
 
 } );
 
@@ -105,7 +98,7 @@ Space.add( "stage", function() {
     this.asteroids.list[0].position.copyFrom( this.planets.list[0].position );
     this.asteroids.list[1].position.copyFrom( this.planets.list[0].position );
 
-    this.spaceships.list[0].position.copyFrom( this.player.position ).addInPlace( new BABYLON.Vector3( 0, 0, 12 ) );
+    this.spaceships.list[0].position.copyFrom( this.player.position ).addInPlace( new BABYLON.Vector3( 0, 0, 10 ) );
     this.spaceships.list[0].root.rotate( BABYLON.Axis.Y, 90 * EngineUtils.toRadian, BABYLON.Space.LOCAL );
 
     this.scene.debugLayer.show( { embedMode: true } );

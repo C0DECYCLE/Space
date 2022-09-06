@@ -23,7 +23,7 @@ class Spaceships {
         this.game = game;
         this.scene = this.game.scene;
 
-        EngineUtils.configure( this.config, config );
+        EngineUtils.configure.call( this, config );
 
         this.#setupVariants();
     }
@@ -40,6 +40,14 @@ class Spaceships {
         for ( let i = 0; i < this.list.length; i++ ) {
 
             this.list[i].update();
+        }
+    }
+    
+    planetInsert( planet, distance, planetThreashold ) {
+
+        for ( let i = 0; i < this.list.length; i++ ) {
+
+            this.list[i].planetInsert( planet, distance, planetThreashold );
         }
     }
 

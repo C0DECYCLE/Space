@@ -16,9 +16,9 @@ class EngineUtils {
         return delta * fpsTarget / 1000;
     }
 
-    static configure( target, inject ) {
+    static configure( inject ) {
 
-        const keys = Object.keys( target );
+        const keys = Object.keys( this.config );
 
         for ( let i = 0; i < keys.length; i++ ) {
 
@@ -27,8 +27,17 @@ class EngineUtils {
 
             if ( value !== undefined ) {
 
-                target[ key ] = value;
+                this.config[ key ] = value;
             }
+        }
+        
+        if ( this.__config === undefined ) {
+
+            this.__config = this.config;
+            
+        } else {
+
+            this.config = Object.assign( this.__config, this.config );
         }
     }
 

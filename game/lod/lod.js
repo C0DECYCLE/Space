@@ -14,6 +14,7 @@ class LOD {
     coverage = undefined;
 
     #game = null;
+    #isVisible = false;
 
     constructor( game ) {
 
@@ -48,6 +49,16 @@ class LOD {
         }
     }
 
+    get isVisible() {
+
+        return this.#isVisible;
+    }
+
+    get maxVisibleDistance() {
+
+        return EngineUtils.getBounding( this.root ).size / LOD.minimum;
+    }
+
     fromSingle( node ) {
 
         this.add( node, LOD.minimum );
@@ -80,10 +91,13 @@ class LOD {
     update() {
         
         this.coverage = this.#game.camera.screenCoverage( this.root );
+        this.#isVisible = false;
 
         for ( let i = 0; i < this.levels.length; i++ ) {
 
-            this.levels[i][0].setEnabled( this.coverage < ( i - 1 < 0 ? Infinity : this.levels[ i - 1 ][1] ) && this.coverage >= this.levels[i][1] );
+            this.levels[i][0].setEnabled( ( i - 1 < 0 ? this.coverage <= Infinity : this.coverage < this.levels[ i - 1 ][1] ) && this.coverage >= this.levels[i][1] );
+
+            this.#isVisible = this.levels[i][0].isEnabled( false ) === true ? true : this.#isVisible;
         }
     }
 

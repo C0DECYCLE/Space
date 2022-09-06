@@ -17,8 +17,7 @@ class Player {
         jump: 0.01,
 
         standingup: 0.05,
-
-        experimentalPointerLock: true
+        deceleration: 0.15
     };
 
     game = null;
@@ -39,14 +38,13 @@ class Player {
         this.camera = this.game.camera;
         this.controls = this.game.controls;
 
-        EngineUtils.configure( this.config, config );
+        EngineUtils.configure.call( this, config );
 
         this.#createMesh();    
         this.#setupInspector();
         this.#setupStates();
         this.#setupPhysics();
         this.#setupInteraction();
-        this.#registerObservables();
     }
 
     get root() {
@@ -82,6 +80,19 @@ class Player {
         this.interaction.update();
     }
 
+    planetInsert( planet, distance, planetThreashold ) {
+
+        if ( distance <= planetThreashold && this.state.is( "space" ) === true ) {
+
+            this.state.set( "planet", planet );
+        }
+
+        if ( this.state.is( "planet" ) === true && PlanetUtils.compare( this.planet, planet ) && distance > planetThreashold ) {
+
+            this.state.set( "space" );
+        }
+    }
+
     #setupInspector() {
 
         this.root._float = this.config.float;
@@ -110,21 +121,21 @@ class Player {
 
     #createMesh() {
 
-        const material = new BABYLON.StandardMaterial( "player_material", this.scene );
-        material.setColorIntensity( "#ff226b", 0.5 );
-
-        this.mesh = BABYLON.MeshBuilder.CreateCapsule( "player", { height: 2, radius: 0.5, tessellation: 8, subdivisions: 1, capSubdivisions: 3 }, this.scene );
-        this.mesh.convertToFlatShadedMesh();
-        this.mesh.material = material;
-        this.mesh.rotationQuaternion = this.mesh.rotation.toQuaternion();
+        const body = BABYLON.MeshBuilder.CreateCapsule( "player_mesh_body", { height: 2, radius: 0.5, tessellation: 8, subdivisions: 1, capSubdivisions: 3 }, this.scene );
+        body.convertToFlatShadedMesh();
         
         const head = BABYLON.MeshBuilder.CreateBox( "player_mesh_head", { width: 0.7, height: 0.35, depth: 0.3 }, this.scene );
         head.position.copyFromFloats( 0, 0.5, 0.4 );
-        head.material = material;
-        head.parent = this.mesh;
+
+        this.mesh = BABYLON.Mesh.MergeMeshes( [ body, head ], true );
+        this.mesh.id = "player";
+        this.mesh.name = this.mesh.id;
+        this.mesh.material = new BABYLON.StandardMaterial( "player_material", this.scene );
+        this.mesh.material.setColorIntensity( "#ff226b", 0.5 );
+        this.mesh.rotationQuaternion = this.mesh.rotation.toQuaternion();
     
-        this.game.star.shadow.cast( this.mesh, true, true );
-        this.game.star.shadow.receive( this.mesh, true, true );
+        this.game.star.shadow.cast( this.mesh, true, false );
+        this.game.star.shadow.receive( this.mesh, true, false );
     }
 
     #setupPhysics() {
@@ -137,37 +148,9 @@ class Player {
         this.interaction = new PlayerInteraction( this );
     }
 
-    #registerObservables() {
-
-        this.controls.onPointerMove.add( event => this.#onPointerMove( event ) );
-    }
-
     #updateFromInspector() {
 
         this.config.float = this.root._float;
-    }
-
-    #onPointerMove( event ) {
-        
-        if ( this.controls.isPointerDown === true || this.config.experimentalPointerLock === true ) {
-
-            if ( this.controls.isKeyboarding === true ) {
-
-                this.#followPointer( event );
-
-            } else {
-
-                this.camera.free( event );
-            }
-        }
-    }
-
-    #followPointer( event ) {
-        
-        const deltaCorrection = this.game.engine.deltaCorrection;
-        
-        this.root.rotate( BABYLON.Axis.Y, event.event.movementX * this.controls.config.panning * deltaCorrection, BABYLON.Space.LOCAL );
-        this.root.rotate( BABYLON.Axis.X, event.event.movementY * this.controls.config.panning * deltaCorrection, BABYLON.Space.LOCAL );
     }
 
     #onSpaceEnter( oldState ) {
@@ -203,9 +186,10 @@ class Player {
         log( "player entered spaceship" );
 
         this.interaction.unhighlightAll();
+        this.physics.pause();
         this.physics.spaceship = spaceship;
         this.physics.spaceship.enter( this );
-        this.camera.attachToSpaceship( spaceship );
+        this.camera.attachToSpaceship( this.physics.spaceship );
     }
     
     #onSpaceshipLeave( newState ) {
@@ -214,6 +198,7 @@ class Player {
 
         this.physics.spaceship.leave( this );
         this.physics.spaceship = null;
+        this.physics.resume();
     }
 
 }
