@@ -134,8 +134,8 @@ class Player {
         this.mesh.material.setColorIntensity( "#ff226b", 0.5 );
         this.mesh.rotationQuaternion = this.mesh.rotation.toQuaternion();
     
-        this.game.star.shadow.cast( this.mesh, true, true );
-        this.game.star.shadow.receive( this.mesh, true, true );
+        this.game.star.shadow.cast( this.mesh, true, false );
+        this.game.star.shadow.receive( this.mesh, true, false );
     }
 
     #setupPhysics() {
@@ -186,6 +186,7 @@ class Player {
         log( "player entered spaceship" );
 
         this.interaction.unhighlightAll();
+        this.physics.pause();
         this.physics.spaceship = spaceship;
         this.physics.spaceship.enter( this );
         this.camera.attachToSpaceship( this.physics.spaceship );
@@ -197,6 +198,7 @@ class Player {
 
         this.physics.spaceship.leave( this );
         this.physics.spaceship = null;
+        this.physics.resume();
     }
 
 }
