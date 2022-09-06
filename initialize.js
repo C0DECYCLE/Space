@@ -83,11 +83,6 @@ Space.add( "install", function() {
     this.asteroids.register( "ring", { key: 1, radius: 5 * 1000, spread: 2 * 1000, height: 100, density: 0.03 } );
     
 
-    //movement bug which poped up? look through changes
-
-    //https://playground.babylonjs.com/#1OH09K#1403
-    //spaceship truster effect?
-
 } );
 
 Space.add( "stage", function() {
@@ -99,7 +94,6 @@ Space.add( "stage", function() {
     this.planets.list[3].place( this.planets.list[2].position, 10 * 1000, 60 );
     
     this.player.position.copyFrom( this.planets.list[0].position ).addInPlace( new BABYLON.Vector3( 5 * 1000, 0, 0 ) );
-    //this.player.root.rotate( BABYLON.Axis.Y, 180 * EngineUtils.toRadian, BABYLON.Space.LOCAL );
     
     this.asteroids.list[0].position.copyFrom( this.planets.list[0].position );
     this.asteroids.list[1].position.copyFrom( this.planets.list[0].position );
