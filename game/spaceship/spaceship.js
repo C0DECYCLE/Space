@@ -119,6 +119,8 @@ class Spaceship {
         } );
 
         this.root.name = `spaceships_spaceship${ this.config.key }`;
+
+        this.game.ui.createMarker( "spaceship", this.root );
     }
 
     #addPhysics() {

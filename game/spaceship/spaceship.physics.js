@@ -51,7 +51,7 @@ class SpaceshipPhysics extends PhysicsEntity {
 
         } else if ( controls.activeKeys.has( "s" ) === true ) {
 
-            this.#localVelocity.scaleInPlace( brakeScale );
+            this.#localVelocity.scaleInPlace( this.#localVelocity.length() > 0.00001 ? brakeScale : 0 );
         }
         
         if ( controls.activeKeys.has( "d" ) === true ) {

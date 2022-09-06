@@ -186,6 +186,9 @@ class Player {
         log( "player entered spaceship" );
 
         this.interaction.unhighlightAll();
+        this.game.ui.toggleMarkers( "planet", true );
+        this.game.ui.toggleMarkers( "spaceship", false );
+        this.game.ui.toggleMarkers( "interactable", false );
         this.physics.pause();
         this.physics.spaceship = spaceship;
         this.physics.spaceship.enter( this );
@@ -196,6 +199,9 @@ class Player {
         
         log( "player left spaceship" );
 
+        this.game.ui.toggleMarkers( "planet", false );
+        this.game.ui.toggleMarkers( "spaceship", true );
+        this.game.ui.toggleMarkers( "interactable", true );
         this.physics.spaceship.leave( this );
         this.physics.spaceship = null;
         this.physics.resume();

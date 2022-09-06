@@ -109,7 +109,7 @@ String.prototype.firstLetterUppercase = function() {
 
 Number.prototype.dotit = function() {
 
-    return Math.round( this ).toString().replace( /(\d)(?=(\d{3})+(?!\d))/g, "$1." );
+    return Math.round( this ).toString().replace( /(\d)(?=(\d{3})+(?!\d))/g, "$1," );
 };
 
 

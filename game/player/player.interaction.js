@@ -9,8 +9,7 @@
 class PlayerInteraction {
 
     static RADIUS = 8;
-    static EDGE = 6;
-    static COLOR = "#3c9dff";
+    static EDGE = 8;
 
     list = [];
 
@@ -24,7 +23,9 @@ class PlayerInteraction {
     register( mesh, event ) {
         
         mesh.edgesWidth = PlayerInteraction.EDGE;
-        mesh.edgesColor = BABYLON.Color4.FromHexString( PlayerInteraction.COLOR );
+        mesh.edgesColor = BABYLON.Color4.FromHexString( UI.DEFAULTCOLOR );
+
+        this.#player.game.ui.createMarker( "interactable", mesh );
 
         this.list.push( { mesh: mesh, highlight: false, event: event } );
     }
