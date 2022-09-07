@@ -29,7 +29,7 @@ class SpaceshipPhysics extends PhysicsEntity {
         if ( this.#spaceship.nearPlanet !== null ) {
 
             const up = this.#spaceship.nearPlanet.physics.spin( this );
-            this.quaternionTowardsUpright( up, this.#spaceship.config.atmosphereup );
+            //this.quaternionTowardsUpright( up, this.#spaceship.config.atmosphereup );
         }
 
         super.update();
@@ -51,7 +51,7 @@ class SpaceshipPhysics extends PhysicsEntity {
 
         } else if ( controls.activeKeys.has( "s" ) === true ) {
 
-            this.#localVelocity.scaleInPlace( this.#localVelocity.length() > 0.00001 ? brakeScale : 0 );
+            this.#localVelocity.scaleInPlace( brakeScale );
         }
         
         if ( controls.activeKeys.has( "d" ) === true ) {
@@ -100,6 +100,11 @@ class SpaceshipPhysics extends PhysicsEntity {
         }
         
         this.velocity.copyFrom( BABYLON.Vector3.Lerp( this.velocity, this.#localVelocity.applyRotationQuaternion( this.#spaceship.rotationQuaternion ), velocityDrag ) );
+        
+        if ( this.velocity.length() < 0.001 ) {
+
+            this.velocity.copyFromFloats( 0, 0, 0 );
+        }
     }
     
 }

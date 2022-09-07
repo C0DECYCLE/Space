@@ -103,10 +103,6 @@ Space.add( "stage", function() {
     this.spaceships.list[0].position.copyFrom( this.player.position ).addInPlace( new BABYLON.Vector3( 0, 0, 10 ) );
     this.spaceships.list[0].root.rotate( BABYLON.Axis.Y, 90 * EngineUtils.toRadian, BABYLON.Space.LOCAL );
 
-    this.ui.toggleMarkers( "planet", false );
-    this.ui.toggleMarkers( "spaceship", true );
-    this.ui.toggleMarkers( "interactable", true );
-
     this.scene.debugLayer.show( { embedMode: true } );
     
 

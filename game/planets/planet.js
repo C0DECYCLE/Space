@@ -129,7 +129,7 @@ class Planet {
         this.root = new BABYLON.TransformNode( `planets_planet${ this.config.key }`, this.scene );
         this.root.rotationQuaternion = this.root.rotation.toQuaternion();
 
-        this.game.ui.createMarker( "planet", this.root );
+        this.game.ui.registerMarker( this.root, { type: "travel" } );
     }
 
     #createLod() {
