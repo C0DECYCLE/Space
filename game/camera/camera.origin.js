@@ -80,7 +80,7 @@ class CameraOrigin {
 
             const node = scene.rootNodes[i];
 
-            if ( node.name === "camera" || node.isEnabled( false ) === false || !node.position ) {
+            if ( node.name === "camera" || /*node.isEnabled( false ) === false ||*/ !node.position ) {
                 
                 continue;
             }
@@ -106,7 +106,7 @@ class CameraOrigin {
 
             const node = scene.rootNodes[i];
 
-            if ( node.name !== "camera" && node.isEnabled( false ) === true && node._actualPosition ) {
+            if ( node.name !== "camera" && /*node.isEnabled( false ) === true &&*/ node._actualPosition ) {
 
                 node.position.copyFrom( node._actualPosition );
             }

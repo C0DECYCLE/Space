@@ -42,7 +42,7 @@ class UI {
 
     #setupFullscreenUI() {
 
-        this.gui = BABYLON.GUI.AdvancedDynamicTexture.CreateFullscreenUI( "ui" );
+        this.gui = BABYLON.GUI.AdvancedDynamicTexture.CreateFullscreenUI( "ui", true, this.game.scene );
         this.gui.useInvalidateRectOptimization = false;
     }
 
