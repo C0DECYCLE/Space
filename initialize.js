@@ -40,6 +40,8 @@ Space.add( "install", function() {
     
     this.postprocess = new PostProcess( this, {} );
 
+    this.ui = new UI( this, {} );
+
     this.star = new Star( this, {}, {} );
 
     this.player = new Player( this, {} );
@@ -81,7 +83,7 @@ Space.add( "install", function() {
 
     this.asteroids.register( "ring", { key: 0, radius: 5 * 1000, spread: 400, height: 200, density: 0.02 } );
     this.asteroids.register( "ring", { key: 1, radius: 5 * 1000, spread: 2 * 1000, height: 100, density: 0.03 } );
-    
+
 
 } );
 
@@ -120,6 +122,8 @@ Space.add( "run", function( delta ) {
     this.camera.update();
 
     this.star.update();
+
+    this.ui.update();
 
 
 } );

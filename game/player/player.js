@@ -185,7 +185,6 @@ class Player {
         
         log( "player entered spaceship" );
 
-        this.interaction.unhighlightAll();
         this.physics.pause();
         this.physics.spaceship = spaceship;
         this.physics.spaceship.enter( this );

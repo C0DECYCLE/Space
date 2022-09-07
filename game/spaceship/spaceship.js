@@ -119,6 +119,8 @@ class Spaceship {
         } );
 
         this.root.name = `spaceships_spaceship${ this.config.key }`;
+
+        this.game.ui.registerMarker( this.root, { type: "hint" } );
     }
 
     #addPhysics() {
@@ -133,6 +135,10 @@ class Spaceship {
         this.game.player.interaction.register( cockpit, () => {
 
             this.game.player.state.set( "spaceship", this );
+
+        }, () => {
+
+            this.game.player.state.set( "space" );
         } );
     }
 

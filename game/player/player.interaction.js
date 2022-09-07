@@ -9,24 +9,31 @@
 class PlayerInteraction {
 
     static RADIUS = 8;
-    static EDGE = 6;
-    static COLOR = "#3c9dff";
+    static EDGE = 8;
 
     list = [];
-
+    
     #player = null;
+    #isInteracting = false;
 
     constructor( player ) {
         
         this.#player = player;
     }
 
-    register( mesh, event ) {
+    get isInteracting() {
+
+        return this.#isInteracting == false ? false : true;
+    }
+
+    register( mesh, event, leaveEvent = false ) {
         
         mesh.edgesWidth = PlayerInteraction.EDGE;
-        mesh.edgesColor = BABYLON.Color4.FromHexString( PlayerInteraction.COLOR );
+        mesh.edgesColor = BABYLON.Color4.FromHexString( UI.NEUTRAL );
 
-        this.list.push( { mesh: mesh, highlight: false, event: event } );
+        this.#player.game.ui.registerMarker( mesh, { type: "interactable" } );
+
+        this.list.push( { mesh: mesh, highlight: false, event: event, leaveEvent: leaveEvent } );
     }
 
     unhighlightAll() {
@@ -39,9 +46,9 @@ class PlayerInteraction {
 
     update() {
 
-        if ( this.#player.state.is( "spaceship" ) === true ) {
+        if ( this.isInteracting === true ) {
 
-            this.#spaceshipUpdate();
+            this.#interactingUpdate();
 
         } else {
 
@@ -49,11 +56,12 @@ class PlayerInteraction {
         }
     }
 
-    #spaceshipUpdate() {
+    #interactingUpdate() {
 
         if ( this.#player.controls.activeKeys.has( "p" ) === true ) {
 
-            this.#player.state.set( "space" );
+            this.#isInteracting();
+            this.#isInteracting = false;
         }
     }
 
@@ -76,6 +84,12 @@ class PlayerInteraction {
             if ( this.#player.controls.activeKeys.has( "f" ) === true ) {
 
                 interaction.event();
+                this.#isInteracting = interaction.leaveEvent;
+
+                if ( this.isInteracting === true ) {
+
+                    this.unhighlightAll();
+                }
             }
 
         } else {
