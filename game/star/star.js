@@ -72,6 +72,8 @@ class Star {
         this.mesh = BABYLON.MeshBuilder.CreateSphere( "star", { diameter: this.config.size, segments: this.config.resolution }, this.scene );
         this.mesh.rotationQuaternion = this.mesh.rotation.toQuaternion();
         this.mesh.material = material;
+
+        PhysicsEntity.collidable( this.mesh, PhysicsEntity.TYPES.STATIC );
     }
 
     #createPointLight( split ) {

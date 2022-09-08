@@ -11,12 +11,14 @@ class PlayerPhysics extends PhysicsEntity {
     #player = null;
     #planet = null;
     #spaceship = null;
+    #controls = null;
 
     /* override */ constructor( player ) {
 
-        super( player.root, PhysicsEntity.TYPES.DYNAMIC );
+        super( player.game, player.root, PhysicsEntity.TYPES.DYNAMIC );
         
         this.#player = player;
+        this.#controls = this.#player.controls;
     }
 
     set planet( value ) {
@@ -69,7 +71,7 @@ class PlayerPhysics extends PhysicsEntity {
         if ( this.state === PhysicsEntity.STATES.GROUND ) {
 
             this.#planetMovement();
-            this.quaternionTowardsUpright( up, this.#player.config.standingup );
+            EngineUtils.setNodeDirection( this.#player.root, undefined, up, this.#player.config.standingup );
         }
     }
 
@@ -83,45 +85,44 @@ class PlayerPhysics extends PhysicsEntity {
 
     #spaceMovement() {
 
-        const controls = this.#player.controls;
         const floatConfig = this.#player.config.float;
         const deltaCorrection = this.#player.game.engine.deltaCorrection;
         const translate = new BABYLON.Vector3( 0, 0, 0 );
 
         const float = floatConfig * deltaCorrection;
 
-        if ( controls.activeKeys.has( "w" ) === true ) {
+        if ( this.#controls.activeKeys.has( Controls.KEYS.for ) === true ) {
 
             translate.z = float;
 
-        } else if ( controls.activeKeys.has( "s" ) === true ) {
+        } else if ( this.#controls.activeKeys.has( Controls.KEYS.back ) === true ) {
 
             translate.z = -float;
         }
         
-        if ( controls.activeKeys.has( "d" ) === true ) {
+        if ( this.#controls.activeKeys.has( Controls.KEYS.right ) === true ) {
 
             translate.x = float;
 
-        } else if ( controls.activeKeys.has( "a" ) === true ) {
+        } else if ( this.#controls.activeKeys.has( Controls.KEYS.left ) === true ) {
 
             translate.x = -float;
         }
         
-        if ( controls.activeKeys.has( "x" ) === true ) {
+        if ( this.#controls.activeKeys.has( Controls.KEYS.up ) === true ) {
 
             translate.y = float;
 
-        } else if ( controls.activeKeys.has( "y" ) === true ) {
+        } else if ( this.#controls.activeKeys.has( Controls.KEYS.down ) === true ) {
 
             translate.y = -float;
         }
 
-        if ( controls.activeKeys.has( "q" ) === true ) {
+        if ( this.#controls.activeKeys.has( Controls.KEYS.leftRoll ) === true ) {
 
             this.#player.root.rotate( BABYLON.Axis.Z, float, BABYLON.Space.LOCAL );
 
-        } else if ( controls.activeKeys.has( "e" ) === true ) {
+        } else if ( this.#controls.activeKeys.has( Controls.KEYS.rightRoll ) === true ) {
 
             this.#player.root.rotate( BABYLON.Axis.Z, -float, BABYLON.Space.LOCAL );
         }
@@ -131,7 +132,6 @@ class PlayerPhysics extends PhysicsEntity {
 
     #planetMovement() {
 
-        const controls = this.#player.controls;
         const walkConfig = this.#player.config.walk;
         const runConfig = this.#player.config.run;
         const jumpConfig = this.#player.config.jump;
@@ -144,30 +144,30 @@ class PlayerPhysics extends PhysicsEntity {
 
         let speed = walk;
 
-        if ( controls.activeKeys.has( "shift" ) === true ) {
+        if ( this.#controls.activeKeys.has( Controls.KEYS.fast ) === true ) {
 
             speed = run;
         }
 
-        if ( controls.activeKeys.has( "w" ) === true ) {
+        if ( this.#controls.activeKeys.has( Controls.KEYS.for ) === true ) {
 
             translate.z = speed;
 
-        } else if ( controls.activeKeys.has( "s" ) === true ) {
+        } else if ( this.#controls.activeKeys.has( Controls.KEYS.back ) === true ) {
 
             translate.z = -speed;
         }
         
-        if ( controls.activeKeys.has( "d" ) === true ) {
+        if ( this.#controls.activeKeys.has( Controls.KEYS.right ) === true ) {
 
             translate.x = speed;
 
-        } else if ( controls.activeKeys.has( "a" ) === true ) {
+        } else if ( this.#controls.activeKeys.has( Controls.KEYS.left ) === true ) {
 
             translate.x = -speed;
         }
 
-        if ( controls.activeKeys.has( " " ) === true ) {
+        if ( this.#controls.activeKeys.has( Controls.KEYS.jump ) === true ) {
 
             translate.y = jump;
         }

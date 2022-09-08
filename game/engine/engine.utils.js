@@ -92,4 +92,11 @@ class EngineUtils {
         return debugMaterial;
     }
 
+    static setNodeDirection( node, forward, up, lerp = undefined ) {
+
+        const direction = BABYLON.Quaternion.FromLookDirectionRH( forward || node.forward, up || node.up );
+
+        node.rotationQuaternion.copyFrom( lerp === undefined ? direction : BABYLON.Quaternion.Slerp( node.rotationQuaternion, direction, lerp ) );
+    }
+
 }

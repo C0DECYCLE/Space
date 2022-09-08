@@ -10,6 +10,7 @@ class UI {
 
     static NEUTRAL = "#4a9cff";
     static BAD = "#ff255b";
+    static LIGHTUP = "#ffdb6f";
 
     config = {
 

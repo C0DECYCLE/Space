@@ -8,6 +8,27 @@
 
 class Controls {
 
+    static KEYS = {
+
+        for: "w",
+        back: "s",
+        left: "a",
+        right: "d",
+        
+        leftRoll: "q",
+        rightRoll: "e",
+        up: "x",
+        down: "y",
+
+        fast: "shift",
+        jump: " ",
+
+        free: "r",
+        interact: "f",
+        travel: "b",
+        exit: "p"
+    };
+
     config = {
 
         panning: 0.005,

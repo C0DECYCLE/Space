@@ -14,18 +14,24 @@ class UIMarker {
 
         size: 32,
         color: UI.NEUTRAL,
+        lightUpColor: UI.LIGHTUP,
         thickness: 5,
         fontFamily: "ExtraBold",
         fontSize: 20
     };
     
     node = null;
+    lightUp = false;
     
     #ui = null;
 
     #outer = null;
     #inner = null;
     #text = null;
+
+    #direction = undefined;
+    #distance = undefined;
+    #isNear = undefined;
 
     constructor( ui, node, config ) {
 
@@ -48,35 +54,24 @@ class UIMarker {
         this.#outer.isVisible = value;
     }
 
+    get direction() {
+
+        return this.#direction;
+    }
+
+    get isNear() {
+
+        return this.#isNear;
+    }
+
     update() {
 
-        const distance = EngineUtils.getWorldPosition( this.node ).subtractInPlace( this.#ui.game.player.position ).length();
-        const size = EngineUtils.getBounding( this.node ).size;
-
-        if ( this.config.type === "travel" ) {
-
-            this.visible = this.#ui.game.player.physics.spaceship !== null; //&& this.#ui.game.player.physics.spaceship.isTraveling;
-
-        } else if ( this.config.type === "interactable" ) {
-
-            this.visible = distance < size * 4 && this.#ui.game.player.interaction.isInteracting === false;
-
-        } else if ( this.config.type === "hint" ) {
-
-            this.visible = distance > size * 2;
-        }
+        this.#isNear = this.#evaluateNear();
+        this.visible = this.#evaluateVisible();
 
         if ( this.visible === true ) {
 
-            this.#text.text = distance.dotit();
-
-            if ( this.config.type === "travel" ) {
-
-                this.#outer.color = distance < size / 2 ? UI.BAD : this.config.color;
-                this.#inner.color = this.#outer.color;
-                this.#inner.background = this.#outer.color;
-                this.#text.color = this.#outer.color;
-            }
+            this.#updateVisual();
         }
     }
 
@@ -112,6 +107,69 @@ class UIMarker {
         this.#outer.addControl( this.#text );
         this.#ui.gui.addControl( this.#outer );
         this.#outer.linkWithMesh( this.node ); 
+    }
+
+    #evaluateNear() {
+
+        const diffrence = EngineUtils.getWorldPosition( this.node ).subtractInPlace( this.#ui.game.player.position );
+        const size = EngineUtils.getBounding( this.node ).size;
+
+        this.#distance = diffrence.length();
+        this.#direction = diffrence.normalize();
+
+        if ( this.config.type === "travel" ) {
+
+            return this.#distance < size / 2;
+
+        } else if ( this.config.type === "interactable" ) {
+
+            return this.#distance < size * 4;
+
+        } else if ( this.config.type === "hint" ) {
+
+            return this.#distance > size * 2;
+        }
+    }
+
+    #evaluateVisible() {
+
+        if ( this.config.type === "travel" ) {
+
+            const spaceship = this.#ui.game.player.physics.spaceship;
+
+            return spaceship !== null && spaceship.physics.travel.isTraveling === true && spaceship.physics.travel.isJumping === false;
+
+        } else if ( this.config.type === "interactable" ) {
+
+            return this.#isNear === true && this.#ui.game.player.interaction.isInteracting === false;
+
+        } else if ( this.config.type === "hint" ) {
+
+            return this.#isNear;
+        }
+    }
+
+    #updateVisual() {
+
+        this.#text.text = this.#distance.dotit();
+
+        if ( this.config.type === "travel" ) {
+
+            this.#updateColor( this.#isNear ? UI.BAD : this.config.color );
+        }
+
+        if ( this.lightUp === true ) {
+         
+            this.#updateColor( this.config.lightUpColor  );   
+        }
+    }
+
+    #updateColor( color ) {
+
+        this.#outer.color = color;
+        this.#inner.color = this.#outer.color;
+        this.#inner.background = this.#outer.color;
+        this.#text.color = this.#outer.color;
     }
 
 }

@@ -8,77 +8,89 @@
 
 class SpaceshipPhysics extends PhysicsEntity {
 
-    #spaceship = null;
+    spaceship = null;
+    controls = null;
+    travel = null;
 
     #localVelocity = new BABYLON.Vector3();
 
     /* override */ constructor( spaceship ) {
 
-        super( spaceship.root, PhysicsEntity.TYPES.DYNAMIC );
+        super( spaceship.game, spaceship.root, PhysicsEntity.TYPES.DYNAMIC );
         
-        this.#spaceship = spaceship;
+        this.spaceship = spaceship;
+        this.controls = this.spaceship.game.controls;
+
+        this.#setupTravel();
     }
 
     /* override */ update() {
         
-        if ( this.#spaceship.hasController === true ) {
+        if ( this.travel.isJumping === false ) {
 
-            this.#movement();
+            if ( this.spaceship.hasController === true ) {
+
+                this.#movement();
+            }
+            
+            if ( this.spaceship.nearPlanet !== null ) {
+
+                this.spaceship.nearPlanet.physics.spin( this );
+            }
         }
         
-        if ( this.#spaceship.nearPlanet !== null ) {
-
-            const up = this.#spaceship.nearPlanet.physics.spin( this );
-            //this.quaternionTowardsUpright( up, this.#spaceship.config.atmosphereup );
-        }
-
+        this.travel.update();
         super.update();
+    }
+
+    #setupTravel() {
+
+        this.travel = new SpaceshipPhysicsTravel( this );
     }
 
     #movement() {
 
-        const controls = this.#spaceship.game.controls;
-        const mainAcceleration = this.#spaceship.config.mainAcceleration;
-        const brakeScale = 1 - this.#spaceship.config.brakeAcceleration;
-        const minorAcceleration = this.#spaceship.config.minorAcceleration;
-        const rollSpeed = this.#spaceship.config.rollSpeed;
-        const deltaCorrection = this.#spaceship.game.engine.deltaCorrection;
+        const mainAcceleration = this.spaceship.config.mainAcceleration;
+        const brakeScale = 1 - this.spaceship.config.brakeAcceleration;
+        const minorAcceleration = this.spaceship.config.minorAcceleration;
+        const rollSpeed = this.spaceship.config.rollSpeed;
+        const deltaCorrection = this.spaceship.game.engine.deltaCorrection;
         const acceleration = new BABYLON.Vector3( 0, 0, 0 );
 
-        if ( controls.activeKeys.has( "w" ) === true ) {
+        if ( this.controls.activeKeys.has( Controls.KEYS.for ) === true ) {
 
             acceleration.z = mainAcceleration;
 
-        } else if ( controls.activeKeys.has( "s" ) === true ) {
+        } else if ( this.controls.activeKeys.has( Controls.KEYS.back ) === true ) {
 
             this.#localVelocity.scaleInPlace( brakeScale );
         }
         
-        if ( controls.activeKeys.has( "d" ) === true ) {
+        if ( this.controls.activeKeys.has( Controls.KEYS.right ) === true ) {
 
             acceleration.x = minorAcceleration;
 
-        } else if ( controls.activeKeys.has( "a" ) === true ) {
+        } else if ( this.controls.activeKeys.has( Controls.KEYS.left ) === true ) {
 
             acceleration.x = -minorAcceleration;
         }
         
-        if ( controls.activeKeys.has( "x" ) === true ) {
+        if ( this.controls.activeKeys.has( Controls.KEYS.up ) === true ) {
 
             acceleration.y = minorAcceleration;
 
-        } else if ( controls.activeKeys.has( "y" ) === true ) {
+        } else if ( this.controls.activeKeys.has( Controls.KEYS.down ) === true ) {
 
             acceleration.y = -minorAcceleration;
         }
 
-        if ( controls.activeKeys.has( "q" ) === true ) {
+        if ( this.controls.activeKeys.has( Controls.KEYS.leftRoll ) === true ) {
 
-            this.#spaceship.root.rotate( BABYLON.Axis.Z, rollSpeed * deltaCorrection, BABYLON.Space.LOCAL );
+            this.spaceship.root.rotate( BABYLON.Axis.Z, rollSpeed * deltaCorrection, BABYLON.Space.LOCAL );
 
-        } else if ( controls.activeKeys.has( "e" ) === true ) {
+        } else if ( this.controls.activeKeys.has( Controls.KEYS.rightRoll ) === true ) {
 
-            this.#spaceship.root.rotate( BABYLON.Axis.Z, -rollSpeed * deltaCorrection, BABYLON.Space.LOCAL );
+            this.spaceship.root.rotate( BABYLON.Axis.Z, -rollSpeed * deltaCorrection, BABYLON.Space.LOCAL );
         }
 
         this.#movementTranslate( acceleration );
@@ -86,8 +98,8 @@ class SpaceshipPhysics extends PhysicsEntity {
 
     #movementTranslate( acceleration ) {
         
-        const velocityLimit = this.#spaceship.config.velocityLimit;
-        const velocityDrag = this.#spaceship.config.velocityDrag;
+        const velocityLimit = this.spaceship.config.velocityLimit;
+        const velocityDrag = this.spaceship.config.velocityDrag;
         
         if ( acceleration.x !== 0 || acceleration.y !== 0 || acceleration.z !== 0 ) {
 
@@ -99,7 +111,7 @@ class SpaceshipPhysics extends PhysicsEntity {
             this.#localVelocity.normalize().scaleInPlace( velocityLimit );
         }
         
-        this.velocity.copyFrom( BABYLON.Vector3.Lerp( this.velocity, this.#localVelocity.applyRotationQuaternion( this.#spaceship.rotationQuaternion ), velocityDrag ) );
+        this.velocity.copyFrom( BABYLON.Vector3.Lerp( this.velocity, this.#localVelocity.applyRotationQuaternion( this.spaceship.rotationQuaternion ), velocityDrag ) );
         
         if ( this.velocity.length() < 0.001 ) {
 

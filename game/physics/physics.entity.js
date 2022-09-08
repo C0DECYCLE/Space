@@ -48,8 +48,9 @@ class PhysicsEntity {
     delta = new BABYLON.Vector3( 0, 0, 0 );
     velocity = new BABYLON.Vector3( 0, 0, 0 );
 
-    #scene = null;
+    #game = null;
     #mesh = null;
+    #scene = null;
     
     #typeValue = undefined;
     #stateValue = PhysicsEntity.STATES.FLOATING;
@@ -57,17 +58,17 @@ class PhysicsEntity {
     #lastTimeOnGround = 0;
     #isPaused = false;
 
-    constructor( mesh, type = PhysicsEntity.TYPES.DYNAMIC ) {
+    constructor( game, mesh, type = PhysicsEntity.TYPES.DYNAMIC ) {
 
+        this.#game = game;
         this.#mesh = mesh;
-        this.#scene = this.#mesh.getScene();
+        this.#scene = this.#game.scene;
 
         this.#type = type;
 
         PhysicsEntity.collidable( this.#mesh, this.type );
 
         this.#fitCollider();
-
         //this.debugCollider();
     }
     
@@ -108,7 +109,7 @@ class PhysicsEntity {
 
     update() {
         
-        if ( this.#isPaused === true ) {
+        if ( this.#isPaused === true || this.#game.physics.isPaused === true ) {
 
             return;
         }
@@ -128,9 +129,9 @@ class PhysicsEntity {
         this.delta.copyFromFloats( 0, 0, 0 );
     }
 
-    pause( allowCollisions = false ) {
+    pause( allowCollisions = false, doNotPause = false ) {
 
-        this.#isPaused = true;
+        this.#isPaused = !doNotPause;
         
         PhysicsEntity.#collisions( this.#mesh, allowCollisions );
     }
@@ -141,27 +142,20 @@ class PhysicsEntity {
         this.#isPaused = false;
     }
 
-    getCollider() {
+    getCollider( mesh = this.#mesh ) {
 
-        return this.#mesh.ellipsoid;
+        return mesh.ellipsoid;
     }
 
-    debugCollider() {
+    debugCollider( mesh = this.#mesh ) {
 
-        const ellipsoid = this.getCollider();
+        const ellipsoid = this.getCollider( mesh );
 
-        const debug = BABYLON.MeshBuilder.CreateSphere( `${ this.#mesh.name }_debug_collider`, { diameterX: ellipsoid.x * 2, diameterY: ellipsoid.y * 2, diameterZ: ellipsoid.z * 2, segments: 8 }, this.#scene );
-        debug.position.copyFrom( this.#mesh.ellipsoidOffset );
-        debug.scaling.divideInPlace( this.#mesh.scaling );
+        const debug = BABYLON.MeshBuilder.CreateSphere( `${ mesh.name }_debug_collider`, { diameterX: ellipsoid.x * 2, diameterY: ellipsoid.y * 2, diameterZ: ellipsoid.z * 2, segments: 8 }, this.#scene );
+        debug.position.copyFrom( mesh.ellipsoidOffset );
+        debug.scaling.divideInPlace( mesh.scaling );
         debug.material = this.#scene.debugMaterial;
-        debug.parent = this.#mesh;
-    }
-
-    quaternionTowardsUpright( up, stretch ) {
-
-        const look = BABYLON.Quaternion.FromLookDirectionRH( this.#mesh.forward, up );
-
-        this.#mesh.rotationQuaternion.copyFrom( BABYLON.Quaternion.Slerp( this.#mesh.rotationQuaternion, look, stretch ) );
+        debug.parent = mesh;
     }
 
     registerPull( distanceAboveGround ) {
@@ -186,10 +180,13 @@ class PhysicsEntity {
     #fitCollider() {
 
         const bounding = EngineUtils.getBounding( this.#mesh );
+        const subs = this.#mesh.getChildMeshes();
+        const main = this.getCollider( this.#mesh ).copyFrom( bounding.scaleInPlace( 0.5 ) );//.scaleInPlace( PhysicsEntity.ENLARGEMENT );
         
-        this.getCollider()
-        .copyFrom( bounding.scaleInPlace( 0.5 ) )
-        //.scaleInPlace( PhysicsEntity.ENLARGEMENT );
+        for ( let i = 0; i < subs.length; i++ ) {
+
+            this.getCollider( subs[i] ).copyFrom( main );
+        }
     }
 
 }
