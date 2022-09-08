@@ -15,7 +15,7 @@ class PlayerPhysics extends PhysicsEntity {
 
     /* override */ constructor( player ) {
 
-        super( player.root, PhysicsEntity.TYPES.DYNAMIC );
+        super( player.game, player.root, PhysicsEntity.TYPES.DYNAMIC );
         
         this.#player = player;
         this.#controls = this.#player.controls;

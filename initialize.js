@@ -84,9 +84,7 @@ Space.add( "install", function() {
     this.asteroids.register( "ring", { key: 0, radius: 5 * 1000, spread: 400, height: 200, density: 0.02 } );
     this.asteroids.register( "ring", { key: 1, radius: 5 * 1000, spread: 2 * 1000, height: 100, density: 0.03 } );
 
-    //solve flying through stuff by either irgnoring collisions and test if it is obstructed!
-    //make able to stop fast travel
-    //children to have same collider! debug
+    
 } );
 
 Space.add( "stage", function() {

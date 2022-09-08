@@ -52,7 +52,7 @@ class SpaceshipPhysicsTravel {
 
         } else {
 
-            this.#movement();
+            this.#updateJumping();
         }
     }
 
@@ -65,7 +65,10 @@ class SpaceshipPhysicsTravel {
             potential.lightUp = true;
         }
         
-        this.#evaluateKeyPress( potential );
+        if ( this.#evaluateKeyPress() === true ) {
+
+            this.#onKeyPress( potential );
+        }
     }
 
     #getPotentialMarker() {
@@ -86,46 +89,62 @@ class SpaceshipPhysicsTravel {
         return null;
     }
 
-    #evaluateKeyPress( potential ) {
+    #evaluateKeyPress() {
 
         if ( this.#spaceshipPhysics.controls.activeKeys.has( Controls.KEYS.travel ) === true && Date.now() - this.#pressedTime > this.#pressedThreshold ) {
 
             this.#pressedTime = Date.now();
 
-            if ( this.#isTraveling === false ) {
+            return true;
+        }
 
-                this.#isTraveling = true;
+        return false;
+    }
+
+    #onKeyPress( potential ) {
+
+        if ( this.#isTraveling === false ) {
+
+            this.#isTraveling = true;
+
+        } else {
+
+            if ( potential !== null ) {
+
+                this.#startJumping( potential );
 
             } else {
 
-                if ( potential !== null ) {
-
-                    this.#jumping = potential;
-                    EngineUtils.setNodeDirection( this.#spaceshipPhysics.spaceship.root, this.#jumping.direction );
-
-                } else {
-
-                    this.#isTraveling = false;
-                }
+                this.#isTraveling = false;
             }
         }
     }
+
+    #startJumping( potential ) {
+
+        this.#jumping = potential;
+        EngineUtils.setNodeDirection( this.#spaceshipPhysics.spaceship.root, this.#jumping.direction );   
+    }
     
-    #movement() {
+    #updateJumping() {
 
         const direction = EngineUtils.getWorldPosition( this.#jumping.node ).subtractInPlace( this.#game.player.position );
         const size = EngineUtils.getBounding( this.#jumping.node ).size;
 
-        if ( direction.length() > size / 2 ) {
+        if ( direction.length() > size / 2 && this.#evaluateKeyPress() === false ) {
 
             this.#spaceshipPhysics.velocity.copyFrom( direction.normalize() ).scaleInPlace( SpaceshipPhysicsTravel.VELOCITY * this.#game.engine.deltaCorrection );
 
         } else {
 
-            this.#spaceshipPhysics.velocity.copyFromFloats( 0, 0, 0 );
-            this.#jumping = false;
+            this.#stopJumping();
         }
-        
+    }
+
+    #stopJumping() {
+
+        this.#spaceshipPhysics.velocity.copyFromFloats( 0, 0, 0 );
+        this.#jumping = false;
     }
 
 }

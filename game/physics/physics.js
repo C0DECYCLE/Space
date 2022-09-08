@@ -15,6 +15,8 @@ class Physics {
     game = null;
     scene = null;
 
+    #isPaused = false;
+
     constructor( game, config ) {
 
         this.game = game;
@@ -24,11 +26,26 @@ class Physics {
 
         this.#setupCollisions();
     }
+
+    get isPaused() {
+
+        return this.#isPaused;
+    }
+
+    pause() {
+
+        this.#isPaused = true;
+    }
+
+    resume() {
+
+        this.#isPaused = false;
+    }
     
     #setupCollisions() {
 
         this.scene.gravity = BABYLON.Vector3.Zero();
-        this.scene.checkCollisions = true;
+        this.scene.collisionsEnabled = true;
     }
 
 }
