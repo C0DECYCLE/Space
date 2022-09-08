@@ -71,7 +71,7 @@ class PlayerPhysics extends PhysicsEntity {
         if ( this.state === PhysicsEntity.STATES.GROUND ) {
 
             this.#planetMovement();
-            this.quaternionTowardsUpright( up, this.#player.config.standingup );
+            EngineUtils.setNodeDirection( this.#player.root, undefined, up, this.#player.config.standingup );
         }
     }
 

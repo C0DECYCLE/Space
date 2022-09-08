@@ -101,6 +101,7 @@ class SpaceshipPhysicsTravel {
                 if ( potential !== null ) {
 
                     this.#jumping = potential;
+                    EngineUtils.setNodeDirection( this.#spaceshipPhysics.spaceship.root, this.#jumping.direction );
 
                 } else {
 

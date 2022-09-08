@@ -157,13 +157,6 @@ class PhysicsEntity {
         debug.parent = this.#mesh;
     }
 
-    quaternionTowardsUpright( up, stretch ) {
-
-        const look = BABYLON.Quaternion.FromLookDirectionRH( this.#mesh.forward, up );
-
-        this.#mesh.rotationQuaternion.copyFrom( BABYLON.Quaternion.Slerp( this.#mesh.rotationQuaternion, look, stretch ) );
-    }
-
     registerPull( distanceAboveGround ) {
         
         this.#lastTimeOnGround++;
