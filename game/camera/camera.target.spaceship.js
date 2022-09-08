@@ -34,7 +34,7 @@ class CameraTargetSpaceship extends CameraTarget {
 
         super.update( spaceship );
 
-        if ( this.camera.controls.activeKeys.has( "r" ) === false ) {
+        if ( this.camera.controls.activeKeys.has( Controls.KEYS.free ) === false && spaceship.physics.travel.isJumping === false ) {
 
             this.focus();
         }
@@ -44,7 +44,7 @@ class CameraTargetSpaceship extends CameraTarget {
 
         if ( this.camera.controls.isPointerDown === true || this.camera.controls.config.experimentalPointerLock === true ) {
 
-            if ( this.camera.controls.activeKeys.has( "r" ) === true ) {
+            if ( this.camera.controls.activeKeys.has( Controls.KEYS.free ) === true || spaceship.physics.travel.isJumping === true ) {
 
                 this.free( event );
 
@@ -53,6 +53,16 @@ class CameraTargetSpaceship extends CameraTarget {
                 this.followPointer( spaceship, event );
             }
         }
+    }
+
+    /* override */ syncPosition( spaceship ) {
+
+        if ( spaceship.physics.travel.isJumping === true ) {
+
+            return spaceship.position.add( this.config.offset.applyRotationQuaternion( spaceship.rotationQuaternion ) );
+        }
+        
+        return super.syncPosition( spaceship );
     }
 
     #adaptOffsetRadius( spaceship ) {
