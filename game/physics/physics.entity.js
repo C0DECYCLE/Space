@@ -68,8 +68,8 @@ class PhysicsEntity {
 
         PhysicsEntity.collidable( this.#mesh, this.type );
 
-        this.#fitCollider();
-        //this.debugCollider();
+        this.#fitCollider(); //what size for landing?
+        this.debugCollider();
     }
     
     get position() {
@@ -180,13 +180,10 @@ class PhysicsEntity {
     #fitCollider() {
 
         const bounding = EngineUtils.getBounding( this.#mesh );
-        const subs = this.#mesh.getChildMeshes();
-        const main = this.getCollider( this.#mesh ).copyFrom( bounding.scaleInPlace( 0.5 ) );//.scaleInPlace( PhysicsEntity.ENLARGEMENT );
         
-        for ( let i = 0; i < subs.length; i++ ) {
-
-            this.getCollider( subs[i] ).copyFrom( main );
-        }
+        this.getCollider( this.#mesh )
+        .copyFrom( bounding.scaleInPlace( 0.5 ) );
+        //.scaleInPlace( PhysicsEntity.ENLARGEMENT );
     }
 
 }

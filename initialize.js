@@ -84,7 +84,12 @@ Space.add( "install", function() {
     this.asteroids.register( "ring", { key: 0, radius: 5 * 1000, spread: 400, height: 200, density: 0.02 } );
     this.asteroids.register( "ring", { key: 1, radius: 5 * 1000, spread: 2 * 1000, height: 100, density: 0.03 } );
 
-    
+    //planet landing? automatic trigger when touching down && velocity small?
+    //problem with touching down collider
+    //when touching down (hight over ground < threshold) && velocity small:
+    //switch state to landed and camera free look, and if then movement button pressed again trigger takeoff
+
+    //make a imposter like system? custom mesh for physics inside? just for epsiloid? (casting) or also a collisions mesh for receiving
 } );
 
 Space.add( "stage", function() {
