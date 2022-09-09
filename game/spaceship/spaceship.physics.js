@@ -16,7 +16,7 @@ class SpaceshipPhysics extends PhysicsEntity {
 
     /* override */ constructor( spaceship ) {
 
-        super( spaceship.game, spaceship.root, PhysicsEntity.TYPES.DYNAMIC );
+        super( spaceship.game, spaceship.root );
         
         this.spaceship = spaceship;
         this.controls = this.spaceship.game.controls;

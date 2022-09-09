@@ -19,7 +19,7 @@ class PlanetPhysics {
         
         if ( size === this.#planet.config.min ) {
 
-            PhysicsEntity.collidable( mesh, PhysicsEntity.TYPES.STATIC );
+            PhysicsEntity.collidable( mesh );
         }
     }
 

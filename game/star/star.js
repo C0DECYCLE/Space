@@ -73,7 +73,7 @@ class Star {
         this.mesh.rotationQuaternion = this.mesh.rotation.toQuaternion();
         this.mesh.material = material;
 
-        PhysicsEntity.collidable( this.mesh, PhysicsEntity.TYPES.STATIC );
+        PhysicsEntity.collidable( this.mesh );
     }
 
     #createPointLight( split ) {

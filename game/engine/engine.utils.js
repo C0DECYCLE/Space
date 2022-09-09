@@ -53,10 +53,12 @@ class EngineUtils {
             const minmax = node.getHierarchyBoundingVectors();
 
             node.boundingCache = minmax.max.subtract( minmax.min );
+            node.boundingCache.offset = node.boundingCache.scale( 0.5 ).addInPlace( minmax.min );
             node.boundingCache.size = node.boundingCache.length();
         }
 
         const bounding = node.boundingCache.clone();
+        bounding.offset = node.boundingCache.offset;
         bounding.size = node.boundingCache.size;
 
         return bounding;
