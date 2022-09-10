@@ -57,6 +57,8 @@ class PhysicsEntity {
     #isPaused = false;
     #isCollidingPaused = false;
 
+    #debugMesh = null;
+
     constructor( game, mesh, type = PhysicsEntity.TYPES.DYNAMIC ) {
 
         this.#game = game;
@@ -68,7 +70,7 @@ class PhysicsEntity {
         PhysicsEntity.collidable( this.#mesh, this.type );
 
         this.#fitCollider();
-        this.debugCollider();
+        this.#debug();
     }
     
     get position() {
@@ -108,6 +110,9 @@ class PhysicsEntity {
             return;
         }
 
+        //this.#fitCollider();
+        //this.#debug();
+
         if ( this.velocity.x !== 0 || this.velocity.y !== 0 || this.velocity.z !== 0 ) {
 
             this.delta.addInPlace( this.velocity );
@@ -115,19 +120,16 @@ class PhysicsEntity {
 
         if ( this.delta.x !== 0 || this.delta.y !== 0 || this.delta.z !== 0 ) {
 
-            PhysicsEntity.#collisions( this.#mesh, false );
-            
             if ( this.#isCollidingPaused === false ) {
 
-                this.#mesh.ellipsoid.copyFrom( this.#mesh.getBoundingInfo().boundingBox.extendSizeWorld ); this.debugCollider();
+                PhysicsEntity.#collisions( this.#mesh, false );
                 this.#mesh.moveWithCollisions( this.delta );
+                PhysicsEntity.#collisions( this.#mesh, true );
 
             } else {
 
                 this.#mesh.position.addInPlace( this.delta );
             }
-
-            PhysicsEntity.#collisions( this.#mesh, true );
         }
 
         this.delta.copyFromFloats( 0, 0, 0 );
@@ -145,25 +147,6 @@ class PhysicsEntity {
         PhysicsEntity.#collisions( this.#mesh, true );
         this.#isCollidingPaused = false;
         this.#isPaused = false;
-    }
-
-    debugCollider( mesh = this.#mesh ) {
-
-        if ( window["__colDeb"+mesh.name] !== undefined ) {
-
-            window["__colDeb"+mesh.name].rotationQuaternion.copyFrom( mesh.rotationQuaternion ).invertInPlace();
-            window["__colDeb"+mesh.name].scaling.copyFrom( mesh.ellipsoid ).scaleInPlace( 2 ).divideInPlace( mesh.scaling );
-            return;
-        }
-
-        const debug = BABYLON.MeshBuilder.CreateSphere( "collider_debug", { diameter: 1, segments: 8 }, this.#scene );
-        debug.position.copyFrom( mesh.ellipsoidOffset );
-        debug.rotationQuaternion = mesh.rotationQuaternion.invert();
-        debug.scaling.copyFrom( mesh.ellipsoid ).scaleInPlace( 2 ).divideInPlace( mesh.scaling );
-        debug.material = this.#scene.debugMaterial;
-        debug.parent = mesh;
-
-        window["__colDeb"+mesh.name] = debug;
     }
 
     registerPull( distanceAboveGround ) {
@@ -187,13 +170,35 @@ class PhysicsEntity {
 
     #fitCollider() {
 
-        const bounding = EngineUtils.getBounding( this.#mesh, true );
+        //not use this use getBoundingInfo With CollisionMesh
+        const bounding = EngineUtils.getBounding( this.#mesh, true, mesh => mesh.name !== "debugMesh" );
         
         this.#mesh.ellipsoid
         .copyFrom( bounding.scaleInPlace( 0.5 ) );
         
         this.#mesh.ellipsoidOffset
         .copyFrom( bounding.offset );
+    }
+
+    #debug( mesh = this.#mesh ) {
+
+        if ( this.#debugMesh !== null ) {
+            
+            this.#debugMesh.position.copyFrom( mesh.ellipsoidOffset );
+            this.#debugMesh.rotationQuaternion.copyFrom( mesh.rotationQuaternion ).invertInPlace();
+            this.#debugMesh.scaling.copyFrom( mesh.ellipsoid ).scaleInPlace( 2 ).divideInPlace( mesh.scaling );
+
+            return;
+        }
+
+        const debug = BABYLON.MeshBuilder.CreateSphere( "debugMesh", { diameter: 1, segments: 8 }, this.#scene );
+        debug.position.copyFrom( mesh.ellipsoidOffset );
+        debug.rotationQuaternion = mesh.rotationQuaternion.invert();
+        debug.scaling.copyFrom( mesh.ellipsoid ).scaleInPlace( 2 ).divideInPlace( mesh.scaling );
+        debug.material = this.#scene.debugMaterial;
+        debug.parent = mesh;
+
+        this.#debugMesh = debug;
     }
 
 }

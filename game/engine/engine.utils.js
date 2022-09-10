@@ -46,14 +46,14 @@ class EngineUtils {
         return new BABYLON.Vector3( 0, 1000 * 1000 * 1000, 0 );
     }
 
-    static getBounding( node, force = false ) {
+    static getBounding( node, force = false, filter = undefined ) {
         
         if ( node.boundingCache === undefined || force === true ) {
 
-            const minmax = node.getHierarchyBoundingVectors();
+            const minmax = node.getHierarchyBoundingVectors( true, filter );
 
             node.boundingCache = minmax.max.subtract( minmax.min );
-            node.boundingCache.offset = node.boundingCache.scale( 0.5 ).addInPlace( minmax.min );
+            node.boundingCache.offset = node.boundingCache.scale( 0.5 ).addInPlace( minmax.min ).subtractInPlace( node.position );
             node.boundingCache.size = node.boundingCache.length();
         }
 
