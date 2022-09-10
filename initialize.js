@@ -84,12 +84,32 @@ Space.add( "install", function() {
     this.asteroids.register( "ring", { key: 0, radius: 5 * 1000, spread: 400, height: 200, density: 0.02 } );
     this.asteroids.register( "ring", { key: 1, radius: 5 * 1000, spread: 2 * 1000, height: 100, density: 0.03 } );
 
-    //planet landing? automatic trigger when touching down && velocity small?
-    //problem with touching down collider
-    //when touching down (hight over ground < threshold) && velocity small:
-    //switch state to landed and camera free look, and if then movement button pressed again trigger takeoff
+    //planet landing (automatic trigger)
+    //problem with touching down collider because rotation isnt taken into account! maybe make it so that epsilon switches between max and min radius?
+    /*
+    //initialization, not in update: thresholdAngle = 20 * EngineUtils.toRadian;
 
-    //make a imposter like system? custom mesh for physics inside? just for epsiloid? (casting) or also a collisions mesh for receiving
+    if ( spaceship state is "landed" == false ) {
+
+        downAngle = Math.acos( BABYLON.Vector3.Dot( down, velocity.normalizeToNew() ) );
+
+        if (downAngle < thresholdAngle && hightOverGround < threshold) {
+
+            spaceship state = "landed"; log("landed"); //camera free: if state is landed === true
+            velocity set 0 //aka function freeze velocity?
+            //when landed register button movement input but dont apply velocity
+        }
+
+    } else {
+
+        upAngle = Math.acos( BABYLON.Vector3.Dot( up, velocity.normalizeToNew() ) );
+
+        if ( upAngle < thresholdAngle) {
+
+            spaceship state = "not landed"; log("takeoff");
+        }
+    }
+    */
 } );
 
 Space.add( "stage", function() {

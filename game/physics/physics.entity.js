@@ -57,7 +57,7 @@ class PhysicsEntity {
     #isPaused = false;
     #isCollidingPaused = false;
 
-    constructor( game, mesh, type = PhysicsEntity.TYPES.DYNAMIC, customCollider = false ) {
+    constructor( game, mesh, type = PhysicsEntity.TYPES.DYNAMIC ) {
 
         this.#game = game;
         this.#mesh = mesh;
@@ -67,7 +67,7 @@ class PhysicsEntity {
 
         PhysicsEntity.collidable( this.#mesh, this.type );
 
-        this.#fitCollider( customCollider );
+        this.#fitCollider();
         this.debugCollider();
     }
     
@@ -119,6 +119,7 @@ class PhysicsEntity {
             
             if ( this.#isCollidingPaused === false ) {
 
+                this.#mesh.ellipsoid.copyFrom( this.#mesh.getBoundingInfo().boundingBox.extendSizeWorld ); this.debugCollider();
                 this.#mesh.moveWithCollisions( this.delta );
 
             } else {
@@ -148,11 +149,21 @@ class PhysicsEntity {
 
     debugCollider( mesh = this.#mesh ) {
 
-        const debug = BABYLON.MeshBuilder.CreateSphere( "collider_debug", { diameterX: mesh.ellipsoid.x * 2, diameterY: mesh.ellipsoid.y * 2, diameterZ: mesh.ellipsoid.z * 2, segments: 8 }, this.#scene );
+        if ( window["__colDeb"+mesh.name] !== undefined ) {
+
+            window["__colDeb"+mesh.name].rotationQuaternion.copyFrom( mesh.rotationQuaternion ).invertInPlace();
+            window["__colDeb"+mesh.name].scaling.copyFrom( mesh.ellipsoid ).scaleInPlace( 2 ).divideInPlace( mesh.scaling );
+            return;
+        }
+
+        const debug = BABYLON.MeshBuilder.CreateSphere( "collider_debug", { diameter: 1, segments: 8 }, this.#scene );
         debug.position.copyFrom( mesh.ellipsoidOffset );
-        debug.scaling.divideInPlace( mesh.scaling );
+        debug.rotationQuaternion = mesh.rotationQuaternion.invert();
+        debug.scaling.copyFrom( mesh.ellipsoid ).scaleInPlace( 2 ).divideInPlace( mesh.scaling );
         debug.material = this.#scene.debugMaterial;
         debug.parent = mesh;
+
+        window["__colDeb"+mesh.name] = debug;
     }
 
     registerPull( distanceAboveGround ) {
@@ -174,12 +185,12 @@ class PhysicsEntity {
         return this.#lastTimeOnGround / 100;
     }
 
-    #fitCollider( customCollider = false ) {
+    #fitCollider() {
 
-        const bounding = EngineUtils.getBounding( this.#mesh );
+        const bounding = EngineUtils.getBounding( this.#mesh, true );
         
         this.#mesh.ellipsoid
-        .copyFrom( customCollider === false ? bounding.scaleInPlace( 0.5 ) : customCollider );
+        .copyFrom( bounding.scaleInPlace( 0.5 ) );
         
         this.#mesh.ellipsoidOffset
         .copyFrom( bounding.offset );
