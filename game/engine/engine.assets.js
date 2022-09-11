@@ -8,6 +8,9 @@
 
 class EngineAssets {
     
+    static collisionKey = "COLLISION";
+    static collisionColor = "#43ff53";
+
     scene = null;
     cache = null;
 
@@ -48,13 +51,21 @@ class EngineAssets {
     }
 
     traverse( importLod, onEveryMesh ) {
-
+        
         const lod = this.#traverseMesh( importLod, onEveryMesh );
         const subs = importLod.getChildMeshes( true );
         
         for ( let i = 0; i < subs.length; i++ ) {
 
-            this.#traverseMesh( subs[i], onEveryMesh ).parent = lod;
+            if ( subs[i].name.includes( EngineAssets.collisionKey ) === true || subs[i].id.includes( EngineAssets.collisionKey ) ) {
+
+                lod.collisionMesh = this.#traverseCollisionMesh( subs[i] );
+                lod.collisionMesh.parent = lod;
+
+            } else {
+
+                this.#traverseMesh( subs[i], onEveryMesh ).parent = lod;
+            }
         }
 
         lod.parent = this.cache;
@@ -70,7 +81,15 @@ class EngineAssets {
 
         for ( let i = 0; i < subs.length; i++ ) {
 
-            this.#instanceMesh( subs[i], onEveryInstance ).parent = instance;
+            if ( subs[i].isCollisionMesh === true ) {
+
+                instance.collisionMesh = this.#instanceCollisionMesh( subs[i], onEveryInstance );
+                instance.collisionMesh.parent = instance;
+
+            } else {
+
+                this.#instanceMesh( subs[i], onEveryInstance ).parent = instance;
+            }
         }
 
         instance.parent = null;
@@ -99,30 +118,60 @@ class EngineAssets {
 
     #traverseMesh( importMesh, onMesh = undefined ) {
         
-        const mesh = new BABYLON.Mesh( importMesh.name, this.scene );
-        const color = importMesh.material.albedoColor.toHexString();
+        const mesh = this.#traverseMeshGeneral( importMesh );
         
-        if ( this.materials.has( color ) === false ) {
-                
-            const material = new BABYLON.StandardMaterial( `c-${ color }`, this.scene );
-            material.setColorIntensity( color, 0.5 );
-            material.alpha = importMesh.material.alpha;
-            this.materials.set( color, material );
+        if ( typeof onMesh === "function" ) {
+
+            onMesh( mesh );
         }
         
-        mesh.material = this.materials.get( color );
+        return mesh;
+    }
+
+    #traverseCollisionMesh( importCollisionMesh ) {
+
+        const mesh = this.#traverseMeshGeneral( importCollisionMesh, EngineAssets.collisionColor );
+
+        mesh.isCollisionMesh = true;
+        
+        return mesh;
+    }
+
+    #traverseMeshGeneral( importMesh, color = undefined ) {
+
+        const mesh = new BABYLON.Mesh( importMesh.name, this.scene );
+        
+        mesh.material = this.#getColorMaterial( importMesh, color );
         importMesh.geometry.applyToMesh( mesh );
         mesh.flipFaces( true );
         
         mesh.position.copyFrom( importMesh.position );
         mesh.rotation.copyFrom( importMesh.rotation );
         mesh.scaling.copyFrom( importMesh.scaling );
-        
-        if ( typeof onMesh === "function" ) {
 
-            onMesh( mesh );
-        }
         return mesh;
+    }
+
+    #getColorMaterial( importMesh, color = undefined ) {
+
+        color = color === undefined ? importMesh.material.albedoColor.toHexString() : color;
+
+        if ( this.materials.has( color ) === false ) {
+                
+            const material = new BABYLON.StandardMaterial( `c-${ color }`, this.scene );
+            material.setColorIntensity( color, 0.5 );
+            material.alpha = importMesh.material.alpha;
+
+            if ( color === EngineAssets.collisionColor ) {
+
+                material.alpha = 0.25;
+                material.emissiveColor = new BABYLON.Color3.FromHexString( EngineAssets.collisionColor ).scale( material.alpha );
+            }
+
+            this.materials.set( color, material );
+        }
+        
+        return this.materials.get( color );
     }
 
     #instanceMesh( mesh, onInstance = undefined ) {
@@ -133,6 +182,17 @@ class EngineAssets {
 
             onInstance( instance );
         }
+
+        return instance;
+    }
+
+    #instanceCollisionMesh( mesh ) {
+
+        const instance = mesh.createInstance( `i-${ mesh.name }` );
+
+        instance.isCollisionMesh = true;
+        instance.isVisible = false;
+        
         return instance;
     }
 

@@ -50,11 +50,11 @@ class SpaceshipPhysics extends PhysicsEntity {
 
     #movement() {
 
-        const mainAcceleration = this.spaceship.config.mainAcceleration;
-        const brakeScale = 1 - this.spaceship.config.brakeAcceleration;
-        const minorAcceleration = this.spaceship.config.minorAcceleration;
-        const rollSpeed = this.spaceship.config.rollSpeed;
         const deltaCorrection = this.spaceship.game.engine.deltaCorrection;
+        const mainAcceleration = this.spaceship.config.mainAcceleration * deltaCorrection;
+        const brakeScale = ( 1 - this.spaceship.config.brakeAcceleration ) * deltaCorrection;
+        const minorAcceleration = this.spaceship.config.minorAcceleration * deltaCorrection;
+        const rollSpeed = this.spaceship.config.rollSpeed * deltaCorrection;
         const acceleration = new BABYLON.Vector3( 0, 0, 0 );
 
         if ( this.controls.activeKeys.has( Controls.KEYS.for ) === true ) {
@@ -64,6 +64,12 @@ class SpaceshipPhysics extends PhysicsEntity {
         } else if ( this.controls.activeKeys.has( Controls.KEYS.back ) === true ) {
 
             this.#localVelocity.scaleInPlace( brakeScale );
+            
+            if ( this.velocity.length() < 0.05 ) {
+                
+                this.#localVelocity.copyFromFloats( 0, 0, 0 );
+                this.velocity.copyFromFloats( 0, 0, 0 );
+            }
         }
         
         if ( this.controls.activeKeys.has( Controls.KEYS.right ) === true ) {
@@ -86,11 +92,11 @@ class SpaceshipPhysics extends PhysicsEntity {
 
         if ( this.controls.activeKeys.has( Controls.KEYS.leftRoll ) === true ) {
 
-            this.spaceship.root.rotate( BABYLON.Axis.Z, rollSpeed * deltaCorrection, BABYLON.Space.LOCAL );
+            this.spaceship.root.rotate( BABYLON.Axis.Z, rollSpeed, BABYLON.Space.LOCAL );
 
         } else if ( this.controls.activeKeys.has( Controls.KEYS.rightRoll ) === true ) {
 
-            this.spaceship.root.rotate( BABYLON.Axis.Z, -rollSpeed * deltaCorrection, BABYLON.Space.LOCAL );
+            this.spaceship.root.rotate( BABYLON.Axis.Z, -rollSpeed, BABYLON.Space.LOCAL );
         }
 
         this.#movementTranslate( acceleration );
@@ -112,11 +118,6 @@ class SpaceshipPhysics extends PhysicsEntity {
         }
         
         this.velocity.copyFrom( BABYLON.Vector3.Lerp( this.velocity, this.#localVelocity.applyRotationQuaternion( this.spaceship.rotationQuaternion ), velocityDrag ) );
-        
-        if ( this.velocity.length() < 0.001 ) {
-
-            this.velocity.copyFromFloats( 0, 0, 0 );
-        }
     }
     
 }

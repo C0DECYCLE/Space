@@ -101,4 +101,10 @@ class EngineUtils {
         node.rotationQuaternion.copyFrom( lerp === undefined ? direction : BABYLON.Quaternion.Slerp( node.rotationQuaternion, direction, lerp ) );
     }
 
+    static minmax( vector ) {
+
+        vector.min = Math.min( vector.x, vector.y, vector.z );
+        vector.max = Math.max( vector.x, vector.y, vector.z );
+    }
+
 }

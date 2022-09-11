@@ -87,7 +87,7 @@ Space.add( "install", function() {
     //planet landing (automatic trigger)
     //problem with touching down collider because rotation isnt taken into account! maybe make it so that epsilon switches between max and min radius?
     /*
-    //initialization, not in update: thresholdAngle = 20 * EngineUtils.toRadian;
+    //initialization, not in update: thresholdAngle = 45 * EngineUtils.toRadian;
 
     if ( spaceship state is "landed" == false ) {
 
@@ -96,13 +96,14 @@ Space.add( "install", function() {
         if (downAngle < thresholdAngle && hightOverGround < threshold) {
 
             spaceship state = "landed"; log("landed"); //camera free: if state is landed === true
-            velocity set 0 //aka function freeze velocity?
-            //when landed register button movement input but dont apply velocity
+            velocity set 0 //aka function freeze velocity
+            //when landed register button movement input but dont apply localVelocity to velocity
+            //whenn landed quaternion towards up with 0 lerp
         }
 
     } else {
 
-        upAngle = Math.acos( BABYLON.Vector3.Dot( up, velocity.normalizeToNew() ) );
+        upAngle = Math.acos( BABYLON.Vector3.Dot( babylon.vector3.up, localvelocity.normalizeToNew() ) );
 
         if ( upAngle < thresholdAngle) {
 
@@ -110,6 +111,7 @@ Space.add( "install", function() {
         }
     }
     */
+
 } );
 
 Space.add( "stage", function() {
