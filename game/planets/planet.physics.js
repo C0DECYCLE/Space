@@ -19,7 +19,7 @@ class PlanetPhysics {
         
         if ( size === this.#planet.config.min ) {
 
-            PhysicsEntity.collidable( mesh, PhysicsEntity.TYPES.STATIC );
+            PhysicsEntity.collidable( mesh );
         }
     }
 
@@ -28,12 +28,11 @@ class PlanetPhysics {
         const delta = this.#getDelta( physicsEntity.position );
         const distanceCenter = delta.length(); 
         const up = delta.clone().normalize();
-        const distance = BABYLON.Vector3.Distance( this.#projectOnSurface( up ), physicsEntity.position );
         
         this.#pullSpin( physicsEntity, distanceCenter );
         this.#pullGravity( physicsEntity, up );
         
-        physicsEntity.registerPull( distance );
+        physicsEntity.registerPull( this.getDistanceAboveGround( physicsEntity, up ) );
 
         return up;
     }
@@ -47,6 +46,11 @@ class PlanetPhysics {
         this.#pullSpin( physicsEntity, distanceCenter );
 
         return up;
+    }
+
+    getDistanceAboveGround( physicsEntity, up ) {
+
+        return BABYLON.Vector3.Distance( this.#projectOnSurface( up ), physicsEntity.position );
     }
 
     #getDelta( position ) {

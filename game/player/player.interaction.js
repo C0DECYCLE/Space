@@ -102,7 +102,7 @@ class PlayerInteraction {
 
         if ( interaction.highlight === false ) {
 
-            interaction.mesh.enableEdgesRendering();
+            //interaction.mesh.enableEdgesRendering();
             interaction.highlight = true;
         }
     }
@@ -111,7 +111,7 @@ class PlayerInteraction {
 
         if ( interaction.highlight === true ) {
                 
-            interaction.mesh.disableEdgesRendering();
+            //interaction.mesh.disableEdgesRendering();
             interaction.highlight = false;
         }
     }

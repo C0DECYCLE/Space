@@ -46,17 +46,19 @@ class EngineUtils {
         return new BABYLON.Vector3( 0, 1000 * 1000 * 1000, 0 );
     }
 
-    static getBounding( node, force = false ) {
+    static getBounding( node, force = false, filter = undefined ) {
         
         if ( node.boundingCache === undefined || force === true ) {
 
-            const minmax = node.getHierarchyBoundingVectors();
+            const minmax = node.getHierarchyBoundingVectors( true, filter );
 
             node.boundingCache = minmax.max.subtract( minmax.min );
+            node.boundingCache.offset = node.boundingCache.scale( 0.5 ).addInPlace( minmax.min ).subtractInPlace( node.position );
             node.boundingCache.size = node.boundingCache.length();
         }
 
         const bounding = node.boundingCache.clone();
+        bounding.offset = node.boundingCache.offset;
         bounding.size = node.boundingCache.size;
 
         return bounding;
@@ -97,6 +99,13 @@ class EngineUtils {
         const direction = BABYLON.Quaternion.FromLookDirectionRH( forward || node.forward, up || node.up );
 
         node.rotationQuaternion.copyFrom( lerp === undefined ? direction : BABYLON.Quaternion.Slerp( node.rotationQuaternion, direction, lerp ) );
+    }
+
+    static minmax( vector ) {
+
+        vector.min = Math.min( vector.x, vector.y, vector.z );
+        vector.max = Math.max( vector.x, vector.y, vector.z );
+        vector.biggest = Math.abs( vector.min ) > Math.abs( vector.max ) ? vector.min : vector.max;
     }
 
 }

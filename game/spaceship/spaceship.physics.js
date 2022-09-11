@@ -16,7 +16,7 @@ class SpaceshipPhysics extends PhysicsEntity {
 
     /* override */ constructor( spaceship ) {
 
-        super( spaceship.game, spaceship.root, PhysicsEntity.TYPES.DYNAMIC );
+        super( spaceship.game, spaceship.root );
         
         this.spaceship = spaceship;
         this.controls = this.spaceship.game.controls;
@@ -26,6 +26,8 @@ class SpaceshipPhysics extends PhysicsEntity {
 
     /* override */ update() {
         
+        this.preUpdate();
+
         if ( this.travel.isJumping === false ) {
 
             if ( this.spaceship.hasController === true ) {
@@ -35,12 +37,14 @@ class SpaceshipPhysics extends PhysicsEntity {
             
             if ( this.spaceship.nearPlanet !== null ) {
 
-                this.spaceship.nearPlanet.physics.spin( this );
+                const up = this.spaceship.nearPlanet.physics.spin( this );
+                
+                this.#landingLogic( up );
             }
         }
         
         this.travel.update();
-        super.update();
+        this.postUpdate();
     }
 
     #setupTravel() {
@@ -50,11 +54,11 @@ class SpaceshipPhysics extends PhysicsEntity {
 
     #movement() {
 
-        const mainAcceleration = this.spaceship.config.mainAcceleration;
-        const brakeScale = 1 - this.spaceship.config.brakeAcceleration;
-        const minorAcceleration = this.spaceship.config.minorAcceleration;
-        const rollSpeed = this.spaceship.config.rollSpeed;
         const deltaCorrection = this.spaceship.game.engine.deltaCorrection;
+        const mainAcceleration = this.spaceship.config.mainAcceleration * deltaCorrection;
+        const brakeScale = ( 1 - this.spaceship.config.brakeAcceleration ) * deltaCorrection;
+        const minorAcceleration = this.spaceship.config.minorAcceleration * deltaCorrection;
+        const rollSpeed = this.spaceship.config.rollSpeed * deltaCorrection;
         const acceleration = new BABYLON.Vector3( 0, 0, 0 );
 
         if ( this.controls.activeKeys.has( Controls.KEYS.for ) === true ) {
@@ -64,6 +68,12 @@ class SpaceshipPhysics extends PhysicsEntity {
         } else if ( this.controls.activeKeys.has( Controls.KEYS.back ) === true ) {
 
             this.#localVelocity.scaleInPlace( brakeScale );
+            
+            if ( this.velocity.length() < 0.05 ) {
+                
+                this.#localVelocity.copyFromFloats( 0, 0, 0 );
+                this.velocity.copyFromFloats( 0, 0, 0 );
+            }
         }
         
         if ( this.controls.activeKeys.has( Controls.KEYS.right ) === true ) {
@@ -86,11 +96,11 @@ class SpaceshipPhysics extends PhysicsEntity {
 
         if ( this.controls.activeKeys.has( Controls.KEYS.leftRoll ) === true ) {
 
-            this.spaceship.root.rotate( BABYLON.Axis.Z, rollSpeed * deltaCorrection, BABYLON.Space.LOCAL );
+            this.spaceship.root.rotate( BABYLON.Axis.Z, rollSpeed, BABYLON.Space.LOCAL );
 
         } else if ( this.controls.activeKeys.has( Controls.KEYS.rightRoll ) === true ) {
 
-            this.spaceship.root.rotate( BABYLON.Axis.Z, -rollSpeed * deltaCorrection, BABYLON.Space.LOCAL );
+            this.spaceship.root.rotate( BABYLON.Axis.Z, -rollSpeed, BABYLON.Space.LOCAL );
         }
 
         this.#movementTranslate( acceleration );
@@ -112,11 +122,63 @@ class SpaceshipPhysics extends PhysicsEntity {
         }
         
         this.velocity.copyFrom( BABYLON.Vector3.Lerp( this.velocity, this.#localVelocity.applyRotationQuaternion( this.spaceship.rotationQuaternion ), velocityDrag ) );
-        
-        if ( this.velocity.length() < 0.001 ) {
+    }
 
+    #landingLogic( up ) {
+        
+        if ( this.spaceship.isLanded === false ) {
+
+            const distanceAboveGround = this.spaceship.nearPlanet.physics.getDistanceAboveGround( this, up ).clamp( 0, Infinity );
+        
+            this.#adjustCollider( distanceAboveGround );
+            this.#checkLanding( up, distanceAboveGround );
+
+        } else {
+
+            this.#freezeCollider();
+            this.velocity.copyFromFloats( 0, 0, 0 );
+            EngineUtils.setNodeDirection( this.spaceship.root, undefined, up, this.spaceship.config.upLerp );
+            this.#checkTakeoff();
+        }
+    }
+
+    #adjustCollider( distanceAboveGround ) {
+
+        if ( distanceAboveGround - this.colliderMax < 0 ) {
+
+            const targetSize = this.colliderMin;
+            const lerp = 1 - ( ( distanceAboveGround - targetSize ) / ( this.colliderMax - targetSize ) );
+
+            this.setColliderSize( BABYLON.Vector3.Lerp( this.colliderSize, BABYLON.Vector3.One().scaleInPlace( targetSize ), lerp.clamp( 0, 1 ) ) );
+        }
+    } 
+
+    #freezeCollider() {
+
+        this.setColliderSize( BABYLON.Vector3.One().scaleInPlace( this.colliderMin ) );
+    }
+
+    #checkLanding( up, distanceAboveGround ) {
+
+        const downAngle = Math.acos( BABYLON.Vector3.Dot( up.negate(), this.velocity.normalizeToNew() ) );
+
+        if ( downAngle < this.spaceship.config.landingAngle && distanceAboveGround < this.colliderMin ) {
+
+            this.spaceship.land();
+
+            this.#localVelocity.copyFromFloats( 0, 0, 0 );
             this.velocity.copyFromFloats( 0, 0, 0 );
         }
     }
     
+    #checkTakeoff() {
+
+        const upAngle = Math.acos( BABYLON.Vector3.Dot( BABYLON.Vector3.Up(), this.#localVelocity.normalizeToNew() ) );
+
+        if ( upAngle < this.spaceship.config.landingAngle ) {
+
+            this.spaceship.takeoff();
+        }
+    }
+
 }

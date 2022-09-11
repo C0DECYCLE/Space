@@ -27,7 +27,8 @@ class Spaceship {
 
         key: UUIDv4(),
 
-        atmosphereup: 0.005
+        landingAngle: 45 * EngineUtils.toRadian,
+        upLerp: 0.1,
     };
 
     game = null;
@@ -40,6 +41,7 @@ class Spaceship {
     #seatDiffrence = new BABYLON.Vector3();
     #hasController = false;
     #nearPlanet = null;
+    #isLanded = false;
 
     constructor( game, config ) {
 
@@ -79,6 +81,11 @@ class Spaceship {
         return this.#nearPlanet;
     }
 
+    get isLanded() {
+
+        return this.#isLanded;
+    }
+
     update() {
 
         this.lod.update();
@@ -108,6 +115,16 @@ class Spaceship {
 
         this.#hasController = false;
         this.#putOutOfSeat( player );
+    }
+
+    land() {
+
+        this.#isLanded = true;
+    }
+
+    takeoff() {
+
+        this.#isLanded = false;
     }
 
     #createLod() {

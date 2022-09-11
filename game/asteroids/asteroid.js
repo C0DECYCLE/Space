@@ -83,7 +83,7 @@ class Asteroid {
 
     #addPhysics() {
 
-        PhysicsEntity.collidable( this.root, PhysicsEntity.TYPES.STATIC );
+        PhysicsEntity.collidable( this.root );
     }
 
 }

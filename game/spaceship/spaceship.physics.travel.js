@@ -124,6 +124,7 @@ class SpaceshipPhysicsTravel {
 
         this.#jumping = potential;
         EngineUtils.setNodeDirection( this.#spaceshipPhysics.spaceship.root, this.#jumping.direction );   
+        //this.#spaceshipPhysics.pause( false, true );
     }
     
     #updateJumping() {
@@ -144,6 +145,7 @@ class SpaceshipPhysicsTravel {
     #stopJumping() {
 
         this.#spaceshipPhysics.velocity.copyFromFloats( 0, 0, 0 );
+        //this.#spaceshipPhysics.resume();
         this.#jumping = false;
     }
 
