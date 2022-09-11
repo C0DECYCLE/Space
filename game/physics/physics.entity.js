@@ -56,6 +56,7 @@ class PhysicsEntity {
     #isPaused = false;
     #isCollidingPaused = false;
     #colliderMin = undefined;
+    #debug = false;
 
     constructor( game, mesh, type = PhysicsEntity.TYPES.DYNAMIC ) {
 
@@ -99,6 +100,21 @@ class PhysicsEntity {
 
             this.#lastTimeOnGround = 0;
         }
+    }
+
+    get colliderMax() {
+
+        return this.#mesh.ellipsoid.max + this.#mesh.ellipsoidOffset.biggest;
+    }
+
+    get colliderMin() {
+
+        return this.#colliderMin / PhysicsEntity.COLLIDER_SCALE;
+    }
+
+    get colliderSize() {
+
+        return this.#mesh.ellipsoid.clone();
     }
 
     update() {
@@ -165,7 +181,7 @@ class PhysicsEntity {
         
         this.#lastTimeOnGround++;
         
-        if ( distanceAboveGround - this.getColliderMax() < 0 ) {
+        if ( distanceAboveGround - this.colliderMax < 0 ) {
 
             this.state = PhysicsEntity.STATES.GROUND;
 
@@ -178,21 +194,6 @@ class PhysicsEntity {
     getAcceleration() {
 
         return this.#lastTimeOnGround / 100;
-    }
-
-    getColliderMax() {
-
-        return this.#mesh.ellipsoid.max + this.#mesh.ellipsoidOffset.biggest;
-    }
-
-    getColliderMin() {
-
-        return this.#colliderMin;
-    }
-
-    getColliderSize() {
-
-        return this.#mesh.ellipsoid;
     }
 
     setColliderSize( size ) {
@@ -225,6 +226,11 @@ class PhysicsEntity {
     }
 
     #setupDebug( mesh = this.#mesh ) {
+
+        if ( this.#debug === false ) {
+
+            return;
+        }
 
         this.#debugMesh = BABYLON.MeshBuilder.CreateSphere( "debugMesh", { diameter: 1, segments: 8 }, this.#scene );
         this.#debugMesh.material = this.#scene.debugMaterial;

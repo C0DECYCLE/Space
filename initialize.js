@@ -84,29 +84,6 @@ Space.add( "install", function() {
     this.asteroids.register( "ring", { key: 0, radius: 5 * 1000, spread: 400, height: 200, density: 0.02 } );
     this.asteroids.register( "ring", { key: 1, radius: 5 * 1000, spread: 2 * 1000, height: 100, density: 0.03 } );
     
-    /*
-    if ( spaceship state is "landed" == false ) {
-
-        downAngle = Math.acos( BABYLON.Vector3.Dot( down, velocity.normalizeToNew() ) );
-
-        if (downAngle < thresholdAngle && hightOverGround < threshold) {
-
-            spaceship state = "landed"; log("landed"); //camera free: if state is landed === true
-            velocity set 0 //aka function freeze velocity
-            //when landed register button movement input but dont apply localVelocity to velocity
-            //whenn landed quaternion towards up with 0 lerp
-        }
-
-    } else {
-
-        upAngle = Math.acos( BABYLON.Vector3.Dot( babylon.vector3.up, localvelocity.normalizeToNew() ) );
-
-        if ( upAngle < thresholdAngle) {
-
-            spaceship state = "not landed"; log("takeoff");
-        }
-    }
-    */
 
 } );
 

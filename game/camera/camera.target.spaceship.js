@@ -34,7 +34,7 @@ class CameraTargetSpaceship extends CameraTarget {
 
         super.update( spaceship );
 
-        if ( this.camera.controls.activeKeys.has( Controls.KEYS.free ) === false && spaceship.physics.travel.isJumping === false ) {
+        if ( this.camera.controls.activeKeys.has( Controls.KEYS.free ) === false && spaceship.isLanded === false && spaceship.physics.travel.isJumping === false ) {
 
             this.focus();
         }
@@ -44,7 +44,7 @@ class CameraTargetSpaceship extends CameraTarget {
 
         if ( this.camera.controls.isPointerDown === true || this.camera.controls.config.experimentalPointerLock === true ) {
 
-            if ( this.camera.controls.activeKeys.has( Controls.KEYS.free ) === true || spaceship.physics.travel.isJumping === true ) {
+            if ( this.camera.controls.activeKeys.has( Controls.KEYS.free ) === true || spaceship.isLanded === true || spaceship.physics.travel.isJumping === true ) {
 
                 this.free( event );
 

@@ -8,8 +8,6 @@
 
 class SpaceshipPhysics extends PhysicsEntity {
 
-    static LANDING_ANGLE = 45 * EngineUtils.toRadian;
-
     spaceship = null;
     controls = null;
     travel = null;
@@ -127,17 +125,60 @@ class SpaceshipPhysics extends PhysicsEntity {
     }
 
     #landingLogic( up ) {
-
-        const distanceAboveGround = this.spaceship.nearPlanet.physics.getDistanceAboveGround( this, up ).clamp( 0, Infinity );
-        const colliderMax = this.getColliderMax();
         
-        if ( distanceAboveGround - colliderMax < 0 ) {
+        if ( this.spaceship.isLanded === false ) {
 
-            const targetSize = this.getColliderMin() / PhysicsEntity.COLLIDER_SCALE;
-            const lerp = 1 - ( ( distanceAboveGround - targetSize ) / ( colliderMax - targetSize ) );
+            const distanceAboveGround = this.spaceship.nearPlanet.physics.getDistanceAboveGround( this, up ).clamp( 0, Infinity );
+        
+            this.#adjustCollider( distanceAboveGround );
+            this.#checkLanding( up, distanceAboveGround );
 
-            this.setColliderSize( BABYLON.Vector3.Lerp( this.getColliderSize(), BABYLON.Vector3.One().scaleInPlace( targetSize ), lerp.clamp( 0, 1 ) ) );
+        } else {
+
+            this.#freezeCollider();
+            this.velocity.copyFromFloats( 0, 0, 0 );
+            EngineUtils.setNodeDirection( this.spaceship.root, undefined, up, this.spaceship.config.upLerp );
+            this.#checkTakeoff();
+        }
+    }
+
+    #adjustCollider( distanceAboveGround ) {
+
+        if ( distanceAboveGround - this.colliderMax < 0 ) {
+
+            const targetSize = this.colliderMin;
+            const lerp = 1 - ( ( distanceAboveGround - targetSize ) / ( this.colliderMax - targetSize ) );
+
+            this.setColliderSize( BABYLON.Vector3.Lerp( this.colliderSize, BABYLON.Vector3.One().scaleInPlace( targetSize ), lerp.clamp( 0, 1 ) ) );
+        }
+    } 
+
+    #freezeCollider() {
+
+        this.setColliderSize( BABYLON.Vector3.One().scaleInPlace( this.colliderMin ) );
+    }
+
+    #checkLanding( up, distanceAboveGround ) {
+
+        const downAngle = Math.acos( BABYLON.Vector3.Dot( up.negate(), this.velocity.normalizeToNew() ) );
+
+        if ( downAngle < this.spaceship.config.landingAngle && distanceAboveGround < this.colliderMin ) {
+
+            this.spaceship.land();
+
+            this.#localVelocity.copyFromFloats( 0, 0, 0 );
+            this.velocity.copyFromFloats( 0, 0, 0 );
         }
     }
     
+    #checkTakeoff() {
+
+        const upAngle = Math.acos( BABYLON.Vector3.Dot( BABYLON.Vector3.Up(), this.#localVelocity.normalizeToNew() ) );
+
+        if ( upAngle < this.spaceship.config.landingAngle ) {
+
+            this.spaceship.takeoff();
+        }
+    }
+
 }
