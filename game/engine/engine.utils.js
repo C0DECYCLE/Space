@@ -105,6 +105,7 @@ class EngineUtils {
 
         vector.min = Math.min( vector.x, vector.y, vector.z );
         vector.max = Math.max( vector.x, vector.y, vector.z );
+        vector.biggest = Math.abs( vector.min ) > Math.abs( vector.max ) ? vector.min : vector.max;
     }
 
 }

@@ -8,6 +8,8 @@
 
 class PhysicsEntity {
 
+    static COLLIDER_SCALE = 0.8;
+
     static TYPES = {
 
         STATIC: 0,
@@ -20,10 +22,9 @@ class PhysicsEntity {
         GROUND: 1
     };
     
-    static collidable( mesh, type = PhysicsEntity.TYPES.STATIC/*, children = false*/ ) {
+    static collidable( mesh, type = PhysicsEntity.TYPES.STATIC ) {
 
         mesh.physicsEntityType = type;
-        //mesh.physicsEntityCollidableChildren = children;
         
         PhysicsEntity.#collisions( mesh, true );
     }
@@ -38,23 +39,10 @@ class PhysicsEntity {
         }
 
         mesh.checkCollisions = checkCollisions;
-        /*
-        if ( mesh.physicsEntityCollidableChildren === true ) {
-
-            const subs = mesh.getChildMeshes();
-            
-            for ( let i = 0; i < subs.length; i++ ) {
-
-                subs[i].checkCollisions = checkCollisions;
-            }
-        }
-        */
     }
 
     delta = new BABYLON.Vector3( 0, 0, 0 );
     velocity = new BABYLON.Vector3( 0, 0, 0 );
-
-    isDynamicCollider = true;
 
     #game = null;
     #mesh = null;
@@ -69,14 +57,13 @@ class PhysicsEntity {
     #isCollidingPaused = false;
     #colliderMin = undefined;
 
-    constructor( game, mesh, type = PhysicsEntity.TYPES.DYNAMIC, isDynamicCollider = this.isDynamicCollider ) {
+    constructor( game, mesh, type = PhysicsEntity.TYPES.DYNAMIC ) {
 
         this.#game = game;
         this.#mesh = mesh;
         this.#scene = this.#game.scene;
 
         this.#typeValue = type;
-        this.isDynamicCollider = isDynamicCollider;
 
         PhysicsEntity.collidable( this.#mesh, this.type );
 
@@ -116,13 +103,26 @@ class PhysicsEntity {
 
     update() {
         
+        this.preUpdate();
+        this.postUpdate();
+    }
+
+    preUpdate() {
+        
         if ( this.#isPaused === true || this.#game.physics.isPaused === true ) {
 
             return;
         }
 
         this.#updateFitCollider();
-        this.#updateDebug();
+    }
+
+    postUpdate() {
+
+        if ( this.#isPaused === true || this.#game.physics.isPaused === true ) {
+
+            return;
+        }
 
         if ( this.velocity.x !== 0 || this.velocity.y !== 0 || this.velocity.z !== 0 ) {
 
@@ -144,6 +144,7 @@ class PhysicsEntity {
         }
 
         this.delta.copyFromFloats( 0, 0, 0 );
+        this.#updateDebug();
     }
 
     pause( allowCollisions = false, allowUpdate = false ) {
@@ -163,8 +164,8 @@ class PhysicsEntity {
     registerPull( distanceAboveGround ) {
         
         this.#lastTimeOnGround++;
-
-        if ( distanceAboveGround - this.#mesh.ellipsoid.max - this.#mesh.ellipsoidOffset.length < 0 ) {
+        
+        if ( distanceAboveGround - this.getColliderMax() < 0 ) {
 
             this.state = PhysicsEntity.STATES.GROUND;
 
@@ -179,6 +180,28 @@ class PhysicsEntity {
         return this.#lastTimeOnGround / 100;
     }
 
+    getColliderMax() {
+
+        return this.#mesh.ellipsoid.max + this.#mesh.ellipsoidOffset.biggest;
+    }
+
+    getColliderMin() {
+
+        return this.#colliderMin;
+    }
+
+    getColliderSize() {
+
+        return this.#mesh.ellipsoid;
+    }
+
+    setColliderSize( size ) {
+
+        this.#mesh.ellipsoid.copyFrom( size );
+        
+        EngineUtils.minmax( this.#mesh.ellipsoid );
+    }
+
     #setupFitCollider() {
         
         this.#fitCollider();
@@ -189,41 +212,23 @@ class PhysicsEntity {
 
         const boundingInfo = this.#mesh.collisionMesh !== undefined ? this.#mesh.collisionMesh.getBoundingInfo() : this.#mesh.getBoundingInfo();
 
-        this.#mesh.ellipsoid.copyFrom( boundingInfo.boundingBox.extendSizeWorld );
-        this.#mesh.ellipsoidOffset.copyFrom( boundingInfo.boundingBox.centerWorld ).subtractInPlace( EngineUtils.getWorldPosition( this.#mesh ).subtractInPlace( this.#game.camera.position ) );
-
-        if ( this.#colliderMin !== undefined ) this.#mesh.ellipsoid.copyFromFloats( this.#colliderMin, this.#colliderMin, this.#colliderMin );
+        this.#mesh.ellipsoid.copyFrom( boundingInfo.boundingBox.extendSizeWorld ).scaleInPlace( PhysicsEntity.COLLIDER_SCALE );
+        this.#mesh.ellipsoidOffset.copyFrom( boundingInfo.boundingBox.center ).applyRotationQuaternionInPlace( this.#mesh.rotationQuaternion ).multiplyInPlace( this.#mesh.scaling );
 
         EngineUtils.minmax( this.#mesh.ellipsoid );
-
-        this.#mesh.ellipsoidOffset.size = this.#mesh.ellipsoidOffset.length();
-
-        /*
-        const bounding = EngineUtils.getBounding( this.#mesh, true, mesh => mesh.name !== "debugMesh" );
-        
-        this.#mesh.ellipsoid.copyFrom( bounding.scaleInPlace( 0.5 ) );
-        this.#mesh.ellipsoidOffset.copyFrom( bounding.offset );
-        */
+        EngineUtils.minmax( this.#mesh.ellipsoidOffset );
     }
 
     #updateFitCollider() {
 
-        if ( this.isDynamicCollider === true ) {
-
-            this.#fitCollider();
-        }
+        this.#fitCollider();
     }
 
     #setupDebug( mesh = this.#mesh ) {
 
-        const debug = BABYLON.MeshBuilder.CreateSphere( "debugMesh", { diameter: 1, segments: 8 }, this.#scene );
-        debug.position.copyFrom( mesh.ellipsoidOffset ).addInPlace( mesh.position );
-        //debug.rotationQuaternion = mesh.rotationQuaternion.invert();
-        debug.scaling.copyFrom( mesh.ellipsoid ).scaleInPlace( 2 )//.divideInPlace( mesh.scaling );
-        debug.material = this.#scene.debugMaterial;
-        //debug.parent = mesh;
-
-        this.#debugMesh = debug;
+        this.#debugMesh = BABYLON.MeshBuilder.CreateSphere( "debugMesh", { diameter: 1, segments: 8 }, this.#scene );
+        this.#debugMesh.material = this.#scene.debugMaterial;
+        this.#updateDebug( mesh );
         
         if ( mesh.collisionMesh !== undefined ) {
 
@@ -235,9 +240,8 @@ class PhysicsEntity {
 
         if ( this.#debugMesh !== null ) {
             
-            this.#debugMesh.position.copyFrom( mesh.ellipsoidOffset ).addInPlace( mesh.position );
-            //this.#debugMesh.rotationQuaternion.copyFrom( mesh.rotationQuaternion ).invertInPlace();
-            this.#debugMesh.scaling.copyFrom( mesh.ellipsoid ).scaleInPlace( 2 )//.divideInPlace( mesh.scaling );
+            this.#debugMesh.position.copyFrom( mesh.position ).addInPlace( mesh.ellipsoidOffset );
+            this.#debugMesh.scaling.copyFrom( mesh.ellipsoid ).scaleInPlace( 2 );
         }
     }
 

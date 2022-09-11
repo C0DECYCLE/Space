@@ -8,6 +8,8 @@
 
 class SpaceshipPhysics extends PhysicsEntity {
 
+    static LANDING_ANGLE = 45 * EngineUtils.toRadian;
+
     spaceship = null;
     controls = null;
     travel = null;
@@ -26,6 +28,8 @@ class SpaceshipPhysics extends PhysicsEntity {
 
     /* override */ update() {
         
+        this.preUpdate();
+
         if ( this.travel.isJumping === false ) {
 
             if ( this.spaceship.hasController === true ) {
@@ -35,12 +39,14 @@ class SpaceshipPhysics extends PhysicsEntity {
             
             if ( this.spaceship.nearPlanet !== null ) {
 
-                this.spaceship.nearPlanet.physics.spin( this );
+                const up = this.spaceship.nearPlanet.physics.spin( this );
+                
+                this.#landingLogic( up );
             }
         }
         
         this.travel.update();
-        super.update();
+        this.postUpdate();
     }
 
     #setupTravel() {
@@ -118,6 +124,20 @@ class SpaceshipPhysics extends PhysicsEntity {
         }
         
         this.velocity.copyFrom( BABYLON.Vector3.Lerp( this.velocity, this.#localVelocity.applyRotationQuaternion( this.spaceship.rotationQuaternion ), velocityDrag ) );
+    }
+
+    #landingLogic( up ) {
+
+        const distanceAboveGround = this.spaceship.nearPlanet.physics.getDistanceAboveGround( this, up ).clamp( 0, Infinity );
+        const colliderMax = this.getColliderMax();
+        
+        if ( distanceAboveGround - colliderMax < 0 ) {
+
+            const targetSize = this.getColliderMin() / PhysicsEntity.COLLIDER_SCALE;
+            const lerp = 1 - ( ( distanceAboveGround - targetSize ) / ( colliderMax - targetSize ) );
+
+            this.setColliderSize( BABYLON.Vector3.Lerp( this.getColliderSize(), BABYLON.Vector3.One().scaleInPlace( targetSize ), lerp.clamp( 0, 1 ) ) );
+        }
     }
     
 }
