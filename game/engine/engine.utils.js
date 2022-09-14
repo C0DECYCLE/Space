@@ -108,4 +108,13 @@ class EngineUtils {
         vector.biggest = Math.abs( vector.min ) > Math.abs( vector.max ) ? vector.min : vector.max;
     }
 
+    static round( vector ) {
+
+        vector.x = Math.round( vector.x );
+        vector.y = Math.round( vector.y );
+        vector.z = Math.round( vector.z );
+
+        return vector;
+    }
+
 }

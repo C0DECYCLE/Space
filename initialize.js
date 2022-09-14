@@ -32,6 +32,8 @@ Space.addOnReady( function() {
 Space.add( "install", function() {
 
 
+    this.objectcontainers = new ObjectContainers( this, {} );
+
     this.physics = new Physics( this, {} );
     
     this.controls = new Controls( this, {} );

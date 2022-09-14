@@ -72,6 +72,8 @@ class Camera {
 
             this.target.camera.update( this.target.object );
         }
+
+        this.game.objectcontainers.insert( this.position );
     }
 
     screenCoverage( node ) {
