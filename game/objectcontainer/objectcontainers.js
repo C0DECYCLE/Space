@@ -16,8 +16,9 @@ class ObjectContainers {
 
     #game = null;
 
-    #mainPosition = new BABYLON.Vector3();
-    #mainContainer = null;
+    #mainIndex = undefined;
+    #mainGrid = null;
+    //#mainContainer = null;
 
     constructor( game, config ) {
 
@@ -28,21 +29,27 @@ class ObjectContainers {
         this.#setupSpatialHash();
     }
 
-    get mainPosition() {
+    get mainIndex() {
 
-        return this.#mainPosition;
+        return this.#mainIndex;
+    }
+
+    get mainGrid() {
+
+        return this.#mainGrid;
     }
 
     insert( position ) {
         
-        this.#mainPosition.copyFrom( position );
+        this.#mainGrid = ObjectContainerUtils.positionToGrid( position );
+        this.#mainIndex = ObjectContainerUtils.gridToIndex( this.#mainGrid );
 
-        const index = ObjectContainerUtils.positionToIndex( this.#mainPosition );
+        /*
+        if ( this.#mainContainer === null || this.#mainContainer.index !== this.#mainIndex ) {
 
-        if ( this.#mainContainer === null || this.#mainContainer.index !== index ) {
-
-            this.#mainContainer = this.spatialhash.get( index );
+            this.#mainContainer = this.spatialhash.get( this.#mainIndex );
         }
+        */
     }
 
     #setupSpatialHash() {

@@ -13,6 +13,7 @@ class ObjectContainer {
     #containers = null;
 
     #index = undefined;
+    #grid = null;
     #list = new ObjectArray();
 
     #distanceCache = undefined;
@@ -22,6 +23,7 @@ class ObjectContainer {
 
         this.#containers = containers;
         this.#index = index;
+        this.#grid = ObjectContainerUtils.indexToGrid( this.#index );
     }
 
     get index() {
@@ -36,7 +38,13 @@ class ObjectContainer {
 
     get distance() {
 
-        return 0;
+        if ( this.#distanceCache === undefined || this.#cacheMainIndex !== this.#containers.mainIndex ) {
+
+            this.#distanceCache = this.#getDistance();
+            this.#cacheMainIndex = this.#containers.mainIndex;
+        }
+
+        return this.#distanceCache;
     }
 
     store( node ) {
@@ -66,6 +74,11 @@ class ObjectContainer {
     
         this.#distanceCache = undefined;
         this.#cacheMainIndex = undefined;
+    }
+
+    #getDistance() {
+
+        return BABYLON.Vector3.Distance( this.#containers.mainGrid, this.#grid );
     }
 
 }
