@@ -18,9 +18,16 @@ class ObjectContainerUtils {
         return grid.scale( ObjectContainer.size );
     }
 
-    static gridToIndex( grid ) {
+    static gridToIndex( grid, y, z ) {
 
-        return `${ grid.x },${ grid.y },${ grid.z }`;
+        if ( typeof grid === "number" ) {
+
+            return `${ grid },${ y },${ z }`;
+
+        } else {
+
+            return `${ grid.x },${ grid.y },${ grid.z }`;
+        }
     }
 
     static indexToGrid( index ) {

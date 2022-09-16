@@ -58,11 +58,11 @@ class ObjectArray extends Array {
         return this[ index ];
     }
 
-    match( property, value, len = this.length ) {
+    match( property, value ) {
 
         let i;
 
-        for ( i = 0; i < len; i++ ) {
+        for ( i = 0; i < this.length; i++ ) {
 
             if ( this[i][ property ] === value ) {
                 
@@ -71,22 +71,27 @@ class ObjectArray extends Array {
         }
     }
 
-    delete( object, len = this.length ) {
+    delete( object ) {
 
         if ( this.contains( object ) === true ) {
 
-            this[ len - 1 ].oaMeta.set( this.uuid, this.indexOf( object ) );
-            this[ this.indexOf( object ) ] = this[ len - 1 ];
-            this[ len - 1 ] = object;
+            this[ this.length - 1 ].oaMeta.set( this.uuid, this.indexOf( object ) );
+            this[ this.indexOf( object ) ] = this[ this.length - 1 ];
+            this[ this.length - 1 ] = object;
 
             this.pop();
-            this.splice( len, 0 ); //for babylon rtt hook
+            this.splice( this.length, 0 ); //for babylon rtt hook
         }
     }
 
-    clear() {
+    /* override */ clear() {
 
-        this.length = 0;
+        for ( i = 0; i < this.length; i++ ) {
+
+            this[i].oaMeta.delete( this.uuid );
+        }
+
+        super.clear();
     }
 
 }

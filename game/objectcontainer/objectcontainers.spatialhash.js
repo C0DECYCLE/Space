@@ -19,27 +19,57 @@ class ObjectContainersSpatialHash {
 
     add( node ) {
 
-        //get all objectcontainers based on min max index by boundaries (min max position);
-        //all objetcontainers store node
-        //node.objectcontainer = container; //main get by position index
-        //if node.objectcontainers === undefined then
-        //node.objectcontainers = [];
-        //else
-        //node.objectcontainers.length = 0;
-        //
-        //node.objectcontainers.push all based on boundaries
+        const minmax = EngineUtils.getBounding( node ).minmax;
+        const minGrid = ObjectContainerUtils.positionToGrid( minmax.min );
+        const maxGrid = ObjectContainerUtils.positionToGrid( minmax.max );
+
+        this.#clearNode( node );
+
+        for ( let x = minGrid.x, xl = maxGrid.x; x <= xl; ++x ) {
+            
+            for ( let y = minGrid.y, yl = maxGrid.y; y <= yl; ++y ) {
+            
+                for ( let z = minGrid.z, zl = maxGrid.z; z <= zl; ++z ) {
+                    
+                    node.objectcontainers.push( this.#getOrMake( ObjectContainerUtils.gridToIndex( x, y, z ) ).store( node ) );
+                }
+            }
+        }
+
+        node.objectcontainer = this.#getOrMake( ObjectContainerUtils.positionToIndex( node.position ) );
     }
 
     get( index ) {
 
-        return this.list.get( index );
+        return this.list.get( index ) || null;
     }
 
     remove( node ) {
 
-        //go thr all node.objectcontainers and unstore node
-        //node.objectcontainer = null;
-        //node.objectcontainers.length = 0;
+        if ( node.objectcontainers === undefined ) {
+
+            return;
+        }
+
+        for ( let i = 0; i < node.objectcontainers.length; i++ ) {
+
+            node.objectcontainers[i].unstore( node );
+        }
+        
+        node.objectcontainers.clear();
+        node.objectcontainer = null;
+    }
+
+    #clearNode( node ) {
+
+        if ( node.objectcontainers === undefined ) {
+
+            node.objectcontainers = [];
+
+        } else {
+
+            node.clear();
+        }
     }
 
     #getOrMake( index ) {

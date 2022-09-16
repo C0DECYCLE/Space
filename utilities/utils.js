@@ -16,6 +16,30 @@ function UUIDv4() {
 };
 
 
+Number.prototype.between = function( a, b ) {
+
+    return this > Math.min( a, b ) && this < Math.max( a, b );
+};
+
+
+Number.prototype.dotit = function() {
+
+    return Math.round( this ).toString().replace( /(\d)(?=(\d{3})+(?!\d))/g, "$1," );
+};
+
+
+Number.prototype.clamp = function( min, max ) {
+
+    return Math.min( Math.max( this, min ), max );
+};
+
+
+String.prototype.firstLetterUppercase = function() {
+
+    return this.charAt( 0 ).toUpperCase() + this.slice( 1 );
+};
+
+
 Array.prototype.hasByProperty = function( property, value ) {
     
     let i;
@@ -95,25 +119,7 @@ Array.prototype.quick_remove = function( index ) {
 };
 
 
-Number.prototype.between = function( a, b ) {
+Array.prototype.clear = function() {
 
-    return this > Math.min( a, b ) && this < Math.max( a, b );
-};
-
-
-String.prototype.firstLetterUppercase = function() {
-
-    return this.charAt( 0 ).toUpperCase() + this.slice( 1 );
-};
-
-
-Number.prototype.dotit = function() {
-
-    return Math.round( this ).toString().replace( /(\d)(?=(\d{3})+(?!\d))/g, "$1," );
-};
-
-
-Number.prototype.clamp = function( min, max ) {
-
-    return Math.min( Math.max( this, min ), max );
+    this.length = 0;
 };
