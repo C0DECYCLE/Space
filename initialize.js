@@ -98,15 +98,13 @@ Space.add( "stage", function() {
     this.planets.list[2].place( this.star.position, 250 * 1000, 240 );
     this.planets.list[3].place( this.planets.list[2].position, 10 * 1000, 60 );
     
-    this.player.position.copyFrom( this.planets.list[0].position ).addInPlace( new BABYLON.Vector3( 5 * 1000, 0, 0 ) );
-    
     this.asteroids.list[0].position.copyFrom( this.planets.list[0].position );
     this.asteroids.list[1].position.copyFrom( this.planets.list[0].position );
 
-    this.spaceships.list[0].position.copyFrom( this.player.position ).addInPlace( new BABYLON.Vector3( 0, 0, 10 ) );
+    this.spaceships.list[0].position.copyFrom( this.planets.list[0].position ).addInPlace( new BABYLON.Vector3( 5 * 1000, 0, 0 ) );
     this.spaceships.list[0].root.rotate( BABYLON.Axis.Y, 90 * EngineUtils.toRadian, BABYLON.Space.LOCAL );
-
-    this.scene.debugLayer.show( { embedMode: true } );
+    
+    this.player.position.copyFrom( this.spaceships.list[0].position ).addInPlace( new BABYLON.Vector3( 0, 0, -10 ) );
     
 
     this.objectcontainers.add( this.planets.list[0].root );
@@ -117,6 +115,10 @@ Space.add( "stage", function() {
     this.objectcontainers.addAll( this.asteroids.list[0].root.getChildMeshes() );
     this.objectcontainers.addAll( this.asteroids.list[1].root.getChildMeshes() );
 
+    this.objectcontainers.add( this.spaceships.list[0].root );
+
+
+    this.scene.debugLayer.show( { embedMode: true } );
 
 } );
 

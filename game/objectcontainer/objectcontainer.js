@@ -95,8 +95,8 @@ class ObjectContainer {
     }
 
     #getDistance() {
-        //log("needed to compute container distance!");
-        return BABYLON.Vector3.Distance( this.#containers.mainGrid, this.#grid );
+        
+        return BABYLON.Vector3.Distance( this.#containers.mainGrid, this.#grid ) * ObjectContainer.size;
     }
 
 }

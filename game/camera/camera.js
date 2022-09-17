@@ -81,13 +81,16 @@ class Camera {
 
     getApproximateScreenDistance( node, alreadyWorld = false ) {
         
-        //inject all into containers
-        //get container if not on node search in parents upwards (make it a objectcontainerutils method)
-        //check if that container === main container
-        //if yes: return this.getScreenDistance( node, alreadyWorld );
-        //if no: return container.distance
+        const objectcontainer = ObjectContainerUtils.getObjectContainer( node );
 
-        return this.getScreenDistance( node, alreadyWorld );
+        if ( objectcontainer.index === this.game.objectcontainers.mainIndex ) {
+            
+            return this.getScreenDistance( node, alreadyWorld );
+
+        } else {
+
+            return objectcontainer.distance;
+        }
     }
 
     getScreenCoverage( node ) {

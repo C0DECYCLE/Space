@@ -47,4 +47,23 @@ class ObjectContainerUtils {
         return ObjectContainerUtils.gridToApproximatePosition( ObjectContainerUtils.indexToGrid( index ) );
     }
 
+    static getObjectContainer( node ) {
+        
+        if ( node.objectcontainer !== undefined ) {
+
+            return node.objectcontainer;
+
+        } else {
+
+            if ( node.parent !== null ) {
+
+                return ObjectContainerUtils.getObjectContainer( node.parent );
+
+            } else {
+
+                return null;
+            }
+        }
+    }
+
 }
