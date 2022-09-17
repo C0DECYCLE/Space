@@ -111,11 +111,11 @@ class UIMarker {
 
     #evaluateNear() {
 
-        const diffrence = EngineUtils.getWorldPosition( this.node ).subtractInPlace( this.#ui.game.player.position );
+        const worldPosition = EngineUtils.getWorldPosition( this.node );
         const size = EngineUtils.getBounding( this.node ).size;
 
-        this.#distance = diffrence.length(); //DISTANCE
-        this.#direction = diffrence.normalize();
+        this.#distance = this.#ui.game.camera.getScreenDistance( worldPosition );
+        this.#direction = worldPosition.subtractInPlace( this.#ui.game.player.position ).normalize();
 
         if ( this.config.type === "travel" ) {
 

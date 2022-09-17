@@ -49,22 +49,22 @@ class Planets {
 
     update() {
 
-        this.#insert( this.camera.position );
+        this.#insert();
         this.#update();
     }
 
-    #insert( position ) {
+    #insert() {
 
         for ( let i = 0; i < this.list.length; i++ ) {
 
             const planet = this.list[i];
-            const distance = BABYLON.Vector3.Distance( planet.position, position );
+            const distance = this.camera.getScreenDistance( planet.position );
             const planetThreashold = planet.config.radius + planet.config.influence;
             
             this.player.planetInsert( planet, distance, planetThreashold );
             this.spaceships.planetInsert( planet, distance, planetThreashold );
            
-            planet.insert( position, distance );
+            planet.insert( distance );
         }
     }
 

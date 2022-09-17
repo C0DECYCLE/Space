@@ -90,7 +90,7 @@ class LOD {
 
     update() {
         
-        this.coverage = this.#game.camera.screenCoverage( this.root );
+        this.coverage = this.#game.camera.getScreenCoverage( this.root );
         this.#isVisible = false;
 
         for ( let i = 0; i < this.levels.length; i++ ) {

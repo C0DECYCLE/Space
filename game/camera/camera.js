@@ -76,9 +76,14 @@ class Camera {
         this.game.objectcontainers.insert( this.position );
     }
 
-    screenCoverage( node ) {
+    getScreenDistance( positionWorld ) {
 
-        const distance = EngineUtils.getWorldPosition( node ).subtractInPlace( this.position ).length(); //DISTANCE
+        return EngineUtils.getDistance( positionWorld, this.position );
+    }
+
+    getScreenCoverage( node ) {
+
+        const distance = this.getScreenDistance( EngineUtils.getWorldPosition( node ) );
         const size = EngineUtils.getBounding( node ).size;
         
         return size / distance;
