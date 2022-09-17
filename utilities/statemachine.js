@@ -29,14 +29,10 @@ class StateMachine {
 
         if ( this.#list.has( state ) === true ) {
 
-            if ( this.#current !== undefined ) {
-
-                this.#list.get( this.#current ).onLeave( state, params );
-            }
-
             const oldState = this.#current;
-
             this.#current = state;
+
+            this.#list.get( oldState )?.onLeave( state, params );
             this.#list.get( this.#current ).onEnter( oldState, params );
 
         } else {

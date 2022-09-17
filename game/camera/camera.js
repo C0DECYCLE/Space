@@ -68,10 +68,7 @@ class Camera {
 
     update() {
 
-        if ( this.target.object !== null && this.target.camera !== null ) {
-
-            this.target.camera.update( this.target.object );
-        }
+        this.target.camera?.update( this.target.object );
     }
 
     getScreenDistance( node = null, alreadyWorld = false ) {
@@ -138,10 +135,7 @@ class Camera {
 
     #onPointerMove( event ) {
         
-        if ( this.target.object !== null && this.target.camera !== null ) {
-
-            this.target.camera.onPointerMove( this.target.object, event );
-        }
+        this.target.camera?.onPointerMove( this.target.object, event );
     }
     
     #enterTarget( object, camera ) {

@@ -88,6 +88,10 @@ Space.add( "install", function() {
     this.asteroids.register( "ring", { key: 1, seed: "4674", radius: 5 * 1000, spread: 2 * 1000, height: 100, density: 0.03 } );
 
 
+    //smarter insertion
+    //update dynamic mechanism
+    //spaceship solution? add remove based on control or dynamic
+
 } );
 
 Space.add( "stage", function() {
@@ -120,6 +124,7 @@ Space.add( "stage", function() {
 
     this.scene.debugLayer.show( { embedMode: true } );
 
+
 } );
 
 Space.add( "run", function( delta ) {
@@ -140,8 +145,6 @@ Space.add( "run", function( delta ) {
     this.star.update();
 
     this.ui.update();
-
-    log( `error: ${ Math.round( Math.abs( 1 - ( this.camera.getApproximateScreenDistance( this.planets.list[0].root ) / this.camera.getScreenDistance( this.planets.list[0].root ) ) ) * 100 ) }%` );
-
+    
 
 } );

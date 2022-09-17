@@ -58,7 +58,7 @@ class Planets {
         for ( let i = 0; i < this.list.length; i++ ) {
 
             const planet = this.list[i];
-            const distance = this.camera.getApproximateScreenDistance( planet.root );
+            const distance = this.camera.getScreenDistance( planet.root );
             const planetThreashold = planet.config.radius + planet.config.influence;
             
             this.player.planetInsert( planet, distance, planetThreashold );

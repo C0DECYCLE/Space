@@ -67,6 +67,16 @@ class ObjectContainer {
         return this;
     }
 
+    onEnter( oldIndex ) {
+
+        
+    }
+
+    onLeave( newIndex ) {
+
+        
+    }
+
     debug( parent = null ) {
 
         if ( this.#debugMesh === null ) {

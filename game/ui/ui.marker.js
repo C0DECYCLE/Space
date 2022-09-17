@@ -137,7 +137,7 @@ class UIMarker {
 
             const spaceship = this.#ui.game.player.physics.spaceship;
 
-            return spaceship !== null && spaceship.physics.travel.isTraveling === true && spaceship.physics.travel.isJumping === false;
+            return spaceship?.physics.travel.isTraveling === true && spaceship?.physics.travel.isJumping === false;
 
         } else if ( this.config.type === "interactable" ) {
 

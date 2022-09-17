@@ -244,11 +244,8 @@ class PhysicsEntity {
 
     #updateDebug( mesh = this.#mesh ) {
 
-        if ( this.#debugMesh !== null ) {
-            
-            this.#debugMesh.position.copyFrom( mesh.position ).addInPlace( mesh.ellipsoidOffset );
-            this.#debugMesh.scaling.copyFrom( mesh.ellipsoid ).scaleInPlace( 2 );
-        }
+        this.#debugMesh?.position.copyFrom( mesh.position ).addInPlace( mesh.ellipsoidOffset );
+        this.#debugMesh?.scaling.copyFrom( mesh.ellipsoid ).scaleInPlace( 2 );
     }
 
 }
