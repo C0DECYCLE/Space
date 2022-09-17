@@ -49,7 +49,7 @@ class EngineUtils {
     static getBounding( node, force = false, filter = undefined ) {
         
         if ( node.boundingCache === undefined || force === true ) {
-
+            
             const minmax = node.getHierarchyBoundingVectors( true, filter );
 
             node.boundingCache = minmax.max.subtract( minmax.min );

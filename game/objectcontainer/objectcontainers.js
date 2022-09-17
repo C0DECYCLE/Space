@@ -47,8 +47,8 @@ class ObjectContainers {
     }
 
     add( node ) {
-
-        const minmax = EngineUtils.getBounding( node ).minmax; 
+        
+        const minmax = EngineUtils.getBounding( node, true ).minmax;
         const minGrid = ObjectContainerUtils.positionToGrid( minmax.min );
         const maxGrid = ObjectContainerUtils.positionToGrid( minmax.max );
 

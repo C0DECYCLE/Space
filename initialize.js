@@ -88,7 +88,7 @@ Space.add( "install", function() {
     this.asteroids.register( "ring", { key: 1, seed: "4674", radius: 5 * 1000, spread: 2 * 1000, height: 100, density: 0.03 } );
 
 
-    //smarter insertion
+    //smarter insertion //register static/dynamic?
     //update dynamic mechanism
     //spaceship solution? add remove based on control or dynamic
 
