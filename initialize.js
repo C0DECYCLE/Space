@@ -141,5 +141,7 @@ Space.add( "run", function( delta ) {
 
     this.ui.update();
 
+    log( `error: ${ Math.round( Math.abs( 1 - ( this.camera.getApproximateScreenDistance( this.planets.list[0].root ) / this.camera.getScreenDistance( this.planets.list[0].root ) ) ) * 100 ) }%` );
+
 
 } );

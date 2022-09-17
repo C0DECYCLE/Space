@@ -88,7 +88,7 @@ class Camera {
             return this.getScreenDistance( node, alreadyWorld );
 
         } else {
-
+            
             return objectcontainer.distance;
         }
     }
