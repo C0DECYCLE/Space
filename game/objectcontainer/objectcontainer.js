@@ -8,7 +8,7 @@
 
 class ObjectContainer {
 
-    static size = 128;
+    static size = 512;
 
     #containers = null;
 
@@ -18,6 +18,7 @@ class ObjectContainer {
 
     #distanceCache = undefined;
     #cacheMainIndex = undefined;
+    #debugMesh = null;
 
     constructor( containers, index ) {
 
@@ -48,7 +49,7 @@ class ObjectContainer {
     }
 
     store( node ) {
-
+        if ( this.index === "-1,0,206" ) log( node );
         this.#list.add( node );
 
         return this;
@@ -64,6 +65,18 @@ class ObjectContainer {
         }
 
         return this;
+    }
+
+    debug() {
+
+        if ( this.#debugMesh === null ) {
+
+            const scene = this.#containers.game.scene;
+
+            this.#debugMesh = BABYLON.MeshBuilder.CreateBox( `objectcontainer_${ this.index }`, { size: ObjectContainer.size }, scene );
+            this.#debugMesh.material = scene.debugMaterialWhite;
+            this.#debugMesh.position.copyFrom( ObjectContainerUtils.indexToApproximatePosition( this.index ) );
+        }
     }
 
     dispose() {

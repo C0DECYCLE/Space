@@ -54,16 +54,10 @@ class EngineUtils {
 
             node.boundingCache = minmax.max.subtract( minmax.min );
             node.boundingCache.minmax = minmax;
-            node.boundingCache.offset = node.boundingCache.scale( 0.5 ).addInPlace( minmax.min ).subtractInPlace( node.position );
             node.boundingCache.size = node.boundingCache.length();
         }
 
-        const bounding = node.boundingCache.clone();
-        bounding.minmax = node.boundingCache.minmax;
-        bounding.offset = node.boundingCache.offset;
-        bounding.size = node.boundingCache.size;
-
-        return bounding;
+        return node.boundingCache;
     }
 
     static getWorldPosition( node ) {
@@ -87,10 +81,10 @@ class EngineUtils {
         }
     }
 
-    static makeDebugMaterial( scene ) {
+    static makeDebugMaterial( scene, color ) {
 
-        const debugMaterial = new BABYLON.StandardMaterial( "debug", scene );
-        debugMaterial.setColorIntensity( "#ff226b", 1.0 );
+        const debugMaterial = new BABYLON.StandardMaterial( `debug_${ color }`, scene );
+        debugMaterial.setColorIntensity( color, 1.0 );
         debugMaterial.wireframe = true;
 
         return debugMaterial;

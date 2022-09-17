@@ -85,8 +85,7 @@ class AsteroidsRing {
             const angle = ( 360 / count ) * i * EngineUtils.toRadian;
             const offset = new BABYLON.Vector3( Math.cos( angle ), 0, Math.sin( angle ) ).scaleInPlace( this.config.radius );
 
-            const cluster = new AsteroidsCluster( this.game, { key: i, radius: this.config.spread, height: this.config.height, density: this.config.density }, this.root );
-            cluster.offsetAllAsteroids( offset );
+            const cluster = new AsteroidsCluster( this.game, { key: i, radius: this.config.spread, height: this.config.height, density: this.config.density, offset: offset }, this.root );
 
             this.list.push( cluster );
         }

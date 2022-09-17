@@ -111,11 +111,11 @@ class PlanetGenerator {
     #debugInfluence() {
 
         const debug_influence = BABYLON.MeshBuilder.CreateSphere( "planet_debug_influence", { diameter: ( this.#planet.config.radius + this.#planet.config.influence ) * 2, segments: 32 }, this.#planet.scene );
-        debug_influence.material = this.#planet.scene.debugMaterial;
+        debug_influence.material = this.#planet.scene.debugMaterialRed;
         debug_influence.parent = this.#planet.root;
 
         const debug_maxHeight = BABYLON.MeshBuilder.CreateSphere( "planet_debug_maxHeight", { diameter: ( this.#planet.config.radius + this.#planet.config.maxHeight ) * 2, segments: 32 }, this.#planet.scene );
-        debug_maxHeight.material = this.#planet.scene.debugMaterial;
+        debug_maxHeight.material = this.#planet.scene.debugMaterialRed;
         debug_maxHeight.parent = this.#planet.root;
     }
 

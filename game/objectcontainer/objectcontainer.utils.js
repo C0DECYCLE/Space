@@ -10,7 +10,7 @@ class ObjectContainerUtils {
 
     static positionToGrid( position ) {
 
-        return EngineUtils.round( position.divide( ObjectContainer.size ) );
+        return EngineUtils.round( position.scale( 1 / ObjectContainer.size ) );
     }
 
     static gridToApproximatePosition( grid ) {
@@ -42,9 +42,9 @@ class ObjectContainerUtils {
         return ObjectContainerUtils.gridToIndex( ObjectContainerUtils.positionToGrid( position ) );
     }
 
-    static indexToApproximatePosition( position ) {
+    static indexToApproximatePosition( index ) {
 
-        return ObjectContainerUtils.gridToApproximatePosition( ObjectContainerUtils.indexToGrid( position ) );
+        return ObjectContainerUtils.gridToApproximatePosition( ObjectContainerUtils.indexToGrid( index ) );
     }
 
 }

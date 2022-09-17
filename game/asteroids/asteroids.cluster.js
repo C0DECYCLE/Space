@@ -15,6 +15,8 @@ class AsteroidsCluster {
         radius: 1000,
         height: 1000,
         density: 0.1,
+
+        offset: null
     };
 
     game = null;
@@ -123,6 +125,11 @@ class AsteroidsCluster {
             const asteroid = new Asteroid( this.game, {} );
             asteroid.position.copyFromFloats( Math.random() * 2 - 1, Math.random() * 2 - 1, Math.random() * 2 - 1 ).multiplyInPlace( spread );
             asteroid.parent = this.root;
+
+            if ( this.config.offset !== null ) {
+
+                asteroid.position.addInPlace( this.config.offset );
+            }
 
             this.list.push( asteroid );
         }

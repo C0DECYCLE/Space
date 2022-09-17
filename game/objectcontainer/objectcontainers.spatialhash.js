@@ -19,9 +19,11 @@ class ObjectContainersSpatialHash {
 
     add( node ) {
 
-        const minmax = EngineUtils.getBounding( node ).minmax;
-        const minGrid = ObjectContainerUtils.positionToGrid( minmax.min );
-        const maxGrid = ObjectContainerUtils.positionToGrid( minmax.max );
+        const positionWorld = EngineUtils.getWorldPosition( node );
+        const minmax = EngineUtils.getBounding( node ).minmax; 
+
+        const minGrid = ObjectContainerUtils.positionToGrid( minmax.min.add( positionWorld ) );
+        const maxGrid = ObjectContainerUtils.positionToGrid( minmax.max.add( positionWorld ) );
 
         this.#clearNode( node );
 
@@ -30,13 +32,13 @@ class ObjectContainersSpatialHash {
             for ( let y = minGrid.y, yl = maxGrid.y; y <= yl; ++y ) {
             
                 for ( let z = minGrid.z, zl = maxGrid.z; z <= zl; ++z ) {
-                    
+                    log(this.#getOrMake( ObjectContainerUtils.gridToIndex( x, y, z ) ))
                     node.objectcontainers.push( this.#getOrMake( ObjectContainerUtils.gridToIndex( x, y, z ) ).store( node ) );
                 }
             }
         }
-
-        node.objectcontainer = this.#getOrMake( ObjectContainerUtils.positionToIndex( node.position ) );
+        if ( ObjectContainerUtils.positionToIndex( positionWorld ) === "-1,0,206" ) log( "a" );
+        node.objectcontainer = this.#getOrMake( ObjectContainerUtils.positionToIndex( positionWorld ) );
     }
 
     get( index ) {
@@ -58,6 +60,11 @@ class ObjectContainersSpatialHash {
         
         node.objectcontainers.clear();
         node.objectcontainer = null;
+    }
+
+    debug() {
+        
+        this.list.forEach( objectcontainer => objectcontainer.debug() );
     }
 
     #clearNode( node ) {

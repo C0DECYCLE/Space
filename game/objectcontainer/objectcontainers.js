@@ -12,9 +12,9 @@ class ObjectContainers {
 
     };
 
-    spatialhash = null;
+    game = null;
 
-    #game = null;
+    spatialhash = null;
 
     #mainIndex = undefined;
     #mainGrid = null;
@@ -22,7 +22,7 @@ class ObjectContainers {
 
     constructor( game, config ) {
 
-        this.#game = game;
+        this.game = game;
 
         EngineUtils.configure.call( this, config );
 
@@ -39,9 +39,19 @@ class ObjectContainers {
         return this.#mainGrid;
     }
 
+    add( node ) {
+
+        this.spatialhash.add( node );
+    }
+
+    addAll( nodes ) {
+
+        nodes.forEach( node => this.add( node ) );
+    }
+
     update() {
         
-        this.#mainGrid = ObjectContainerUtils.positionToGrid( this.#game.camera.position );
+        this.#mainGrid = ObjectContainerUtils.positionToGrid( this.game.camera.position );
         this.#mainIndex = ObjectContainerUtils.gridToIndex( this.#mainGrid );
 
         /*
@@ -50,6 +60,11 @@ class ObjectContainers {
             this.#mainContainer = this.spatialhash.get( this.#mainIndex );
         }
         */
+    }
+
+    debug() {
+
+        this.spatialhash.debug();
     }
 
     #setupSpatialHash() {
