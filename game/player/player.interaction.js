@@ -75,7 +75,7 @@ class PlayerInteraction {
 
     #evaluateInteraction( interaction ) {
 
-        const distance = EngineUtils.getWorldPosition( interaction.mesh ).subtractInPlace( this.#player.position ).length();
+        const distance = EngineUtils.getWorldPosition( interaction.mesh ).subtractInPlace( this.#player.position ).length(); //DISTANCE
 
         if ( distance <= PlayerInteraction.RADIUS ) {
 

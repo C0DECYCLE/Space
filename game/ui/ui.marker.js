@@ -114,7 +114,7 @@ class UIMarker {
         const diffrence = EngineUtils.getWorldPosition( this.node ).subtractInPlace( this.#ui.game.player.position );
         const size = EngineUtils.getBounding( this.node ).size;
 
-        this.#distance = diffrence.length();
+        this.#distance = diffrence.length(); //DISTANCE
         this.#direction = diffrence.normalize();
 
         if ( this.config.type === "travel" ) {

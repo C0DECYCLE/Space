@@ -26,7 +26,7 @@ class PlanetPhysics {
     pull( physicsEntity ) {
 
         const delta = this.#getDelta( physicsEntity.position );
-        const distanceCenter = delta.length(); 
+        const distanceCenter = delta.length();
         const up = delta.clone().normalize();
         
         this.#pullSpin( physicsEntity, distanceCenter );
@@ -40,7 +40,7 @@ class PlanetPhysics {
     spin( physicsEntity ) {
 
         const delta = this.#getDelta( physicsEntity.position );
-        const distanceCenter = delta.length(); 
+        const distanceCenter = delta.length();
         const up = delta.clone().normalize();
 
         this.#pullSpin( physicsEntity, distanceCenter );

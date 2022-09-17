@@ -132,7 +132,7 @@ class SpaceshipPhysicsTravel {
         const direction = EngineUtils.getWorldPosition( this.#jumping.node ).subtractInPlace( this.#game.player.position );
         const size = EngineUtils.getBounding( this.#jumping.node ).size;
 
-        if ( direction.length() > size / 2 && this.#evaluateKeyPress() === false ) {
+        if ( direction.length() > size / 2 && this.#evaluateKeyPress() === false ) { //DISTANCE
 
             this.#spaceshipPhysics.velocity.copyFrom( direction.normalize() ).scaleInPlace( SpaceshipPhysicsTravel.VELOCITY * this.#game.engine.deltaCorrection );
 
