@@ -131,7 +131,7 @@ class SpaceshipPhysicsTravel {
 
         const worldPosition = EngineUtils.getWorldPosition( this.#jumping.node );
         const size = EngineUtils.getBounding( this.#jumping.node ).size;
-        const distance = this.#game.camera.getScreenDistance( worldPosition );
+        const distance = this.#game.camera.getApproximateScreenDistance( this.#jumping.node, worldPosition );
         const direction = worldPosition.subtractInPlace( this.#game.player.position ).normalize();
 
         if ( distance > size / 2 && this.#evaluateKeyPress() === false ) {

@@ -94,13 +94,16 @@ class SpaceshipPhysics extends PhysicsEntity {
             acceleration.y = -minorAcceleration;
         }
 
-        if ( this.controls.activeKeys.has( Controls.KEYS.leftRoll ) === true ) {
+        if ( this.spaceship.isLanded === false ) {
+                
+            if ( this.controls.activeKeys.has( Controls.KEYS.leftRoll ) === true ) {
 
-            this.spaceship.root.rotate( BABYLON.Axis.Z, rollSpeed, BABYLON.Space.LOCAL );
+                this.spaceship.root.rotate( BABYLON.Axis.Z, rollSpeed, BABYLON.Space.LOCAL );
 
-        } else if ( this.controls.activeKeys.has( Controls.KEYS.rightRoll ) === true ) {
+            } else if ( this.controls.activeKeys.has( Controls.KEYS.rightRoll ) === true ) {
 
-            this.spaceship.root.rotate( BABYLON.Axis.Z, -rollSpeed, BABYLON.Space.LOCAL );
+                this.spaceship.root.rotate( BABYLON.Axis.Z, -rollSpeed, BABYLON.Space.LOCAL );
+            }
         }
 
         this.#movementTranslate( acceleration );

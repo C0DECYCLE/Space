@@ -75,7 +75,7 @@ class PlayerInteraction {
 
     #evaluateInteraction( interaction ) {
 
-        const distance = this.#player.camera.getScreenDistance( EngineUtils.getWorldPosition( interaction.mesh ) );
+        const distance = this.#player.camera.getApproximateScreenDistance( interaction.mesh );
 
         if ( distance <= PlayerInteraction.RADIUS ) {
 

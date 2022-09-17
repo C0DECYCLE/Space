@@ -87,11 +87,6 @@ class EngineUtils {
         }
     }
 
-    static getDistance( a, b ) {
-
-        return BABYLON.Vector3.Distance( a, b );
-    }
-
     static makeDebugMaterial( scene ) {
 
         const debugMaterial = new BABYLON.StandardMaterial( "debug", scene );

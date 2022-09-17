@@ -72,18 +72,27 @@ class Camera {
 
             this.target.camera.update( this.target.object );
         }
-
-        this.game.objectcontainers.insert( this.position );
     }
 
-    getScreenDistance( positionWorld ) {
+    getScreenDistance( node = null, alreadyWorld = false ) {
 
-        return EngineUtils.getDistance( positionWorld, this.position );
+        return BABYLON.Vector3.Distance( alreadyWorld === false ? EngineUtils.getWorldPosition( node ) : alreadyWorld, this.position );
+    }
+
+    getApproximateScreenDistance( node, alreadyWorld = false ) {
+        
+        //inject all into containers
+        //get container if not on node search in parents upwards (make it a objectcontainerutils method)
+        //check if that container === main container
+        //if yes: return this.getScreenDistance( node, alreadyWorld );
+        //if no: return container.distance
+
+        return this.getScreenDistance( node, alreadyWorld );
     }
 
     getScreenCoverage( node ) {
 
-        const distance = this.getScreenDistance( EngineUtils.getWorldPosition( node ) );
+        const distance = this.getApproximateScreenDistance( node );
         const size = EngineUtils.getBounding( node ).size;
         
         return size / distance;

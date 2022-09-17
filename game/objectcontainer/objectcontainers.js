@@ -39,9 +39,9 @@ class ObjectContainers {
         return this.#mainGrid;
     }
 
-    insert( position ) {
+    update() {
         
-        this.#mainGrid = ObjectContainerUtils.positionToGrid( position );
+        this.#mainGrid = ObjectContainerUtils.positionToGrid( this.#game.camera.position );
         this.#mainIndex = ObjectContainerUtils.gridToIndex( this.#mainGrid );
 
         /*

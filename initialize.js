@@ -113,6 +113,8 @@ Space.add( "stage", function() {
 Space.add( "run", function( delta ) {
     
 
+    this.objectcontainers.update();
+    
     this.planets.update();
 
     this.asteroids.update();
