@@ -11,6 +11,7 @@ class ObjectContainersSpatialHash {
     list = new Map();
 
     #containers = null;
+    #debugParent = null;
 
     constructor( containers ) {
 
@@ -19,26 +20,24 @@ class ObjectContainersSpatialHash {
 
     add( node ) {
 
-        const positionWorld = EngineUtils.getWorldPosition( node );
         const minmax = EngineUtils.getBounding( node ).minmax; 
-
-        const minGrid = ObjectContainerUtils.positionToGrid( minmax.min.add( positionWorld ) );
-        const maxGrid = ObjectContainerUtils.positionToGrid( minmax.max.add( positionWorld ) );
+        const minGrid = ObjectContainerUtils.positionToGrid( minmax.min );
+        const maxGrid = ObjectContainerUtils.positionToGrid( minmax.max );
 
         this.#clearNode( node );
-
+        
         for ( let x = minGrid.x, xl = maxGrid.x; x <= xl; ++x ) {
             
             for ( let y = minGrid.y, yl = maxGrid.y; y <= yl; ++y ) {
             
                 for ( let z = minGrid.z, zl = maxGrid.z; z <= zl; ++z ) {
-                    log(this.#getOrMake( ObjectContainerUtils.gridToIndex( x, y, z ) ))
+                    
                     node.objectcontainers.push( this.#getOrMake( ObjectContainerUtils.gridToIndex( x, y, z ) ).store( node ) );
                 }
             }
         }
-        if ( ObjectContainerUtils.positionToIndex( positionWorld ) === "-1,0,206" ) log( "a" );
-        node.objectcontainer = this.#getOrMake( ObjectContainerUtils.positionToIndex( positionWorld ) );
+        
+        node.objectcontainer = this.#getOrMake( ObjectContainerUtils.positionToIndex( EngineUtils.getWorldPosition( node ) ) );
     }
 
     get( index ) {
@@ -64,7 +63,13 @@ class ObjectContainersSpatialHash {
 
     debug() {
         
-        this.list.forEach( objectcontainer => objectcontainer.debug() );
+        if ( this.#debugParent === null ) {
+
+            this.#debugParent = new BABYLON.TransformNode( "objectcontainers", this.#containers.game.scene );
+            this.#debugParent.rotationQuaternion = this.#debugParent.rotation.toQuaternion();
+        }
+
+        this.list.forEach( objectcontainer => objectcontainer.debug( this.#debugParent ) );
     }
 
     #clearNode( node ) {

@@ -84,10 +84,9 @@ Space.add( "install", function() {
 
     this.asteroids = new Asteroids( this, {} );
 
-    this.asteroids.register( "ring", { key: 0, radius: 5 * 1000, spread: 400, height: 200, density: 0.02 } );
-    this.asteroids.register( "ring", { key: 1, radius: 5 * 1000, spread: 2 * 1000, height: 100, density: 0.03 } );
+    this.asteroids.register( "ring", { key: 0, seed: "7417", radius: 5 * 1000, spread: 400, height: 200, density: 0.02 } );
+    this.asteroids.register( "ring", { key: 1, seed: "4674", radius: 5 * 1000, spread: 2 * 1000, height: 100, density: 0.03 } );
 
-    //make all randoms seeded! asteroids especially https://github.com/davidbau/seedrandom
 
 } );
 
@@ -101,14 +100,23 @@ Space.add( "stage", function() {
     
     this.player.position.copyFrom( this.planets.list[0].position ).addInPlace( new BABYLON.Vector3( 5 * 1000, 0, 0 ) );
     
-    this.asteroids.list[0].position.copyFrom( this.planets.list[0].position ); this.objectcontainers.addAll( this.asteroids.list[0].root.getChildMeshes() );
-    this.asteroids.list[1].position.copyFrom( this.planets.list[0].position ); this.objectcontainers.addAll( this.asteroids.list[1].root.getChildMeshes() );
+    this.asteroids.list[0].position.copyFrom( this.planets.list[0].position );
+    this.asteroids.list[1].position.copyFrom( this.planets.list[0].position );
 
     this.spaceships.list[0].position.copyFrom( this.player.position ).addInPlace( new BABYLON.Vector3( 0, 0, 10 ) );
     this.spaceships.list[0].root.rotate( BABYLON.Axis.Y, 90 * EngineUtils.toRadian, BABYLON.Space.LOCAL );
 
     this.scene.debugLayer.show( { embedMode: true } );
     
+
+    this.objectcontainers.add( this.planets.list[0].root );
+    this.objectcontainers.add( this.planets.list[1].root );
+    this.objectcontainers.add( this.planets.list[2].root );
+    this.objectcontainers.add( this.planets.list[3].root );
+    
+    this.objectcontainers.addAll( this.asteroids.list[0].root.getChildMeshes() );
+    this.objectcontainers.addAll( this.asteroids.list[1].root.getChildMeshes() );
+
 
 } );
 

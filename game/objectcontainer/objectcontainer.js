@@ -49,7 +49,7 @@ class ObjectContainer {
     }
 
     store( node ) {
-        if ( this.index === "-1,0,206" ) log( node );
+        
         this.#list.add( node );
 
         return this;
@@ -67,7 +67,7 @@ class ObjectContainer {
         return this;
     }
 
-    debug() {
+    debug( parent = null ) {
 
         if ( this.#debugMesh === null ) {
 
@@ -76,6 +76,11 @@ class ObjectContainer {
             this.#debugMesh = BABYLON.MeshBuilder.CreateBox( `objectcontainer_${ this.index }`, { size: ObjectContainer.size }, scene );
             this.#debugMesh.material = scene.debugMaterialWhite;
             this.#debugMesh.position.copyFrom( ObjectContainerUtils.indexToApproximatePosition( this.index ) );
+
+            if ( parent !== null ) {
+
+                this.#debugMesh.parent = parent;
+            }
         }
     }
 

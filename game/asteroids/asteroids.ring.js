@@ -11,6 +11,7 @@ class AsteroidsRing {
     config = {
 
         key: UUIDv4(),
+        seed: undefined,
 
         radius: 1000,
         spread: 200,
@@ -78,6 +79,7 @@ class AsteroidsRing {
 
     #spawnClusters() {
 
+        const random = new Math.seedrandom( this.config.seed );
         const count = Math.floor( ( Math.PI * 2 * this.config.radius ) / ( this.config.spread * 2 ) );
         
         for ( let i = 0; i < count; i++ ) {
@@ -85,7 +87,7 @@ class AsteroidsRing {
             const angle = ( 360 / count ) * i * EngineUtils.toRadian;
             const offset = new BABYLON.Vector3( Math.cos( angle ), 0, Math.sin( angle ) ).scaleInPlace( this.config.radius );
 
-            const cluster = new AsteroidsCluster( this.game, { key: i, radius: this.config.spread, height: this.config.height, density: this.config.density, offset: offset }, this.root );
+            const cluster = new AsteroidsCluster( this.game, { key: i, seed: random, radius: this.config.spread, height: this.config.height, density: this.config.density, offset: offset }, this.root );
 
             this.list.push( cluster );
         }
