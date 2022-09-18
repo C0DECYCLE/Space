@@ -46,18 +46,26 @@ class EngineUtils {
         return new BABYLON.Vector3( 0, 1000 * 1000 * 1000, 0 );
     }
 
-    static getBounding( node, force = false, filter = undefined ) {
+    static getBounding( node, force = false ) {
         
         if ( node.boundingCache === undefined || force === true ) {
             
-            const minmax = node.getHierarchyBoundingVectors( true, filter );
+            const positionWorld = EngineUtils.getWorldPosition( node );
 
-            node.boundingCache = minmax.max.subtract( minmax.min );
-            node.boundingCache.minmax = minmax;
-            node.boundingCache.size = node.boundingCache.length();
+            node.boundingCache = node.getHierarchyBoundingVectors( true );
+            node.boundingCache.min.subtractInPlace( positionWorld );
+            node.boundingCache.max.subtractInPlace( positionWorld );
+
+            node.boundingCache.diagonal = node.boundingCache.max.subtract( node.boundingCache.min );
+            node.boundingCache.size = node.boundingCache.diagonal.length();
         }
 
         return node.boundingCache;
+    }
+
+    static getBoundingSize( node, force = false ) {
+
+        return EngineUtils.getBounding( node, force ).size;
     }
 
     static getWorldPosition( node ) {

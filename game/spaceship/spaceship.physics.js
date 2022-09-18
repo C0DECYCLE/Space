@@ -41,6 +41,11 @@ class SpaceshipPhysics extends PhysicsEntity {
                 
                 this.#landingLogic( up );
             }
+
+            if ( this.spaceship.hasController === false && this.spaceship.isLanded === false ) {
+
+                //make the velocity slow down this.#localVelocity.scaleInPlace( brakeScale );
+            }
         }
         
         this.travel.update();

@@ -41,36 +41,59 @@ class ObjectContainers {
         return this.#mainGrid;
     }
 
-    addAll( nodes ) {
+    addAll( nodes, ignoreMinMax = false ) {
 
-        nodes.forEach( node => this.add( node ) );
+        nodes.forEach( node => this.add( node, ignoreMinMax ) );
     }
 
-    add( node ) {
+    add( node, ignoreMinMax = false, positionWorld = EngineUtils.getWorldPosition( node ), gridMinMax = null ) {
         
-        const minmax = EngineUtils.getBounding( node, true ).minmax;
-        const minGrid = ObjectContainerUtils.positionToGrid( minmax.min );
-        const maxGrid = ObjectContainerUtils.positionToGrid( minmax.max );
+        if ( ignoreMinMax === false && gridMinMax === null ) {
 
-        this.#clearNode( node );
+            gridMinMax = this.#getGridMinMax( node, positionWorld );
+        }
         
-        for ( let x = minGrid.x, xl = maxGrid.x; x <= xl; ++x ) {
+        this.#initializeNode( node, gridMinMax );
+
+        if ( ignoreMinMax === false ) {
+
+            for ( let x = gridMinMax.min.x, xl = gridMinMax.max.x; x <= xl; ++x ) {
             
-            for ( let y = minGrid.y, yl = maxGrid.y; y <= yl; ++y ) {
-            
-                for ( let z = minGrid.z, zl = maxGrid.z; z <= zl; ++z ) {
-                    
-                    node.objectcontainers.push( this.#getOrMake( ObjectContainerUtils.gridToIndex( x, y, z ) ).store( node ) );
+                for ( let y = gridMinMax.min.y, yl = gridMinMax.max.y; y <= yl; ++y ) {
+                
+                    for ( let z = gridMinMax.min.z, zl = gridMinMax.max.z; z <= zl; ++z ) {
+                        
+                        node.objectcontainers.push( this.#getOrMake( ObjectContainerUtils.gridToIndex( x, y, z ) ).store( node ) );
+                    }
                 }
             }
         }
         
-        node.objectcontainer = this.#getOrMake( ObjectContainerUtils.positionToIndex( EngineUtils.getWorldPosition( node ) ) );
+        node.objectcontainer = this.#getOrMake( ObjectContainerUtils.positionToIndex( positionWorld ) );
     }
 
     get( index ) {
 
         return this.list.get( index ) || null;
+    }
+
+    move( node, ignoreMinMax = false ) {
+
+        if ( node.objectcontainers === undefined ) {
+
+            return;
+        }
+
+        const positionWorld = EngineUtils.getWorldPosition( node );
+        const gridMinMax = this.#getGridMinMax( node, positionWorld );
+
+        if ( ObjectContainerUtils.gridToIndex( gridMinMax.min ) === ObjectContainerUtils.gridToIndex( node.objectcontainers.gridMinMax.min ) && ObjectContainerUtils.gridToIndex( gridMinMax.max ) === ObjectContainerUtils.gridToIndex( node.objectcontainers.gridMinMax.max ) ) {
+
+            return;
+        }
+
+        this.remove( node );
+        this.add( node, ignoreMinMax, positionWorld, gridMinMax );
     }
 
     remove( node ) {
@@ -85,8 +108,7 @@ class ObjectContainers {
             node.objectcontainers[i].unstore( node );
         }
         
-        node.objectcontainers.clear();
-        node.objectcontainer = null;
+        this.#clearNode( node );
     }
 
     update() {
@@ -114,17 +136,23 @@ class ObjectContainers {
         this.list.forEach( objectcontainer => objectcontainer.debug( this.#debugParent ) );
     }
 
-    #clearNode( node ) {
+    #initializeNode( node, gridMinMax = null ) {
 
         if ( node.objectcontainers === undefined ) {
 
             node.objectcontainers = [];
-
-        } else {
-
-            node.clear();
         }
+
+        node.objectcontainers.gridMinMax = gridMinMax;
     }
+
+    #clearNode( node ) {
+
+        node.objectcontainers.gridMinMax = null;
+        node.objectcontainers.clear();
+        node.objectcontainer = null;
+    }
+       
 
     #getOrMake( index ) {
 
@@ -138,6 +166,17 @@ class ObjectContainers {
         }
 
         return container;
+    }
+
+    #getGridMinMax( node, positionWorld ) {
+
+        const minmax = EngineUtils.getBounding( node );
+        
+        return {
+
+            min: ObjectContainerUtils.positionToGrid( minmax.min.add( positionWorld ) ),
+            max: ObjectContainerUtils.positionToGrid( minmax.max.add( positionWorld ) )
+        };
     }
 
 }

@@ -112,7 +112,7 @@ class UIMarker {
     #evaluateNear() {
 
         const worldPosition = EngineUtils.getWorldPosition( this.node );
-        const size = EngineUtils.getBounding( this.node ).size;
+        const size = EngineUtils.getBoundingSize( this.node );
 
         this.#distance = this.#ui.game.camera.getApproximateScreenDistance( this.node, worldPosition );
         this.#direction = worldPosition.subtractInPlace( this.#ui.game.player.position ).normalize();

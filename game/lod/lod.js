@@ -56,7 +56,7 @@ class LOD {
 
     get maxVisibleDistance() {
 
-        return EngineUtils.getBounding( this.root ).size / LOD.minimum;
+        return EngineUtils.getBoundingSize( this.root ) / LOD.minimum;
     }
 
     fromSingle( node ) {

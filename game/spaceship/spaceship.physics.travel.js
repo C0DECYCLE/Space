@@ -130,7 +130,7 @@ class SpaceshipPhysicsTravel {
     #updateJumping() {
 
         const worldPosition = EngineUtils.getWorldPosition( this.#jumping.node );
-        const size = EngineUtils.getBounding( this.#jumping.node ).size;
+        const size = EngineUtils.getBoundingSize( this.#jumping.node );
         const distance = this.#game.camera.getApproximateScreenDistance( this.#jumping.node, worldPosition );
         const direction = worldPosition.subtractInPlace( this.#game.player.position ).normalize();
 

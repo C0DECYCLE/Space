@@ -92,6 +92,10 @@ Space.add( "install", function() {
     //update dynamic mechanism
     //spaceship solution? add remove based on control or dynamic
 
+    //calculate once per frame at the end the new world position? also exact distance etc all expencive stuff only once per frame!
+
+    //when leaving spaceship while flying does it continue onward? if yes make it slow down
+
 } );
 
 Space.add( "stage", function() {
@@ -111,10 +115,10 @@ Space.add( "stage", function() {
     this.player.position.copyFrom( this.spaceships.list[0].position ).addInPlace( new BABYLON.Vector3( 0, 0, -10 ) );
     
 
-    this.objectcontainers.add( this.planets.list[0].root );
-    this.objectcontainers.add( this.planets.list[1].root );
-    this.objectcontainers.add( this.planets.list[2].root );
-    this.objectcontainers.add( this.planets.list[3].root );
+    this.objectcontainers.add( this.planets.list[0].root, true );
+    this.objectcontainers.add( this.planets.list[1].root, true );
+    this.objectcontainers.add( this.planets.list[2].root, true );
+    this.objectcontainers.add( this.planets.list[3].root, true );
     
     this.objectcontainers.addAll( this.asteroids.list[0].root.getChildMeshes() );
     this.objectcontainers.addAll( this.asteroids.list[1].root.getChildMeshes() );
@@ -136,7 +140,7 @@ Space.add( "run", function( delta ) {
 
     this.asteroids.update();
 
-    this.spaceships.update();
+    this.spaceships.update(); this.objectcontainers.move( this.spaceships.list[0].root );
 
     this.player.update();
     

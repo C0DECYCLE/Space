@@ -93,7 +93,7 @@ class Camera {
     getScreenCoverage( node ) {
 
         const distance = this.getApproximateScreenDistance( node );
-        const size = EngineUtils.getBounding( node ).size;
+        const size = EngineUtils.getBoundingSize( node );
         
         return size / distance;
     }
