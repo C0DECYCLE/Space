@@ -23,6 +23,7 @@ class ObjectContainers {
     #list = new Map();
     #mainIndex = undefined;
     #mainGrid = null;
+    #dynamicNodes = new ObjectArray();
     #debugParent = null;
 
     constructor( game, config ) {
@@ -52,8 +53,18 @@ class ObjectContainers {
         nodes.forEach( node => this.add( node, type, ignoreMinMax ) );
     }
 
-    add( node, type = ObjectContainers.TYPES.STATIC, ignoreMinMax = false, positionWorld = EngineUtils.getWorldPosition( node ), gridMinMax = null ) {
+    add( node, type, ignoreMinMax, positionWorld, gridMinMax ) {
         
+        this.#addInternal( node, type, ignoreMinMax, positionWorld, gridMinMax );
+
+        if ( type === ObjectContainers.TYPES.DYNAMIC ) {
+
+            this.#dynamicNodes.add( node );
+        }
+    }
+
+    #addInternal( node, type = ObjectContainers.TYPES.STATIC, ignoreMinMax = false, positionWorld = EngineUtils.getWorldPosition( node ), gridMinMax = null ) {
+
         if ( ignoreMinMax === false && gridMinMax === null ) {
 
             gridMinMax = this.#getGridMinMax( node, positionWorld );
@@ -98,8 +109,10 @@ class ObjectContainers {
             return;
         }
 
-        this.remove( node );
-        this.add( node, ignoreMinMax, positionWorld, gridMinMax );
+        const type = node.objectcontainers.type;
+
+        this.#removeInternal( node );
+        this.#addInternal( node, type, ignoreMinMax, positionWorld, gridMinMax );
     }
 
     remove( node ) {
@@ -108,6 +121,16 @@ class ObjectContainers {
 
             return;
         }
+        
+        if ( node.objectcontainers.type === ObjectContainers.TYPES.DYNAMIC ) {
+
+            this.#dynamicNodes.delete( node );
+        }
+
+        this.#removeInternal( node );
+    }
+
+    #removeInternal( node ) {
 
         for ( let i = 0; i < node.objectcontainers.length; i++ ) {
 

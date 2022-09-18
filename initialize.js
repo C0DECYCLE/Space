@@ -113,15 +113,15 @@ Space.add( "stage", function() {
     this.player.position.copyFrom( this.spaceships.list[0].position ).addInPlace( new BABYLON.Vector3( 0, 0, -10 ) );
     
 
-    this.objectcontainers.add( this.planets.list[0].root, true );
-    this.objectcontainers.add( this.planets.list[1].root, true );
-    this.objectcontainers.add( this.planets.list[2].root, true );
-    this.objectcontainers.add( this.planets.list[3].root, true );
+    this.objectcontainers.add( this.planets.list[0].root, ObjectContainers.TYPES.STATIC, true );
+    this.objectcontainers.add( this.planets.list[1].root, ObjectContainers.TYPES.STATIC, true );
+    this.objectcontainers.add( this.planets.list[2].root, ObjectContainers.TYPES.STATIC, true );
+    this.objectcontainers.add( this.planets.list[3].root, ObjectContainers.TYPES.STATIC, true );
     
     this.objectcontainers.addAll( this.asteroids.list[0].root.getChildMeshes() );
     this.objectcontainers.addAll( this.asteroids.list[1].root.getChildMeshes() );
 
-    this.objectcontainers.add( this.spaceships.list[0].root );
+    this.objectcontainers.add( this.spaceships.list[0].root, ObjectContainers.TYPES.DYNAMIC );
 
 
     this.scene.debugLayer.show( { embedMode: true } );
@@ -147,9 +147,6 @@ Space.add( "run", function( delta ) {
     this.star.update();
 
     this.ui.update();
-    
-
-    this.objectcontainers.move( this.spaceships.list[0].root );
 
 
 } );

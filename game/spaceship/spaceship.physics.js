@@ -57,32 +57,6 @@ class SpaceshipPhysics extends PhysicsEntity {
         this.travel = new SpaceshipPhysicsTravel( this );
     }
 
-    #brake() {
-
-        const velocityDrag = this.spaceship.config.velocityDrag;
-
-        this.#brakeVelocity();
-
-        this.velocity.copyFrom( BABYLON.Vector3.Lerp( this.velocity, this.#localVelocity.applyRotationQuaternion( this.spaceship.rotationQuaternion ), velocityDrag ) );
-    }
-
-    #brakeVelocity( brakeScale = undefined ) {
-
-        if ( brakeScale === undefined ) {
-
-            const deltaCorrection = this.spaceship.game.engine.deltaCorrection;
-            brakeScale = ( 1 - this.spaceship.config.brakeAcceleration ) * deltaCorrection;
-        }
-
-        this.#localVelocity.scaleInPlace( brakeScale );
-        
-        if ( this.velocity.length() < 0.05 ) {
-            
-            this.#localVelocity.copyFromFloats( 0, 0, 0 );
-            this.velocity.copyFromFloats( 0, 0, 0 );
-        }
-    }
-
     #movement() {
 
         const deltaCorrection = this.spaceship.game.engine.deltaCorrection;
@@ -132,6 +106,32 @@ class SpaceshipPhysics extends PhysicsEntity {
         }
 
         this.#movementTranslate( acceleration );
+    }
+    
+    #brake() {
+
+        const velocityDrag = this.spaceship.config.velocityDrag;
+
+        this.#brakeVelocity();
+
+        this.velocity.copyFrom( BABYLON.Vector3.Lerp( this.velocity, this.#localVelocity.applyRotationQuaternion( this.spaceship.rotationQuaternion ), velocityDrag ) );
+    }
+
+    #brakeVelocity( brakeScale = undefined ) {
+
+        if ( brakeScale === undefined ) {
+
+            const deltaCorrection = this.spaceship.game.engine.deltaCorrection;
+            brakeScale = ( 1 - this.spaceship.config.brakeAcceleration ) * deltaCorrection;
+        }
+
+        this.#localVelocity.scaleInPlace( brakeScale );
+        
+        if ( this.velocity.length() < 0.05 ) {
+            
+            this.#localVelocity.copyFromFloats( 0, 0, 0 );
+            this.velocity.copyFromFloats( 0, 0, 0 );
+        }
     }
 
     #movementTranslate( acceleration ) {

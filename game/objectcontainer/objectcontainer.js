@@ -57,7 +57,7 @@ class ObjectContainer {
 
     unstore( node ) {
 
-        this.#list.remove( node );
+        this.#list.delete( node );
 
         if ( this.#list.length === 0 ) {
 
