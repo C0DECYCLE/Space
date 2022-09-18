@@ -8,6 +8,12 @@
 
 class ObjectContainers {
 
+    static TYPES = {
+
+        STATIC: 0,
+        DYNAMIC: 1
+    };
+
     config = {
 
     };
@@ -41,19 +47,19 @@ class ObjectContainers {
         return this.#mainGrid;
     }
 
-    addAll( nodes, ignoreMinMax = false ) {
+    addAll( nodes, type = ObjectContainers.TYPES.STATIC, ignoreMinMax = false ) {
 
-        nodes.forEach( node => this.add( node, ignoreMinMax ) );
+        nodes.forEach( node => this.add( node, type, ignoreMinMax ) );
     }
 
-    add( node, ignoreMinMax = false, positionWorld = EngineUtils.getWorldPosition( node ), gridMinMax = null ) {
+    add( node, type = ObjectContainers.TYPES.STATIC, ignoreMinMax = false, positionWorld = EngineUtils.getWorldPosition( node ), gridMinMax = null ) {
         
         if ( ignoreMinMax === false && gridMinMax === null ) {
 
             gridMinMax = this.#getGridMinMax( node, positionWorld );
         }
         
-        this.#initializeNode( node, gridMinMax );
+        this.#initializeNode( node, type, gridMinMax );
 
         if ( ignoreMinMax === false ) {
 
@@ -136,18 +142,20 @@ class ObjectContainers {
         this.list.forEach( objectcontainer => objectcontainer.debug( this.#debugParent ) );
     }
 
-    #initializeNode( node, gridMinMax = null ) {
+    #initializeNode( node, type = ObjectContainers.TYPES.STATIC, gridMinMax = null ) {
 
         if ( node.objectcontainers === undefined ) {
 
             node.objectcontainers = [];
         }
 
+        node.objectcontainers.type = type;
         node.objectcontainers.gridMinMax = gridMinMax;
     }
 
     #clearNode( node ) {
 
+        node.objectcontainers.type = undefined; 
         node.objectcontainers.gridMinMax = null;
         node.objectcontainers.clear();
         node.objectcontainer = null;

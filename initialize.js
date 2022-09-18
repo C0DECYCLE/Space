@@ -94,8 +94,6 @@ Space.add( "install", function() {
 
     //calculate once per frame at the end the new world position? also exact distance etc all expencive stuff only once per frame!
 
-    //when leaving spaceship while flying does it continue onward? if yes make it slow down
-
 } );
 
 Space.add( "stage", function() {
@@ -140,7 +138,7 @@ Space.add( "run", function( delta ) {
 
     this.asteroids.update();
 
-    this.spaceships.update(); this.objectcontainers.move( this.spaceships.list[0].root );
+    this.spaceships.update(); 
 
     this.player.update();
     
@@ -150,5 +148,8 @@ Space.add( "run", function( delta ) {
 
     this.ui.update();
     
+
+    this.objectcontainers.move( this.spaceships.list[0].root );
+
 
 } );

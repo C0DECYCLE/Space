@@ -44,7 +44,7 @@ class SpaceshipPhysics extends PhysicsEntity {
 
             if ( this.spaceship.hasController === false && this.spaceship.isLanded === false ) {
 
-                //make the velocity slow down this.#localVelocity.scaleInPlace( brakeScale );
+                this.#brake();
             }
         }
         
@@ -55,6 +55,32 @@ class SpaceshipPhysics extends PhysicsEntity {
     #setupTravel() {
 
         this.travel = new SpaceshipPhysicsTravel( this );
+    }
+
+    #brake() {
+
+        const velocityDrag = this.spaceship.config.velocityDrag;
+
+        this.#brakeVelocity();
+
+        this.velocity.copyFrom( BABYLON.Vector3.Lerp( this.velocity, this.#localVelocity.applyRotationQuaternion( this.spaceship.rotationQuaternion ), velocityDrag ) );
+    }
+
+    #brakeVelocity( brakeScale = undefined ) {
+
+        if ( brakeScale === undefined ) {
+
+            const deltaCorrection = this.spaceship.game.engine.deltaCorrection;
+            brakeScale = ( 1 - this.spaceship.config.brakeAcceleration ) * deltaCorrection;
+        }
+
+        this.#localVelocity.scaleInPlace( brakeScale );
+        
+        if ( this.velocity.length() < 0.05 ) {
+            
+            this.#localVelocity.copyFromFloats( 0, 0, 0 );
+            this.velocity.copyFromFloats( 0, 0, 0 );
+        }
     }
 
     #movement() {
@@ -72,13 +98,7 @@ class SpaceshipPhysics extends PhysicsEntity {
 
         } else if ( this.controls.activeKeys.has( Controls.KEYS.back ) === true ) {
 
-            this.#localVelocity.scaleInPlace( brakeScale );
-            
-            if ( this.velocity.length() < 0.05 ) {
-                
-                this.#localVelocity.copyFromFloats( 0, 0, 0 );
-                this.velocity.copyFromFloats( 0, 0, 0 );
-            }
+            this.#brakeVelocity( brakeScale );
         }
         
         if ( this.controls.activeKeys.has( Controls.KEYS.right ) === true ) {
