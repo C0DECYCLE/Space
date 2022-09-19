@@ -38,15 +38,8 @@ class Sync {
 
         if ( this.#length <= 0 ) {
 
-            if ( typeof this.#callback === "function" ) {
-
-                this.#callback();
-                this.#hasFired = true;
-
-            } else {
-
-                console.error( "Sync: Type of callback must be a function." );
-            }
+            this.#callback?.();
+            this.#hasFired = true;
         }
     }
 

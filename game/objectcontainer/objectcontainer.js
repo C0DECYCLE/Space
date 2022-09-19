@@ -15,6 +15,7 @@ class ObjectContainer {
     #index = undefined;
     #grid = null;
     #list = new ObjectArray();
+    #isDisposed = false;
 
     #distanceCache = undefined;
     #cacheMainIndex = undefined;
@@ -39,6 +40,8 @@ class ObjectContainer {
 
     get distance() {
 
+        this.#preventDisposed();
+
         if ( this.#distanceCache === undefined || this.#cacheMainIndex !== this.#containers.mainIndex ) {
 
             this.#distanceCache = this.#getDistance();
@@ -49,18 +52,23 @@ class ObjectContainer {
     }
 
     store( node ) {
+
+        this.#preventDisposed();
         
         this.#list.add( node );
 
         return this;
     }
 
-    unstore( node ) {
+    unstore( node, onDispose = undefined ) {
+
+        this.#preventDisposed();
 
         this.#list.delete( node );
 
         if ( this.#list.length === 0 ) {
 
+            onDispose?.( this.index );
             this.dispose();
         }
 
@@ -69,15 +77,21 @@ class ObjectContainer {
 
     onEnter( oldIndex ) {
 
+        this.#preventDisposed();
+
         
     }
 
     onLeave( newIndex ) {
 
+        this.#preventDisposed();
+
         
     }
 
     debug( parent = null ) {
+
+        this.#preventDisposed();
 
         if ( this.#debugMesh === null ) {
 
@@ -96,6 +110,7 @@ class ObjectContainer {
 
     dispose() {
 
+        this.#isDisposed = true;
         this.#index = undefined;
         this.#list.clear();
         this.#list = null;
@@ -107,6 +122,14 @@ class ObjectContainer {
     #getDistance() {
         
         return BABYLON.Vector3.Distance( this.#containers.mainGrid, this.#grid ) * ObjectContainer.size;
+    }
+
+    #preventDisposed() {
+
+        if ( this.#isDisposed === true ) {
+
+            throw "ObjectContainer: Container is disposed!";
+        }
     }
 
 }

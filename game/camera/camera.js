@@ -78,15 +78,15 @@ class Camera {
 
     getApproximateScreenDistance( node, alreadyWorld = false ) {
         
-        const objectcontainer = ObjectContainerUtils.getObjectContainer( node );
+        const container = ObjectContainerUtils.getObjectContainer( node );
 
-        if ( objectcontainer.index === this.game.objectcontainers.mainIndex ) {
+        if ( container.index === this.game.objectcontainers.mainIndex ) {
             
             return this.getScreenDistance( node, alreadyWorld );
 
         } else {
             
-            return objectcontainer.distance;
+            return container.distance;
         }
     }
 

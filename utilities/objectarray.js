@@ -86,6 +86,8 @@ class ObjectArray extends Array {
 
     /* override */ clear() {
 
+        let i;
+
         for ( i = 0; i < this.length; i++ ) {
 
             this[i].oaMeta.delete( this.uuid );

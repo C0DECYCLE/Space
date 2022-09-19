@@ -120,10 +120,7 @@ class EngineAssets {
         
         const mesh = this.#traverseMeshGeneral( importMesh );
         
-        if ( typeof onMesh === "function" ) {
-
-            onMesh( mesh );
-        }
+        onMesh?.( mesh );
         
         return mesh;
     }
@@ -178,10 +175,7 @@ class EngineAssets {
 
         const instance = mesh.createInstance( `i-${ mesh.name }` );
 
-        if ( typeof onInstance === "function" ) {
-
-            onInstance( instance );
-        }
+        onInstance?.( instance );
 
         return instance;
     }

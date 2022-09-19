@@ -87,13 +87,7 @@ Space.add( "install", function() {
     this.asteroids.register( "ring", { key: 0, seed: "7417", radius: 5 * 1000, spread: 400, height: 200, density: 0.02 } );
     this.asteroids.register( "ring", { key: 1, seed: "4674", radius: 5 * 1000, spread: 2 * 1000, height: 100, density: 0.03 } );
 
-
-    //smarter insertion //register static/dynamic?
-    //update dynamic mechanism
-    //spaceship solution? add remove based on control or dynamic
-
     //calculate once per frame at the end the new world position? also exact distance etc all expencive stuff only once per frame!
-
 } );
 
 Space.add( "stage", function() {

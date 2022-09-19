@@ -92,23 +92,23 @@ class Controls {
         if ( pointerInfo.type === BABYLON.PointerEventTypes.POINTERDOWN ) {
 
             this.isPointerDown = true;
-            this.onPointerDown.forEach( callback => callback( pointerInfo ) );
+            this.onPointerDown.forEach( callback => callback?.( pointerInfo ) );
 
         } else if ( pointerInfo.type === BABYLON.PointerEventTypes.POINTERUP ) {
 
             this.isPointerDown = false;
-            this.onPointerUp.forEach( callback => callback( pointerInfo ) );
+            this.onPointerUp.forEach( callback => callback?.( pointerInfo ) );
 
         } else if ( pointerInfo.type === BABYLON.PointerEventTypes.POINTERMOVE && this.config.experimentalPointerLock === false ) {
 
-            this.onPointerMove.forEach( callback => callback( pointerInfo ) );
+            this.onPointerMove.forEach( callback => callback?.( pointerInfo ) );
         }
     }
 
     #pointerLock() {
 
         const canvas = this.game.engine.babylon._renderingCanvas;
-        const mouseMove = ( event ) => this.onPointerMove.forEach( callback => callback( { event: event } ) );
+        const mouseMove = ( event ) => this.onPointerMove.forEach( callback => callback?.( { event: event } ) );
         const changeCallback = ( e ) => {
 
             if (document.pointerLockElement === canvas ||

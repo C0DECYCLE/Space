@@ -32,8 +32,8 @@ class StateMachine {
             const oldState = this.#current;
             this.#current = state;
 
-            this.#list.get( oldState )?.onLeave( state, params );
-            this.#list.get( this.#current ).onEnter( oldState, params );
+            this.#list.get( oldState )?.onLeave?.( state, params );
+            this.#list.get( this.#current )?.onEnter?.( oldState, params );
 
         } else {
 
