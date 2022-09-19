@@ -132,7 +132,7 @@ class PlanetQuadtree {
         
         return {
 
-            distance: BABYLON.Vector3.Distance( terrainifyWorldRotatePosition, params.insertposition ),
+            distance: this.#planet.game.camera.getScreenDistance( undefined, terrainifyWorldRotatePosition ),
 
             dot: BABYLON.Vector3.Dot( params.centerToInsertion, terrainifyWorldRotatePosition.subtract( this.#planet.position ).normalize() )
         };

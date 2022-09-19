@@ -68,16 +68,32 @@ class Camera {
 
     update() {
 
-        if ( this.target.object !== null && this.target.camera !== null ) {
+        this.target.camera?.update( this.target.object );
+    }
 
-            this.target.camera.update( this.target.object );
+    getScreenDistance( node = null, alreadyWorld = false ) {
+
+        return BABYLON.Vector3.Distance( alreadyWorld === false ? EngineUtils.getWorldPosition( node ) : alreadyWorld, this.position );
+    }
+
+    getApproximateScreenDistance( node, alreadyWorld = false ) {
+        
+        const container = ObjectContainerUtils.getObjectContainer( node );
+
+        if ( container.index === this.game.objectcontainers.mainIndex ) {
+            
+            return this.getScreenDistance( node, alreadyWorld );
+
+        } else {
+            
+            return container.distance;
         }
     }
 
-    screenCoverage( node ) {
+    getScreenCoverage( node ) {
 
-        const distance = EngineUtils.getWorldPosition( node ).subtractInPlace( this.position ).length();
-        const size = EngineUtils.getBounding( node ).size;
+        const distance = this.getApproximateScreenDistance( node );
+        const size = EngineUtils.getBoundingSize( node );
         
         return size / distance;
     }
@@ -119,10 +135,7 @@ class Camera {
 
     #onPointerMove( event ) {
         
-        if ( this.target.object !== null && this.target.camera !== null ) {
-
-            this.target.camera.onPointerMove( this.target.object, event );
-        }
+        this.target.camera?.onPointerMove( this.target.object, event );
     }
     
     #enterTarget( object, camera ) {

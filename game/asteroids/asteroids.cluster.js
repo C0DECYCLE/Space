@@ -11,10 +11,13 @@ class AsteroidsCluster {
     config = {
 
         key: UUIDv4(),
+        seed: undefined,
 
         radius: 1000,
         height: 1000,
         density: 0.1,
+
+        offset: null
     };
 
     game = null;
@@ -115,14 +118,20 @@ class AsteroidsCluster {
 
     #spawnAsteroids() {
 
+        const random = this.config.seed !== undefined && typeof this.config.seed === "function" ? this.config.seed : new Math.seedrandom( this.config.seed );
         const count = ( ( 2 * this.config.radius + this.config.height ) / 3 ) * this.config.density;
         const spread = new BABYLON.Vector3( this.config.radius, this.config.height, this.config.radius );
 
         for ( let i = 0; i < count; i++ ) {
             
-            const asteroid = new Asteroid( this.game, {} );
-            asteroid.position.copyFromFloats( Math.random() * 2 - 1, Math.random() * 2 - 1, Math.random() * 2 - 1 ).multiplyInPlace( spread );
+            const asteroid = new Asteroid( this.game, { random: random } );
+            asteroid.position.copyFromFloats( random() * 2 - 1, random() * 2 - 1, random() * 2 - 1 ).multiplyInPlace( spread );
             asteroid.parent = this.root;
+
+            if ( this.config.offset !== null ) {
+
+                asteroid.position.addInPlace( this.config.offset );
+            }
 
             this.list.push( asteroid );
         }

@@ -233,7 +233,7 @@ class PhysicsEntity {
         }
 
         this.#debugMesh = BABYLON.MeshBuilder.CreateSphere( "debugMesh", { diameter: 1, segments: 8 }, this.#scene );
-        this.#debugMesh.material = this.#scene.debugMaterial;
+        this.#debugMesh.material = this.#scene.debugMaterialRed;
         this.#updateDebug( mesh );
         
         if ( mesh.collisionMesh !== undefined ) {
@@ -244,11 +244,8 @@ class PhysicsEntity {
 
     #updateDebug( mesh = this.#mesh ) {
 
-        if ( this.#debugMesh !== null ) {
-            
-            this.#debugMesh.position.copyFrom( mesh.position ).addInPlace( mesh.ellipsoidOffset );
-            this.#debugMesh.scaling.copyFrom( mesh.ellipsoid ).scaleInPlace( 2 );
-        }
+        this.#debugMesh?.position.copyFrom( mesh.position ).addInPlace( mesh.ellipsoidOffset );
+        this.#debugMesh?.scaling.copyFrom( mesh.ellipsoid ).scaleInPlace( 2 );
     }
 
 }

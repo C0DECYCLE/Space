@@ -16,7 +16,8 @@ Space.addOnReady( function() {
     this.scene = new BABYLON.Scene( this.engine.babylon );
     this.scene.clearColor = BABYLON.Color3.FromHexString( background ).scale( 0.25 * 0.5 );
     this.scene.ambient = new EngineAmbient( this.scene, background, 0.25 * 1.25 );
-    this.scene.debugMaterial = EngineUtils.makeDebugMaterial( this.scene );
+    this.scene.debugMaterialRed = EngineUtils.makeDebugMaterial( this.scene, "#ff226b" );
+    this.scene.debugMaterialWhite = EngineUtils.makeDebugMaterial( this.scene, "#ffffff" );
 
     this.scene.assets = new EngineAssets( this.scene );
     this.scene.assets.onLoadObservable.addOnce( () => { this.install(); this.stage(); Space.update( this.scene, this.run ); } );
@@ -31,6 +32,8 @@ Space.addOnReady( function() {
 
 Space.add( "install", function() {
 
+
+    this.objectcontainers = new ObjectContainers( this, {} );
 
     this.physics = new Physics( this, {} );
     
@@ -81,10 +84,10 @@ Space.add( "install", function() {
 
     this.asteroids = new Asteroids( this, {} );
 
-    this.asteroids.register( "ring", { key: 0, radius: 5 * 1000, spread: 400, height: 200, density: 0.02 } );
-    this.asteroids.register( "ring", { key: 1, radius: 5 * 1000, spread: 2 * 1000, height: 100, density: 0.03 } );
-    
+    this.asteroids.register( "ring", { key: 0, seed: "7417", radius: 5 * 1000, spread: 400, height: 200, density: 0.02 } );
+    this.asteroids.register( "ring", { key: 1, seed: "4674", radius: 5 * 1000, spread: 2 * 1000, height: 100, density: 0.03 } );
 
+    
 } );
 
 Space.add( "stage", function() {
@@ -95,27 +98,41 @@ Space.add( "stage", function() {
     this.planets.list[2].place( this.star.position, 250 * 1000, 240 );
     this.planets.list[3].place( this.planets.list[2].position, 10 * 1000, 60 );
     
-    this.player.position.copyFrom( this.planets.list[0].position ).addInPlace( new BABYLON.Vector3( 5 * 1000, 0, 0 ) );
-    
     this.asteroids.list[0].position.copyFrom( this.planets.list[0].position );
     this.asteroids.list[1].position.copyFrom( this.planets.list[0].position );
 
-    this.spaceships.list[0].position.copyFrom( this.player.position ).addInPlace( new BABYLON.Vector3( 0, 0, 10 ) );
+    this.spaceships.list[0].position.copyFrom( this.planets.list[0].position ).addInPlace( new BABYLON.Vector3( 5 * 1000, 0, 0 ) );
     this.spaceships.list[0].root.rotate( BABYLON.Axis.Y, 90 * EngineUtils.toRadian, BABYLON.Space.LOCAL );
+    
+    this.player.position.copyFrom( this.spaceships.list[0].position ).addInPlace( new BABYLON.Vector3( 0, 0, -10 ) );
+    
+
+    this.objectcontainers.add( this.planets.list[0].root, ObjectContainers.TYPES.STATIC, true );
+    this.objectcontainers.add( this.planets.list[1].root, ObjectContainers.TYPES.STATIC, true );
+    this.objectcontainers.add( this.planets.list[2].root, ObjectContainers.TYPES.STATIC, true );
+    this.objectcontainers.add( this.planets.list[3].root, ObjectContainers.TYPES.STATIC, true );
+    
+    this.objectcontainers.addAll( this.asteroids.list[0].root.getChildMeshes() );
+    this.objectcontainers.addAll( this.asteroids.list[1].root.getChildMeshes() );
+
+    this.objectcontainers.add( this.spaceships.list[0].root, ObjectContainers.TYPES.DYNAMIC );
+
 
     this.scene.debugLayer.show( { embedMode: true } );
-    
+
 
 } );
 
 Space.add( "run", function( delta ) {
     
 
+    this.objectcontainers.update();
+    
     this.planets.update();
 
     this.asteroids.update();
 
-    this.spaceships.update();
+    this.spaceships.update(); 
 
     this.player.update();
     

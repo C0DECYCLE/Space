@@ -111,11 +111,11 @@ class UIMarker {
 
     #evaluateNear() {
 
-        const diffrence = EngineUtils.getWorldPosition( this.node ).subtractInPlace( this.#ui.game.player.position );
-        const size = EngineUtils.getBounding( this.node ).size;
+        const worldPosition = EngineUtils.getWorldPosition( this.node );
+        const size = EngineUtils.getBoundingSize( this.node );
 
-        this.#distance = diffrence.length();
-        this.#direction = diffrence.normalize();
+        this.#distance = this.#ui.game.camera.getScreenDistance( this.node, worldPosition );
+        this.#direction = worldPosition.subtractInPlace( this.#ui.game.player.position ).normalize();
 
         if ( this.config.type === "travel" ) {
 
@@ -137,7 +137,7 @@ class UIMarker {
 
             const spaceship = this.#ui.game.player.physics.spaceship;
 
-            return spaceship !== null && spaceship.physics.travel.isTraveling === true && spaceship.physics.travel.isJumping === false;
+            return spaceship?.physics.travel.isTraveling === true && spaceship?.physics.travel.isJumping === false;
 
         } else if ( this.config.type === "interactable" ) {
 

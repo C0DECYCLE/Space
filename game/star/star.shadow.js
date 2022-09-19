@@ -54,9 +54,9 @@ class StarShadow {
 
     update() {
 
-        if ( this.#debug === true && this.#frustumViewer !== null ) {
+        if ( this.#debug === true ) {
 
-            this.#frustumViewer.update();
+            this.#frustumViewer?.update();
         }
     }
 

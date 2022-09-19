@@ -46,22 +46,26 @@ class EngineUtils {
         return new BABYLON.Vector3( 0, 1000 * 1000 * 1000, 0 );
     }
 
-    static getBounding( node, force = false, filter = undefined ) {
+    static getBounding( node, force = false ) {
         
         if ( node.boundingCache === undefined || force === true ) {
+            
+            const positionWorld = EngineUtils.getWorldPosition( node );
 
-            const minmax = node.getHierarchyBoundingVectors( true, filter );
+            node.boundingCache = node.getHierarchyBoundingVectors( true );
+            node.boundingCache.min.subtractInPlace( positionWorld );
+            node.boundingCache.max.subtractInPlace( positionWorld );
 
-            node.boundingCache = minmax.max.subtract( minmax.min );
-            node.boundingCache.offset = node.boundingCache.scale( 0.5 ).addInPlace( minmax.min ).subtractInPlace( node.position );
-            node.boundingCache.size = node.boundingCache.length();
+            node.boundingCache.diagonal = node.boundingCache.max.subtract( node.boundingCache.min );
+            node.boundingCache.size = node.boundingCache.diagonal.length();
         }
 
-        const bounding = node.boundingCache.clone();
-        bounding.offset = node.boundingCache.offset;
-        bounding.size = node.boundingCache.size;
+        return node.boundingCache;
+    }
 
-        return bounding;
+    static getBoundingSize( node, force = false ) {
+
+        return EngineUtils.getBounding( node, force ).size;
     }
 
     static getWorldPosition( node ) {
@@ -85,10 +89,10 @@ class EngineUtils {
         }
     }
 
-    static makeDebugMaterial( scene ) {
+    static makeDebugMaterial( scene, color ) {
 
-        const debugMaterial = new BABYLON.StandardMaterial( "debug", scene );
-        debugMaterial.setColorIntensity( "#ff226b", 1.0 );
+        const debugMaterial = new BABYLON.StandardMaterial( `debug_${ color }`, scene );
+        debugMaterial.setColorIntensity( color, 1.0 );
         debugMaterial.wireframe = true;
 
         return debugMaterial;
@@ -106,6 +110,15 @@ class EngineUtils {
         vector.min = Math.min( vector.x, vector.y, vector.z );
         vector.max = Math.max( vector.x, vector.y, vector.z );
         vector.biggest = Math.abs( vector.min ) > Math.abs( vector.max ) ? vector.min : vector.max;
+    }
+
+    static round( vector ) {
+
+        vector.x = Math.round( vector.x );
+        vector.y = Math.round( vector.y );
+        vector.z = Math.round( vector.z );
+
+        return vector;
     }
 
 }

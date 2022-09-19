@@ -24,26 +24,23 @@ class Game {
         } );
     }
     
-    addOnReady( callback ) {
+    addOnReady( callback = undefined ) {
 
-        if ( typeof callback === "function" ) {
-
-            window.addEventListener( "ready", () => callback.call( this ) );
-        }
+        window.addEventListener( "ready", () => callback?.call( this ) );
     }
 
-    add( key, callback ) {
+    add( key, callback = undefined ) {
 
-        this[ key ] = () => callback.call( this );
+        this[ key ] = () => callback?.call( this );
     }
 
-    update( scene, update ) {
+    update( scene, update = undefined ) {
 
         this.engine.set( delta => {
         
             this.engine.stats[3].begin();
 
-            update( delta );
+            update?.( delta );
 
             this.engine.stats[3].end();
     

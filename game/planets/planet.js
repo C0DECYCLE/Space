@@ -89,13 +89,13 @@ class Planet {
         .addInPlace( this.#orbitCenter );
     }
 
-    insert( position, distance, force = false ) {
+    insert( distance, force = false ) {
 
         this.#updateAtmosphereDensity( distance );
 
         if ( force === true ) {
 
-            this.#evalInsertionWithString( position, distance );
+            this.#evalInsertionWithString( distance );
             return;
         }
 
@@ -106,14 +106,14 @@ class Planet {
                 this.#oversteppedInsertLimit = true;
                 //two times: first time removes half limit resolution chunk,
                 //second makes the lowest resolution chunk for outside of the limit
-                this.#insertQuadtrees( position, distance );
-                this.#insertQuadtrees( position, distance );
+                this.#insertQuadtrees( distance );
+                this.#insertQuadtrees( distance );
             }
             
         } else {
 
             this.#oversteppedInsertLimit = false;
-            this.#evalInsertionWithString( position, distance );
+            this.#evalInsertionWithString( distance );
         }
     }
 
@@ -224,21 +224,21 @@ class Planet {
         EngineUtils.getBounding( this.root, true );
     }
     
-    #evalInsertionWithString( position, distance ) {
+    #evalInsertionWithString( distance ) {
 
-        const insertionString = this.#getInsertionString( position );
+        const insertionString = this.#getInsertionString();
         
         if ( insertionString !== this.#cachedInsertionString ) {
             
-            this.#insertQuadtrees( position, distance );
+            this.#insertQuadtrees( distance );
             
             this.#cachedInsertionString = insertionString;
         }
     }
 
-    #getInsertionString( position ) {
+    #getInsertionString() {
 
-        const diffrence = position.subtract( 
+        const diffrence = this.game.camera.position.subtract( 
 
             BABYLON.Vector3.TransformCoordinates( 
 
@@ -260,18 +260,16 @@ class Planet {
         return diffrence.toString();
     }
 
-    #insertQuadtrees( position, distance ) {
+    #insertQuadtrees( distance ) {
 
         const params = { 
-            
-            insertposition: position,
             
             list: this.#list,
             
             distanceCenterInsertion: distance,
             distanceRadiusFactor: distance / this.config.radius,
 
-            centerToInsertion: position.subtract( this.position ).normalize(),
+            centerToInsertion: this.game.camera.position.subtract( this.position ).normalize(),
             occlusionFallOf: ( 1 - ( (distance / this.config.radius) - 1 ) ).clamp( -1.05, 0.95 )
         };
         
