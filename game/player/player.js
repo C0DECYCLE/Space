@@ -134,8 +134,8 @@ class Player {
         this.mesh.material.setColorIntensity( "#ff226b", 0.5 );
         this.mesh.rotationQuaternion = this.mesh.rotation.toQuaternion();
     
-        this.game.star.shadow.cast( this.mesh, true, false );
-        this.game.star.shadow.receive( this.mesh, true, false );
+        this.game.star.shadow.cast( this.mesh, undefined, undefined, false );
+        this.game.star.shadow.receive( this.mesh, undefined, undefined, false );
     }
 
     #setupPhysics() {

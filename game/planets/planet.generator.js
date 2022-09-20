@@ -52,8 +52,8 @@ class PlanetGenerator {
 
         this.#planet.physics.enable( mesh, size );
         
-        this.#planet.game.star.shadow.cast( mesh, true, false );        
-        this.#planet.game.star.shadow.receive( mesh, true, false );  
+        this.#planet.game.star.shadow.cast( mesh, undefined, undefined, false );        
+        this.#planet.game.star.shadow.receive( mesh, undefined, undefined, false );  
 
         return mesh;
     }
@@ -105,7 +105,7 @@ class PlanetGenerator {
         this.#planet.mask.material = this.#planet.game.planets.getMaskMaterial();
         this.#planet.mask.parent = this.#planet.root;
 
-        this.#planet.game.star.shadow.cast( this.#planet.mask, true, false );
+        this.#planet.game.star.shadow.cast( this.#planet.mask, undefined, undefined, false );
     }
 
     #debugInfluence() {

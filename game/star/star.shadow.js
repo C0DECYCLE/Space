@@ -10,7 +10,7 @@ class StarShadow {
 
     config = {
 
-        radius: 0.5 * 1000,
+        radius: ObjectContainer.size,
         resolution: 2048,
 
         bias: 0.005,
@@ -18,7 +18,9 @@ class StarShadow {
         lambda: 0.85,
 
         filter: "PCF", //"NONE" "PCF" "CONHRD"
-        quality: "HIGH" //LOW MEDIUM HIGH
+        quality: "HIGH", //LOW MEDIUM HIGH
+
+        defaultPause: true
     };
 
     generator = null;
@@ -28,7 +30,7 @@ class StarShadow {
     #star = null;
     #light = null;
 
-    #debug = false;
+    #debug = true;
     #frustumViewer = null;
 
     constructor( star, light, config ) {
@@ -42,14 +44,34 @@ class StarShadow {
         this.#createGenerator();
     }
 
-    cast( mesh, value = true, recursiv = false ) {
+    cast( mesh, value, recursiv = false, allowPause ) {
 
-        this.#meshRecurse( mesh, ( m ) => this.#meshCast( m, value ), recursiv );
+        this.#meshRecurse( mesh, ( m ) => this.#meshCast( m, value, allowPause ), recursiv );
+        
+        if ( this.config.defaultPause === true ) {
+
+            this.pause( mesh, recursiv );
+        }
     }
  
-    receive( mesh, value = true, recursiv = false ) {
+    receive( mesh, value, recursiv = false, allowPause ) {
+        
+        this.#meshRecurse( mesh, ( m ) => this.#meshReceive( m, value, allowPause ), recursiv );
+        
+        if ( this.config.defaultPause === true ) {
 
-        this.#meshRecurse( mesh, ( m ) => this.#meshReceive( m, value ), recursiv );
+            this.pause( mesh, recursiv );
+        }
+    }
+
+    pause( mesh, recursiv = false ) {
+
+        this.#meshRecurse( mesh, ( m ) => this.#meshPause( m ), recursiv );
+    }
+
+    resume( mesh, recursiv = false ) {
+
+        this.#meshRecurse( mesh, ( m ) => this.#meshResume( m ), recursiv );
     }
 
     update() {
@@ -95,7 +117,6 @@ class StarShadow {
 
         this.generator.usePercentageCloserFiltering = this.config.filter === "PCF";
         this.generator.useContactHardeningShadow = this.config.filter === "CONHRD";
-        //this.generator.contactHardeningLightSizeUVRatio = 0-1;
         this.generator.filteringQuality = BABYLON.ShadowGenerator[ `QUALITY_${ this.config.quality }` ];
 
         this.generator.debug = this.#debug;
@@ -107,10 +128,6 @@ class StarShadow {
 
         this.generator.shadowMaxZ = this.config.radius;
         this.generator.penumbraDarkness = 1.0;
-
-        //this.generator.depthClamp = true; //not PCSS
-        //this.generator.autoCalcDepthBounds = false; //what is that?
-        //this.generator.autoCalcDepthBoundsRefreshRate = 2 //every second frame;
 
         this.#shadowMap = this.generator.getShadowMap();
         this.#shadowMap.renderList = new ObjectArray();
@@ -131,9 +148,12 @@ class StarShadow {
         }
     }
 
-    #meshCast( mesh, value ) {
+    #meshCast( mesh, value, allowPause ) {
 
-        if ( value === true ) {
+        mesh.castShadow = value === undefined || value === true;
+        mesh.allowCastShadowsPause = allowPause === undefined || allowPause === true;
+        
+        if ( mesh.castShadow === true ) {
 
             this.#shadowMap.renderList.add( mesh );
 
@@ -143,9 +163,38 @@ class StarShadow {
         }
     }
 
-    #meshReceive( mesh, value ) {
+    #meshReceive( mesh, value, allowPause ) {
 
-        mesh.receiveShadows = value;
+        mesh.receiveShadow = value === undefined || value === true;
+        mesh.allowReceiveShadowsPause = allowPause === undefined || allowPause === true;
+
+        mesh.receiveShadows = mesh.receiveShadow;
+    }
+
+    #meshPause( mesh ) {
+        
+        if ( mesh.allowCastShadowsPause === true && mesh.castShadow === true ) {
+            
+            this.#shadowMap.renderList.delete( mesh );
+        }
+
+        if ( mesh.allowReceiveShadowsPause === true && mesh.receiveShadow === true ) {
+
+            mesh.receiveShadows = false;
+        }
+    }
+
+    #meshResume( mesh ) {
+
+        if ( mesh.allowCastShadowsPause === true && mesh.castShadow === true ) {
+
+            this.#shadowMap.renderList.add( mesh );
+        }
+
+        if ( mesh.allowReceiveShadowsPause === true && mesh.receiveShadow === true ) {
+
+            mesh.receiveShadows = true;
+        }
     }
 
 }
