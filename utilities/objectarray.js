@@ -24,10 +24,19 @@ class ObjectArray extends Array {
 
     /* override */ indexOf( object ) {
         
-        return object.oaMeta === undefined ? -1 : object.oaMeta.get( this.uuid ) || -1;
+        if ( object.oaMeta === undefined ) {
+
+            return -1;
+
+        } else {
+            
+            const index = object.oaMeta.get( this.uuid );
+
+            return index === undefined ? -1 : index;
+        }
     }
 
-    /* override */ contains( object ) {
+    /* override */ includes( object ) {
 
         return object.oaMeta === undefined ? false : object.oaMeta.has( this.uuid );
     }
@@ -42,15 +51,15 @@ class ObjectArray extends Array {
 
     add( object ) {
 
-        if ( this.contains( object ) === false ) {
-            
+        if ( this.has( object ) === false ) {
+
             this.push( object );
         }
     }
 
     has( object ) {
 
-        return this.contains( object );
+        return this.includes( object );
     }
 
     get( index ) {
@@ -73,7 +82,7 @@ class ObjectArray extends Array {
 
     delete( object ) {
 
-        if ( this.contains( object ) === true ) {
+        if ( this.has( object ) === true ) {
 
             this[ this.length - 1 ].oaMeta.set( this.uuid, this.indexOf( object ) );
             this[ this.indexOf( object ) ] = this[ this.length - 1 ];
