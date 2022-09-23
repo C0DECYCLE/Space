@@ -8,55 +8,84 @@
 
 class ObjectArray extends Array {
 
-    uuid = UUIDv4(); //constructor(debug){super();this.debug=debug;}
+    uuid = UUIDv4();
 
     /* override */ push( object ) {
             
-        if ( object.oaMeta === undefined ) {
+        if ( object.metalist === undefined ) {
 
-            object.oaMeta = new Map();  
+            object.metalist = new Map();  
         }
         
-        object.oaMeta.set( this.uuid, this.length );
-
+        object.metalist.set( this.uuid, this.length );
         super.push( object );
-        
-        //if(object.oaMeta.get( this.uuid )!==super.indexOf(object)&& this.debug )console.error("index",object.oaMeta.get( this.uuid ),"was set with push (real index is",super.indexOf(object),")!");
-    }
-
-    /* override */ indexOf( object ) {
-        
-        if ( object.oaMeta === undefined ) {
-
-            return -1;
-
-        } else {
-            
-            const index = object.oaMeta.get( this.uuid );
-
-            if ( index > this.length ) {
-                
-                console.error( `ObjectArray: index ${ index } was out of bounds, real index is ${ super.indexOf( object ) }.` ); 
-            }
-            //if(index !== undefined && index!==super.indexOf(object)&& this.debug )console.error("my index",index,"is wrong (real index is",super.indexOf(object),")!");
-            
-            return index === undefined ? -1 : index;
-        }
     }
 
     /* override */ includes( object ) {
 
-        return object.oaMeta === undefined ? false : object.oaMeta.has( this.uuid );
+        return object.metalist === undefined ? false : object.metalist.has( this.uuid );
+    }
+
+    /* override */ indexOf( object ) {
+        
+        if ( object.metalist === undefined ) {
+
+            return -1;
+        }
+        
+        const index = object.metalist.get( this.uuid );
+
+        if ( index > this.length ) {
+            
+            console.error( `ObjectArray: index ${ index } was out of bounds, real index is ${ super.indexOf( object ) }.` ); 
+        }
+
+        return index === undefined ? -1 : index;
     }
 
     /* override */ pop() {
 
         const object = super.pop();
-        object.oaMeta.delete( this.uuid );
+        object.metalist.delete( this.uuid );
 
         return object;
     }
+    
+    /* override */ splice( prevent = false ) {
+        
+        if ( prevent !== true ) {
+            
+            console.warn( "ObjectArray: Illegal splice operation." );
+        }
+    }
 
+    /* override */ shift() {
+
+        console.warn( "ObjectArray: Illegal shift operation." );
+    }
+    
+    /* override */ sort() {
+
+        console.warn( "ObjectArray: Illegal sort operation." );
+    }
+    
+    /* override */ unshift() {
+
+        console.warn( "ObjectArray: Illegal unshift operation." );
+    }
+
+    /* override */ clear() {
+
+        let i;
+
+        for ( i = 0; i < this.length; i++ ) {
+
+            this[i].metalist.delete( this.uuid );
+        }
+
+        super.clear();
+    }
+    
     add( object ) {
 
         if ( this.has( object ) === false ) {
@@ -70,81 +99,35 @@ class ObjectArray extends Array {
         return this.includes( object );
     }
 
-    get( index ) {
-
-        return this[ index ];
-    }
-
-    match( property, value ) {
-
-        let i;
-
-        for ( i = 0; i < this.length; i++ ) {
-
-            if ( this[i][ property ] === value ) {
-                
-                return this[i];
-            }
-        }
-    }
-
     delete( object ) {
 
-        if ( this.has( object ) === true ) {
+        if ( this.has( object ) === false ) {
+
+            return;
+        }
+
+        this.#interchange( object );
+        this.pop();
+        this.splice( true ); //for babylon rtt hook
+    }
+
+    #interchange( object ) {
+
+        const lastObject = this[ this.length - 1 ];
+           
+        if ( object !== lastObject ) {
             
-            if ( object !== this[ this.length - 1 ] ) {
+            const index = this.indexOf( object );
+
+            if ( index === -1 ) {
                 
-                const index = this.indexOf( object );
-                const lastObject = this[ this.length - 1 ];
-
-                if ( index === -1 ) {
-                    
-                    console.error( "ObjectArray: Try to delete index of -1." );
-                }
-
-                lastObject.oaMeta.set( this.uuid, index );
-                this[ index ] = lastObject;
-                this[ this.length - 1 ] = object;
+                console.error( "ObjectArray: Try to delete index of -1." );
             }
 
-            this.pop();
-            this.splice( true ); //for babylon rtt hook
+            this[ index ] = lastObject;
+            lastObject.metalist.set( this.uuid, index );
+            this[ this.length - 1 ] = object;
         }
-    }
-
-    /* override */ clear() {
-
-        let i;
-
-        for ( i = 0; i < this.length; i++ ) {
-
-            this[i].oaMeta.delete( this.uuid );
-        }
-
-        super.clear();
-    }
-    
-    /* override */ splice( prevent ) {
-        
-        if ( prevent !== true ) {
-            
-            console.warn( "ObjectArray: Illegal operation, splice." );
-        }
-    }
-
-    /* override */ shift() {
-
-        console.warn( "ObjectArray: Illegal operation, shift." );
-    }
-    
-    /* override */ sort() {
-
-        console.warn( "ObjectArray: Illegal operation, sort." );
-    }
-    
-    /* override */ unshift() {
-
-        console.warn( "ObjectArray: Illegal operation, unshift." );
     }
 
 }
