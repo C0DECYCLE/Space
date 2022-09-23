@@ -91,6 +91,9 @@ Space.add( "install", function() {
     this.asteroids.register( "ring", { key: 0, seed: "7417", radius: 5 * 1000, spread: 400, height: 200, density: 0.02 } );
     this.asteroids.register( "ring", { key: 1, seed: "4674", radius: 5 * 1000, spread: 2 * 1000, height: 100, density: 0.03 } );
 
+    //clean up refactor custom material
+    //look for on bind call regarding performance, doesnt have to be every frame
+    //investigate container is diposed bug when near planet 3
     
 } );
 
@@ -105,7 +108,7 @@ Space.add( "stage", function() {
     this.asteroids.list[0].position.copyFrom( this.planets.list[0].position );
     this.asteroids.list[1].position.copyFrom( this.planets.list[0].position );
 
-    this.spaceships.list[0].position.copyFrom( this.planets.list[2].position ).addInPlace( new BABYLON.Vector3( 0, 0, 5 * 1000, 0, 0 ) );
+    this.spaceships.list[0].position.copyFrom( this.planets.list[0].position ).addInPlace( new BABYLON.Vector3( 5 * 1000, 0, 0 ) );
     this.spaceships.list[0].root.rotate( BABYLON.Axis.Y, 90 * EngineUtils.toRadian, BABYLON.Space.LOCAL );
     
     this.player.position.copyFrom( this.spaceships.list[0].position ).addInPlace( new BABYLON.Vector3( 0, 0, -10 ) );
