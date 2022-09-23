@@ -73,7 +73,7 @@ class Asteroid {
         this.lod = new LOD( this.game );
         this.lod.fromModels( this.asteroids.models, mesh => {
 
-            this.game.star.shadow.cast( mesh, true, false );
+            this.game.star.shadow.cast( mesh );
         } );
     }
 

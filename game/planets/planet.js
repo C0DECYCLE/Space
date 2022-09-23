@@ -306,6 +306,9 @@ class Planet {
 
     #disposeNode( nodeKey, data ) {
 
+        this.game.star.shadow.cast( data.mesh, false, undefined, false );        
+        this.game.star.shadow.receive( data.mesh, false, undefined, false );  
+
         data.mesh.dispose( !true, false );
         this.#list.delete( nodeKey );
     }

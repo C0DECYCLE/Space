@@ -11,77 +11,67 @@ class ObjectArray extends Array {
     uuid = UUIDv4();
 
     /* override */ push( object ) {
+            
+        if ( object.metalist === undefined ) {
 
-        if ( object.oaMeta === undefined ) {
-
-            object.oaMeta = new Map();  
+            object.metalist = new Map();  
         }
         
-        object.oaMeta.set( this.uuid, this.length );
-
+        object.metalist.set( this.uuid, this.length );
         super.push( object );
+    }
+
+    /* override */ includes( object ) {
+
+        return object.metalist === undefined ? false : object.metalist.has( this.uuid );
     }
 
     /* override */ indexOf( object ) {
         
-        return object.oaMeta === undefined ? -1 : object.oaMeta.get( this.uuid ) || -1;
-    }
+        if ( object.metalist === undefined ) {
 
-    /* override */ contains( object ) {
+            return -1;
+        }
+        
+        const index = object.metalist.get( this.uuid );
 
-        return object.oaMeta === undefined ? false : object.oaMeta.has( this.uuid );
+        if ( index > this.length ) {
+            
+            console.error( `ObjectArray: index ${ index } was out of bounds, real index is ${ super.indexOf( object ) }.` ); 
+        }
+
+        return index === undefined ? -1 : index;
     }
 
     /* override */ pop() {
 
         const object = super.pop();
-        object.oaMeta.delete( this.uuid );
+        object.metalist.delete( this.uuid );
 
         return object;
     }
-
-    add( object ) {
-
-        if ( this.contains( object ) === false ) {
+    
+    /* override */ splice( prevent = false ) {
+        
+        if ( prevent !== true ) {
             
-            this.push( object );
+            console.warn( "ObjectArray: Illegal splice operation." );
         }
     }
 
-    has( object ) {
+    /* override */ shift() {
 
-        return this.contains( object );
+        console.warn( "ObjectArray: Illegal shift operation." );
     }
+    
+    /* override */ sort() {
 
-    get( index ) {
-
-        return this[ index ];
+        console.warn( "ObjectArray: Illegal sort operation." );
     }
+    
+    /* override */ unshift() {
 
-    match( property, value ) {
-
-        let i;
-
-        for ( i = 0; i < this.length; i++ ) {
-
-            if ( this[i][ property ] === value ) {
-                
-                return this[i];
-            }
-        }
-    }
-
-    delete( object ) {
-
-        if ( this.contains( object ) === true ) {
-
-            this[ this.length - 1 ].oaMeta.set( this.uuid, this.indexOf( object ) );
-            this[ this.indexOf( object ) ] = this[ this.length - 1 ];
-            this[ this.length - 1 ] = object;
-
-            this.pop();
-            this.splice( this.length, 0 ); //for babylon rtt hook
-        }
+        console.warn( "ObjectArray: Illegal unshift operation." );
     }
 
     /* override */ clear() {
@@ -90,10 +80,54 @@ class ObjectArray extends Array {
 
         for ( i = 0; i < this.length; i++ ) {
 
-            this[i].oaMeta.delete( this.uuid );
+            this[i].metalist.delete( this.uuid );
         }
 
         super.clear();
+    }
+    
+    add( object ) {
+
+        if ( this.has( object ) === false ) {
+
+            this.push( object );
+        }
+    }
+
+    has( object ) {
+
+        return this.includes( object );
+    }
+
+    delete( object ) {
+
+        if ( this.has( object ) === false ) {
+
+            return;
+        }
+
+        this.#interchange( object );
+        this.pop();
+        this.splice( true ); //for babylon rtt hook
+    }
+
+    #interchange( object ) {
+
+        const lastObject = this[ this.length - 1 ];
+           
+        if ( object !== lastObject ) {
+            
+            const index = this.indexOf( object );
+
+            if ( index === -1 ) {
+                
+                console.error( "ObjectArray: Try to delete index of -1." );
+            }
+
+            this[ index ] = lastObject;
+            lastObject.metalist.set( this.uuid, index );
+            this[ this.length - 1 ] = object;
+        }
     }
 
 }

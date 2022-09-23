@@ -10,7 +10,7 @@ class SpaceshipPhysicsTravel {
 
     static get VELOCITY() {
 
-        return 100;
+        return 128; 
     }
 
     #spaceshipPhysics = null;
