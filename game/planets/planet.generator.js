@@ -36,7 +36,71 @@ class PlanetGenerator {
     createCustomMaterial() {
         
         const material = new BABYLON.CustomMaterial( `planet${ this.#planet.config.key }_custumMaterial`, this.#planet.scene );
-        material.setColorIntensity( "#534d5f", 1.0 );
+        
+        const colorMain = new BABYLON.Color3.FromHexString( this.#planet.config.colorMain );
+        const colorSteep = new BABYLON.Color3.FromHexString( this.#planet.config.colorSteep );
+        
+        material.specularColor = new BABYLON.Color3( 0, 0, 0 );
+        material.emissiveColor = new BABYLON.Color3( 0, 0, 0 );
+        material.ambientColor = new BABYLON.Color3( 0, 0, 0 );
+
+        const ambient = this.#planet.scene.ambient;
+
+        if ( typeof ambient !== "undefined" ) {
+
+            colorMain.scale( ambient.intensity );
+            colorSteep.scale( ambient.intensity );
+
+            material.ambientColor = new BABYLON.Color3.FromHexString( ambient.color ).scale( ambient.materialFactor() );
+        }
+                
+        material.AddUniform( "colorMain", "vec3" );
+        material.AddUniform( "colorSteep", "vec3" );
+        material.AddUniform( "positionCenter", "vec3" );
+
+        material.onBindObservable.add( () => { 
+
+            material.getEffect().setVector3( "colorMain", new BABYLON.Vector3( colorMain.r, colorMain.g, colorMain.b ) );
+            material.getEffect().setVector3( "colorSteep", new BABYLON.Vector3( colorSteep.r, colorSteep.g, colorSteep.b ) );
+            material.getEffect().setVector3( "positionCenter", this.#planet.position );
+        } );
+
+        //this.material.Vertex_Begin( this._getVertexBegin() );
+        //this.material.Vertex_Definitions( PlanetSharedShader + this._getVertexDefinitions() );
+        //this.material.Vertex_MainBegin( this._getVertexMainBegin() );
+        //this.material.Vertex_Before_PositionUpdated( this._getVertexBeforePositionUpdated() );
+        //this.material.Vertex_After_WorldPosComputed( this._getVertexAfterWorldPosComputed() );
+        //this.material.Vertex_Before_NormalUpdated( this._getVertexBeforeNormalUpdated() );
+        //this.material.Vertex_MainEnd( this._getVertexMainEnd() );
+
+        //this.material.Fragment_Begin( this._getFragmentBegin() );
+        //this.material.Fragment_Definitions( this._getFragmentDefinitions() );
+        //this.material.Fragment_MainBegin( this._getFragmentMainBegin() ); 
+        //this.material.Fragment_Before_Lights( this._getFragmentBeforeLights() );
+        //this.material.Fragment_Before_Fog( this._getFragmentBeforeFog() );
+        //this.material.Fragment_Before_FragColor( this._getFragmentBeforeFragColor() );
+        material.Fragment_Custom_Diffuse( `
+        
+            float steep = dot( normalize( vPositionW - positionCenter ), vNormalW );
+
+            if ( steep <= 0.9 ) {
+
+                diffuseColor = colorSteep;
+
+            } else if ( steep > 0.9 && steep <= 0.933 ) {
+
+                diffuseColor = mix( colorSteep, colorMain, 0.33 );
+
+            } else if ( steep > 0.933 && steep <= 0.966 ) {
+
+                diffuseColor = mix( colorSteep, colorMain, 0.66 );
+
+            } else {
+
+                diffuseColor = colorMain;
+            }
+        ` );
+        //this.material.Fragment_Custom_Alpha( this._getFragmentCustomAlpha() );
 
         return material;
     }

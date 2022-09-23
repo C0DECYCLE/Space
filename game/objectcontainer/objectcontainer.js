@@ -134,7 +134,7 @@ class ObjectContainer {
 
         if ( this.#isDisposed === true ) {
 
-            throw "ObjectContainer: Container is disposed!";
+            console.error( "ObjectContainer: Container is disposed!" );
         }
     }
 
