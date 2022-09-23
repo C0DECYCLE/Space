@@ -11,7 +11,7 @@ class StarShadow {
     config = {
 
         radius: ObjectContainer.size,
-        resolution: 2048,
+        resolution: 1024,
 
         bias: 0.005,
         blend: 0.05,
@@ -130,7 +130,7 @@ class StarShadow {
         this.generator.penumbraDarkness = 1.0;
 
         this.#shadowMap = this.generator.getShadowMap();
-        this.#shadowMap.renderList = new ObjectArray(true);
+        this.#shadowMap.renderList = new ObjectArray();
     }
 
     #meshRecurse( mesh, call, recursiv = false ) {

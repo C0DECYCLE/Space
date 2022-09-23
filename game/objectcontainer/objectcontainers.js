@@ -141,6 +141,14 @@ class ObjectContainers {
         this.list.forEach( container => container.debug( this.#debugParent ) );
     }
 
+    #moveDynamicNodes() {
+
+        for ( let i = 0; i < this.#dynamicNodes.length; i++ ) {
+            
+            this.move( this.#dynamicNodes[i] );
+        }
+    }
+
     #addInternal( node, type = ObjectContainers.TYPES.STATIC, ignoreMinMax = false, positionWorld = EngineUtils.getWorldPosition( node ), gridMinMax = null ) {
 
         if ( ignoreMinMax === false && gridMinMax === null ) {
@@ -169,7 +177,7 @@ class ObjectContainers {
     
     #removeInternal( node ) {
 
-        const onCotainerDispose = index => this.#onContainerDispose( index );
+        const onCotainerDispose = index => this.list.delete( index );
 
         for ( let i = 0; i < node.objectcontainers.length; i++ ) {
 
@@ -224,19 +232,6 @@ class ObjectContainers {
             min: ObjectContainerUtils.positionToGrid( minmax.min.add( positionWorld ) ),
             max: ObjectContainerUtils.positionToGrid( minmax.max.add( positionWorld ) )
         };
-    }
-
-    #moveDynamicNodes() {
-
-        for ( let i = 0; i < this.#dynamicNodes.length; i++ ) {
-            
-            this.move( this.#dynamicNodes[i] );
-        }
-    }
-
-    #onContainerDispose( index ) {
-
-        this.list.delete( index );
     }
 
 }

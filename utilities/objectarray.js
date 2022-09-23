@@ -8,7 +8,7 @@
 
 class ObjectArray extends Array {
 
-    uuid = UUIDv4(); constructor(debug){super();this.debug=debug;}
+    uuid = UUIDv4(); //constructor(debug){super();this.debug=debug;}
 
     /* override */ push( object ) {
             
@@ -19,7 +19,9 @@ class ObjectArray extends Array {
         
         object.oaMeta.set( this.uuid, this.length );
 
-        super.push( object );if(object.oaMeta.get( this.uuid )!==super.indexOf(object)&& this.debug )console.error("index",object.oaMeta.get( this.uuid ),"was set with push (real index is",super.indexOf(object),")!");
+        super.push( object );
+        
+        //if(object.oaMeta.get( this.uuid )!==super.indexOf(object)&& this.debug )console.error("index",object.oaMeta.get( this.uuid ),"was set with push (real index is",super.indexOf(object),")!");
     }
 
     /* override */ indexOf( object ) {
@@ -32,11 +34,12 @@ class ObjectArray extends Array {
             
             const index = object.oaMeta.get( this.uuid );
 
-            if ( index > this.length && this.debug ) {
-
-                console.error("index",index,"of",object,"was out of bounds, real index is",super.indexOf(object),"!"); 
+            if ( index > this.length ) {
+                
+                console.error( `ObjectArray: index ${ index } was out of bounds, real index is ${ super.indexOf( object ) }.` ); 
             }
-            if(index !== undefined && index!==super.indexOf(object)&& this.debug )console.error("my index",index,"is wrong (real index is",super.indexOf(object),")!");
+            //if(index !== undefined && index!==super.indexOf(object)&& this.debug )console.error("my index",index,"is wrong (real index is",super.indexOf(object),")!");
+            
             return index === undefined ? -1 : index;
         }
     }
@@ -91,8 +94,13 @@ class ObjectArray extends Array {
             
             if ( object !== this[ this.length - 1 ] ) {
                 
-                const index = this.indexOf( object );if(index===-1&& this.debug )console.error("delete, index -1!");
+                const index = this.indexOf( object );
                 const lastObject = this[ this.length - 1 ];
+
+                if ( index === -1 ) {
+                    
+                    console.error( "ObjectArray: Try to delete index of -1." );
+                }
 
                 lastObject.oaMeta.set( this.uuid, index );
                 this[ index ] = lastObject;
@@ -100,7 +108,7 @@ class ObjectArray extends Array {
             }
 
             this.pop();
-            this.splice( this.length, 0 ); //for babylon rtt hook
+            this.splice( true ); //for babylon rtt hook
         }
     }
 
@@ -116,20 +124,27 @@ class ObjectArray extends Array {
         super.clear();
     }
     
+    /* override */ splice( prevent ) {
+        
+        if ( prevent !== true ) {
+            
+            console.warn( "ObjectArray: Illegal operation, splice." );
+        }
+    }
+
     /* override */ shift() {
-        console.warn("ObjectArray: Illegal operation, shift.");
+
+        console.warn( "ObjectArray: Illegal operation, shift." );
     }
     
     /* override */ sort() {
-        console.warn("ObjectArray: Illegal operation, sort.");
-    }
-    
-    /* override */ splice() {
-        //console.warn("ObjectArray: Illegal operation, splice.");
+
+        console.warn( "ObjectArray: Illegal operation, sort." );
     }
     
     /* override */ unshift() {
-        console.warn("ObjectArray: Illegal operation, unshift.");
+
+        console.warn( "ObjectArray: Illegal operation, unshift." );
     }
 
 }
