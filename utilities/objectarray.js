@@ -8,10 +8,10 @@
 
 class ObjectArray extends Array {
 
-    uuid = UUIDv4();
+    uuid = UUIDv4(); constructor(debug){super();this.debug=debug;}
 
     /* override */ push( object ) {
-
+            
         if ( object.oaMeta === undefined ) {
 
             object.oaMeta = new Map();  
@@ -19,7 +19,7 @@ class ObjectArray extends Array {
         
         object.oaMeta.set( this.uuid, this.length );
 
-        super.push( object );
+        super.push( object );if(object.oaMeta.get( this.uuid )!==super.indexOf(object)&& this.debug )console.error("index",object.oaMeta.get( this.uuid ),"was set with push (real index is",super.indexOf(object),")!");
     }
 
     /* override */ indexOf( object ) {
@@ -32,6 +32,11 @@ class ObjectArray extends Array {
             
             const index = object.oaMeta.get( this.uuid );
 
+            if ( index > this.length && this.debug ) {
+
+                console.error("index",index,"of",object,"was out of bounds, real index is",super.indexOf(object),"!"); 
+            }
+            if(index !== undefined && index!==super.indexOf(object)&& this.debug )console.error("my index",index,"is wrong (real index is",super.indexOf(object),")!");
             return index === undefined ? -1 : index;
         }
     }
@@ -83,10 +88,16 @@ class ObjectArray extends Array {
     delete( object ) {
 
         if ( this.has( object ) === true ) {
+            
+            if ( object !== this[ this.length - 1 ] ) {
+                
+                const index = this.indexOf( object );if(index===-1&& this.debug )console.error("delete, index -1!");
+                const lastObject = this[ this.length - 1 ];
 
-            this[ this.length - 1 ].oaMeta.set( this.uuid, this.indexOf( object ) );
-            this[ this.indexOf( object ) ] = this[ this.length - 1 ];
-            this[ this.length - 1 ] = object;
+                lastObject.oaMeta.set( this.uuid, index );
+                this[ index ] = lastObject;
+                this[ this.length - 1 ] = object;
+            }
 
             this.pop();
             this.splice( this.length, 0 ); //for babylon rtt hook
@@ -103,6 +114,22 @@ class ObjectArray extends Array {
         }
 
         super.clear();
+    }
+    
+    /* override */ shift() {
+        console.warn("ObjectArray: Illegal operation, shift.");
+    }
+    
+    /* override */ sort() {
+        console.warn("ObjectArray: Illegal operation, sort.");
+    }
+    
+    /* override */ splice() {
+        //console.warn("ObjectArray: Illegal operation, splice.");
+    }
+    
+    /* override */ unshift() {
+        console.warn("ObjectArray: Illegal operation, unshift.");
     }
 
 }

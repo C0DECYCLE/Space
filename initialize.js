@@ -93,9 +93,9 @@ Space.add( "install", function() {
 Space.add( "stage", function() {
     
 
-    this.planets.list[0].place( this.star.position, 100 * 1000, 90 );
-    this.planets.list[1].place( this.star.position, 200 * 1000, -45 );
-    this.planets.list[2].place( this.star.position, 250 * 1000, 240 );
+    this.planets.list[0].place( this.star.position, 500 * 1000, 90 );
+    this.planets.list[1].place( this.star.position, 800 * 1000, -45 );
+    this.planets.list[2].place( this.star.position, 1000 * 1000, 240 );
     this.planets.list[3].place( this.planets.list[2].position, 10 * 1000, 60 );
     
     this.asteroids.list[0].position.copyFrom( this.planets.list[0].position );

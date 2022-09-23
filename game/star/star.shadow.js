@@ -30,7 +30,7 @@ class StarShadow {
     #star = null;
     #light = null;
 
-    #debug = true;
+    #debug = false;
     #frustumViewer = null;
 
     constructor( star, light, config ) {
@@ -130,7 +130,7 @@ class StarShadow {
         this.generator.penumbraDarkness = 1.0;
 
         this.#shadowMap = this.generator.getShadowMap();
-        this.#shadowMap.renderList = new ObjectArray();
+        this.#shadowMap.renderList = new ObjectArray(true);
     }
 
     #meshRecurse( mesh, call, recursiv = false ) {
@@ -150,8 +150,8 @@ class StarShadow {
 
     #meshCast( mesh, value, allowPause ) {
 
-        mesh.castShadow = value === undefined || value === true;
-        mesh.allowCastShadowsPause = allowPause === undefined || allowPause === true;
+        mesh.castShadow = value === undefined ? true : value;
+        mesh.allowCastShadowsPause = allowPause === undefined ? true : allowPause;
         
         if ( mesh.castShadow === true ) {
 
@@ -165,20 +165,20 @@ class StarShadow {
 
     #meshReceive( mesh, value, allowPause ) {
 
-        mesh.receiveShadow = value === undefined || value === true;
-        mesh.allowReceiveShadowsPause = allowPause === undefined || allowPause === true;
+        mesh.receiveShadow = value === undefined ? true : value;
+        mesh.allowReceiveShadowsPause = allowPause === undefined ? true : allowPause;
 
         mesh.receiveShadows = mesh.receiveShadow;
     }
 
     #meshPause( mesh ) {
         
-        if ( mesh.allowCastShadowsPause === true && mesh.castShadow === true ) {
+        if ( mesh.allowCastShadowsPause === true ) {
             
             this.#shadowMap.renderList.delete( mesh );
         }
 
-        if ( mesh.allowReceiveShadowsPause === true && mesh.receiveShadow === true ) {
+        if ( mesh.allowReceiveShadowsPause === true ) {
 
             mesh.receiveShadows = false;
         }
