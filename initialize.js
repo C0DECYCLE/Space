@@ -61,28 +61,28 @@ Space.add( "install", function() {
             key: 0, radius: 1024, spin: 0.005, 
             gravity: 0.6, atmosphere: 256, waveLengths: new BABYLON.Color3( 450, 370, 420 ),
             seed: new BABYLON.Vector3( -1123, 7237, -3943 ), mountainy: 5, warp: 0.8,
-            colors: { main: "#92a4a8", steep: "#66515f" }
+            colors: { main: "#92a4a8", second: "#a58685", third: "#caa88d", steep: "#66515f" }
         },
 
         { 
             key: 1, radius: 2048, spin: 0.005, 
             gravity: 0.7, atmosphere: 512, waveLengths: new BABYLON.Color3( 450, 500, 680 ),
             seed: new BABYLON.Vector3( 8513, -9011, -5910 ), variant: "1", mountainy: 3.5, warp: 1.0,
-            colors: { main: "#d3b246", steep: "#51515f" }
+            colors: { main: "#d4b96d", second: "#ffb765", third: "#f4ffb5", steep: "#51515f" }
         },
 
         { 
             key: 2, radius: 4096, spin: 0.0025, 
             gravity: 0.8, atmosphere: 1024, waveLengths: new BABYLON.Color3( 700, 600, 500 ),
             seed: new BABYLON.Vector3( -925, -2011, 7770 ),
-            colors: { main: "#9caf95", steep: "#252123" }
+            colors: { main: "#7a8161", second: "#856160", third: "#a8ceb0", steep: "#252123" }
         },
 
         { 
             key: 3, radius: 256, spin: 0.01, 
             gravity: 0.4, atmosphere: false,
             seed: new BABYLON.Vector3( 2253, 7001, 4099 ), mountainy: 2, warp: 0.6,
-            colors: { main: "#9a9aac", steep: "#65606e" }
+            colors: { main: "#9a9aac", second: "#aa9cc0", third: "#6d7a7a", steep: "#65606e" }
         }
     ] );
 
@@ -91,7 +91,6 @@ Space.add( "install", function() {
     this.asteroids.register( "ring", { key: 0, seed: "7417", radius: 5 * 1000, spread: 400, height: 200, density: 0.02 } );
     this.asteroids.register( "ring", { key: 1, seed: "4674", radius: 5 * 1000, spread: 2 * 1000, height: 100, density: 0.03 } );
 
-    //look for on bind call regarding performance, doesnt have to be every frame
     //investigate container is diposed bug when near planet 3
     
 } );
@@ -107,7 +106,7 @@ Space.add( "stage", function() {
     this.asteroids.list[0].position.copyFrom( this.planets.list[0].position );
     this.asteroids.list[1].position.copyFrom( this.planets.list[0].position );
 
-    this.spaceships.list[0].position.copyFrom( this.planets.list[0].position ).addInPlace( new BABYLON.Vector3( 5 * 1000, 0, 0 ) );
+    this.spaceships.list[0].position.copyFrom( this.planets.list[2].position ).addInPlace( new BABYLON.Vector3( 5 * 1000, 0, 0 ) );
     this.spaceships.list[0].root.rotate( BABYLON.Axis.Y, 90 * EngineUtils.toRadian, BABYLON.Space.LOCAL );
     
     this.player.position.copyFrom( this.spaceships.list[0].position ).addInPlace( new BABYLON.Vector3( 0, 0, -10 ) );
