@@ -79,7 +79,7 @@ Space.add( "install", function() {
         },
 
         { 
-            key: 3, radius: 256, spin: 0.01, 
+            key: 3, radius: 512, spin: 0.01, 
             gravity: 0.4, atmosphere: false,
             seed: new BABYLON.Vector3( 2253, 7001, 4099 ), mountainy: 2, warp: 0.6,
             colors: { main: "#9a9aac", second: "#aa9cc0", third: "#6d7a7a", steep: "#65606e" }
@@ -91,7 +91,6 @@ Space.add( "install", function() {
     this.asteroids.register( "ring", { key: 0, seed: "7417", radius: 5 * 1000, spread: 400, height: 200, density: 0.02 } );
     this.asteroids.register( "ring", { key: 1, seed: "4674", radius: 5 * 1000, spread: 2 * 1000, height: 100, density: 0.03 } );
 
-    //investigate container is diposed bug when near planet 3
     
 } );
 
@@ -101,12 +100,12 @@ Space.add( "stage", function() {
     this.planets.list[0].place( this.star.position, 500 * 1000, 90 );
     this.planets.list[1].place( this.star.position, 800 * 1000, -45 );
     this.planets.list[2].place( this.star.position, 1000 * 1000, 240 );
-    this.planets.list[3].place( this.planets.list[2].position, 200 * 1000, 60 );
+    this.planets.list[3].place( this.planets.list[2].position, 60 * 1000, 60 );
     
     this.asteroids.list[0].position.copyFrom( this.planets.list[0].position );
     this.asteroids.list[1].position.copyFrom( this.planets.list[0].position );
 
-    this.spaceships.list[0].position.copyFrom( this.planets.list[2].position ).addInPlace( new BABYLON.Vector3( 5 * 1000, 0, 0 ) );
+    this.spaceships.list[0].position.copyFrom( this.planets.list[0].position ).addInPlace( new BABYLON.Vector3( 5 * 1000, 0, 0 ) );
     this.spaceships.list[0].root.rotate( BABYLON.Axis.Y, 90 * EngineUtils.toRadian, BABYLON.Space.LOCAL );
     
     this.player.position.copyFrom( this.spaceships.list[0].position ).addInPlace( new BABYLON.Vector3( 0, 0, -10 ) );

@@ -59,6 +59,11 @@ class UIMarker {
         return this.#direction;
     }
 
+    get distance() {
+
+        return this.#distance;
+    }
+
     get isNear() {
 
         return this.#isNear;

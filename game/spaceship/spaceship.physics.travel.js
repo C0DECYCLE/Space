@@ -129,14 +129,11 @@ class SpaceshipPhysicsTravel {
     
     #updateJumping() {
 
-        const worldPosition = EngineUtils.getWorldPosition( this.#jumping.node );
         const size = EngineUtils.getBoundingSize( this.#jumping.node );
-        const distance = this.#game.camera.getApproximateScreenDistance( this.#jumping.node, worldPosition );
-        const direction = worldPosition.subtractInPlace( this.#game.player.position ).normalize();
+        
+        if ( this.#jumping.distance > size / 2 && this.#evaluateKeyPress() === false ) {
 
-        if ( distance > size / 2 && this.#evaluateKeyPress() === false ) {
-
-            this.#spaceshipPhysics.velocity.copyFrom( direction ).scaleInPlace( SpaceshipPhysicsTravel.VELOCITY * this.#game.engine.deltaCorrection );
+            this.#spaceshipPhysics.velocity.copyFrom( this.#jumping.direction ).scaleInPlace( SpaceshipPhysicsTravel.VELOCITY * this.#game.engine.deltaCorrection );
 
         } else {
 
