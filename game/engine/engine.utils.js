@@ -121,4 +121,9 @@ class EngineUtils {
         return vector;
     }
 
+    static color3ToVector3( color ) {
+
+        return new BABYLON.Vector3( color.r, color.g, color.b );
+    }
+
 }

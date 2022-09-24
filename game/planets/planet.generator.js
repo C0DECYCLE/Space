@@ -25,17 +25,9 @@ class PlanetGenerator {
         this.#planet.mask.setEnabled( value );
     }
 
-    createMaterial() {
+    createBasicMaterial() {
         
-        const material = new BABYLON.StandardMaterial( `planet${ this.#planet.config.key }_material`, this.#planet.scene );
-        material.setColorIntensity( "#534d5f", 1.0 );
-
-        return material;
-    }
-
-    createCustomMaterial() {
-        
-        const material = new BABYLON.CustomMaterial( `planet${ this.#planet.config.key }_custumMaterial`, this.#planet.scene );
+        const material = new BABYLON.StandardMaterial( `planet${ this.#planet.config.key }_basicMaterial`, this.#planet.scene );
         material.setColorIntensity( "#534d5f", 1.0 );
 
         return material;

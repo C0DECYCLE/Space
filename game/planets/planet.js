@@ -22,12 +22,18 @@ class Planet {
         waveLengths: new BABYLON.Color3( 700, 530, 440 ),
         
         min: 64,
-        resolution: 16,
+        resolution: 24,
 
         seed: null,
         variant: "0", //"1"
         mountainy: 7.5, //3.5
-        warp: 0.3 //1.0
+        warp: 0.3, //1.0
+
+        colors: {
+            
+            main: "#7e7e7e",
+            steep: "#222222"
+        }
     };
 
     game = null;
@@ -141,8 +147,8 @@ class Planet {
     #addGenerator() {
 
         this.generator = new PlanetGenerator( this, this.#faces );
-        this.material = this.generator.createMaterial();
-        //this.custumMaterial = this.generator.createCustomMaterial();
+        //this.material = this.generator.createMaterial();
+        this.material = new PlanetMaterial( this );
     }
 
     #setupPerlin() {

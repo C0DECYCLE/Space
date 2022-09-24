@@ -41,7 +41,6 @@ class Player {
         EngineUtils.configure.call( this, config );
 
         this.#createMesh();    
-        this.#setupInspector();
         this.#setupStates();
         this.#setupPhysics();
         this.#setupInteraction();
@@ -74,8 +73,6 @@ class Player {
 
     update() {
 
-        this.#updateFromInspector();
-
         this.physics.update();
         this.interaction.update();
     }
@@ -91,23 +88,6 @@ class Player {
 
             this.state.set( "space" );
         }
-    }
-
-    #setupInspector() {
-
-        this.root._float = this.config.float;
-
-        this.root.inspectableCustomProperties = [
-
-            {
-                label: "Float",
-                propertyName: "_float",
-                type: BABYLON.InspectableType.Slider,
-                min: 0.05,
-                max: 10,
-                step: 1,
-            }
-        ];
     }
 
     #setupStates() {
@@ -146,11 +126,6 @@ class Player {
     #setupInteraction() {
 
         this.interaction = new PlayerInteraction( this );
-    }
-
-    #updateFromInspector() {
-
-        this.config.float = this.root._float;
     }
 
     #onSpaceEnter( oldState ) {

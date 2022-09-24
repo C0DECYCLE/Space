@@ -11,7 +11,7 @@ class StarShadow {
     config = {
 
         radius: ObjectContainer.size,
-        resolution: 1024,
+        resolution: 2048,
 
         bias: 0.005,
         blend: 0.05,
