@@ -48,7 +48,7 @@ class Planet {
     perlin = null;
     atmosphere = null;
 
-    #faces = [];
+    #faces = new Map();
 
     #cachedInsertionString = "";
     #oversteppedInsertLimit = false;
@@ -147,8 +147,8 @@ class Planet {
     #addGenerator() {
 
         this.generator = new PlanetGenerator( this, this.#faces );
-        //this.material = this.generator.createMaterial();
-        this.material = new PlanetMaterial( this );
+        this.material = this.generator.createBasicMaterial();
+        //this.material = new PlanetMaterial( this );
     }
 
     #setupPerlin() {
@@ -267,26 +267,10 @@ class Planet {
     }
 
     #insertQuadtrees( distance ) {
-
-        const params = { 
-            
-            list: this.#list,
-            
-            distanceCenterInsertion: distance,
-            distanceRadiusFactor: distance / this.config.radius,
-
-            centerToInsertion: this.game.camera.position.subtract( this.position ).normalize(),
-            occlusionFallOf: ( 1 - ( (distance / this.config.radius) - 1 ) ).clamp( -1.05, 0.95 )
-        };
         
         this.#unkeepAll();
-
-        for ( let i = 0; i < this.#faces.length; i++ ) {
-
-            this.#faces[i].insert( params );
-        }
-
-        this.#disposeUnkept();
+        this.#generate( distance );
+        this.#disposeAndStitch();
     }
 
     #unkeepAll() {
@@ -297,13 +281,33 @@ class Planet {
         } );
     }
 
-    #disposeUnkept() {
+    #generate( distance ) {
+        
+        const params = { 
+            
+            list: this.#list,
+            
+            distanceCenterInsertion: distance,
+            distanceRadiusFactor: distance / this.config.radius,
+
+            centerToInsertion: this.game.camera.position.subtract( this.position ).normalize(),
+            occlusionFallOf: ( 1 - ( (distance / this.config.radius) - 1 ) ).clamp( -1.05, 0.95 )
+        };
+
+        this.#faces.forEach( ( face, suffic ) => face.insert( params ) );
+    }
+
+    #disposeAndStitch() {
 
         this.#list.forEach( ( data, nodeKey ) => {
             
             if ( data.keep === false ) {
                 
                 this.#disposeNode( nodeKey, data );
+
+            } else {
+
+                this.#faces.get( nodeKey[0] ).stitch( nodeKey, this.#list, data );
             }
         } ); 
         

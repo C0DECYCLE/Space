@@ -29,6 +29,7 @@ class PlanetGenerator {
         
         const material = new BABYLON.StandardMaterial( `planet${ this.#planet.config.key }_basicMaterial`, this.#planet.scene );
         material.setColorIntensity( "#534d5f", 1.0 );
+        material.wireframe = true;
 
         return material;
     }
@@ -57,11 +58,34 @@ class PlanetGenerator {
         for ( let i = 0; i < positions.length / 3; i++ ) {
             
             let vertex = new BABYLON.Vector3( positions[ i * 3 ], positions[ i * 3 + 1 ], positions[ i * 3 + 2 ] );
-            
+
             vertex.applyRotationQuaternionInPlace( fixRotation.toQuaternion() );
             vertex.addInPlace( position );
     
             vertex = PlanetUtils.terrainify( this.#planet, vertex );
+
+            positions[ i * 3 ] = vertex.x;
+            positions[ i * 3 + 1 ] = vertex.y;
+            positions[ i * 3 + 2 ] = vertex.z;
+        }
+        
+        mesh.updateVerticesData( BABYLON.VertexBuffer.PositionKind, positions );
+        mesh.convertToFlatShadedMesh();
+    }
+    
+    stitchChunkMesh( mesh, position, fixRotation ) {
+        
+        const positions = mesh.getVerticesData( BABYLON.VertexBuffer.PositionKind );
+
+        for ( let i = 0; i < positions.length / 3; i++ ) {
+            
+            let vertex = new BABYLON.Vector3( positions[ i * 3 ], positions[ i * 3 + 1 ], positions[ i * 3 + 2 ] );
+            
+            if ( edge === true /*x | z === size / 2*/ ) {
+
+                //if left && do left then stitch left
+                //...
+            }
 
             positions[ i * 3 ] = vertex.x;
             positions[ i * 3 + 1 ] = vertex.y;
@@ -87,7 +111,7 @@ class PlanetGenerator {
 
         for ( let i = 0; i < rotations.length; i++ ) {
 
-            faces.push( new PlanetQuadtree( this.#planet, suffix[i], rotations[i] ) );
+            faces.set( suffix[i], new PlanetQuadtree( this.#planet, suffix[i], rotations[i] ) );
         }
     }
     
