@@ -68,7 +68,7 @@ class PlanetQuadtree {
         let doTop = last === 2 || last === 3 ? false : this.#hasBiggerNeighbor( seclast, "t", hasSecVer, hasThiVer, hasSecHor, hasThiHor );
         let doBottom = last === 0 || last === 1 ? false : this.#hasBiggerNeighbor( seclast, "b", hasSecVer, hasThiVer, hasSecHor, hasThiHor );
 
-        
+
     }
 
     #getHash( nodeKey, backIndex ) {
@@ -191,7 +191,7 @@ class PlanetQuadtree {
             keep: true,
 
             resolution: resolution,
-            mesh: this.#planet.generator.createChunkMesh( nodeKey, position, this.#fixRotation, size, resolution, factors.distance )
+            mesh: new PlanetChunk( this.#planet, { nodeKey: nodeKey, position: position, fixRotation: this.#fixRotation, size: size, resolution: resolution, distance: factors.distance } )
         } );
     }
 

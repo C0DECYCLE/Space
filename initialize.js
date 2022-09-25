@@ -92,8 +92,9 @@ Space.add( "install", function() {
     this.asteroids.register( "ring", { key: 1, seed: "4674", radius: 5 * 1000, spread: 2 * 1000, height: 100, density: 0.03 } );
 
 
+    //refactor ground mesh generation by manual
     //do stitching
-    //do only one generation: IS: nodes -> generation, stitching -> updating SHOULD: nodes, stitching, generation & updating
+    //nodes -> generation, stitching
     //cache old chunks and reuse (same sizes), accross planets?
     
 } );
