@@ -48,11 +48,11 @@ class Planet {
     perlin = null;
     atmosphere = null;
 
-    #faces = new Map();
+    faces = new Map();
+    chunks = null;
 
     #cachedInsertionString = "";
     #oversteppedInsertLimit = false;
-    #list = new Map();
     #orbitCenter = new BABYLON.Vector3( 0, 0, 0 );
     #distanceInOrbit = 0;
     #angleAroundOrbit = 0;
@@ -112,8 +112,8 @@ class Planet {
                 this.#oversteppedInsertLimit = true;
                 //two times: first time removes half limit resolution chunk,
                 //second makes the lowest resolution chunk for outside of the limit
-                this.#insertQuadtrees( distance );
-                this.#insertQuadtrees( distance );
+                this.chunks.insertQuadtrees( distance );
+                this.chunks.insertQuadtrees( distance );
             }
             
         } else {
@@ -146,9 +146,10 @@ class Planet {
 
     #addGenerator() {
 
-        this.generator = new PlanetGenerator( this, this.#faces );
-        this.material = this.generator.createBasicMaterial();
-        //this.material = new PlanetMaterial( this );
+        this.generator = new PlanetGenerator( this, this.faces );
+        this.chunks = new PlanetChunks( this );
+        //this.material = this.generator.createBasicMaterial();
+        this.material = new PlanetMaterial( this );
     }
 
     #setupPerlin() {
@@ -236,7 +237,7 @@ class Planet {
         
         if ( insertionString !== this.#cachedInsertionString ) {
             
-            this.#insertQuadtrees( distance );
+            this.chunks.insertQuadtrees( distance );
             
             this.#cachedInsertionString = insertionString;
         }
@@ -264,63 +265,6 @@ class Planet {
         );
 
         return diffrence.toString();
-    }
-
-    #insertQuadtrees( distance ) {
-        
-        this.#unkeepAll();
-        this.#generate( distance );
-        this.#disposeAndStitch();
-    }
-
-    #unkeepAll() {
-
-        this.#list.forEach( ( data, nodeKey ) => {
-            
-            data.keep = false;
-        } );
-    }
-
-    #generate( distance ) {
-        
-        const params = { 
-            
-            list: this.#list,
-            
-            distanceCenterInsertion: distance,
-            distanceRadiusFactor: distance / this.config.radius,
-
-            centerToInsertion: this.game.camera.position.subtract( this.position ).normalize(),
-            occlusionFallOf: ( 1 - ( (distance / this.config.radius) - 1 ) ).clamp( -1.05, 0.95 )
-        };
-
-        this.#faces.forEach( ( face, suffic ) => face.insert( params ) );
-    }
-
-    #disposeAndStitch() {
-
-        this.#list.forEach( ( data, nodeKey ) => {
-            
-            if ( data.keep === false ) {
-                
-                this.#disposeNode( nodeKey, data );
-
-            } else {
-
-                this.#faces.get( nodeKey[0] ).stitch( nodeKey, this.#list, data );
-            }
-        } ); 
-        
-        /*data.retired = true; data.mesh.setEnabled( false );*/ 
-    }
-
-    #disposeNode( nodeKey, data ) {
-
-        this.game.star.shadow.cast( data.mesh, false, undefined, false );        
-        this.game.star.shadow.receive( data.mesh, false, undefined, false );  
-
-        data.mesh.dispose( !true, false );
-        this.#list.delete( nodeKey );
     }
 
 }

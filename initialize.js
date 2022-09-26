@@ -91,12 +91,10 @@ Space.add( "install", function() {
     this.asteroids.register( "ring", { key: 0, seed: "7417", radius: 5 * 1000, spread: 400, height: 200, density: 0.02 } );
     this.asteroids.register( "ring", { key: 1, seed: "4674", radius: 5 * 1000, spread: 2 * 1000, height: 100, density: 0.03 } );
 
-
-    //refactor ground mesh generation by manual
+    //compute new tree -> keep same nodes, make new nodes -> make geometry with stitching (take old meshes from cache plus make new when necessary)
     //do stitching
-    //nodes -> generation, stitching
     //cache old chunks and reuse (same sizes), accross planets?
-    
+  
 } );
 
 Space.add( "stage", function() {

@@ -46,7 +46,7 @@ class PlanetQuadtree {
 
         this.#recurse( params, this.suffix, this.#up.scale( this.#planet.config.radius ), this.#size );
     }
-
+    /*
     stitch( nodeKey, list, data ) {
 
         if ( nodeKey.length === 1 || nodeKey.length === 2 ) {
@@ -68,7 +68,7 @@ class PlanetQuadtree {
         let doTop = last === 2 || last === 3 ? false : this.#hasBiggerNeighbor( seclast, "t", hasSecVer, hasThiVer, hasSecHor, hasThiHor );
         let doBottom = last === 0 || last === 1 ? false : this.#hasBiggerNeighbor( seclast, "b", hasSecVer, hasThiVer, hasSecHor, hasThiHor );
 
-
+        //return [ doTop, doBottom, doLeft, doRight ];
     }
 
     #getHash( nodeKey, backIndex ) {
@@ -116,7 +116,7 @@ class PlanetQuadtree {
             case 3: return 2;
         }
     }
-
+    */
     #setup1D() {
 
         this.#right = BABYLON.Vector3.Right().applyRotationQuaternionInPlace( this.#fixRotation.toQuaternion() );
@@ -145,7 +145,7 @@ class PlanetQuadtree {
             
         } else {
 
-            this.#evaluateNode( params, nodeKey, position, size, factors );
+            this.#planet.chunks.evaluateNode( params, nodeKey, position, size, factors );
         }
     }
 
@@ -155,44 +155,6 @@ class PlanetQuadtree {
         this.#recurse( params, `${ nodeKey }1`, this.#rightforward.scale( size / 4 ).addInPlace( position ), size / 2 );
         this.#recurse( params, `${ nodeKey }2`, this.#leftbackward.scale( size / 4 ).addInPlace( position ), size / 2 );
         this.#recurse( params, `${ nodeKey }3`, this.#rightbackward.scale( size / 4 ).addInPlace( position ), size / 2 );
-    }
-
-    #evaluateNode( params, nodeKey, position, size, factors ) {
-
-        //if ( factors.dot > params.occlusionFallOf ) {
-                
-            const resolution = this.#getResolution( params, size );
-            
-            if ( params.list.has( nodeKey ) === true ) {
-
-                this.#keepNode( params, nodeKey, resolution );
-
-            } else {
-
-                this.#makeNode( params, nodeKey, position, size, factors, resolution );
-            }
-        //}
-    }
-
-    #keepNode( params, nodeKey, resolution ) {
-
-        const node = params.list.get( nodeKey );
-            
-        if ( node.resolution === resolution ) {
-
-            node.keep = true;
-        }
-    }
-
-    #makeNode( params, nodeKey, position, size, factors, resolution ) {
-
-        params.list.set( nodeKey, {
-
-            keep: true,
-
-            resolution: resolution,
-            mesh: new PlanetChunk( this.#planet, { nodeKey: nodeKey, position: position, fixRotation: this.#fixRotation, size: size, resolution: resolution, distance: factors.distance } )
-        } );
     }
 
     #getDistanceDot( params, position ) {
@@ -206,23 +168,6 @@ class PlanetQuadtree {
 
             dot: BABYLON.Vector3.Dot( params.centerToInsertion, terrainifyWorldRotatePosition.subtract( this.#planet.position ).normalize() )
         };
-    }
-
-    #getResolution( params, size ) {
-        
-        if ( size >= this.#size ) { 
-            
-            if ( params.distanceRadiusFactor > PlanetQuadtree.INSERT_LIMIT ) {
-
-                return this.#planet.config.resolution / 4;
-                
-            } else if ( params.distanceRadiusFactor > PlanetQuadtree.INSERT_HALF_LIMIT ) {
-
-                return this.#planet.config.resolution / 2;
-            }
-        }
-
-        return this.#planet.config.resolution;
     }
 
 }

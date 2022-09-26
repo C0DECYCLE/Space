@@ -15,7 +15,7 @@ class PlanetUtils {
 
     static terrainify( planet, v ) {
 
-        v = PlanetUtils.cubesphere( v, planet.config.radius );
+        PlanetUtils.cubesphere( v, planet.config.radius );
         
         return PlanetUtils.displace( planet, v );
     }
@@ -24,19 +24,13 @@ class PlanetUtils {
         
         v.scaleInPlace( 1 / r );
         
-        const x2 = v._x * v._x;
-        const y2 = v._y * v._y;
-        const z2 = v._z * v._z;
+        const x2 = v.x * v.x;
+        const y2 = v.y * v.y;
+        const z2 = v.z * v.z;
         
-        const s = { x: 0, y: 0, z: 0 };
-        
-        s.x = v._x * Math.sqrt( 1 - y2 / 2 - z2 / 2 + y2 * z2 / 3 );
-        s.y = v._y * Math.sqrt( 1 - x2 / 2 - z2 / 2 + x2 * z2 / 3 );
-        s.z = v._z * Math.sqrt( 1 - x2 / 2 - y2 / 2 + x2 * y2 / 3 );
-        
-        v._x = s.x;
-        v._y = s.y;
-        v._z = s.z;
+        v.x *= Math.sqrt( 1 - y2 / 2 - z2 / 2 + y2 * z2 / 3 );
+        v.y *= Math.sqrt( 1 - x2 / 2 - z2 / 2 + x2 * z2 / 3 );
+        v.z *= Math.sqrt( 1 - x2 / 2 - y2 / 2 + x2 * y2 / 3 );
         
         return v;
     }

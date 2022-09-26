@@ -22,11 +22,11 @@ class PhysicsEntity {
         GROUND: 1
     };
     
-    static collidable( mesh, type = PhysicsEntity.TYPES.STATIC ) {
+    static collidable( mesh, type = PhysicsEntity.TYPES.STATIC, value ) {
 
         mesh.physicsEntityType = type;
         
-        PhysicsEntity.#collisions( mesh, true );
+        PhysicsEntity.#collisions( mesh, value === undefined ? true : value );
     }
 
     static #collisions( mesh, checkCollisions ) {
