@@ -17,25 +17,24 @@ class PlanetChunk extends BABYLON.Mesh {
     #chunkSize = undefined;
     #chunkResolution = undefined;
     
-    /* override */ constructor( planet, config ) {
+    /* override */ constructor( planet ) {
     
-        super( `planet${ planet.config.key }_chunk_${ config.nodeKey }`, planet.scene );
+        super( `planet${ planet.config.key }_chunk_EMPTY`, planet.scene );
 
         this.#planet = planet;
 
         this.#setupMesh();
-        this.#setupGeometry( config.position, config.fixRotation, config.size, config.resolution );
-        this.#setupPhysics( config.size );
+        this.#setupGeometry();
         this.#setupShadow();
     }
 
-    rebuildChunk( config ) {
+    generate( nodeKey, config, neighbors ) {
 
         this.#removePhysics();
 
-        this.name = `planet${ planet.config.key }_chunk_${ config.nodeKey }`;
+        this.name = `planet${ this.#planet.config.key }_chunk_${ nodeKey }`;
 
-        this.#buildGeometry( config.position, config.fixRotation, config.size, config.resolution );
+        this.#buildGeometry( config.position, config.fixRotation, config.size, config.resolution, neighbors );
         this.#setupPhysics( config.size );
     }
 
@@ -44,6 +43,13 @@ class PlanetChunk extends BABYLON.Mesh {
         this.material = this.#planet.material;
         this.parent = this.#planet.root;
     }
+
+    #setupGeometry() {
+
+        this.#vertexData = new BABYLON.VertexData();
+        this.#vertexData.indices = [];
+        this.#vertexData.positions = [];
+    } 
 
     #setupPhysics( size ) {
 
@@ -60,15 +66,6 @@ class PlanetChunk extends BABYLON.Mesh {
         this.#planet.game.star.shadow.cast( this, undefined, undefined, false );        
         this.#planet.game.star.shadow.receive( this, undefined, undefined, false );  
     }
-
-    #setupGeometry( position, fixRotation, size, resolution, neighbors ) {
-
-        this.#vertexData = new BABYLON.VertexData();
-        this.#vertexData.indices = [];
-        this.#vertexData.positions = [];
-
-        this.#buildGeometry( position, fixRotation, size, resolution, neighbors );
-    } 
 
     #buildGeometry( offset, fixRotation, size, resolution, neighbors ) {
 

@@ -93,7 +93,6 @@ Space.add( "install", function() {
 
     //compute new tree -> keep same nodes, make new nodes -> make geometry with stitching (take old meshes from cache plus make new when necessary)
     //do stitching
-    //cache old chunks and reuse (same sizes), accross planets?
   
 } );
 

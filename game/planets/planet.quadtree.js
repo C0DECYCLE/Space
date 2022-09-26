@@ -117,23 +117,6 @@ class PlanetQuadtree {
         }
     }
     */
-    #setup1D() {
-
-        this.#right = BABYLON.Vector3.Right().applyRotationQuaternionInPlace( this.#fixRotation.toQuaternion() );
-        this.#up = BABYLON.Vector3.Up().applyRotationQuaternionInPlace( this.#fixRotation.toQuaternion() );
-        
-        this.#forward = BABYLON.Vector3.Cross( this.#right, this.#up );
-        this.#left = this.#right.negate();
-        this.#backward = this.#forward.negate();
-    }
-
-    #setup2D() {
-
-        this.#leftforward = this.#left.add( this.#forward );
-        this.#rightforward = this.#right.add( this.#forward );
-        this.#leftbackward = this.#backward.add( this.#left );
-        this.#rightbackward = this.#backward.add( this.#right );
-    }
 
     #recurse( params, nodeKey, position, size ) {
 
@@ -145,7 +128,7 @@ class PlanetQuadtree {
             
         } else {
 
-            this.#planet.chunks.evaluateNode( params, nodeKey, position, size, factors );
+            this.#planet.chunks.node( params, factors, nodeKey, position, this.#fixRotation, size, this.#size );
         }
     }
 
@@ -163,11 +146,27 @@ class PlanetQuadtree {
         const terrainifyWorldRotatePosition = BABYLON.Vector3.TransformCoordinates( terrainifyPosition, this.#planet.root.computeWorldMatrix( true ) );
         
         return {
-
             distance: this.#planet.game.camera.getScreenDistance( undefined, terrainifyWorldRotatePosition ),
-
             dot: BABYLON.Vector3.Dot( params.centerToInsertion, terrainifyWorldRotatePosition.subtract( this.#planet.position ).normalize() )
         };
+    }
+
+    #setup1D() {
+
+        this.#right = BABYLON.Vector3.Right().applyRotationQuaternionInPlace( this.#fixRotation.toQuaternion() );
+        this.#up = BABYLON.Vector3.Up().applyRotationQuaternionInPlace( this.#fixRotation.toQuaternion() );
+        
+        this.#forward = BABYLON.Vector3.Cross( this.#right, this.#up );
+        this.#left = this.#right.negate();
+        this.#backward = this.#forward.negate();
+    }
+
+    #setup2D() {
+
+        this.#leftforward = this.#left.add( this.#forward );
+        this.#rightforward = this.#right.add( this.#forward );
+        this.#leftbackward = this.#backward.add( this.#left );
+        this.#rightbackward = this.#backward.add( this.#right );
     }
 
 }

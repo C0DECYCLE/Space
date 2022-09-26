@@ -43,7 +43,7 @@ class Planet {
     lod = null;
     physics = null;
 
-    generator = null;
+    helper = null;
     material = null;
     perlin = null;
     atmosphere = null;
@@ -66,7 +66,7 @@ class Planet {
 
         this.#createRoot();
         this.#createLod();
-        this.#addGenerator();
+        this.#setupGeneration();
         this.#setupPerlin();
         this.#setupPhysics();
         this.#addAtmosphere();
@@ -144,11 +144,11 @@ class Planet {
         this.lod.fromSingle( this.root );
     }
 
-    #addGenerator() {
+    #setupGeneration() {
 
-        this.generator = new PlanetGenerator( this, this.faces );
+        this.helper = new PlanetHelper( this, this.faces );
         this.chunks = new PlanetChunks( this );
-        //this.material = this.generator.createBasicMaterial();
+        //this.material = this.helper.createBasicMaterial();
         this.material = new PlanetMaterial( this );
     }
 

@@ -6,7 +6,7 @@
     2022
 */
 
-class PlanetGenerator {
+class PlanetHelper {
 
     #planet = null;
 

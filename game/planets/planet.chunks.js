@@ -11,7 +11,7 @@ class PlanetChunks {
     #planet = null;
     
     #nodes = new Map();
-    #list = new Map();
+    #pool = new ObjectArray();
 
     constructor( planet ) {
 
@@ -21,8 +21,16 @@ class PlanetChunks {
     insertQuadtrees( distance ) {
         
         this.#unkeepAll();
-        this.#generate( distance );
-        this.#disposeAndStitch();
+        this.#doQuadtree( distance );
+        this.#doChunks();
+    }
+
+    node( params, factors, nodeKey, position, fixRotation, size, faceSize ) {
+
+        if ( factors.dot > params.occlusionFallOf ) {
+                
+            this.#evalNode( params, nodeKey, position, fixRotation, size, faceSize );
+        }
     }
 
     #unkeepAll() {
@@ -33,66 +41,43 @@ class PlanetChunks {
         } );
     }
 
-    #generate( distance ) {
+    #doQuadtree( distance ) {
         
         const params = { 
             
             distanceCenterInsertion: distance,
             distanceRadiusFactor: distance / this.#planet.config.radius,
 
-            centerToInsertion: this.#planet.game.camera.position.subtract( this.position ).normalize(),
+            centerToInsertion: this.#planet.game.camera.position.subtract( this.#planet.position ).normalize(),
             occlusionFallOf: ( 1 - ( (distance / this.#planet.config.radius) - 1 ) ).clamp( -1.05, 0.95 )
         };
 
         this.#planet.faces.forEach( ( face, suffic ) => face.insert( params ) );
     }
 
-    #disposeAndStitch() {
+    #evalNode( params, nodeKey, position, fixRotation, size, faceSize ) {
 
-        this.#nodes.forEach( ( data, nodeKey ) => {
-            
-            if ( data.keep === false ) {
-                
-                this.#disposeNode( nodeKey, data );
-
-            } else {
-
-                this.#planet.faces.get( nodeKey[0] ).stitch( nodeKey, this.#nodes, data );
-            }
-        } ); 
+        const resolution = this.#getResolution( params, size, faceSize );
+        const node = this.#nodes.get( nodeKey );
         
-        /*data.retired = true; data.mesh.setEnabled( false );*/ 
-    }
+        if ( node !== undefined ) {
 
-    #disposeNode( nodeKey, data ) {
+            if ( node.resolution === resolution ) {
 
-        //this.#planet.game.star.shadow.cast( data.mesh, false, undefined, false );        
-        //this.#planet.game.star.shadow.receive( data.mesh, false, undefined, false );  
-
-        //data.mesh.dispose( !true, false );
-        //this.#list.delete( nodeKey );
-    }
-
-    evaluateNode( params, nodeKey, position, size, factors ) {
-
-        //if ( factors.dot > params.occlusionFallOf ) {
-                
-            const resolution = this.#getResolution( params, size );
-            
-            if ( this.#nodes.has( nodeKey ) === true ) {
-
-                this.#keepNode( params, nodeKey, resolution );
-
-            } else {
-
-                this.#makeNode( params, nodeKey, position, size, factors, resolution );
+                node.keep = true;
             }
-        //}
+
+        } else {
+
+            this.#nodes.set( nodeKey, { keep: true, chunk: this.#getChunk(),
+                position: position, fixRotation: fixRotation, size: size, resolution: resolution
+            } ); 
+        }
     }
 
-    #getResolution( params, size ) {
+    #getResolution( params, size, faceSize ) {
         
-        if ( size >= this.#size ) { 
+        if ( size >= faceSize ) { 
             
             if ( params.distanceRadiusFactor > PlanetQuadtree.INSERT_LIMIT ) {
 
@@ -107,25 +92,47 @@ class PlanetChunks {
         return this.#planet.config.resolution;
     }
 
-    #keepNode( params, nodeKey, resolution ) {
+    #getChunk() {
 
-        const node = this.#nodes.get( nodeKey );
-            
-        if ( node.resolution === resolution ) {
+        if ( this.#pool.length > 0 ) {
 
-            node.keep = true;
+            const chunk = this.#pool.pop();
+            chunk.setEnabled( true );
+            return chunk;
+
+        } else {
+
+            return new PlanetChunk( this.#planet );
         }
     }
 
-    #makeNode( params, nodeKey, position, size, factors, resolution ) {
+    #doChunks() {
 
-        this.#nodes.set( nodeKey, {
+        this.#nodes.forEach( ( data, nodeKey ) => {
+            
+            if ( data.keep === false ) {
+                
+                this.#removeNode( nodeKey, data );
 
-            keep: true,
+            } else {
 
-            resolution: resolution,
-            mesh: new PlanetChunk( this.#planet, { nodeKey: nodeKey, position: position, fixRotation: this.#fixRotation, size: size, resolution: resolution } )
+                this.#makeChunk( nodeKey, data );
+            }
         } ); 
+    }
+
+    #removeNode( nodeKey, data ) {
+
+        data.chunk.setEnabled( false );
+        this.#pool.add( data.chunk );
+        this.#nodes.delete( nodeKey );
+    }
+
+    #makeChunk( nodeKey, data ) {
+
+        //compute neighbors
+        const neighbors = undefined; 
+        data.chunk.generate( nodeKey, data, neighbors );
     }
 
 }

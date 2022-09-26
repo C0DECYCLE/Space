@@ -145,14 +145,14 @@ class Player {
         log( "player entered planet" );
 
         this.physics.planet = planet;
-        this.physics.planet.generator.toggleMask( true );
+        //this.physics.planet.generator.toggleMask( true );
     }
     
     #onPlanetLeave( newState ) {
         
         log( "player left planet" );
 
-        this.physics.planet.generator.toggleMask( false );
+        //this.physics.planet.generator.toggleMask( false );
         this.physics.planet = null;
     }
 
