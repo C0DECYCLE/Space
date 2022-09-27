@@ -11,7 +11,7 @@ class PlanetChunks {
     #planet = null;
     
     #nodes = new Map();
-    #pool = new ObjectArray();
+    //#pool = new ObjectArray();
 
     constructor( planet ) {
 
@@ -20,7 +20,6 @@ class PlanetChunks {
 
     insertQuadtrees( distance ) {
         
-        this.#unkeepAll();
         this.#doQuadtree( distance );
         this.#doChunks();
     }
@@ -31,14 +30,6 @@ class PlanetChunks {
                 
             this.#evalNode( params, nodeKey, position, fixRotation, size, faceSize );
         }
-    }
-
-    #unkeepAll() {
-
-        this.#nodes.forEach( ( data, nodeKey ) => {
-            
-            data.keep = false;
-        } );
     }
 
     #doQuadtree( distance ) {
@@ -61,17 +52,15 @@ class PlanetChunks {
         const node = this.#nodes.get( nodeKey );
         
         if ( node !== undefined ) {
-
-            if ( node.resolution === resolution ) {
+            //fix, can remove weird overstep insert?
+            if ( node.chunk.resolution === resolution ) {
 
                 node.keep = true;
             }
 
         } else {
 
-            this.#nodes.set( nodeKey, { keep: true, chunk: this.#getChunk(),
-                position: position, fixRotation: fixRotation, size: size, resolution: resolution
-            } ); 
+            this.#nodes.set( nodeKey, { keep: true, chunk: new PlanetChunk( this.#planet, nodeKey, { position: position, fixRotation: fixRotation, size: size, resolution: resolution } ) } ); 
         }
     }
 
@@ -92,19 +81,19 @@ class PlanetChunks {
         return this.#planet.config.resolution;
     }
 
-    #getChunk() {
+    /*
+    #getChunk( noconfig ) {
 
         if ( this.#pool.length > 0 ) {
 
-            const chunk = this.#pool.pop();
-            chunk.setEnabled( true );
-            return chunk;
+            return this.#pool.pop();
 
         } else {
-
+        
             return new PlanetChunk( this.#planet );
         }
     }
+    */
 
     #doChunks() {
 
@@ -115,24 +104,34 @@ class PlanetChunks {
                 this.#removeNode( nodeKey, data );
 
             } else {
-
-                this.#makeChunk( nodeKey, data );
+                
+                //this.#makeChunk( nodeKey, data );
             }
+            
+            data.keep = false;
         } ); 
     }
 
     #removeNode( nodeKey, data ) {
 
-        data.chunk.setEnabled( false );
-        this.#pool.add( data.chunk );
+        
+        this.#planet.game.star.shadow.cast( data.chunk, false, undefined, false );        
+        this.#planet.game.star.shadow.receive( data.chunk, false, undefined, false );  
+        data.chunk.dispose();
+        
+        //data.chunk.setEnabled( false );
+        //this.#pool.add( data.chunk );
+
         this.#nodes.delete( nodeKey );
     }
 
+    /*
     #makeChunk( nodeKey, data ) {
 
         //compute neighbors
         const neighbors = undefined; 
-        data.chunk.generate( nodeKey, data, neighbors );
+        data.chunk.generate( nodeKey, data.config, neighbors );
+        data.chunk.setEnabled( true );
     }
-
+    */
 }
