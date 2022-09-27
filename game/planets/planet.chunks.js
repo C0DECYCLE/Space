@@ -25,10 +25,10 @@ class PlanetChunks {
 
     node( params, factors, nodeKey, position, fixRotationQuaternion, size, faceSize ) {
 
-        if ( factors.dot > params.occlusionFallOf ) {
+        //if ( factors.dot > params.occlusionFallOf ) {
                 
             this.#evalNode( params, nodeKey, position, fixRotationQuaternion, size, faceSize );
-        }
+        //}
     }
 
     #doQuadtree( distance ) {
@@ -100,8 +100,8 @@ class PlanetChunks {
     #stitchNode( nodeKey, data ) {
 
         //compute neighbors
-        const neighbors = undefined; 
-        //data.chunk.stitch( neighbors );
+        const neighbors = this.#planet.stitch.stitch( nodeKey, this.#nodes ); 
+        if ( neighbors !== undefined ) data.chunk.stitch( neighbors );
     }
 
     #disposeNode( nodeKey, data ) {

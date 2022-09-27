@@ -57,7 +57,10 @@ class PlanetChunk extends BABYLON.Mesh {
 
         const vertexData = new BABYLON.VertexData();
         vertexData.positions = this.#buildPositions( config.position, config.fixRotationQuaternion, config.size, config.resolution );
-        vertexData.indices = this.#buildIndices( config.resolution );
+        vertexData.indices = this.#buildIndices( config.resolution ); 
+        //
+        vertexData.normals = []; BABYLON.VertexData.ComputeNormals( vertexData.positions, vertexData.indices, vertexData.normals );
+        //
         vertexData.applyToMesh( this, true );
     } 
 
@@ -133,6 +136,8 @@ class PlanetChunk extends BABYLON.Mesh {
 
                     position = new BABYLON.Vector3( positions[ i * 3 ], positions[ i * 3 + 1 ], positions[ i * 3 + 2 ] );
 
+                    position.scaleInPlace( 1.1 );
+
                     positions[ i * 3 ] = position.x;
                     positions[ i * 3 + 1 ] = position.y;
                     positions[ i * 3 + 2 ] = position.z;
@@ -152,7 +157,7 @@ class PlanetChunk extends BABYLON.Mesh {
         const left = col === 0 && neighbors[2] === true;
         const right = col === resolution && neighbors[3] === true;
     
-        if ( size < this.#planet.config.radius * 2 && ( up || down || left || right ) && ( row % 2 === 1 || col % 2 === 1 ) ) {
+        if ( size < this.#planet.config.radius * 2 /*&& ( up || down || left || right ) && ( row % 2 === 1 || col % 2 === 1 )*/ ) {
     
             if ( left === true || right === true ) {
     

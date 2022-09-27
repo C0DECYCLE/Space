@@ -21,7 +21,7 @@ class Planet {
         waveLengths: new BABYLON.Color3( 700, 530, 440 ),
         
         min: 64,
-        resolution: 24,
+        resolution: 4, //24
 
         seed: null,
         variant: "0", //"1"
@@ -43,6 +43,7 @@ class Planet {
     physics = null;
 
     helper = null;
+    stitch = null;
     material = null;
     perlin = null;
     atmosphere = null;
@@ -109,8 +110,7 @@ class Planet {
             if ( this.#oversteppedInsertLimit === false ) {
                 
                 this.#oversteppedInsertLimit = true;
-                //two times: first time removes half limit resolution chunk,
-                //second makes the lowest resolution chunk for outside of the limit
+                //two times: first time removes half limit resolution chunk, second makes the lowest resolution chunk for outside of the limit
                 this.chunks.insertQuadtrees( distance );
                 this.chunks.insertQuadtrees( distance );
             }
@@ -145,9 +145,10 @@ class Planet {
     #setupGeneration() {
 
         this.helper = new PlanetHelper( this, this.faces );
+        this.stitch = new PlanetQuadtreeStitch( this );
         this.chunks = new PlanetChunks( this );
-        //this.material = this.helper.createBasicMaterial();
-        this.material = new PlanetMaterial( this );
+        this.material = this.helper.createBasicMaterial();
+        //this.material = new PlanetMaterial( this );
     }
 
     #setupPerlin() {
