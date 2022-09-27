@@ -16,7 +16,7 @@ class PlanetQuadtree {
     #planet = null;
     #size = undefined;
 
-    #fixRotation = null;
+    #fixRotationQuaternion = null;
 
     #up = null;
     #left = null;
@@ -34,7 +34,7 @@ class PlanetQuadtree {
         this.#planet = planet;
 
         this.#size = this.#planet.config.radius * 2;
-        this.#fixRotation = fixRotation.scaleInPlace( Math.PI / 2 );
+        this.#fixRotationQuaternion = fixRotation.scaleInPlace( Math.PI / 2 ).toQuaternion();
 
         this.#setup1D();
         this.#setup2D();
@@ -46,7 +46,8 @@ class PlanetQuadtree {
 
         this.#recurse( params, this.suffix, this.#up.scale( this.#planet.config.radius ), this.#size );
     }
-    /*
+    
+    /////////////////////////////////////////////////////////
     stitch( nodeKey, list, data ) {
 
         if ( nodeKey.length === 1 || nodeKey.length === 2 ) {
@@ -68,7 +69,7 @@ class PlanetQuadtree {
         let doTop = last === 2 || last === 3 ? false : this.#hasBiggerNeighbor( seclast, "t", hasSecVer, hasThiVer, hasSecHor, hasThiHor );
         let doBottom = last === 0 || last === 1 ? false : this.#hasBiggerNeighbor( seclast, "b", hasSecVer, hasThiVer, hasSecHor, hasThiHor );
 
-        //return [ doTop, doBottom, doLeft, doRight ];
+        return [ doTop, doBottom, doLeft, doRight ];
     }
 
     #getHash( nodeKey, backIndex ) {
@@ -116,7 +117,7 @@ class PlanetQuadtree {
             case 3: return 2;
         }
     }
-    */
+    //////////////////////////////////////////////////////////
 
     #recurse( params, nodeKey, position, size ) {
 
@@ -128,7 +129,7 @@ class PlanetQuadtree {
             
         } else {
 
-            this.#planet.chunks.node( params, factors, nodeKey, position, this.#fixRotation, size, this.#size );
+            this.#planet.chunks.node( params, factors, nodeKey, position, this.#fixRotationQuaternion, size, this.#size );
         }
     }
 
@@ -153,8 +154,8 @@ class PlanetQuadtree {
 
     #setup1D() {
 
-        this.#right = BABYLON.Vector3.Right().applyRotationQuaternionInPlace( this.#fixRotation.toQuaternion() );
-        this.#up = BABYLON.Vector3.Up().applyRotationQuaternionInPlace( this.#fixRotation.toQuaternion() );
+        this.#right = BABYLON.Vector3.Right().applyRotationQuaternionInPlace( this.#fixRotationQuaternion );
+        this.#up = BABYLON.Vector3.Up().applyRotationQuaternionInPlace( this.#fixRotationQuaternion );
         
         this.#forward = BABYLON.Vector3.Cross( this.#right, this.#up );
         this.#left = this.#right.negate();

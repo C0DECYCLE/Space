@@ -9,11 +9,9 @@
 class PlanetChunk extends BABYLON.Mesh {
 
     #planet = null;
-
-    #chunkOffset = null;
-    #chunkfixRotQuat = null;
-    #chunkSize = undefined;
-    #chunkResolution = undefined;
+    
+    #size = undefined;
+    #resolution = undefined;
     
     /* override */ constructor( planet, nodeKey, config ) {
     
@@ -31,24 +29,21 @@ class PlanetChunk extends BABYLON.Mesh {
         this.#setupPhysics( config.size );
     }
 
+    get size() {
+
+        return this.#size;
+    }
+
     get resolution() {
 
-        return this.#chunkResolution;
+        return this.#resolution;
     }
 
-    /*
-    generate( nodeKey, config, neighbors ) {
+    stitch( neighbors ) {
 
-        this.#removePhysics();
-
-        this.name = `planet${ this.#planet.config.key }_chunk_${ nodeKey }`;
-
-        this.#buildGeometry( config.position, config.fixRotation, config.size, config.resolution, neighbors );
-        this.#setupPhysics( config.size );
-
-        return this;
+        this.#stitchGeometry( neighbors, this.#size, this.#resolution );
     }
-    */
+
     #setupMesh() {
 
         this.material = this.#planet.material;
@@ -57,27 +52,18 @@ class PlanetChunk extends BABYLON.Mesh {
 
     #setupGeometry( config ) {
 
+        this.#size = config.size;
+        this.#resolution = config.resolution;
+
         const vertexData = new BABYLON.VertexData();
-        vertexData.indices = [];
-        vertexData.positions = [];
-        vertexData.normals = [];
-
-        this.#buildGeometry( vertexData, config.position, config.fixRotation, config.size, config.resolution, undefined );
-
-        //BABYLON.VertexData.ComputeNormals( vertexData.positions, vertexData.indices, vertexData.normals );
-
+        vertexData.positions = this.#buildPositions( config.position, config.fixRotationQuaternion, config.size, config.resolution );
+        vertexData.indices = this.#buildIndices( config.resolution );
         vertexData.applyToMesh( this, true );
-        this.convertToFlatShadedMesh();
     } 
 
     #setupPhysics( size ) {
 
         this.#planet.physics.enable( this, size );
-    }
-
-    #removePhysics() {
-
-        this.#planet.physics.disable( this );
     }
 
     #setupShadow() {
@@ -86,43 +72,77 @@ class PlanetChunk extends BABYLON.Mesh {
         this.#planet.game.star.shadow.receive( this, undefined, undefined, false );  
     }
 
-    #buildGeometry( vertexData, offset, fixRotation, size, resolution, neighbors ) {
-
-        this.#chunkOffset = offset;
-        this.#chunkfixRotQuat = fixRotation.toQuaternion();
-        this.#chunkSize = size;
-        this.#chunkResolution = resolution;
+    #buildPositions( offset, fixRotationQuaternion, size, resolution ) {
 
         let row;
         let col;
+        const positions = [];
         let position;
 
         for ( row = 0; row <= resolution; row++ ) {
             for ( col = 0; col <= resolution; col++) {
 
                 position = new BABYLON.Vector3( (col * size) / resolution - size / 2.0, 0, ((resolution - row) * size) / resolution - size / 2.0 );
-                position.applyRotationQuaternionInPlace( this.#chunkfixRotQuat );
-                position.addInPlace( this.#chunkOffset );
+                position.applyRotationQuaternionInPlace( fixRotationQuaternion );
+                position.addInPlace( offset );
                 PlanetUtils.terrainify( this.#planet, position );
-
-                //this.#getEdgeCase( neighbors, row, col, this.#chunkSize, this.#chunkResolution );
-
-                vertexData.positions.push( position.x, position.y, position.z );
+                
+                positions.push( position.x, position.y, position.z );
             }
-        }        
+        }   
+        
+        return positions;
+    }
+
+    #buildIndices( resolution ) {
+
+        let row;
+        let col;
+        const indices = [];
 
         for ( row = 0; row < resolution; row++ ) {
             for ( col = 0; col < resolution; col++ ) {
 
-                vertexData.indices.push( col + 1 + (row + 1) * (resolution + 1) );
-                vertexData.indices.push( col + 1 + row * (resolution + 1) );
-                vertexData.indices.push( col + row * (resolution + 1) );
+                indices.push( col + 1 + (row + 1) * (resolution + 1) );
+                indices.push( col + 1 + row * (resolution + 1) );
+                indices.push( col + row * (resolution + 1) );
     
-                vertexData.indices.push( col + (row + 1) * (resolution + 1) );
-                vertexData.indices.push( col + 1 + (row + 1) * (resolution + 1) );
-                vertexData.indices.push( col + row * (resolution + 1) );
+                indices.push( col + (row + 1) * (resolution + 1) );
+                indices.push( col + 1 + (row + 1) * (resolution + 1) );
+                indices.push( col + row * (resolution + 1) );
             }
         }
+
+        return indices;
+    }
+
+    #stitchGeometry( neighbors, size, resolution ) {
+
+        let row;
+        let col;
+        const positions = this.getVerticesData( BABYLON.VertexBuffer.PositionKind );
+        let position;
+        let i = 0;
+
+        for ( row = 0; row <= resolution; row++ ) {
+            for ( col = 0; col <= resolution; col++) {
+
+                const edgeCase = this.#getEdgeCase( neighbors, row, col, size, resolution );
+
+                if ( edgeCase !== false ) {
+
+                    position = new BABYLON.Vector3( positions[ i * 3 ], positions[ i * 3 + 1 ], positions[ i * 3 + 2 ] );
+
+                    positions[ i * 3 ] = position.x;
+                    positions[ i * 3 + 1 ] = position.y;
+                    positions[ i * 3 + 2 ] = position.z;
+                }
+
+                i += 3;
+            }
+        }   
+        
+        this.updateVerticesData( BABYLON.VertexBuffer.PositionKind, positions );
     }
 
     #getEdgeCase( neighbors, row, col, size, resolution ) {

@@ -11,7 +11,6 @@ class PlanetChunks {
     #planet = null;
     
     #nodes = new Map();
-    //#pool = new ObjectArray();
 
     constructor( planet ) {
 
@@ -24,11 +23,11 @@ class PlanetChunks {
         this.#doChunks();
     }
 
-    node( params, factors, nodeKey, position, fixRotation, size, faceSize ) {
+    node( params, factors, nodeKey, position, fixRotationQuaternion, size, faceSize ) {
 
         if ( factors.dot > params.occlusionFallOf ) {
                 
-            this.#evalNode( params, nodeKey, position, fixRotation, size, faceSize );
+            this.#evalNode( params, nodeKey, position, fixRotationQuaternion, size, faceSize );
         }
     }
 
@@ -46,13 +45,13 @@ class PlanetChunks {
         this.#planet.faces.forEach( ( face, suffic ) => face.insert( params ) );
     }
 
-    #evalNode( params, nodeKey, position, fixRotation, size, faceSize ) {
+    #evalNode( params, nodeKey, position, fixRotationQuaternion, size, faceSize ) {
 
         const resolution = this.#getResolution( params, size, faceSize );
         const node = this.#nodes.get( nodeKey );
         
         if ( node !== undefined ) {
-            
+
             if ( node.chunk.resolution === resolution ) {
 
                 node.keep = true;
@@ -60,7 +59,7 @@ class PlanetChunks {
 
         } else {
 
-            this.#nodes.set( nodeKey, { keep: true, chunk: new PlanetChunk( this.#planet, nodeKey, { position: position, fixRotation: fixRotation, size: size, resolution: resolution } ) } ); 
+            this.#nodes.set( nodeKey, { keep: true, chunk: new PlanetChunk( this.#planet, nodeKey, { position: position, fixRotationQuaternion: fixRotationQuaternion, size: size, resolution: resolution } ) } ); 
         }
     }
 
@@ -81,57 +80,37 @@ class PlanetChunks {
         return this.#planet.config.resolution;
     }
 
-    /*
-    #getChunk( noconfig ) {
-
-        if ( this.#pool.length > 0 ) {
-
-            return this.#pool.pop();
-
-        } else {
-        
-            return new PlanetChunk( this.#planet );
-        }
-    }
-    */
-
     #doChunks() {
 
         this.#nodes.forEach( ( data, nodeKey ) => {
             
             if ( data.keep === false ) {
                 
-                this.#removeNode( nodeKey, data );
+                this.#disposeNode( nodeKey, data );
 
             } else {
-                
-                //this.#makeChunk( nodeKey, data );
+
+                this.#stitchNode( nodeKey, data );
             }
             
             data.keep = false;
         } ); 
     }
 
-    #removeNode( nodeKey, data ) {
+    #stitchNode( nodeKey, data ) {
 
-        
+        //compute neighbors
+        const neighbors = undefined; 
+        //data.chunk.stitch( neighbors );
+    }
+
+    #disposeNode( nodeKey, data ) {
+
         this.#planet.game.star.shadow.cast( data.chunk, false, undefined, false );        
         this.#planet.game.star.shadow.receive( data.chunk, false, undefined, false );  
         data.chunk.dispose();
-        
-        //data.chunk.setEnabled( false );
-        //this.#pool.add( data.chunk );
 
         this.#nodes.delete( nodeKey );
     }
 
-    /*
-    #makeChunk( nodeKey, data ) {
-
-        //compute neighbors
-        const neighbors = undefined; 
-        data.chunk.generate( nodeKey, data.config, neighbors );
-        data.chunk.setEnabled( true );
-    }
-    */
 }
