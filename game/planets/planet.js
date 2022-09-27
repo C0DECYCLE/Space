@@ -13,7 +13,6 @@ class Planet {
         key: UUIDv4(),
         radius: 2048,
         spin: false,
-        //orbit: false,
 
         influence: 512,
         maxHeight: 512 * 0.75,
@@ -127,7 +126,6 @@ class Planet {
 
         this.#updateLod();
         this.#updateSpin();
-        //this.#updateOrbit();
     }
 
     #createRoot() {
@@ -207,21 +205,6 @@ class Planet {
             this.root.rotate( BABYLON.Axis.Y, this.config.spin * EngineUtils.toRadian * deltaCorrection, BABYLON.Space.LOCAL ); //make very movement speed * delta time
         }
     }
-    
-    #updateOrbit() {
-
-        if ( this.config.orbit !== false ) {
-
-            const deltaCorrection = this.game.engine.deltaCorrection;
-
-            this.#angleAroundOrbit += this.config.orbit * EngineUtils.toRadian * deltaCorrection;
-
-            this.position
-            .copyFromFloats( Math.cos( this.#angleAroundOrbit ), 0, Math.sin( this.#angleAroundOrbit ) )
-            .scaleInPlace( this.#distanceInOrbit )
-            .addInPlace( this.#orbitCenter );
-        }
-    }
 
     #farInsertion() {
         
@@ -245,24 +228,9 @@ class Planet {
 
     #getInsertionString() {
 
-        const diffrence = this.game.camera.position.subtract( 
-
-            BABYLON.Vector3.TransformCoordinates( 
-
-                BABYLON.Vector3.One().scaleInPlace( this.config.radius ), 
-
-                this.root.computeWorldMatrix( true ) 
-            )
-        );
-
         const rdez = 10;
-
-        diffrence.copyFromFloats(
-
-            Math.round( diffrence.x / rdez ) * rdez, 
-            Math.round( diffrence.y / rdez ) * rdez, 
-            Math.round( diffrence.z / rdez ) * rdez
-        );
+        const diffrence = this.game.camera.position.subtract( BABYLON.Vector3.TransformCoordinates( BABYLON.Vector3.One().scaleInPlace( this.config.radius ), this.root.computeWorldMatrix( true ) ) );
+        diffrence.copyFromFloats( Math.round( diffrence.x / rdez ) * rdez,  Math.round( diffrence.y / rdez ) * rdez, Math.round( diffrence.z / rdez ) * rdez );
 
         return diffrence.toString();
     }

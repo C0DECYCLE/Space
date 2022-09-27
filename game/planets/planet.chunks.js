@@ -52,7 +52,7 @@ class PlanetChunks {
         const node = this.#nodes.get( nodeKey );
         
         if ( node !== undefined ) {
-            //fix, can remove weird overstep insert?
+            
             if ( node.chunk.resolution === resolution ) {
 
                 node.keep = true;

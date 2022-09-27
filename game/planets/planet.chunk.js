@@ -60,8 +60,11 @@ class PlanetChunk extends BABYLON.Mesh {
         const vertexData = new BABYLON.VertexData();
         vertexData.indices = [];
         vertexData.positions = [];
+        vertexData.normals = [];
 
         this.#buildGeometry( vertexData, config.position, config.fixRotation, config.size, config.resolution, undefined );
+
+        //BABYLON.VertexData.ComputeNormals( vertexData.positions, vertexData.indices, vertexData.normals );
 
         vertexData.applyToMesh( this, true );
         this.convertToFlatShadedMesh();
