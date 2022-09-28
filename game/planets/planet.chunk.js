@@ -44,6 +44,12 @@ class PlanetChunk extends BABYLON.Mesh {
         //this.#stitchGeometry( neighbors, this.#size, this.#resolution );
     }
 
+    /* override */ dispose() {
+    
+        this.#removeShadow();
+        super.dispose( ...arguments );
+    }
+
     #setupMesh() {
 
         this.material = this.#planet.material;
@@ -73,6 +79,12 @@ class PlanetChunk extends BABYLON.Mesh {
         
         this.#planet.game.star.shadow.cast( this, undefined, undefined, false );        
         this.#planet.game.star.shadow.receive( this, undefined, undefined, false );  
+    }
+
+    #removeShadow() {
+
+        this.#planet.game.star.shadow.cast( this, false, undefined, false );        
+        this.#planet.game.star.shadow.receive( this, false, undefined, false );  
     }
 
     #buildPositions( offset, fixRotationQuaternion, size, resolution ) {

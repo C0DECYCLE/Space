@@ -106,10 +106,7 @@ class PlanetChunks {
 
     #disposeNode( nodeKey, data ) {
 
-        this.#planet.game.star.shadow.cast( data.chunk, false, undefined, false );        
-        this.#planet.game.star.shadow.receive( data.chunk, false, undefined, false );  
         data.chunk.dispose();
-
         this.#nodes.delete( nodeKey );
     }
 

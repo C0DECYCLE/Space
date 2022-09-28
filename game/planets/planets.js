@@ -47,7 +47,7 @@ class Planets {
         return this.#maskMaterial;
     }
 
-    update() { if ( window.freeze === true ) return;
+    update() { //if ( window.freeze === true ) return;
 
         this.#insert();
         this.#update();
@@ -61,7 +61,7 @@ class Planets {
             const distance = this.camera.getScreenDistance( planet.root );
             const planetThreashold = planet.config.radius + planet.config.influence;
             
-            //this.player.planetInsert( planet, distance, planetThreashold );
+            this.player.planetInsert( planet, distance, planetThreashold );
             this.spaceships.planetInsert( planet, distance, planetThreashold );
            
             planet.insert( distance );

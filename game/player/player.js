@@ -10,7 +10,7 @@ class Player {
 
     config = {
 
-        float: 10.005,
+        float: 0.005,
 
         walk: 0.005,
         run: 0.015,
@@ -109,6 +109,7 @@ class Player {
 
         this.mesh = BABYLON.Mesh.MergeMeshes( [ body, head ], true );
         this.mesh.removeVerticesData( BABYLON.VertexBuffer.NormalKind );
+        this.mesh.removeVerticesData( BABYLON.VertexBuffer.UVKind );
         this.mesh.id = "player";
         this.mesh.name = this.mesh.id;
         this.mesh.material = new BABYLON.StandardMaterial( "player_material", this.scene );

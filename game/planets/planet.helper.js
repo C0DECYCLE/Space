@@ -56,6 +56,8 @@ class PlanetHelper {
     #createMask() {
 
         this.#planet.mask = BABYLON.MeshBuilder.CreateSphere( "planet_mask", { diameter: this.#planet.config.radius * 2, segments: 16 }, this.scene );
+        this.#planet.mask.removeVerticesData( BABYLON.VertexBuffer.NormalKind );
+        this.#planet.mask.removeVerticesData( BABYLON.VertexBuffer.UVKind );
         this.#planet.mask.material = this.#planet.game.planets.getMaskMaterial();
         this.#planet.mask.parent = this.#planet.root;
 
