@@ -21,7 +21,7 @@ class Planet {
         waveLengths: new BABYLON.Color3( 700, 530, 440 ),
         
         min: 64,
-        resolution: 4, //24
+        resolution: 24,
 
         seed: null,
         variant: "0", //"1"
@@ -147,8 +147,8 @@ class Planet {
         this.helper = new PlanetHelper( this, this.faces );
         this.stitch = new PlanetQuadtreeStitch( this );
         this.chunks = new PlanetChunks( this );
-        this.material = this.helper.createBasicMaterial();
-        //this.material = new PlanetMaterial( this );
+        //this.material = this.helper.createBasicMaterial();
+        this.material = new PlanetMaterial( this );
     }
 
     #setupPerlin() {

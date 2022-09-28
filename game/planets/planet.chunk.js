@@ -41,7 +41,7 @@ class PlanetChunk extends BABYLON.Mesh {
 
     stitch( neighbors ) {
 
-        this.#stitchGeometry( neighbors, this.#size, this.#resolution );
+        //this.#stitchGeometry( neighbors, this.#size, this.#resolution );
     }
 
     #setupMesh() {
@@ -59,7 +59,7 @@ class PlanetChunk extends BABYLON.Mesh {
         vertexData.positions = this.#buildPositions( config.position, config.fixRotationQuaternion, config.size, config.resolution );
         vertexData.indices = this.#buildIndices( config.resolution ); 
         //
-        vertexData.normals = []; BABYLON.VertexData.ComputeNormals( vertexData.positions, vertexData.indices, vertexData.normals );
+        //vertexData.normals = []; BABYLON.VertexData.ComputeNormals( vertexData.positions, vertexData.indices, vertexData.normals );
         //
         vertexData.applyToMesh( this, true );
     } 

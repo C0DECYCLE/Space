@@ -59,7 +59,7 @@ Space.add( "install", function() {
 
         { 
             key: 0, radius: 1024, spin: 0.005, 
-            gravity: 0.6, atmosphere: false, //256, waveLengths: new BABYLON.Color3( 450, 370, 420 ),
+            gravity: 0.6, atmosphere: 256, waveLengths: new BABYLON.Color3( 450, 370, 420 ),
             seed: new BABYLON.Vector3( -1123, 7237, -3943 ), mountainy: 5, warp: 0.8,
             colors: { main: "#92a4a8", second: "#a58685", third: "#caa88d", steep: "#66515f" }
         },
@@ -90,9 +90,7 @@ Space.add( "install", function() {
 
     this.asteroids.register( "ring", { key: 0, seed: "7417", radius: 5 * 1000, spread: 400, height: 200, density: 0.02 } );
     this.asteroids.register( "ring", { key: 1, seed: "4674", radius: 5 * 1000, spread: 2 * 1000, height: 100, density: 0.03 } );
-
-    //compute new tree -> keep same nodes, make new nodes -> make geometry with stitching (take old meshes from cache plus make new when necessary)
-    //do stitching
+    
   
 } );
 
