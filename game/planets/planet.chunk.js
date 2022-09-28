@@ -79,8 +79,9 @@ class PlanetChunk extends BABYLON.Mesh {
 
         let row;
         let col;
-        const positions = [];
+        const positions = new Float32Array( (resolution+1) * (resolution+1) * 3 );
         let position;
+        let i = 0;
 
         for ( row = 0; row <= resolution; row++ ) {
             for ( col = 0; col <= resolution; col++) {
@@ -89,8 +90,12 @@ class PlanetChunk extends BABYLON.Mesh {
                 position.applyRotationQuaternionInPlace( fixRotationQuaternion );
                 position.addInPlace( offset );
                 PlanetUtils.terrainify( this.#planet, position );
-                
-                positions.push( position.x, position.y, position.z );
+
+                positions[i] = position.x;
+                positions[i+1] = position.y;
+                positions[i+2] = position.z;
+
+                i += 3;
             }
         }   
         
@@ -101,18 +106,21 @@ class PlanetChunk extends BABYLON.Mesh {
 
         let row;
         let col;
-        const indices = [];
+        const indices = new Uint16Array( resolution * resolution * 6 );
+        let i = 0;
 
         for ( row = 0; row < resolution; row++ ) {
             for ( col = 0; col < resolution; col++ ) {
 
-                indices.push( col + 1 + (row + 1) * (resolution + 1) );
-                indices.push( col + 1 + row * (resolution + 1) );
-                indices.push( col + row * (resolution + 1) );
-    
-                indices.push( col + (row + 1) * (resolution + 1) );
-                indices.push( col + 1 + (row + 1) * (resolution + 1) );
-                indices.push( col + row * (resolution + 1) );
+                indices[i] = col + 1 + (row + 1) * (resolution + 1);
+                indices[i+1] = col + 1 + row * (resolution + 1);
+                indices[i+2] = col + row * (resolution + 1);
+
+                indices[i+3] = col + (row + 1) * (resolution + 1);
+                indices[i+4] = col + 1 + (row + 1) * (resolution + 1);
+                indices[i+5] = col + row * (resolution + 1);
+
+                i += 6;
             }
         }
 
@@ -124,30 +132,39 @@ class PlanetChunk extends BABYLON.Mesh {
         let row;
         let col;
         const positions = this.getVerticesData( BABYLON.VertexBuffer.PositionKind );
-        let position;
-        let i = 0;
 
-        for ( row = 0; row <= resolution; row++ ) {
-            for ( col = 0; col <= resolution; col++) {
+        for ( row = 1; row <= resolution-1; row += 2 ) {
+            for ( col = 0; col <= resolution; col += resolution ) {
 
-                const edgeCase = this.#getEdgeCase( neighbors, row, col, size, resolution );
-
-                if ( edgeCase !== false ) {
-
-                    position = new BABYLON.Vector3( positions[ i * 3 ], positions[ i * 3 + 1 ], positions[ i * 3 + 2 ] );
-
-                    position.scaleInPlace( 1.1 );
-
-                    positions[ i * 3 ] = position.x;
-                    positions[ i * 3 + 1 ] = position.y;
-                    positions[ i * 3 + 2 ] = position.z;
-                }
-
-                i += 3;
+                this.#stitchVertex( positions, neighbors, row, col, size, resolution );
             }
-        }   
+        }
+
+        for ( col = 1; col <= resolution-1; col += 2 ) {
+            for ( row = 0; row <= resolution; row += resolution ) {
+
+                this.#stitchVertex( positions, neighbors, row, col, size, resolution );
+            }
+        }
         
         this.updateVerticesData( BABYLON.VertexBuffer.PositionKind, positions );
+    }
+
+    #stitchVertex( positions, neighbors, row, col, size, resolution ) {
+
+        const edgeCase = this.#getEdgeCase( neighbors, row, col, size, resolution );
+
+        if ( edgeCase !== false ) {
+            
+            const i = (row * (resolution+1) + col ) * 3;
+            const position = new BABYLON.Vector3( positions[i], positions[i+1], positions[i+2] );
+
+            position.scaleInPlace( 1.01 );
+
+            positions[i] = position.x;
+            positions[i+1] = position.y;
+            positions[i+2] = position.z;
+        }
     }
 
     #getEdgeCase( neighbors, row, col, size, resolution ) {
@@ -157,7 +174,7 @@ class PlanetChunk extends BABYLON.Mesh {
         const left = col === 0 && neighbors[2] === true;
         const right = col === resolution && neighbors[3] === true;
     
-        if ( size < this.#planet.config.radius * 2 /*&& ( up || down || left || right ) && ( row % 2 === 1 || col % 2 === 1 )*/ ) {
+        if ( size < this.#planet.config.radius * 2 && ( up || down || left || right ) && ( row % 2 === 1 || col % 2 === 1 ) ) {
     
             if ( left === true || right === true ) {
     
