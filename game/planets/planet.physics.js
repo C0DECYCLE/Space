@@ -23,6 +23,11 @@ class PlanetPhysics {
         }
     }
 
+    disable( mesh ) {
+
+        PhysicsEntity.collidable( mesh, undefined, false );
+    }
+
     pull( physicsEntity ) {
 
         const delta = this.#getDelta( physicsEntity.position );

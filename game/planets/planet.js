@@ -13,7 +13,6 @@ class Planet {
         key: UUIDv4(),
         radius: 2048,
         spin: false,
-        //orbit: false,
 
         influence: 512,
         maxHeight: 512 * 0.75,
@@ -43,16 +42,17 @@ class Planet {
     lod = null;
     physics = null;
 
-    generator = null;
+    helper = null;
+    stitch = null;
     material = null;
     perlin = null;
     atmosphere = null;
 
-    #faces = [];
+    faces = new Map();
+    chunks = null;
 
     #cachedInsertionString = "";
     #oversteppedInsertLimit = false;
-    #list = new Map();
     #orbitCenter = new BABYLON.Vector3( 0, 0, 0 );
     #distanceInOrbit = 0;
     #angleAroundOrbit = 0;
@@ -66,7 +66,7 @@ class Planet {
 
         this.#createRoot();
         this.#createLod();
-        this.#addGenerator();
+        this.#setupGeneration();
         this.#setupPerlin();
         this.#setupPhysics();
         this.#addAtmosphere();
@@ -110,10 +110,9 @@ class Planet {
             if ( this.#oversteppedInsertLimit === false ) {
                 
                 this.#oversteppedInsertLimit = true;
-                //two times: first time removes half limit resolution chunk,
-                //second makes the lowest resolution chunk for outside of the limit
-                this.#insertQuadtrees( distance );
-                this.#insertQuadtrees( distance );
+                //two times: first time removes half limit resolution chunk, second makes the lowest resolution chunk for outside of the limit
+                this.chunks.insertQuadtrees( distance );
+                this.chunks.insertQuadtrees( distance );
             }
             
         } else {
@@ -127,7 +126,6 @@ class Planet {
 
         this.#updateLod();
         this.#updateSpin();
-        //this.#updateOrbit();
     }
 
     #createRoot() {
@@ -144,10 +142,12 @@ class Planet {
         this.lod.fromSingle( this.root );
     }
 
-    #addGenerator() {
+    #setupGeneration() {
 
-        this.generator = new PlanetGenerator( this, this.#faces );
-        //this.material = this.generator.createMaterial();
+        this.helper = new PlanetHelper( this, this.faces );
+        this.stitch = new PlanetQuadtreeStitch( this );
+        this.chunks = new PlanetChunks( this );
+        //this.material = this.helper.createBasicMaterial();
         this.material = new PlanetMaterial( this );
     }
 
@@ -206,21 +206,6 @@ class Planet {
             this.root.rotate( BABYLON.Axis.Y, this.config.spin * EngineUtils.toRadian * deltaCorrection, BABYLON.Space.LOCAL ); //make very movement speed * delta time
         }
     }
-    
-    #updateOrbit() {
-
-        if ( this.config.orbit !== false ) {
-
-            const deltaCorrection = this.game.engine.deltaCorrection;
-
-            this.#angleAroundOrbit += this.config.orbit * EngineUtils.toRadian * deltaCorrection;
-
-            this.position
-            .copyFromFloats( Math.cos( this.#angleAroundOrbit ), 0, Math.sin( this.#angleAroundOrbit ) )
-            .scaleInPlace( this.#distanceInOrbit )
-            .addInPlace( this.#orbitCenter );
-        }
-    }
 
     #farInsertion() {
         
@@ -236,7 +221,7 @@ class Planet {
         
         if ( insertionString !== this.#cachedInsertionString ) {
             
-            this.#insertQuadtrees( distance );
+            this.chunks.insertQuadtrees( distance );
             
             this.#cachedInsertionString = insertionString;
         }
@@ -244,79 +229,11 @@ class Planet {
 
     #getInsertionString() {
 
-        const diffrence = this.game.camera.position.subtract( 
-
-            BABYLON.Vector3.TransformCoordinates( 
-
-                BABYLON.Vector3.One().scaleInPlace( this.config.radius ), 
-
-                this.root.computeWorldMatrix( true ) 
-            )
-        );
-
         const rdez = 10;
-
-        diffrence.copyFromFloats(
-
-            Math.round( diffrence.x / rdez ) * rdez, 
-            Math.round( diffrence.y / rdez ) * rdez, 
-            Math.round( diffrence.z / rdez ) * rdez
-        );
+        const diffrence = this.game.camera.position.subtract( BABYLON.Vector3.TransformCoordinates( BABYLON.Vector3.One().scaleInPlace( this.config.radius ), this.root.computeWorldMatrix( true ) ) );
+        diffrence.copyFromFloats( Math.round( diffrence.x / rdez ) * rdez,  Math.round( diffrence.y / rdez ) * rdez, Math.round( diffrence.z / rdez ) * rdez );
 
         return diffrence.toString();
-    }
-
-    #insertQuadtrees( distance ) {
-
-        const params = { 
-            
-            list: this.#list,
-            
-            distanceCenterInsertion: distance,
-            distanceRadiusFactor: distance / this.config.radius,
-
-            centerToInsertion: this.game.camera.position.subtract( this.position ).normalize(),
-            occlusionFallOf: ( 1 - ( (distance / this.config.radius) - 1 ) ).clamp( -1.05, 0.95 )
-        };
-        
-        this.#unkeepAll();
-
-        for ( let i = 0; i < this.#faces.length; i++ ) {
-
-            this.#faces[i].insert( params );
-        }
-
-        this.#disposeUnkept();
-    }
-
-    #unkeepAll() {
-
-        this.#list.forEach( ( data, nodeKey ) => {
-            
-            data.keep = false;
-        } );
-    }
-
-    #disposeUnkept() {
-
-        this.#list.forEach( ( data, nodeKey ) => {
-            
-            if ( data.keep === false ) {
-                
-                this.#disposeNode( nodeKey, data );
-            }
-        } ); 
-        
-        /*data.retired = true; data.mesh.setEnabled( false );*/ 
-    }
-
-    #disposeNode( nodeKey, data ) {
-
-        this.game.star.shadow.cast( data.mesh, false, undefined, false );        
-        this.game.star.shadow.receive( data.mesh, false, undefined, false );  
-
-        data.mesh.dispose( !true, false );
-        this.#list.delete( nodeKey );
     }
 
 }

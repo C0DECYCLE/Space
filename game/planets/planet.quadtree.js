@@ -16,7 +16,7 @@ class PlanetQuadtree {
     #planet = null;
     #size = undefined;
 
-    #fixRotation = null;
+    #fixRotationQuaternion = null;
 
     #up = null;
     #left = null;
@@ -34,7 +34,7 @@ class PlanetQuadtree {
         this.#planet = planet;
 
         this.#size = this.#planet.config.radius * 2;
-        this.#fixRotation = fixRotation.scaleInPlace( Math.PI / 2 );
+        this.#fixRotationQuaternion = fixRotation.scaleInPlace( Math.PI / 2 ).toQuaternion();
 
         this.#setup1D();
         this.#setup2D();
@@ -47,10 +47,43 @@ class PlanetQuadtree {
         this.#recurse( params, this.suffix, this.#up.scale( this.#planet.config.radius ), this.#size );
     }
 
+    #recurse( params, nodeKey, position, size ) {
+
+        const factors = this.#getDistanceDot( params, position );
+        
+        if ( factors.distance < size * 1.5 && size > this.#planet.config.min ) {
+
+            this.#recurseQuad( params, nodeKey, position, size );
+            
+        } else {
+
+            this.#planet.chunks.node( params, factors, nodeKey, position, this.#fixRotationQuaternion, size, this.#size );
+        }
+    }
+
+    #recurseQuad( params, nodeKey, position, size ) {
+
+        this.#recurse( params, `${ nodeKey }0`, this.#leftforward.scale( size / 4 ).addInPlace( position ), size / 2 );
+        this.#recurse( params, `${ nodeKey }1`, this.#rightforward.scale( size / 4 ).addInPlace( position ), size / 2 );
+        this.#recurse( params, `${ nodeKey }2`, this.#leftbackward.scale( size / 4 ).addInPlace( position ), size / 2 );
+        this.#recurse( params, `${ nodeKey }3`, this.#rightbackward.scale( size / 4 ).addInPlace( position ), size / 2 );
+    }
+
+    #getDistanceDot( params, position ) {
+
+        const terrainifyPosition = PlanetUtils.terrainify( this.#planet, position.clone() );
+        const terrainifyWorldRotatePosition = BABYLON.Vector3.TransformCoordinates( terrainifyPosition, this.#planet.root.computeWorldMatrix( true ) );
+        
+        return {
+            distance: this.#planet.game.camera.getScreenDistance( undefined, terrainifyWorldRotatePosition ),
+            dot: BABYLON.Vector3.Dot( params.centerToInsertion, terrainifyWorldRotatePosition.subtract( this.#planet.position ).normalize() )
+        };
+    }
+
     #setup1D() {
 
-        this.#right = BABYLON.Vector3.Right().applyRotationQuaternionInPlace( this.#fixRotation.toQuaternion() );
-        this.#up = BABYLON.Vector3.Up().applyRotationQuaternionInPlace( this.#fixRotation.toQuaternion() );
+        this.#right = BABYLON.Vector3.Right().applyRotationQuaternionInPlace( this.#fixRotationQuaternion );
+        this.#up = BABYLON.Vector3.Up().applyRotationQuaternionInPlace( this.#fixRotationQuaternion );
         
         this.#forward = BABYLON.Vector3.Cross( this.#right, this.#up );
         this.#left = this.#right.negate();
@@ -63,96 +96,6 @@ class PlanetQuadtree {
         this.#rightforward = this.#right.add( this.#forward );
         this.#leftbackward = this.#backward.add( this.#left );
         this.#rightbackward = this.#backward.add( this.#right );
-    }
-
-    #recurse( params, nodeKey, position, size ) {
-
-        const factors = this.#getDistanceDot( params, position );
-        
-        if ( factors.distance < size * 1.5 && size > this.#planet.config.min ) {
-
-            this.#recurseQuad( params, nodeKey, position, size );
-            
-        } else {
-
-            this.#evaluateNode( params, nodeKey, position, size, factors );
-        }
-    }
-
-    #recurseQuad( params, nodeKey, position, size ) {
-
-        this.#recurse( params, `${ nodeKey }0`, this.#leftforward.scale( size / 4 ).addInPlace( position ), size / 2 );
-        this.#recurse( params, `${ nodeKey }1`, this.#rightforward.scale( size / 4 ).addInPlace( position ), size / 2 );
-        this.#recurse( params, `${ nodeKey }2`, this.#leftbackward.scale( size / 4 ).addInPlace( position ), size / 2 );
-        this.#recurse( params, `${ nodeKey }3`, this.#rightbackward.scale( size / 4 ).addInPlace( position ), size / 2 );
-    }
-
-    #evaluateNode( params, nodeKey, position, size, factors ) {
-
-        if ( factors.dot > params.occlusionFallOf ) {
-                
-            const resolution = this.#getResolution( params, size );
-            
-            if ( params.list.has( nodeKey ) === true ) {
-
-                this.#keepNode( params, nodeKey, resolution );
-
-            } else {
-
-                this.#makeNode( params, nodeKey, position, size, factors, resolution );
-            }
-        }
-    }
-
-    #keepNode( params, nodeKey, resolution ) {
-
-        const node = params.list.get( nodeKey );
-            
-        if ( node.resolution === resolution ) {
-
-            node.keep = true;
-        }
-    }
-
-    #makeNode( params, nodeKey, position, size, factors, resolution ) {
-
-        params.list.set( nodeKey, {
-
-            keep: true,
-
-            resolution: resolution,
-            mesh: this.#planet.generator.createChunkMesh( nodeKey, position, this.#fixRotation, size, resolution, factors.distance )
-        } );
-    }
-
-    #getDistanceDot( params, position ) {
-
-        const terrainifyPosition = PlanetUtils.terrainify( this.#planet, position.clone() );
-        const terrainifyWorldRotatePosition = BABYLON.Vector3.TransformCoordinates( terrainifyPosition, this.#planet.root.computeWorldMatrix( true ) );
-        
-        return {
-
-            distance: this.#planet.game.camera.getScreenDistance( undefined, terrainifyWorldRotatePosition ),
-
-            dot: BABYLON.Vector3.Dot( params.centerToInsertion, terrainifyWorldRotatePosition.subtract( this.#planet.position ).normalize() )
-        };
-    }
-
-    #getResolution( params, size ) {
-        
-        if ( size >= this.#size ) { 
-            
-            if ( params.distanceRadiusFactor > PlanetQuadtree.INSERT_LIMIT ) {
-
-                return this.#planet.config.resolution / 4;
-                
-            } else if ( params.distanceRadiusFactor > PlanetQuadtree.INSERT_HALF_LIMIT ) {
-
-                return this.#planet.config.resolution / 2;
-            }
-        }
-
-        return this.#planet.config.resolution;
     }
 
 }

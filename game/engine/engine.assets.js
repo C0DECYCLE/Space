@@ -74,6 +74,31 @@ class EngineAssets {
         return lod;
     }
 
+    merge( mesh ) {
+
+        const meshes = [ mesh ];
+        const subs = mesh.getChildMeshes( true );
+        const collisionMeshes = [];
+
+        for ( let i = 0; i < subs.length; i++ ) {
+
+            const list = subs[i].isCollisionMesh === true ? collisionMeshes : meshes;
+            list.push( subs[i] );
+        }
+
+        const result = BABYLON.Mesh.MergeMeshes( meshes, false, undefined, undefined, undefined, true );
+
+        for ( let i = 0; i < collisionMeshes.length; i++ ) {
+
+            collisionMeshes[i].clone( collisionMeshes[i].name ).parent = result;
+        }
+
+        result.parent = this.cache;
+        result.setEnabled( false );
+
+        return result;
+    }
+
     instance( lod, onEveryInstance ) {
 
         const instance = this.#instanceMesh( lod, onEveryInstance );

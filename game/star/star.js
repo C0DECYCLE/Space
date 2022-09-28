@@ -70,6 +70,8 @@ class Star {
         material.ambientColor.set( 0, 0, 0 );
 
         this.mesh = BABYLON.MeshBuilder.CreateSphere( "star", { diameter: this.config.size, segments: this.config.resolution }, this.scene );
+        this.mesh.removeVerticesData( BABYLON.VertexBuffer.NormalKind );
+        this.mesh.removeVerticesData( BABYLON.VertexBuffer.UVKind );
         this.mesh.rotationQuaternion = this.mesh.rotation.toQuaternion();
         this.mesh.material = material;
 
@@ -111,7 +113,8 @@ class Star {
     #createBackground() {
 
         this.background = BABYLON.MeshBuilder.CreateSphere( "star_background", { diameter: this.game.camera.config.max, segments: 4, sideOrientation: BABYLON.Mesh.BACKSIDE }, this.scene );
-        
+        this.background.removeVerticesData( BABYLON.VertexBuffer.NormalKind );
+
         this.background.material = new BABYLON.StandardMaterial( "star_background_material", this.scene );
         this.background.material.disableLighting = true;
         

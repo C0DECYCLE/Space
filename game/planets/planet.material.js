@@ -56,6 +56,8 @@ class PlanetMaterial extends BABYLON.CustomMaterial {
 
     #setupUniforms() {
 
+        this.AddUniform( "planetRotation", "vec3" );
+
         for ( let i = 0; i < this.colors.length; i++ ) {
 
             this.AddUniform( this.colors[i][1], "vec3" );
@@ -65,6 +67,8 @@ class PlanetMaterial extends BABYLON.CustomMaterial {
 
             const effect = this.getEffect();
                 
+            effect.setVector3( "planetRotation", this.#planet.rotationQuaternion.toEulerAngles() );
+
             for ( let i = 0; i < this.colors.length; i++ ) {
 
                 effect.setVector3( this.colors[i][1], this.colors[i][2] );
@@ -75,7 +79,7 @@ class PlanetMaterial extends BABYLON.CustomMaterial {
     #hookShader() {
         
         //this.Vertex_Begin( this.#getVertex_Begin() );
-        this.Vertex_Definitions( EngineUtilsShader + this.#getVertex_Definitions() );
+        this.Vertex_Definitions( this.#getVertex_Definitions() );
         //this.Vertex_MainBegin( this.#getVertex_MainBegin() );
         //this.Vertex_Before_PositionUpdated( this.#getVertex_Before_PositionUpdated() );
         //this.Vertex_After_WorldPosComputed( this.#getVertex_After_WorldPosComputed() );
@@ -83,7 +87,7 @@ class PlanetMaterial extends BABYLON.CustomMaterial {
         this.Vertex_MainEnd( this.#getVertex_MainEnd() );
 
         //this.Fragment_Begin( this.#getFragment_Begin() );
-        this.Fragment_Definitions( this.#getFragment_Definitions() );
+        this.Fragment_Definitions( EngineUtilsShader + this.#getFragment_Definitions() );
         //this.Fragment_MainBegin( this.#getFragment_MainBegin() ); 
         //this.Fragment_Before_Lights( this.#getFragment_Before_Lights() );
         //this.Fragment_Before_Fog( this.#getFragment_Before_Fog() );
@@ -94,12 +98,27 @@ class PlanetMaterial extends BABYLON.CustomMaterial {
 
     #getVertex_Definitions() { return `
         
-        flat out vec3 flatDiffuseColor;
+        flat out vec3 flatPosition;
 
     `; }
 
     #getVertex_MainEnd() { return `
-    
+
+        flatPosition = position;
+
+    `; }
+
+    #getFragment_Definitions() { return `
+
+        flat in vec3 flatPosition;
+        
+    `; }
+
+    #getFragment_Custom_Diffuse() { return `
+
+        vec3 position = flatPosition;
+        vec3 normal = rotate( normalW, -planetRotation );
+
         vec3 vColorSteep = colorSteep;
         vec3 vColorMain = colorMain;
      
@@ -117,29 +136,17 @@ class PlanetMaterial extends BABYLON.CustomMaterial {
         
         if ( steep <= 0.9 ) {
 
-            flatDiffuseColor = vColorSteep;
+            diffuseColor = vColorSteep;
 
         } else if ( steep > 0.9 && steep <= 0.95 ) {
 
-            flatDiffuseColor = mix( vColorSteep, vColorMain, 0.66 );
+            diffuseColor = mix( vColorSteep, vColorMain, 0.66 );
 
         } else {
         
-            flatDiffuseColor = vColorMain;
+            diffuseColor = vColorMain;
         }
 
-    `; }
-
-    #getFragment_Definitions() { return `
-
-        flat in vec3 flatDiffuseColor;
-        
-    `; }
-    
-    #getFragment_Custom_Diffuse() { return `
-
-        diffuseColor = flatDiffuseColor;
-        
     `; }
 
 }

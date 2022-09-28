@@ -29,7 +29,7 @@ const EngineUtilsShader = `
         return o4.y * d.y + o4.x * (1.0 - d.y);
     }
 
-    float round( float x, float a ) {
+    float roundf( float x, float a ) {
         x *= a;
         float d = floor( x );
         if ( x - d < 0.5 ) {

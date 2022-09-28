@@ -47,7 +47,7 @@ class Planets {
         return this.#maskMaterial;
     }
 
-    update() {
+    update() { //if ( window.freeze === true ) return;
 
         this.#insert();
         this.#update();
