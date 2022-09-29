@@ -6,17 +6,15 @@
     2022
 */
 
-class PlanetMaterial extends BABYLON.CustomMaterial {
+class PlayerInteractionMaterial extends BABYLON.CustomMaterial {
 
-    colors = [];
-
-    #planet = null;
+    #game = null;
     
-    constructor( planet ) {
+    constructor( game ) {
     
-        super( `planet${ planet.config.key }_material`, planet.scene );
+        super( `player_interaction_material`, game.scene );
 
-        this.#planet = planet;
+        this.#game = game;
 
         this.#setupColors();
         this.#setupUniforms();
@@ -25,55 +23,10 @@ class PlanetMaterial extends BABYLON.CustomMaterial {
 
     #setupColors() {
         
-        const colorKeys = Object.keys( this.#planet.config.colors );
-
-        for ( let i = 0; i < colorKeys.length; i++ ) {
-
-            this.colors.push( [ colorKeys[i], `color${ colorKeys[i].firstLetterUppercase() }`, BABYLON.Color3.FromHexString( this.#planet.config.colors[ colorKeys[i] ] ) ] );
-        }
-        
-        this.specularColor = new BABYLON.Color3( 0, 0, 0 );
-        this.emissiveColor = new BABYLON.Color3( 0, 0, 0 );
-        this.ambientColor = new BABYLON.Color3( 0, 0, 0 );
-
-        const ambient = this.#planet.scene.ambient;
-
-        if ( typeof ambient !== "undefined" ) {
-
-            for ( let i = 0; i < this.colors.length; i++ ) {
-
-                this.colors[i][2].scaleToRef( ambient.intensity, this.colors[i][2] );
-            }
-
-            BABYLON.Color3.FromHexString( ambient.color ).scaleToRef( ambient.materialFactor(), this.ambientColor );
-        }
-
-        for ( let i = 0; i < this.colors.length; i++ ) {
-
-            this.colors[i][2] = EngineUtils.color3ToVector3( this.colors[i][2] );
-        }
     }
 
     #setupUniforms() {
 
-        this.AddUniform( "planetRotation", "vec3" );
-
-        for ( let i = 0; i < this.colors.length; i++ ) {
-
-            this.AddUniform( this.colors[i][1], "vec3" );
-        }
-
-        this.onBindObservable.add( () => { 
-
-            const effect = this.getEffect();
-                
-            effect.setVector3( "planetRotation", this.#planet.rotationQuaternion.toEulerAngles() );
-
-            for ( let i = 0; i < this.colors.length; i++ ) {
-
-                effect.setVector3( this.colors[i][1], this.colors[i][2] );
-            }
-        } );
     }
 
     #hookShader() {

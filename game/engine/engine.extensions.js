@@ -45,7 +45,7 @@ class EngineExtensions {
 
     #lightColor( color ) {
 
-        this.diffuse = new BABYLON.Color3.FromHexString( color );
+        this.diffuse = BABYLON.Color3.FromHexString( color );
         this.specular = new BABYLON.Color3( 0, 0, 0 );
         this.emissiveColor = new BABYLON.Color3( 0, 0, 0 );
         this.ambientColor = new BABYLON.Color3( 0, 0, 0 );
@@ -65,7 +65,7 @@ class EngineExtensions {
 
     #standardMaterialColorIntensity( color, intensity = 1.0 ) {
         
-        this.diffuseColor = new BABYLON.Color3.FromHexString( color ).scale( intensity );
+        BABYLON.Color3.FromHexString( color ).scaleToRef( intensity, this.diffuseColor );
         this.specularColor = new BABYLON.Color3( 0, 0, 0 );
         this.emissiveColor = new BABYLON.Color3( 0, 0, 0 );
         this.ambientColor = new BABYLON.Color3( 0, 0, 0 );
@@ -74,8 +74,8 @@ class EngineExtensions {
 
         if ( typeof ambient !== "undefined" ) {
 
-            this.diffuseColor.scale( ambient.intensity );
-            this.ambientColor = new BABYLON.Color3.FromHexString( ambient.color ).scale( ambient.materialFactor() );
+            this.diffuseColor.scaleToRef( ambient.intensity, this.diffuseColor );
+            BABYLON.Color3.FromHexString( ambient.color ).scaleToRef( ambient.materialFactor(), this.ambientColor );
         }
     }
 

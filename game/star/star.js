@@ -36,7 +36,7 @@ class Star {
         EngineUtils.configure.call( this, config );
 
         this.#createMesh();
-        this.#createPointLight( 0.2 );
+        this.#createPointLight( 0.3 );
         this.#createDirectionalLight( 0.7 );
         this.#createHemisphericLight( 0.1 );
         this.#createShadow( config_shadow );

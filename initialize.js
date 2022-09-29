@@ -14,7 +14,7 @@ Space.addOnReady( function() {
     const background = "#af7ede";
     
     this.scene = new BABYLON.Scene( this.engine.babylon );
-    this.scene.clearColor = BABYLON.Color3.FromHexString( background ).scale( 0.25 * 0.5 );
+    BABYLON.Color3.FromHexString( background ).scaleToRef( 0.25 * 0.5, this.scene.clearColor );
     this.scene.ambient = new EngineAmbient( this.scene, background, 0.25 * 1.25 );
     this.scene.debugMaterialRed = EngineUtils.makeDebugMaterial( this.scene, "#ff226b" );
     this.scene.debugMaterialWhite = EngineUtils.makeDebugMaterial( this.scene, "#ffffff" );
@@ -91,6 +91,11 @@ Space.add( "install", function() {
     this.asteroids.register( "ring", { key: 0, seed: "7417", radius: 5 * 1000, spread: 400, height: 200, density: 0.02 } );
     this.asteroids.register( "ring", { key: 1, seed: "4674", radius: 5 * 1000, spread: 2 * 1000, height: 100, density: 0.03 } );
     
+    //go through ambient fix scale and make intensity more maybe?
+    //make generall ambient scale function for materials
+    //interactable make material shader, make color buffer mandatory revert its effect define which channel holds what use one channel for interactable or not
+    //instance or mesh with that material push these data to buffers
+
   
 } );
 

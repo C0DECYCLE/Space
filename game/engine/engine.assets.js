@@ -187,7 +187,7 @@ class EngineAssets {
             if ( color === EngineAssets.collisionColor ) {
 
                 material.alpha = 0.25;
-                material.emissiveColor = new BABYLON.Color3.FromHexString( EngineAssets.collisionColor ).scale( material.alpha );
+                BABYLON.Color3.FromHexString( EngineAssets.collisionColor ).scaleToRef( material.alph, material.emissiveColor );
             }
 
             this.materials.set( color, material );
