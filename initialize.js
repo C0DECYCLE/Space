@@ -19,7 +19,7 @@ Space.addOnReady( function() {
     this.scene.debugMaterialRed = EngineUtils.makeDebugMaterial( this.scene, "#ff226b" );
     this.scene.debugMaterialWhite = EngineUtils.makeDebugMaterial( this.scene, "#ffffff" );
 
-    this.scene.assets = new EngineAssets( this.scene );
+    this.scene.assets = new EngineAssets( this );
     this.scene.assets.onLoadObservable.addOnce( () => { this.install(); this.stage(); Space.update( this.scene, this.run ); } );
     this.scene.assets.load( [
 
@@ -91,11 +91,6 @@ Space.add( "install", function() {
     this.asteroids.register( "ring", { key: 0, seed: "7417", radius: 5 * 1000, spread: 400, height: 200, density: 0.02 } );
     this.asteroids.register( "ring", { key: 1, seed: "4674", radius: 5 * 1000, spread: 2 * 1000, height: 100, density: 0.03 } );
     
-    //go through ambient fix scale and make intensity more maybe?
-    //make generall ambient scale function for materials
-    //interactable make material shader, make color buffer mandatory revert its effect define which channel holds what use one channel for interactable or not
-    //instance or mesh with that material push these data to buffers
-
   
 } );
 
