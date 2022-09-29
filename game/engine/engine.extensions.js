@@ -29,6 +29,7 @@ class EngineExtensions {
         this.#extend( "HemisphericLight", "setIntensity", this.#lightIntensity );
 
         this.#extend( "StandardMaterial", "setColorIntensity", this.#standardMaterialColorIntensity );
+        this.#extend( "StandardMaterial", "setupDefault", this.#standardMaterialSetupDefault );
     }
 
     #extend( parent, name, method ) {
@@ -45,7 +46,7 @@ class EngineExtensions {
 
     #lightColor( color ) {
 
-        this.diffuse = new BABYLON.Color3.FromHexString( color );
+        this.diffuse = BABYLON.Color3.FromHexString( color );
         this.specular = new BABYLON.Color3( 0, 0, 0 );
         this.emissiveColor = new BABYLON.Color3( 0, 0, 0 );
         this.ambientColor = new BABYLON.Color3( 0, 0, 0 );
@@ -65,7 +66,20 @@ class EngineExtensions {
 
     #standardMaterialColorIntensity( color, intensity = 1.0 ) {
         
-        this.diffuseColor = new BABYLON.Color3.FromHexString( color ).scale( intensity );
+        BABYLON.Color3.FromHexString( color ).scaleToRef( intensity, this.diffuseColor );
+        
+        this.setupDefault( this.diffuseColor );
+    }
+
+    #standardMaterialSetupDefault( colors ) {
+        
+        let list = colors;
+
+        if ( Array.isArray( colors ) === false ) {
+            
+            list = [ colors ];
+        }
+        
         this.specularColor = new BABYLON.Color3( 0, 0, 0 );
         this.emissiveColor = new BABYLON.Color3( 0, 0, 0 );
         this.ambientColor = new BABYLON.Color3( 0, 0, 0 );
@@ -74,8 +88,12 @@ class EngineExtensions {
 
         if ( typeof ambient !== "undefined" ) {
 
-            this.diffuseColor.scale( ambient.intensity );
-            this.ambientColor = new BABYLON.Color3.FromHexString( ambient.color ).scale( ambient.materialFactor() );
+            for ( let i = 0; i < list.length; i++ ) {
+
+                list[i].scaleToRef( ambient.intensity, list[i] );
+            }
+
+            BABYLON.Color3.FromHexString( ambient.color ).scaleToRef( ambient.materialFactor(), this.ambientColor );
         }
     }
 

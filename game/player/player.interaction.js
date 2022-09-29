@@ -77,7 +77,7 @@ class PlayerInteraction {
 
         const distance = this.#player.camera.getApproximateScreenDistance( interaction.mesh );
 
-        if ( distance <= PlayerInteraction.RADIUS ) {
+        if ( distance <= PlayerInteraction.RADIUS /*&& view direction pointing towards it*/ ) {
 
             this.#highlight( interaction );
 
@@ -102,7 +102,8 @@ class PlayerInteraction {
 
         if ( interaction.highlight === false ) {
 
-            //interaction.mesh.enableEdgesRendering();
+            interaction.mesh.instancedBuffers.color.r = 1;
+            interaction.mesh.enableEdgesRendering(); //?
             interaction.highlight = true;
         }
     }
@@ -111,7 +112,8 @@ class PlayerInteraction {
 
         if ( interaction.highlight === true ) {
                 
-            //interaction.mesh.disableEdgesRendering();
+            interaction.mesh.instancedBuffers.color.r = 0;
+            interaction.mesh.disableEdgesRendering(); //?
             interaction.highlight = false;
         }
     }

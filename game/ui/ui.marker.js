@@ -128,7 +128,7 @@ class UIMarker {
 
         } else if ( this.config.type === "interactable" ) {
 
-            return this.#distance < size * 4;
+            return this.#distance < size * 4 && this.#distance > PlayerInteraction.RADIUS;
 
         } else if ( this.config.type === "hint" ) {
 

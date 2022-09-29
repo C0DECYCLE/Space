@@ -16,13 +16,13 @@ class Spaceship {
         
         for ( let i = 0; i < importLods.length; i++ ) {
             
-            let model = game.scene.assets.traverse( importLods[i]/*, mesh => {
+            let model = game.scene.assets.traverse( importLods[i], mesh => {
             
                 game.star.shadow.receive( mesh, undefined, undefined, false );
-            }*/ );
+            }, true );
             
-            model = game.scene.assets.merge( model );
-            game.star.shadow.receive( model, undefined, undefined, false );
+            //model = game.scene.assets.merge( model );
+            //game.star.shadow.receive( model, undefined, undefined, false );
             
             this.model.push( model );
         }
@@ -152,7 +152,7 @@ class Spaceship {
 
     #registerInteractable() {
         
-        const cockpit = this.root;//.getChildMeshes( false, mesh => mesh.name == "i-glass" )[0];
+        const cockpit = this.root.getChildMeshes( false, mesh => mesh.name == "i-glass" )[0];
 
         this.game.player.interaction.register( cockpit, () => {
 

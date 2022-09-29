@@ -14,12 +14,12 @@ Space.addOnReady( function() {
     const background = "#af7ede";
     
     this.scene = new BABYLON.Scene( this.engine.babylon );
-    this.scene.clearColor = BABYLON.Color3.FromHexString( background ).scale( 0.25 * 0.5 );
+    BABYLON.Color3.FromHexString( background ).scaleToRef( 0.25 * 0.5, this.scene.clearColor );
     this.scene.ambient = new EngineAmbient( this.scene, background, 0.25 * 1.25 );
     this.scene.debugMaterialRed = EngineUtils.makeDebugMaterial( this.scene, "#ff226b" );
     this.scene.debugMaterialWhite = EngineUtils.makeDebugMaterial( this.scene, "#ffffff" );
 
-    this.scene.assets = new EngineAssets( this.scene );
+    this.scene.assets = new EngineAssets( this );
     this.scene.assets.onLoadObservable.addOnce( () => { this.install(); this.stage(); Space.update( this.scene, this.run ); } );
     this.scene.assets.load( [
 

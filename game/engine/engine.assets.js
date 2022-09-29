@@ -11,18 +11,21 @@ class EngineAssets {
     static collisionKey = "COLLISION";
     static collisionColor = "#43ff53";
 
+    game = null;
     scene = null;
     cache = null;
 
     list = new Map();
     materials = new Map();
+    interactableMaterials = new Map();
     onLoadObservable = new BABYLON.Observable();
 
     #notify = false;
 
-    constructor( scene ) {
+    constructor( game ) {
         
-        this.scene = scene;
+        this.game = game;
+        this.scene = this.game.scene;
 
         this.#createCache();
         this.#listen();
@@ -50,9 +53,9 @@ class EngineAssets {
         }
     }
 
-    traverse( importLod, onEveryMesh ) {
+    traverse( importLod, onEveryMesh, interactable = false ) {
         
-        const lod = this.#traverseMesh( importLod, onEveryMesh );
+        const lod = this.#traverseMesh( importLod, onEveryMesh, interactable );
         const subs = importLod.getChildMeshes( true );
         
         for ( let i = 0; i < subs.length; i++ ) {
@@ -64,7 +67,7 @@ class EngineAssets {
 
             } else {
 
-                this.#traverseMesh( subs[i], onEveryMesh ).parent = lod;
+                this.#traverseMesh( subs[i], onEveryMesh, interactable ).parent = lod;
             }
         }
 
@@ -141,10 +144,16 @@ class EngineAssets {
         }, 100 );
     }
 
-    #traverseMesh( importMesh, onMesh = undefined ) {
+    #traverseMesh( importMesh, onMesh = undefined, interactable = false ) {
         
-        const mesh = this.#traverseMeshGeneral( importMesh );
+        const mesh = this.#traverseMeshGeneral( importMesh, undefined, interactable );
         
+        if ( interactable === true ) {
+
+            mesh.registerInstancedBuffer( "color", 4 );
+            mesh.instancedBuffers.color = new BABYLON.Color4( 0, 0, 0, 0 );
+        }
+
         onMesh?.( mesh );
         
         return mesh;
@@ -152,18 +161,18 @@ class EngineAssets {
 
     #traverseCollisionMesh( importCollisionMesh ) {
 
-        const mesh = this.#traverseMeshGeneral( importCollisionMesh, EngineAssets.collisionColor );
+        const mesh = this.#traverseMeshGeneral( importCollisionMesh, EngineAssets.collisionColor, false );
 
         mesh.isCollisionMesh = true;
         
         return mesh;
     }
 
-    #traverseMeshGeneral( importMesh, color = undefined ) {
+    #traverseMeshGeneral( importMesh, color = undefined, interactable = false ) {
 
         const mesh = new BABYLON.Mesh( importMesh.name, this.scene );
         
-        mesh.material = this.#getColorMaterial( importMesh, color );
+        mesh.material = this.#getColorMaterial( importMesh, color, interactable );
         importMesh.geometry.applyToMesh( mesh );
         mesh.flipFaces( true );
         
@@ -174,26 +183,43 @@ class EngineAssets {
         return mesh;
     }
 
-    #getColorMaterial( importMesh, color = undefined ) {
+    #getColorMaterial( importMesh, color = undefined, interactable = false ) {
 
         color = color === undefined ? importMesh.material.albedoColor.toHexString() : color;
+        const materialList = interactable === false ? this.materials : this.interactableMaterials;
 
-        if ( this.materials.has( color ) === false ) {
+        if ( materialList.has( color ) === false ) {
                 
-            const material = new BABYLON.StandardMaterial( `c-${ color }`, this.scene );
+            const material = this.#makeMaterial( color, interactable );
             material.setColorIntensity( color, 0.5 );
             material.alpha = importMesh.material.alpha;
 
             if ( color === EngineAssets.collisionColor ) {
 
                 material.alpha = 0.25;
-                material.emissiveColor = new BABYLON.Color3.FromHexString( EngineAssets.collisionColor ).scale( material.alpha );
+                BABYLON.Color3.FromHexString( EngineAssets.collisionColor ).scaleToRef( material.alph, material.emissiveColor );
             }
 
-            this.materials.set( color, material );
+            materialList.set( color, material );
         }
         
-        return this.materials.get( color );
+        return materialList.get( color );
+    }
+
+    #makeMaterial( color, interactable ) {
+
+        const name = `c-${ color }`;
+
+        if ( interactable === false ) {
+
+            return new BABYLON.StandardMaterial( name, this.scene );
+
+        } else {
+
+            const material = new PlayerInteractionMaterial( name, this.game );
+
+            return material;
+        }
     }
 
     #instanceMesh( mesh, onInstance = undefined ) {

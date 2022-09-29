@@ -26,27 +26,15 @@ class PlanetMaterial extends BABYLON.CustomMaterial {
     #setupColors() {
         
         const colorKeys = Object.keys( this.#planet.config.colors );
+        const colorList = [];
 
         for ( let i = 0; i < colorKeys.length; i++ ) {
 
-            this.colors.push( [ colorKeys[i], `color${ colorKeys[i].firstLetterUppercase() }`, new BABYLON.Color3.FromHexString( this.#planet.config.colors[ colorKeys[i] ] ) ] );
+            this.colors.push( [ colorKeys[i], `color${ colorKeys[i].firstLetterUppercase() }`, BABYLON.Color3.FromHexString( this.#planet.config.colors[ colorKeys[i] ] ) ] );
+            colorList.push( this.colors[ this.colors.length - 1 ][2] );
         }
         
-        this.specularColor = new BABYLON.Color3( 0, 0, 0 );
-        this.emissiveColor = new BABYLON.Color3( 0, 0, 0 );
-        this.ambientColor = new BABYLON.Color3( 0, 0, 0 );
-
-        const ambient = this.#planet.scene.ambient;
-
-        if ( typeof ambient !== "undefined" ) {
-
-            for ( let i = 0; i < this.colors.length; i++ ) {
-
-                this.colors[i][2] = this.colors[i][2].scale( ambient.intensity );
-            }
-
-            this.ambientColor = new BABYLON.Color3.FromHexString( ambient.color ).scale( ambient.materialFactor() );
-        }
+        this.setupDefault( colorList );
 
         for ( let i = 0; i < this.colors.length; i++ ) {
 
@@ -63,10 +51,10 @@ class PlanetMaterial extends BABYLON.CustomMaterial {
             this.AddUniform( this.colors[i][1], "vec3" );
         }
 
-        this.onBindObservable.add( () => { 
+        this.onBindObservable.add( ( /*mesh*/ ) => { 
 
             const effect = this.getEffect();
-                
+
             effect.setVector3( "planetRotation", this.#planet.rotationQuaternion.toEulerAngles() );
 
             for ( let i = 0; i < this.colors.length; i++ ) {
@@ -122,28 +110,23 @@ class PlanetMaterial extends BABYLON.CustomMaterial {
         vec3 vColorSteep = colorSteep;
         vec3 vColorMain = colorMain;
      
-        if ( noise( ( ( position * -1.0 ) - noise( position ) * 50.0 ) * 0.0025 ) < 0.25 ) {
-
+        if ( noise( ( (position * -1.0) - noise(position) * 50.0 ) * 0.0025 ) < 0.25 ) {
             vColorMain = colorThird;
         }
 
-        if ( noise( ( position + noise( position ) * 50.0 ) * 0.005 ) < 0.5 ) {
-
+        if ( noise( (position + noise(position) * 50.0) * 0.005 ) < 0.5 ) {
             vColorMain = colorSecond;
         }
 
-        float steep = dot( normalize( position ), normal );
+        float steep = dot( normalize(position), normal );
         
         if ( steep <= 0.9 ) {
-
             diffuseColor = vColorSteep;
 
         } else if ( steep > 0.9 && steep <= 0.95 ) {
-
             diffuseColor = mix( vColorSteep, vColorMain, 0.66 );
 
         } else {
-        
             diffuseColor = vColorMain;
         }
 
