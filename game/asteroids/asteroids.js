@@ -59,7 +59,10 @@ class Asteroids {
             
             this.models.push( this.scene.assets.traverse( importLods[i], mesh => {
             
-                this.game.star.shadow.receive( mesh, undefined, undefined, false );
+                if ( i === 0 ) {
+
+                    this.game.star.shadow.receive( mesh, undefined, undefined, false );
+                } 
             } ) );
         }
     }

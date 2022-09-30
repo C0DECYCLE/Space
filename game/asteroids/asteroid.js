@@ -71,9 +71,12 @@ class Asteroid {
     #createLod() {
         
         this.lod = new LOD( this.game );
-        this.lod.fromModels( this.asteroids.models, mesh => {
+        this.lod.fromModels( this.asteroids.models, ( mesh, level ) => {
 
-            this.game.star.shadow.cast( mesh );
+            if ( level === 0 ) {
+
+                this.game.star.shadow.cast( mesh );
+            }
         } );
     }
 

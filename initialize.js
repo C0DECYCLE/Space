@@ -53,7 +53,9 @@ Space.add( "install", function() {
 
     this.spaceships.register( "vulcan", { key: 0 } );
 
-    this.planets = new Planets( this );
+    this.clouds = new Clouds( this, {} );
+
+    this.planets = new Planets( this, {} );
     
     this.planets.registerFromConfigs( [
 

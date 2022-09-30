@@ -9,6 +9,7 @@
 class PlanetHelper {
 
     #planet = null;
+    #maskValue = undefined;
 
     constructor( planet, faces ) {
     
@@ -22,7 +23,12 @@ class PlanetHelper {
 
     toggleMask( value ) {
 
-        this.#planet.mask.setEnabled( value );
+        if ( this.#maskValue !== value ) {
+
+            this.#planet.mask.setEnabled( value );
+            this.#planet.game.star.shadow.cast( this.#planet.mask, value, undefined, false );
+            this.#maskValue = value;
+        }
     }
 
     createBasicMaterial() {
@@ -62,6 +68,7 @@ class PlanetHelper {
         this.#planet.mask.parent = this.#planet.root;
 
         this.#planet.game.star.shadow.cast( this.#planet.mask, undefined, undefined, false );
+        this.#maskValue = true;
     }
 
     #debugInfluence() {

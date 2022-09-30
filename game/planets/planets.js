@@ -8,6 +8,10 @@
 
 class Planets {
 
+    config = {
+
+    };
+
     game = null;
     scene = null;
     camera = null;
@@ -18,7 +22,7 @@ class Planets {
 
     #maskMaterial = null;
 
-    constructor( game ) {
+    constructor( game, config ) {
         
         this.game = game;
         this.scene = this.game.scene;
@@ -26,6 +30,8 @@ class Planets {
         this.player = this.game.player;
         this.spaceships = this.game.spaceships;
 
+        EngineUtils.configure.call( this, config );
+        
         this.#createMaskMaterial();
     }
 
@@ -65,6 +71,7 @@ class Planets {
             this.spaceships.planetInsert( planet, distance, planetThreashold );
            
             planet.insert( distance );
+            planet.helper.toggleMask( distance < planet.config.radius * 4 );
         }
     }
 

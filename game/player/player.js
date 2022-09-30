@@ -102,8 +102,7 @@ class Player {
     #createMesh() {
 
         const body = BABYLON.MeshBuilder.CreateCapsule( "player_mesh_body", { height: 2, radius: 0.5, tessellation: 8, subdivisions: 1, capSubdivisions: 3 }, this.scene );
-        //body.convertToFlatShadedMesh();
-        
+
         const head = BABYLON.MeshBuilder.CreateBox( "player_mesh_head", { width: 0.7, height: 0.35, depth: 0.3 }, this.scene );
         head.position.copyFromFloats( 0, 0.5, 0.4 );
 
@@ -147,14 +146,12 @@ class Player {
         log( "player entered planet" );
 
         this.physics.planet = planet;
-        //this.physics.planet.generator.toggleMask( true );
     }
     
     #onPlanetLeave( newState ) {
         
         log( "player left planet" );
 
-        //this.physics.planet.generator.toggleMask( false );
         this.physics.planet = null;
     }
 

@@ -12,20 +12,22 @@ class PlanetChunk extends BABYLON.Mesh {
     
     #size = undefined;
     #resolution = undefined;
+
+    #doesShadows = false;
     
     /* override */ constructor( planet, nodeKey, config ) {
     
         super( `planet${ planet.config.key }_chunk_${ nodeKey }`, planet.scene );
-        this._setReady( false );
+        //this._setReady( false );
 
         this.#planet = planet;
 
         this.#setupMesh();
         this.#setupGeometry( config );
 
-        this._setReady( true );
+        //this._setReady( true );
 
-        this.#setupShadow();
+        this.#setupShadow( config.size );
         this.#setupPhysics( config.size );
     }
 
@@ -75,16 +77,24 @@ class PlanetChunk extends BABYLON.Mesh {
         this.#planet.physics.enable( this, size );
     }
 
-    #setupShadow() {
+    #setupShadow( size ) {
         
-        this.#planet.game.star.shadow.cast( this, undefined, undefined, false );        
-        this.#planet.game.star.shadow.receive( this, undefined, undefined, false );  
+        if ( size <= this.#planet.game.star.shadow.config.radius / PlanetQuadtree.divisionSizeFactor ) {
+            
+            this.#planet.game.star.shadow.cast( this, undefined, undefined, false );        
+            this.#planet.game.star.shadow.receive( this, undefined, undefined, false );  
+
+            this.#doesShadows = true;
+        }
     }
 
     #removeShadow() {
 
-        this.#planet.game.star.shadow.cast( this, false, undefined, false );        
-        this.#planet.game.star.shadow.receive( this, false, undefined, false );  
+        if ( this.#doesShadows === true ) {
+
+            this.#planet.game.star.shadow.cast( this, false, undefined, false );        
+            this.#planet.game.star.shadow.receive( this, false, undefined, false );  
+        }
     }
 
     #buildPositions( offset, fixRotationQuaternion, size, resolution ) {

@@ -68,7 +68,7 @@ class LOD {
         
         for ( let i = 0; i < models.length; i++ ) {
             
-            this.add( this.#game.scene.assets.instance( models[i], onEveryMesh ), Number( models[i].name.split( "_" )[2] ) );
+            this.add( this.#game.scene.assets.instance( models[i], mesh => onEveryMesh( mesh, i ) ), Number( models[i].name.split( "_" )[2] ) );
         }
     }
 
@@ -88,6 +88,17 @@ class LOD {
         this.levels.push( [ node, min.clamp( LOD.minimum, Infinity ) ] );
     }
 
+    set( level ) {
+
+        this.#isVisible = false;
+
+        for ( let i = 0; i < this.levels.length; i++ ) {
+
+            this.levels[i][0].setEnabled( i === level );
+            this.#isVisible = i === level ? true : this.#isVisible;
+        }
+    }
+
     update() {
         
         this.coverage = this.#game.camera.getScreenCoverage( this.root );
@@ -96,7 +107,6 @@ class LOD {
         for ( let i = 0; i < this.levels.length; i++ ) {
 
             this.levels[i][0].setEnabled( ( i - 1 < 0 ? this.coverage <= Infinity : this.coverage < this.levels[ i - 1 ][1] ) && this.coverage >= this.levels[i][1] );
-
             this.#isVisible = this.levels[i][0].isEnabled( false ) === true ? true : this.#isVisible;
         }
     }

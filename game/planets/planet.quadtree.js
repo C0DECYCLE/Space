@@ -8,6 +8,8 @@
 
 class PlanetQuadtree {
 
+    static divisionSizeFactor = 1.5;
+
     static INSERT_LIMIT = 48;
     static INSERT_HALF_LIMIT = 16;
 
@@ -51,7 +53,7 @@ class PlanetQuadtree {
 
         const factors = this.#getDistanceDot( params, position );
         
-        if ( factors.distance < size * 1.5 && size > this.#planet.config.min ) {
+        if ( factors.distance < size * PlanetQuadtree.divisionSizeFactor && size > this.#planet.config.min ) {
 
             this.#recurseQuad( params, nodeKey, position, size );
             
