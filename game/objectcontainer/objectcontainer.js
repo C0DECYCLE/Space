@@ -14,7 +14,7 @@ class ObjectContainer {
 
     #index = undefined;
     #grid = null;
-    #list = new ObjectArray();
+    #list = new SmartObjectArray( 100 );
     #isDisposed = false;
 
     #distanceCache = undefined;
@@ -33,10 +33,10 @@ class ObjectContainer {
         return this.#index;
     }
 
-    get nodes() {
+    /*get nodes() {
 
         return this.#list;
-    }
+    }*/
 
     get distance() {
 
@@ -66,7 +66,7 @@ class ObjectContainer {
 
         this.#list.delete( node );
 
-        if ( this.#list.length === 0 ) {
+        if ( this.#list.size === 0 ) {
 
             onDispose?.( this.index );
             this.dispose();
@@ -79,7 +79,7 @@ class ObjectContainer {
 
         this.#preventDisposed();
 
-        for ( let i = 0; i < this.#list.length; i++ ) {
+        for ( let i = 0; i < this.#list.size; i++ ) {
         
             this.#containers.game.star.shadow.resume( this.#list[i] );
         }
@@ -89,7 +89,7 @@ class ObjectContainer {
 
         this.#preventDisposed();
 
-        for ( let i = 0; i < this.#list.length; i++ ) {
+        for ( let i = 0; i < this.#list.size; i++ ) {
         
             this.#containers.game.star.shadow.pause( this.#list[i] );
         }
