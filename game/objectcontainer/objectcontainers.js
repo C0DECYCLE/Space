@@ -23,7 +23,7 @@ class ObjectContainers {
     #list = new Map();
     #mainIndex = undefined;
     #mainGrid = null;
-    #dynamicNodes = new ObjectArray();
+    #dynamicNodes = new SmartObjectArray( 100 );
     #debugParent = null;
 
     constructor( game, config ) {
@@ -143,7 +143,7 @@ class ObjectContainers {
 
     #moveDynamicNodes() {
 
-        for ( let i = 0; i < this.#dynamicNodes.length; i++ ) {
+        for ( let i = 0; i < this.#dynamicNodes.size; i++ ) {
             
             this.move( this.#dynamicNodes[i] );
         }

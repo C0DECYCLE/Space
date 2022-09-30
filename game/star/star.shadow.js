@@ -130,7 +130,7 @@ class StarShadow {
         this.generator.penumbraDarkness = 1.0;
 
         this.#shadowMap = this.generator.getShadowMap();
-        this.#shadowMap.renderList = new ObjectArray();
+        this.#shadowMap.renderList = new SmartObjectArray( 250 );
     }
 
     #meshRecurse( mesh, call, recursiv = false ) {

@@ -12,13 +12,7 @@ class ObjectArray extends Array {
 
     /* override */ push( object ) {
             
-        if ( object.metalist === undefined ) {
-
-            object.metalist = new Map();  
-        }
-        
-        object.metalist.set( this.uuid, this.length );
-        super.push( object );
+        super.push( this.initialize( object ) );
     }
 
     /* override */ includes( object ) {
@@ -45,10 +39,7 @@ class ObjectArray extends Array {
 
     /* override */ pop() {
 
-        const object = super.pop();
-        object.metalist.delete( this.uuid );
-
-        return object;
+        return this.decommission( super.pop() );
     }
     
     /* override */ splice( prevent = false ) {
@@ -80,7 +71,7 @@ class ObjectArray extends Array {
 
         for ( i = 0; i < this.length; i++ ) {
 
-            this[i].metalist.delete( this.uuid );
+            this.decommission( this[i] );
         }
 
         super.clear();
@@ -99,21 +90,40 @@ class ObjectArray extends Array {
         return this.includes( object );
     }
 
-    delete( object ) {
+    delete( object, length = this.length ) {
 
         if ( this.has( object ) === false ) {
 
             return;
         }
 
-        this.#interchange( object );
+        this.#interchange( object, length );
         this.pop();
         this.splice( true ); //for babylon rtt hook
     }
 
-    #interchange( object ) {
+    initialize( object, length = this.length ) {
 
-        const lastObject = this[ this.length - 1 ];
+        if ( object.metalist === undefined ) {
+
+            object.metalist = new Map();  
+        }
+        
+        object.metalist.set( this.uuid, length );
+
+        return object;
+    }
+
+    decommission( object ) {
+
+        object.metalist.delete( this.uuid );
+
+        return object;
+    }
+
+    #interchange( object, length = this.length ) {
+
+        const lastObject = this[ length - 1 ];
            
         if ( object !== lastObject ) {
             
@@ -126,7 +136,7 @@ class ObjectArray extends Array {
 
             this[ index ] = lastObject;
             lastObject.metalist.set( this.uuid, index );
-            this[ this.length - 1 ] = object;
+            this[ length - 1 ] = object;
         }
     }
 

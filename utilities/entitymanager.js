@@ -20,14 +20,14 @@ class EntityManager {
         this.#increase = increase;
         this.#create = create;
 
-        this.#setupObjectArrays();
+        this.#setupObjectArrays( size );
         this.#createRoot( original );
         this.#make( size );
     }
 
     request() {
 
-        if ( this.#free.length === 0 ) {
+        if ( this.#free.size === 0 ) {
 
             this.#make( this.#increase );
         }
@@ -41,10 +41,10 @@ class EntityManager {
         this.#store( entity );
     }
 
-    #setupObjectArrays() {
+    #setupObjectArrays( capacity ) {
 
-        this.#free = new ObjectArray();
-        this.#used = new ObjectArray();
+        this.#free = new SmartObjectArray( capacity );
+        this.#used = new SmartObjectArray( capacity );
     }
 
     #createRoot( original ) {
