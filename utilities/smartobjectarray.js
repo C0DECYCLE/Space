@@ -8,20 +8,24 @@
 
 class SmartObjectArray extends ObjectArray {
 
+    static default = 0;
+
     size = 0;
 
-    /* override */ constructor( capacity = 1 ) {
+    /* override */ constructor( capacity ) {
     
         super( capacity );
+        this.#fill();
     }
 
     /* override */ push( object ) {
             
-        this[ this.size++ ] = this.initialize( object, this.size );
+        this[ this.size ] = this.initialize( object, this.size++ );
 
-        if ( this.size >= this.length ) {
+        if ( this.size === this.length ) {
 
             this.length *= 2;
+            this.#fill( this.size );
         }
     }
 
@@ -55,9 +59,19 @@ class SmartObjectArray extends ObjectArray {
         super.delete( object, this.size );
     }
 
+    #fill( start = 0, end = this.length ) {
+
+        let i;
+
+        for ( i = start; i < end; i++ ) {
+
+            this.#clean(i);
+        }
+    }
+
     #clean( index ) {
 
-        this[ index ] = undefined;
+        this[ index ] = SmartObjectArray.default;
     }
 
 }
