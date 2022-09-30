@@ -26,7 +26,7 @@ class SmartObjectArray extends ObjectArray {
     }
 
     /* override */ pop() {
-        log("smartobjectarray pop");
+        
         if ( this.size > 0 ) {
 
             const object = this[ --this.size ];
@@ -41,7 +41,7 @@ class SmartObjectArray extends ObjectArray {
 
         let i;
 
-        for ( i = 0; i < this.length; i++ ) {
+        for ( i = 0; i < this.size; i++ ) {
 
             this.decommission( this[i] );
             this.#clean( i );
@@ -51,7 +51,7 @@ class SmartObjectArray extends ObjectArray {
     }
 
     /* override */ delete( object ) {
-        log("smartobjectarray delete");
+        
         super.delete( object, this.size );
     }
 
