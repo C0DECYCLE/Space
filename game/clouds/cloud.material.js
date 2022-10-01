@@ -8,15 +8,23 @@
 
 class CloudMaterial extends BABYLON.CustomMaterial {
 
-    #game = null;
+    #clouds = null;
     
-    constructor( game ) {
+    constructor( clouds ) {
     
-        super( `cloud_material`, game.scene );
+        super( `cloud_material`, clouds.scene );
 
-        this.#game = game;
+        this.#clouds = clouds;
 
+        this.#setupColor();
         this.#hookShader();
+    }
+
+    #setupColor() {
+        
+        this.setColorIntensity( this.#clouds.config.color, 1.0 );
+
+        //multiple colors by instanceBuffer and unforms
     }
 
     #hookShader() {
@@ -35,7 +43,7 @@ class CloudMaterial extends BABYLON.CustomMaterial {
         //this.Fragment_Before_Lights( this.#getFragment_Before_Lights() );
         //this.Fragment_Before_Fog( this.#getFragment_Before_Fog() );
         //this.Fragment_Before_FragColor( this.#getFragment_Before_FragColor() );
-        this.Fragment_Custom_Diffuse( this.#getFragment_Custom_Diffuse() );
+        //this.Fragment_Custom_Diffuse( this.#getFragment_Custom_Diffuse() );
         //this.Fragment_Custom_Alpha( this.#getFragment_Custom_Alpha() );
         //this.Fragment_MainEnd( this.#getFragment_MainEnd() ); 
     }

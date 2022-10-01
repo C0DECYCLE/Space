@@ -17,6 +17,7 @@ class Clouds {
 
     config = {
 
+        color: "#ffffff"
     };
 
     game = null;
@@ -39,7 +40,7 @@ class Clouds {
 
     #createModels( blueprints ) {
         
-        this.material = new CloudMaterial( this.game );
+        this.material = new CloudMaterial( this );
 
         for ( let i = 0; i < blueprints.length; i++ ) {
 
@@ -52,7 +53,7 @@ class Clouds {
         const mesh = BABYLON.Mesh.CreateIcoSphere( `cloud_${ level }_${ min }`, { subdivisions: subdivisions }, this.scene );
         mesh.removeVerticesData( BABYLON.VertexBuffer.NormalKind );
         mesh.removeVerticesData( BABYLON.VertexBuffer.UVKind );
-        EngineUtilsShader.enableCustomInstance( mesh );
+        //EngineUtilsShader.enableCustomInstance( mesh );
 
         mesh.material = this.material;
         mesh.parent = this.game.scene.assets.cache;
