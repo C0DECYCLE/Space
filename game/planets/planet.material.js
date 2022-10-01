@@ -75,7 +75,7 @@ class PlanetMaterial extends BABYLON.CustomMaterial {
         this.Vertex_MainEnd( this.#getVertex_MainEnd() );
 
         //this.Fragment_Begin( this.#getFragment_Begin() );
-        this.Fragment_Definitions( EngineUtilsShader + this.#getFragment_Definitions() );
+        this.Fragment_Definitions( this.#getFragment_Definitions() );
         //this.Fragment_MainBegin( this.#getFragment_MainBegin() ); 
         //this.Fragment_Before_Lights( this.#getFragment_Before_Lights() );
         //this.Fragment_Before_Fog( this.#getFragment_Before_Fog() );
@@ -85,7 +85,7 @@ class PlanetMaterial extends BABYLON.CustomMaterial {
     }
 
     #getVertex_Definitions() { return `
-        
+
         flat out vec3 flatPosition;
 
     `; }
@@ -97,6 +97,8 @@ class PlanetMaterial extends BABYLON.CustomMaterial {
     `; }
 
     #getFragment_Definitions() { return `
+
+        ${ EngineUtilsShader.code }
 
         flat in vec3 flatPosition;
         

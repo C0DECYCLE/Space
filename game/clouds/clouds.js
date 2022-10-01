@@ -52,8 +52,8 @@ class Clouds {
         const mesh = BABYLON.Mesh.CreateIcoSphere( `cloud_${ level }_${ min }`, { subdivisions: subdivisions }, this.scene );
         mesh.removeVerticesData( BABYLON.VertexBuffer.NormalKind );
         mesh.removeVerticesData( BABYLON.VertexBuffer.UVKind );
-        mesh.registerInstancedBuffer( "color", 4 );
-        mesh.instancedBuffers.color = new BABYLON.Color4( 0, 0, 0, 0 );
+        EngineUtilsShader.enableCustomInstance( mesh );
+
         mesh.material = this.material;
         mesh.parent = this.game.scene.assets.cache;
         mesh.setEnabled( false );

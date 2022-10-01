@@ -13,6 +13,7 @@ class Engine {
     extensions = null;
 
     stats = [];
+    screenSize = null;
 
     #update = function() {};
 
@@ -76,6 +77,8 @@ class Engine {
     #createBabylon() {
 
         this.babylon = new BABYLON.Engine( this.canvas );
+
+        this.screenSize = new BABYLON.Vector2( this.babylon.getRenderWidth(), this.babylon.getRenderHeight() );
     }
 
     #createExtensions() {

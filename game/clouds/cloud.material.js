@@ -30,7 +30,7 @@ class CloudMaterial extends BABYLON.CustomMaterial {
         //this.Vertex_MainEnd( this.#getVertex_MainEnd() );
 
         //this.Fragment_Begin( this.#getFragment_Begin() );
-        //this.Fragment_Definitions( EngineUtilsShader + this.#getFragment_Definitions() );
+        //this.Fragment_Definitions( this.#getFragment_Definitions() );
         //this.Fragment_MainBegin( this.#getFragment_MainBegin() ); 
         //this.Fragment_Before_Lights( this.#getFragment_Before_Lights() );
         //this.Fragment_Before_Fog( this.#getFragment_Before_Fog() );

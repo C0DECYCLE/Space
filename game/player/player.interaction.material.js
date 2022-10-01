@@ -10,6 +10,8 @@ class PlayerInteractionMaterial extends BABYLON.CustomMaterial {
 
     static interactableColor = EngineUtils.color3ToVector3( BABYLON.Color3.FromHexString( UI.NEUTRAL ) );
 
+    screenSize = null;
+
     #game = null;
     
     constructor( name, game ) {
@@ -24,12 +26,16 @@ class PlayerInteractionMaterial extends BABYLON.CustomMaterial {
 
     #setupUniforms() {
 
+        this.screenSize = this.#game.engine.screenSize;
+        
+        this.AddUniform( "screenSize", "vec2" );
         this.AddUniform( "interactableColor", "vec3" );
 
         this.onBindObservable.add( ( /*mesh*/ ) => { 
 
             const effect = this.getEffect();
 
+            effect.setVector2( "screenSize", this.screenSize );
             effect.setVector3( "interactableColor", PlayerInteractionMaterial.interactableColor );
         } );
     }
@@ -45,7 +51,7 @@ class PlayerInteractionMaterial extends BABYLON.CustomMaterial {
         //this.Vertex_MainEnd( this.#getVertex_MainEnd() );
 
         //this.Fragment_Begin( this.#getFragment_Begin() );
-        this.Fragment_Definitions( EngineUtilsShader + this.#getFragment_Definitions() );
+        this.Fragment_Definitions( this.#getFragment_Definitions() );
         //this.Fragment_MainBegin( this.#getFragment_MainBegin() ); 
         //this.Fragment_Before_Lights( this.#getFragment_Before_Lights() );
         //this.Fragment_Before_Fog( this.#getFragment_Before_Fog() );
@@ -57,9 +63,13 @@ class PlayerInteractionMaterial extends BABYLON.CustomMaterial {
 
     #getFragment_Definitions() { return `
 
+        ${ EngineUtilsShader.code }
+
         float pattern() {
-            float a = abs( cos( (gl_FragCoord.x + gl_FragCoord.y) * 0.2 ) );
-            if ( a > 0.666 ) {
+            vec2 uv = gl_FragCoord.xy / screenSize;
+            float v = ( uv.x + uv.y ) / 2.0;
+            float a = abs( cos( v * PI * 100.0 ) );
+            if ( a > 0.7 ) {
                 return 1.0;
             } else {
                 return 0.5;
@@ -82,9 +92,7 @@ class PlayerInteractionMaterial extends BABYLON.CustomMaterial {
 
         #if defined(VERTEXCOLOR) || defined(INSTANCESCOLOR) && defined(INSTANCES)
 
-            bool highlight = vColor.r == 1.0;
-            
-            if ( highlight ) {
+            if ( ${ EngineUtilsShader.parseCustomInstanceKey( 0 ) } == ${ EngineUtilsShader.parseCustomInstanceValue( true ) } ) {
 
                 gl_FragColor += vec4( interactableColor * pattern(), 1.0 ) * 0.25;
             }

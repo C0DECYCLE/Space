@@ -150,8 +150,7 @@ class EngineAssets {
         
         if ( interactable === true ) {
 
-            mesh.registerInstancedBuffer( "color", 4 );
-            mesh.instancedBuffers.color = new BABYLON.Color4( 0, 0, 0, 0 );
+            EngineUtilsShader.enableCustomInstance( mesh );
         }
 
         onMesh?.( mesh );

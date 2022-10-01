@@ -102,7 +102,7 @@ class PlayerInteraction {
 
         if ( interaction.highlight === false ) {
 
-            interaction.mesh.instancedBuffers.color.r = 1;
+            EngineUtilsShader.setCustomInstance( interaction.mesh, 0, true );
             interaction.mesh.enableEdgesRendering(); //?
             interaction.highlight = true;
         }
@@ -112,7 +112,7 @@ class PlayerInteraction {
 
         if ( interaction.highlight === true ) {
                 
-            interaction.mesh.instancedBuffers.color.r = 0;
+            EngineUtilsShader.setCustomInstance( interaction.mesh, 0, false );
             interaction.mesh.disableEdgesRendering(); //?
             interaction.highlight = false;
         }
