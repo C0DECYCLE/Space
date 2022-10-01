@@ -18,14 +18,11 @@ class PlanetChunk extends BABYLON.Mesh {
     /* override */ constructor( planet, nodeKey, config ) {
     
         super( `planet${ planet.config.key }_chunk_${ nodeKey }`, planet.scene );
-        //this._setReady( false );
-
+    
         this.#planet = planet;
 
         this.#setupMesh();
         this.#setupGeometry( config );
-
-        //this._setReady( true );
 
         this.#setupShadow( config.size );
         this.#setupPhysics( config.size );
@@ -43,7 +40,7 @@ class PlanetChunk extends BABYLON.Mesh {
 
     stitch( neighbors ) {
 
-        //this.#stitchGeometry( neighbors, this.#size, this.#resolution );
+        //this.#stitchGeometry( neighbors, this.size, this.resolution );
     }
 
     /* override */ dispose() {
@@ -78,8 +75,9 @@ class PlanetChunk extends BABYLON.Mesh {
     }
 
     #setupShadow( size ) {
-        
-        if ( size <= this.#planet.game.star.shadow.config.radius / PlanetQuadtree.divisionSizeFactor ) {
+
+        //causes weird glitch
+        if ( true /* size < this.#planet.game.star.shadow.config.radius / PlanetQuadtree.divisionSizeFactor */ ) {
             
             this.#planet.game.star.shadow.cast( this, undefined, undefined, false );        
             this.#planet.game.star.shadow.receive( this, undefined, undefined, false );  
