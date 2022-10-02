@@ -94,7 +94,7 @@ Space.add( "install", function() {
     this.asteroids.register( "ring", { key: 1, seed: "4674", radius: 5 * 1000, spread: 2 * 1000, height: 100, density: 0.03 } );
 
 
-    //rotate clouds to up vector from planet adfanced scale
+    //adfanced scale
     //switch to row col with clouds and perlin noise to dermin if cloud there or not
     
     //set lod level dynamicly and also cull clouds
