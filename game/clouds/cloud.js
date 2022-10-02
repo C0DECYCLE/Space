@@ -62,23 +62,13 @@ class Cloud {
         this.lod.parent = value;
     }
 
-    /*
-    set alpha( value ) {
-
-        for ( let i = 0; i < this.lod.levels.length; i++ ) {
-
-            EngineUtilsShader.setCustomInstance( this.lod.levels[i][0], 0, value );
-        }
-    }
-
     set randomValue( value ) {
 
         for ( let i = 0; i < this.lod.levels.length; i++ ) {
 
-            EngineUtilsShader.setCustomInstance( this.lod.levels[i][0], 0, value );
+            EngineUtilsShader.setInstanceAttribute( this.lod.levels[i][0], "randomValue", value );
         }
     }
-    */
 
     update() {
 

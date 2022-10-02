@@ -93,8 +93,6 @@ Space.add( "install", function() {
     this.asteroids.register( "ring", { key: 0, seed: "7417", radius: 5 * 1000, spread: 400, height: 200, density: 0.02 } );
     this.asteroids.register( "ring", { key: 1, seed: "4674", radius: 5 * 1000, spread: 2 * 1000, height: 100, density: 0.03 } );
 
-    //custom buffer //https://forum.babylonjs.com/t/custom-instance-buffer-trouble/34403
-    //random clouds with custom buffer?
 
     //rotate clouds to up vector from planet adfanced scale
     //switch to row col with clouds and perlin noise to dermin if cloud there or not
@@ -102,7 +100,7 @@ Space.add( "install", function() {
     //set lod level dynamicly and also cull clouds
 
     //transparent clouds //https://forum.babylonjs.com/t/is-it-possible-to-use-custom-buffers-on-instances-to-control-instance-transparency-alpha-channel/7441/3
-  
+
 } );
 
 Space.add( "stage", function() {

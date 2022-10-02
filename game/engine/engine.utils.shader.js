@@ -59,37 +59,19 @@ class EngineUtilsShader {
 
     `;
 
-    static customInstanceDefault = 1;
-    static customkeyMap = [ "r", "g", "b", "a" ];
+    static registerInstanceAttribute( mesh, name, defaultValue ) {
 
-    static enableCustomInstance( mesh ) {
+        const arrayValue = [];
 
-        const d = EngineUtilsShader.customInstanceDefault;
-
-        mesh.registerInstancedBuffer( "color", 4 );
-        mesh.instancedBuffers.color = new BABYLON.Color4( d, d, d, d );
+        defaultValue.toArray?.( arrayValue );
+        
+        mesh.registerInstancedBuffer( name, arrayValue.length || 1 );
+        mesh.instancedBuffers[ name ] = defaultValue;
     }
 
-    static setCustomInstance( instance, key, value ) {
+    static setInstanceAttribute( instance, name, value ) {
 
-        instance.instancedBuffers.color[ EngineUtilsShader.customkeyMap[ key ] ] = EngineUtilsShader.fetchCustomInstanceValue( value );
-    }
-
-    static fetchCustomInstanceValue( value ) {
-
-        return EngineUtilsShader.customInstanceDefault + ( Number( value ) || 0 );
-    }
-
-    static parseCustomInstanceKey( key ) {
-
-        return `roundf( vColor.${ EngineUtilsShader.customkeyMap[ key ] }, 1000000.0 )`;
-    }
-
-    static parseCustomInstanceValue( value ) {
-
-        const fetch = EngineUtilsShader.fetchCustomInstanceValue( value ).toString();
-
-        return fetch.includes( "." ) === true ? fetch : `${ fetch }.0`;
+        instance.instancedBuffers[ name ] = value;
     }
 
 }

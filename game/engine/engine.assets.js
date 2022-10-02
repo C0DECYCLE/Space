@@ -53,9 +53,9 @@ class EngineAssets {
         }
     }
 
-    traverse( importLod, onEveryMesh, interactable = false ) {
+    traverse( importLod, onEveryMesh, interactables = [] ) {
         
-        const lod = this.#traverseMesh( importLod, onEveryMesh, interactable );
+        const lod = this.#traverseMesh( importLod, onEveryMesh, interactables );
         const subs = importLod.getChildMeshes( true );
         
         for ( let i = 0; i < subs.length; i++ ) {
@@ -67,7 +67,7 @@ class EngineAssets {
 
             } else {
 
-                this.#traverseMesh( subs[i], onEveryMesh, interactable ).parent = lod;
+                this.#traverseMesh( subs[i], onEveryMesh, interactables ).parent = lod;
             }
         }
 
@@ -144,13 +144,14 @@ class EngineAssets {
         }, 100 );
     }
 
-    #traverseMesh( importMesh, onMesh = undefined, interactable = false ) {
+    #traverseMesh( importMesh, onMesh = undefined, interactables = [] ) {
         
+        const interactable = interactables.includes( importMesh.name );
         const mesh = this.#traverseMeshGeneral( importMesh, undefined, interactable );
-        
+
         if ( interactable === true ) {
 
-            EngineUtilsShader.enableCustomInstance( mesh );
+            EngineUtilsShader.registerInstanceAttribute( mesh, "interactable", 0 );
         }
 
         onMesh?.( mesh );

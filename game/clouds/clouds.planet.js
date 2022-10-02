@@ -36,16 +36,15 @@ class CloudsPlanet {
 
         for ( let i = 0; i < 100; i++ ) {
 
-            const height = this.#planet.config.radius + this.#planet.config.maxHeight * (0.5 + Math.random() * 0.5)
+            const height = this.#planet.config.radius + this.#planet.config.maxHeight * (0.25 + Math.random() * 0.5)
+            const rot = new BABYLON.Vector3( 0, Math.random() * 2, Math.random() - 0.5 ).scaleInPlace( Math.PI );
 
             const cloud = new Cloud( this.#clouds.game, {} );
+            cloud.position.copyFromFloats( height, 0, 0 ).applyRotationQuaternionInPlace( rot.toQuaternion() );
+            cloud.rotationQuaternion.copyFrom( rot.addInPlaceFromFloats( 0, 0, -Math.PI / 2 ).toQuaternion() );
             cloud.parent = this.#planet.root;
-            cloud.position.copyFromFloats( height, 0, 0 ).applyRotationQuaternionInPlace( new BABYLON.Vector3( 0, Math.random() * 2, Math.random() - 0.5 ).scaleInPlace( Math.PI ).toQuaternion() );
-            EngineUtils.setNodeDirection( cloud, cloud.root.forward, cloud.position.normalizeToNew() );
-
-            //cloud.lod.set( Math.floor( Math.random() * 3 ) );
             cloud.lod.set( 0 );
-            //cloud.randomValue = Math.random() * 10;
+            cloud.randomValue = Math.random() * this.#planet.config.radius;
 
             this.list.push( cloud );
         }

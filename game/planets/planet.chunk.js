@@ -66,7 +66,7 @@ class PlanetChunk extends BABYLON.Mesh {
         //
         //vertexData.normals = []; BABYLON.VertexData.ComputeNormals( vertexData.positions, vertexData.indices, vertexData.normals );
         //
-        vertexData.applyToMesh( this, true );
+        vertexData.applyToMesh( this, false );
     } 
 
     #setupPhysics( size ) {
@@ -171,7 +171,7 @@ class PlanetChunk extends BABYLON.Mesh {
     }
 
     #stitchVertex( positions, neighbors, row, col, size, resolution ) {
-
+        //set updatable true!
         const edgeCase = this.#getEdgeCase( neighbors, row, col, size, resolution );
 
         if ( edgeCase !== false ) {
@@ -214,4 +214,5 @@ class PlanetChunk extends BABYLON.Mesh {
     
         return false;
     }
+    
 }

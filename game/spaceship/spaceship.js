@@ -22,7 +22,7 @@ class Spaceship {
 
                     game.star.shadow.receive( mesh, undefined, undefined, false );
                 }
-            }, true );
+            }, this.interactables );
             
             //model = game.scene.assets.merge( model );
             //game.star.shadow.receive( model, undefined, undefined, false );

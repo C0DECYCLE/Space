@@ -17,6 +17,7 @@ class CloudMaterial extends BABYLON.CustomMaterial {
         this.#clouds = clouds;
 
         this.#setupColor();
+        this.#setupAttributes();
         this.#hookShader();
     }
 
@@ -25,6 +26,11 @@ class CloudMaterial extends BABYLON.CustomMaterial {
         this.setColorIntensity( this.#clouds.config.color, 1.0 );
 
         //multiple colors by instanceBuffer and unforms
+    }
+
+    #setupAttributes() {
+
+        this.AddAttribute( "randomValue" );
     }
 
     #hookShader() {
@@ -43,8 +49,8 @@ class CloudMaterial extends BABYLON.CustomMaterial {
         //this.Fragment_Before_Lights( this.#getFragment_Before_Lights() );
         //this.Fragment_Before_Fog( this.#getFragment_Before_Fog() );
         //this.Fragment_Before_FragColor( this.#getFragment_Before_FragColor() );
-        this.Fragment_Custom_Diffuse( this.#getFragment_Custom_Diffuse() );
-        this.Fragment_Custom_Alpha( this.#getFragment_Custom_Alpha() );
+        //this.Fragment_Custom_Diffuse( this.#getFragment_Custom_Diffuse() );
+        //this.Fragment_Custom_Alpha( this.#getFragment_Custom_Alpha() );
         //this.Fragment_MainEnd( this.#getFragment_MainEnd() ); 
     }
 
@@ -52,43 +58,14 @@ class CloudMaterial extends BABYLON.CustomMaterial {
 
         ${ EngineUtilsShader.code }
 
+        attribute float randomValue;
 
     `; }
 
     #getVertex_Before_PositionUpdated() { return `
         
-        #if defined(VERTEXCOLOR) || defined(INSTANCESCOLOR) && defined(INSTANCES)
-        
-
-        
-        #endif
-
-        //mat4 finWorld=mat4(world0,world1,world2,world3);
-        positionUpdated *= 1.0 + abs( noise( (position /*+ vec3(finWorld * vec4(0.0, 0.0, 0.0, 1.0)) * 0.001*/ ) * 2.0 ) - 0.5 ) * 0.75;
+        positionUpdated *= 1.0 + abs( noise( (position + randomValue) * 2.0 ) - 0.5 ) * 0.75;
 
     `; }
-
-    #getFragment_Custom_Diffuse() { return `
-        
-        #if defined(VERTEXCOLOR) || defined(INSTANCESCOLOR) && defined(INSTANCES)
-
-            baseColor.rgb /= vColor.rgb;
-
-        #endif
-        
-    `; } 
-
-    #getFragment_Custom_Alpha() { return `
-        
-        #if defined(VERTEXCOLOR) || defined(INSTANCESCOLOR) && defined(INSTANCES)
-
-            //alpha = 0.5;//${ EngineUtilsShader.parseCustomInstanceKey( 0 ) };
-
-        #endif
-        
-        alpha = 0.5;
-
-    `; }
-
 
 }
