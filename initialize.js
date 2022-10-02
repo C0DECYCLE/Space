@@ -61,7 +61,7 @@ Space.add( "install", function() {
 
         { 
             key: 0, radius: 1024, spin: 0.005, 
-            gravity: 0.6, atmosphere: 256, waveLengths: new BABYLON.Color3( 450, 370, 420 ),
+            gravity: 0.6, atmosphere: /*256*/false, waveLengths: new BABYLON.Color3( 450, 370, 420 ), clouds: {},
             seed: new BABYLON.Vector3( -1123, 7237, -3943 ), mountainy: 5, warp: 0.8,
             colors: { main: "#92a4a8", second: "#a58685", third: "#caa88d", steep: "#66515f" }
         },
@@ -92,7 +92,16 @@ Space.add( "install", function() {
 
     this.asteroids.register( "ring", { key: 0, seed: "7417", radius: 5 * 1000, spread: 400, height: 200, density: 0.02 } );
     this.asteroids.register( "ring", { key: 1, seed: "4674", radius: 5 * 1000, spread: 2 * 1000, height: 100, density: 0.03 } );
+
+    //custom buffer //https://forum.babylonjs.com/t/custom-instance-buffer-trouble/34403
+    //random clouds with custom buffer?
+
+    //rotate clouds to up vector from planet adfanced scale
+    //switch to row col with clouds and perlin noise to dermin if cloud there or not
     
+    //set lod level dynamicly and also cull clouds
+
+    //transparent clouds //https://forum.babylonjs.com/t/is-it-possible-to-use-custom-buffers-on-instances-to-control-instance-transparency-alpha-channel/7441/3
   
 } );
 

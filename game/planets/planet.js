@@ -17,9 +17,11 @@ class Planet {
         influence: 512,
         maxHeight: 512 * 0.75,
         gravity: 0.8,
+
         atmosphere: 512,
         waveLengths: new BABYLON.Color3( 700, 530, 440 ),
-        
+        clouds: false,
+
         min: 64,
         resolution: 24,
 
@@ -47,6 +49,7 @@ class Planet {
     material = null;
     perlin = null;
     atmosphere = null;
+    clouds = null;
 
     faces = new Map();
     chunks = null;
@@ -71,6 +74,7 @@ class Planet {
         this.#setupPhysics();
         this.#addAtmosphere();
         this.#farInsertion();
+        this.#addClouds();
     }
 
     get position() {
@@ -170,6 +174,22 @@ class Planet {
         }
     }
 
+    #farInsertion() {
+        
+        const farFarAway = EngineUtils.getFarAway();
+        this.insert( farFarAway, farFarAway.y, true );
+        
+        EngineUtils.getBounding( this.root, true );
+    }
+
+    #addClouds() {
+
+        if ( this.config.clouds !== false ) {
+
+            this.clouds = new CloudsPlanet( this.game.clouds, this, this.config.clouds );
+        }
+    }
+
     #updateLod() {
 
         this.lod.update();
@@ -205,14 +225,6 @@ class Planet {
 
             this.root.rotate( BABYLON.Axis.Y, this.config.spin * EngineUtils.toRadian * deltaCorrection, BABYLON.Space.LOCAL ); //make very movement speed * delta time
         }
-    }
-
-    #farInsertion() {
-        
-        const farFarAway = EngineUtils.getFarAway();
-        this.insert( farFarAway, farFarAway.y, true );
-        
-        EngineUtils.getBounding( this.root, true );
     }
     
     #evalInsertionWithString( distance ) {

@@ -10,6 +10,13 @@ class Cloud {
 
     config = {
 
+        random: Math.random,
+
+        width: () => Math.ceil( this.config.random() * 10 ) + 10,
+        height: () => Math.ceil( this.config.random() * 10 ) + 10,
+        depth: () => Math.ceil( this.config.random() * 10 ) + 10,
+
+        scale: () => Math.ceil( this.config.random() * 5 )
     };
 
     game = null;
@@ -27,6 +34,7 @@ class Cloud {
         EngineUtils.configure.call( this, config );
         
         this.#createLod();   
+        this.#makeUnique();   
     }
 
     get root() {
@@ -44,10 +52,33 @@ class Cloud {
         return this.lod.rotationQuaternion;
     }
 
+    get scaling() {
+        
+        return this.lod.scaling;
+    }
+
     set parent( value ) {
 
         this.lod.parent = value;
     }
+
+    /*
+    set alpha( value ) {
+
+        for ( let i = 0; i < this.lod.levels.length; i++ ) {
+
+            EngineUtilsShader.setCustomInstance( this.lod.levels[i][0], 0, value );
+        }
+    }
+
+    set randomValue( value ) {
+
+        for ( let i = 0; i < this.lod.levels.length; i++ ) {
+
+            EngineUtilsShader.setCustomInstance( this.lod.levels[i][0], 0, value );
+        }
+    }
+    */
 
     update() {
 
@@ -57,11 +88,13 @@ class Cloud {
     #createLod() {
         
         this.lod = new LOD( this.game );
-        this.lod.fromModels( this.clouds.models, ( mesh, level ) => {
+        this.lod.fromModels( this.clouds.models, ( mesh, level ) => {} );
+    }
+    
+    #makeUnique() {
 
-            //which level?
-            this.game.star.shadow.cast( mesh );
-        } );
+        //this.rotationQuaternion.copyFrom( new BABYLON.Vector3( this.config.random() * 2 - 1, this.config.random() * 2 - 1, this.config.random() * 2 - 1 ).scaleInPlace( Math.PI ).toQuaternion() );
+        this.scaling/*.copyFromFloats( this.config.scale(), this.config.scale(), this.config.scale() )*/.scaleInPlace( 100 );
     }
 
 }
