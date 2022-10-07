@@ -10,8 +10,8 @@ class Clouds {
 
     static lods = [
 
-        [ 12, 0.25 ],
-        [ 2, 0.1 ],
+        [ 6, 0.25 ],
+        [ 3, 0.1 ],
         [ 1, LOD.minimum ]
     ]
 

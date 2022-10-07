@@ -34,7 +34,6 @@ class Cloud {
         EngineUtils.configure.call( this, config );
         
         this.#createLod();   
-        this.#makeUnique();   
     }
 
     get root() {
@@ -79,12 +78,6 @@ class Cloud {
         
         this.lod = new LOD( this.game );
         this.lod.fromModels( this.clouds.models, ( mesh, level ) => {} );
-    }
-    
-    #makeUnique() {
-
-        //this.rotationQuaternion.copyFrom( new BABYLON.Vector3( this.config.random() * 2 - 1, this.config.random() * 2 - 1, this.config.random() * 2 - 1 ).scaleInPlace( Math.PI ).toQuaternion() );
-        this.scaling/*.copyFromFloats( this.config.scale(), this.config.scale(), this.config.scale() )*/.scaleInPlace( 30 );
     }
 
 }

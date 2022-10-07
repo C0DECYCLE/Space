@@ -10,13 +10,16 @@ class CloudsPlanet {
 
     config = {
 
-        resolution: 32
+        seed: undefined,
+        density: 0.1,
     };
 
     list = [];
 
     #clouds = null;
     #planet = null;
+
+    #perlin = null;
 
     constructor( clouds, planet, config ) {
 
@@ -25,6 +28,7 @@ class CloudsPlanet {
 
         EngineUtils.configure.call( this, config );
 
+        this.#setupPerlin();
         this.#spawnClouds();
     }
 
@@ -33,34 +37,69 @@ class CloudsPlanet {
 
     }
 
-    #spawnClouds() {
+    #setupPerlin() {
 
-        const rowRes = this.config.resolution;
+        this.config.seed = this.config.seed || this.#planet.config.seed.y;
 
-        for ( let row = 0; row < rowRes; row++ ) {
+        this.#perlin = new perlinNoise3d();
+        this.#perlin.noiseSeed( this.config.seed );
+    }
 
-            const colRes = Math.round( rowRes * 0.5 - Math.abs( row - rowRes * 0.5 ) );
+    #spawnClouds() { this.testcache = new BABYLON.Node( "test_cache", this.scene );
+    this.testcache.setEnabled( false );
 
-            for ( let col = 0; col < colRes; col++ ) {
+        const planetSurfaceArea = 4 * Math.PI * this.#planet.config.radius;
+        const nSamples = Math.floor( planetSurfaceArea * this.config.density );
+        log(nSamples)
+        for ( let i = 0; i < nSamples; i++ ) {
 
-                this.#makeCloud( row / rowRes, col / colRes );
-            }
+            const theta = 2 * Math.PI * i / Math.PHI;
+            const phi = Math.acos( 1 - 2 * ( i + 0.5 ) / nSamples );
+
+            this.#evalCloud( theta, phi, nSamples );
         }
     }
 
-    #makeCloud( rowStep, colStep ) {
+    #evalCloud( theta, phi, nSamples ) {
 
-        const height = this.#planet.config.radius + this.#planet.config.maxHeight * (0.25 + 1/*Math.random()*/ * 0.5);
-        const rot = new BABYLON.Vector3( 0, colStep * 2, rowStep - 0.5 ).scaleInPlace( Math.PI );
+        const position = new BABYLON.Vector3( Math.cos( theta ) * Math.sin( phi ), Math.sin( theta ) * Math.sin( phi ), Math.cos( phi ) ); 
+        
+        const noiseOffset = new BABYLON.Vector3( this.#planet.position.x, this.config.seed, this.#planet.position.z );
+        const cull = this.#noise( position.clone().scaleInPlace( this.#planet.config.radius * 0.005 ).addInPlace( noiseOffset ) );
+        const height = this.#noise( position.clone().scaleInPlace( this.#planet.config.radius * -0.0025 ).addInPlace( noiseOffset ) );
+
+        position.scaleInPlace( this.#planet.config.radius + this.#planet.config.maxHeight * (0.25 + height * 0.5) );
+
+        if ( cull < 0.35 ) {
+            
+            this.#makeCloud( position, nSamples );
+        }
+    }
+
+    #makeCloud( position, nSamples ) {
 
         const cloud = new Cloud( this.#clouds.game, {} );
-        cloud.position.copyFromFloats( height, 0, 0 ).applyRotationQuaternionInPlace( rot.toQuaternion() );
-        cloud.rotationQuaternion.copyFrom( rot.addInPlaceFromFloats( 0, 0, -Math.PI / 2 ).toQuaternion() );
-        cloud.parent = this.#planet.root;
-        cloud.lod.set( 0 );
-        cloud.randomValue = Math.random() * this.#planet.config.radius;
+
+        cloud.position.copyFrom( position );
+        cloud.root.setDirection( position.negate(), undefined, -Math.PI / 2, undefined );
+        cloud.root.rotate( BABYLON.Axis.Y, Math.random() * Math.PI * 2, BABYLON.Space.LOCAL );
+        cloud.scaling.copyFromFloats( Math.random(), Math.random(), Math.random() ).scaleInPlace( 0.75 ).addInPlaceFromFloats( 0.5, 0.5, 0.5 ).scaleInPlace( 75 );
+
+        cloud.parent = this.testcache;//this.#planet.root;
+        cloud.lod.set( -1 ); //dynamic lod
+        cloud.randomValue = Math.random() * nSamples;
 
         this.list.push( cloud );
+    }
+
+    #noise( vector ) {
+
+        if ( typeof vector === "number" ) {
+
+            return this.#perlin.get( vector, vector, vector );
+        }
+
+        return this.#perlin.get( vector.x, vector.y, vector.z );
     }
 
 }

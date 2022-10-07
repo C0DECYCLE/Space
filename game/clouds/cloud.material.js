@@ -17,6 +17,7 @@ class CloudMaterial extends BABYLON.CustomMaterial {
         this.#clouds = clouds;
 
         this.#setupColor();
+        this.#setupTransparency();
         this.#setupAttributes();
         this.#hookShader();
     }
@@ -26,6 +27,12 @@ class CloudMaterial extends BABYLON.CustomMaterial {
         this.setColorIntensity( this.#clouds.config.color, 1.0 );
 
         //multiple colors by instanceBuffer and unforms
+    }
+
+    #setupTransparency() {
+
+        this.alpha = 0.99;
+        this.needDepthPrePass = true;
     }
 
     #setupAttributes() {
@@ -64,7 +71,7 @@ class CloudMaterial extends BABYLON.CustomMaterial {
 
     #getVertex_Before_PositionUpdated() { return `
         
-        positionUpdated *= 1.0 + abs( noise( (position + randomValue) * 2.0 ) - 0.5 ) * 0.75;
+        positionUpdated *= 1.0 + ( noise( (position + randomValue) * 2.0 ) - 0.5 ) * 0.75;
 
     `; }
 
