@@ -17,12 +17,17 @@ class EntityLOD extends AbstractLOD {
     #doShadow = false;
     #currentEntity = null;
 
-    /* override */ constructor( game, size, doCollidable = false, doShadow = false ) {
+    /* override */ constructor( game, doCollidable = false, doShadow = false ) {
 
-        super( game, size );
+        super( game );
 
         this.#doCollidable = doCollidable;
         this.#doShadow = doShadow;
+    }
+
+    setBounding( boundingCache ) {
+
+        this.boundingCache = boundingCache;
     }
 
     /* override */ disposeCurrent( currentLevel ) {

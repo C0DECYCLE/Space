@@ -180,6 +180,11 @@ class EngineAssets {
         mesh.rotation.copyFrom( importMesh.rotation );
         mesh.scaling.copyFrom( importMesh.scaling );
 
+        if ( !mesh.rotationQuaternion ) {
+            
+            mesh.rotationQuaternion = mesh.rotation.toQuaternion();
+        }
+
         return mesh;
     }
 
@@ -226,6 +231,11 @@ class EngineAssets {
 
         const instance = mesh.createInstance( `i-${ mesh.name }` );
 
+        if ( !instance.rotationQuaternion ) {
+            
+            instance.rotationQuaternion = instance.rotation.toQuaternion();
+        }
+
         onInstance?.( instance );
 
         return instance;
@@ -234,6 +244,11 @@ class EngineAssets {
     #instanceCollisionMesh( mesh ) {
 
         const instance = mesh.createInstance( `i-${ mesh.name }` );
+
+        if ( !instance.rotationQuaternion ) {
+            
+            instance.rotationQuaternion = instance.rotation.toQuaternion();
+        }
 
         instance.isCollisionMesh = true;
         instance.isVisible = false;

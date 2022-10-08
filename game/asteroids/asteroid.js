@@ -35,12 +35,7 @@ class Asteroid {
         
         this.#createLod();   
         this.#makeUnique();
-        this.#addPhysics();
-    }
-
-    get root() { //remove
-
-        return this.lod.root;
+        this.#post();
     }
 
     get position() {
@@ -70,14 +65,12 @@ class Asteroid {
 
     #createLod() {
         
-        this.lod = new LOD( this.game );
-        this.lod.fromModels( this.asteroids.models, ( mesh, level ) => {
+        this.lod = new EntityLOD( this.game, true, true );
 
-            if ( level === 0 ) {
-
-                //this.game.star.shadow.cast( mesh /*, undefined, undefined, false*/ );
-            }
-        } );
+        for ( let i = 0; i < this.asteroids.models.length; i++ ) {
+            
+            this.lod.add( this.asteroids.models[i].entitymanager, Number( this.asteroids.models[i].name.split( "_" )[2] ) );
+        }
     }
 
     #makeUnique() {
@@ -86,9 +79,9 @@ class Asteroid {
         this.scaling.copyFromFloats( this.config.width(), this.config.height(), this.config.depth() ).scaleInPlace( this.config.scale() );
     }
 
-    #addPhysics() {
+    #post() {
 
-        //PhysicsEntity.collidable( this.root );
+        this.lod.setBounding( EngineUtils.createBoundingCache( this.asteroids.models[0], this.scaling ) );
     }
 
 }

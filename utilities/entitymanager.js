@@ -16,14 +16,14 @@ class EntityManager {
     #root = null;
     #create = undefined;
 
-    constructor( original, create, size, increase ) {
+    constructor( name, scene, create, size, increase ) {
         
         this.#increase = increase;
-        this.#scene = original.getScene();
+        this.#scene = scene;
         this.#create = create;
 
         this.#setupObjectArrays( size );
-        this.#createRoot( original );
+        this.#createRoot( name );
         this.#make( size );
     }
 
@@ -49,10 +49,9 @@ class EntityManager {
         this.#used = new SmartObjectArray( capacity );
     }
 
-    #createRoot( original ) {
+    #createRoot( name ) {
 
-        //just node?
-        this.#root = new BABYLON.TransformNode( `entitymanager_${ original.name }`, this.#scene );
+        this.#root = new BABYLON.Node( `entitymanager_${ name }`, this.#scene );
         this.#root.setEnabled( false );
     }
 

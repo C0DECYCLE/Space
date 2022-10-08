@@ -137,7 +137,7 @@ class Spaceship {
 
     #createLod() {
 
-        this.lod = new LOD( this.game, undefined, true );
+        this.lod = new LOD( this.game, true );
         this.lod.fromModels( this.constructor.model, ( mesh, level ) => {} );
 
         this.root.name = `spaceships_spaceship${ this.config.key }`;

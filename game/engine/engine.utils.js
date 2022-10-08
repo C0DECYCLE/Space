@@ -46,18 +46,31 @@ class EngineUtils {
         return new BABYLON.Vector3( 0, 1000 * 1000 * 1000, 0 );
     }
 
+    static createBoundingCache( node, scaling = null ) {
+    
+        const positionWorld = EngineUtils.getWorldPosition( node );
+
+        const boundingCache = node.getHierarchyBoundingVectors( true );
+        boundingCache.min.subtractInPlace( positionWorld );
+        boundingCache.max.subtractInPlace( positionWorld );
+
+        if ( scaling !== null ) {
+
+            boundingCache.min.multiplyInPlace( scaling );
+            boundingCache.max.multiplyInPlace( scaling );
+        }
+
+        boundingCache.diagonal = boundingCache.max.subtract( boundingCache.min );
+        boundingCache.size = boundingCache.diagonal.length();
+
+        return boundingCache;
+    }
+
     static getBounding( node, force = false ) {
         
         if ( node.boundingCache === undefined || force === true ) {
             
-            const positionWorld = EngineUtils.getWorldPosition( node );
-
-            node.boundingCache = node.getHierarchyBoundingVectors( true );
-            node.boundingCache.min.subtractInPlace( positionWorld );
-            node.boundingCache.max.subtractInPlace( positionWorld );
-
-            node.boundingCache.diagonal = node.boundingCache.max.subtract( node.boundingCache.min );
-            node.boundingCache.size = node.boundingCache.diagonal.length();
+            node.boundingCache = EngineUtils.createBoundingCache( node );
         }
 
         return node.boundingCache;
@@ -79,14 +92,21 @@ class EngineUtils {
 
     static #recurseParentsPosition( result, node ) {
 
-        if ( node.parent !== null ) {
-            
-            result.multiplyInPlace( node.parent.scaling )
-            .applyRotationQuaternionInPlace( node.parent.rotationQuaternion )
-            .addInPlace( node.parent.position );
+        if ( node.parent === null ) {
 
-            EngineUtils.#recurseParentsPosition( result, node.parent );
+            return;
         }
+
+        if ( !node.parent.scaling || !node.parent.rotationQuaternion || !node.parent.position ) {
+
+            return;
+        }
+        
+        result.multiplyInPlace( node.parent.scaling )
+        .applyRotationQuaternionInPlace( node.parent.rotationQuaternion )
+        .addInPlace( node.parent.position );
+
+        EngineUtils.#recurseParentsPosition( result, node.parent );
     }
 
     static makeDebugMaterial( scene, color ) {

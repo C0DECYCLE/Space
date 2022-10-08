@@ -131,16 +131,22 @@ Space.add( "stage", function() {
     
     this.player.position.copyFrom( this.spaceships.list[0].position ).addInPlace( new BABYLON.Vector3( 0, 0, -10 ) );
 
-    
-    //wtf does a objectcontainer node need???
 
     this.objectcontainers.add( this.planets.list[0].root, ObjectContainers.TYPES.STATIC, true ); //insert planet object?
     this.objectcontainers.add( this.planets.list[1].root, ObjectContainers.TYPES.STATIC, true ); //insert planet object?
     this.objectcontainers.add( this.planets.list[2].root, ObjectContainers.TYPES.STATIC, true ); //insert planet object?
     this.objectcontainers.add( this.planets.list[3].root, ObjectContainers.TYPES.STATIC, true ); //insert planet object?
-    
-    this.objectcontainers.addAll( this.asteroids.list[0].root.getChildMeshes() ); //insert lods
-    this.objectcontainers.addAll( this.asteroids.list[1].root.getChildMeshes() ); //insert lods
+
+    for ( let r = 0; r < this.asteroids.list.length; r++ ) {
+
+        for ( let c = 0; c < this.asteroids.list[r].list.length; c++ ) {
+
+            for ( let a = 0; a < this.asteroids.list[r].list[c].list.length; a++ ) {
+                
+                this.objectcontainers.add( this.asteroids.list[r].list[c].list[a].lod );
+            }
+        }
+    }
 
     this.objectcontainers.add( this.spaceships.list[0].root, ObjectContainers.TYPES.DYNAMIC ); //insert spaceship object?
 

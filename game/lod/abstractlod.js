@@ -12,7 +12,6 @@ class AbstractLOD {
 
     game = null;
     levels = [];
-    size = undefined;
 
     #isEnabled = true;
 
@@ -20,10 +19,9 @@ class AbstractLOD {
     #currentLevel = undefined;
     #lastValidLevel = 0;
 
-    constructor( game, size ) {
+    constructor( game ) {
 
         this.game = game;
-        this.size = size;
     }
 
     get isVisible() {
@@ -54,7 +52,7 @@ class AbstractLOD {
             return;
         }
 
-        this.#coverage = this.game.camera.getScreenCoverage( this.root || this, this.size );
+        this.#coverage = this.game.camera.getScreenCoverage( this.root || this );
         this.#setLevel( this.#getLevelFromCoverage( this.#coverage ) );
     }
 

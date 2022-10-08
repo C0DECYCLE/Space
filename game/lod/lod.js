@@ -10,9 +10,9 @@ class LOD extends AbstractLOD {
 
     #doShadow = false;
     
-    /* override */ constructor( game, size, doShadow = false ) {
+    /* override */ constructor( game, doShadow = false ) {
 
-        super( game, size );
+        super( game );
 
         this.#doShadow = doShadow;
     }
