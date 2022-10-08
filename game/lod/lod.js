@@ -14,7 +14,9 @@ class LOD {
     coverage = undefined;
 
     #game = null;
+    #isEnabled = true;
     #isVisible = false;
+    #lastLevel = 0;
 
     constructor( game ) {
 
@@ -88,26 +90,52 @@ class LOD {
         this.levels.push( [ node, min.clamp( LOD.minimum, Infinity ) ] );
     }
 
+    setEnabled( value ) {
+
+        this.set( value === true ? this.#lastLevel : -1 );
+    }
+
     set( level ) {
 
         this.#isVisible = false;
+        this.#lastLevel = undefined;
 
         for ( let i = 0; i < this.levels.length; i++ ) {
 
             this.levels[i][0].setEnabled( i === level );
-            this.#isVisible = i === level ? true : this.#isVisible;
+
+            if ( i === level ) {
+
+                this.#isVisible = true;
+                this.#lastLevel = i;
+            }
         }
+
+        this.#isEnabled = this.#isVisible;
     }
+
+    // !!! Instead of toggle all, remember the current, if new is diffrent toggle the current and new ( O(2) instead of O(n) ) !!!
+    // !!! Initialize the levels and location abstract and request / return to entity managers instead of toggle on of !!!
 
     update() {
         
+        if ( this.#isEnabled === false ) {
+
+            return;
+        }
+
         this.coverage = this.#game.camera.getScreenCoverage( this.root );
         this.#isVisible = false;
 
         for ( let i = 0; i < this.levels.length; i++ ) {
 
             this.levels[i][0].setEnabled( ( i - 1 < 0 ? this.coverage <= Infinity : this.coverage < this.levels[ i - 1 ][1] ) && this.coverage >= this.levels[i][1] );
-            this.#isVisible = this.levels[i][0].isEnabled( false ) === true ? true : this.#isVisible;
+
+            if ( this.levels[i][0].isEnabled( false ) === true ) {
+
+                this.#isVisible = true;
+                this.#lastLevel = i;
+            }
         }
     }
 

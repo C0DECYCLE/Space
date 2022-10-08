@@ -12,16 +12,24 @@ class EntityManager {
     #used = null;
     #increase = undefined;
 
+    #onStore = undefined;
+    #onRelease = undefined;
+
+    #scene = null;
     #root = null;
     #create = undefined;
 
-    constructor( original, create, size, increase ) {
+    constructor( name, scene, create, size, increase, onStore = this.#onStore, onRelease = this.#onRelease ) {
         
         this.#increase = increase;
+        this.#onStore = onStore;
+        this.#onRelease = onRelease;
+
+        this.#scene = scene;
         this.#create = create;
 
         this.#setupObjectArrays( size );
-        this.#createRoot( original );
+        this.#createRoot( name );
         this.#make( size );
     }
 
@@ -47,9 +55,10 @@ class EntityManager {
         this.#used = new SmartObjectArray( capacity );
     }
 
-    #createRoot( original ) {
+    #createRoot( name ) {
 
-        this.#root = new BABYLON.TransformNode( `entitymanager_${ original.name }`, entity.getScene() );
+        //just node?
+        this.#root = new BABYLON.TransformNode( `entitymanager_${ name }`, this.#scene );
         this.#root.setEnabled( false );
     }
 
@@ -63,10 +72,12 @@ class EntityManager {
 
     #release( entity ) {
 
-        entity.setEnabled( true );
-        entity.parent = null;
-
         this.#used.add( entity );
+        
+        this.#onRelease?.( entity );
+        
+        entity.parent = null;
+        entity.setEnabled( true );
 
         return entity;
     }
@@ -76,6 +87,8 @@ class EntityManager {
         entity.setEnabled( false );
         entity.parent = this.#root;
 
+        this.#onStore?.( entity );
+        
         this.#free.add( entity );
     }
     

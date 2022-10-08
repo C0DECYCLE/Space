@@ -75,7 +75,7 @@ Space.add( "install", function() {
 
         { 
             key: 2, radius: 4096, spin: 0.0025, 
-            gravity: 0.8, atmosphere: 1024, waveLengths: new BABYLON.Color3( 700, 600, 500 ), clouds: { density: 0 },
+            gravity: 0.8, atmosphere: 1024, waveLengths: new BABYLON.Color3( 700, 600, 500 ), clouds: { density: 0.0 },
             seed: new BABYLON.Vector3( -925, -2011, 7770 ),
             colors: { main: "#7a8161", second: "#856160", third: "#a8ceb0", steep: "#252123" }
         },
@@ -93,8 +93,15 @@ Space.add( "install", function() {
     this.asteroids.register( "ring", { key: 0, seed: "7417", radius: 5 * 1000, spread: 400, height: 200, density: 0.02 } );
     this.asteroids.register( "ring", { key: 1, seed: "4674", radius: 5 * 1000, spread: 2 * 1000, height: 100, density: 0.03 } );
 
+    //IS: calculated spawn locations for entitys, make a lod there with n instances, later get toggled the needed instance
+    //SHOULD: calculate spawn locations for entity, create entity managers for every enitity/lodlevel, make a lod ther with 0 instances but abstract information needed for instance, later request / return instance from entity manager instead of toggle on off
 
     //investigate why disabled onces not give back cpu ms
+    //implement remove/add mesh to scene behavior
+
+    //optimzie scene from docs
+    //look where to use unindexed mesh? compare index length + positions length < unindex positions length
+    //octree?
 
     // set lod level dynamicly and also cull clouds
     // when culled or lod -1 aka disabled remove it from the parent planet
@@ -116,7 +123,7 @@ Space.add( "stage", function() {
     this.asteroids.list[0].position.copyFrom( this.planets.list[0].position );
     this.asteroids.list[1].position.copyFrom( this.planets.list[0].position );
 
-    this.spaceships.list[0].position.copyFrom( this.planets.list[2].position ).addInPlace( new BABYLON.Vector3( 5 * 1000, 0, 0 ) );
+    this.spaceships.list[0].position.copyFrom( this.planets.list[0].position ).addInPlace( new BABYLON.Vector3( 5 * 1000, 0, 0 ) );
     this.spaceships.list[0].root.rotate( BABYLON.Axis.Y, 90 * EngineUtils.toRadian, BABYLON.Space.LOCAL );
     
     this.player.position.copyFrom( this.spaceships.list[0].position ).addInPlace( new BABYLON.Vector3( 0, 0, -10 ) );
