@@ -20,7 +20,7 @@ class StarShadow {
         filter: "PCF", //"NONE" "PCF" "CONHRD"
         quality: "HIGH", //LOW MEDIUM HIGH
 
-        defaultPause: true
+        //defaultPause: true
     };
 
     generator = null;
@@ -44,26 +44,29 @@ class StarShadow {
         this.#createGenerator();
     }
 
-    cast( mesh, value, recursiv = false, allowPause ) {
+    cast( mesh, value /*, recursiv = false, allowPause*/ ) {
 
-        this.#meshRecurse( mesh, ( m ) => this.#meshCast( m, value, allowPause ), recursiv );
-        
+        this.#meshRecurse( mesh, ( m ) => this.#meshCast( m, value /*, allowPause*/ ), false/*recursiv*/ );
+        /*
         if ( this.config.defaultPause === true ) {
 
             this.pause( mesh, recursiv );
         }
+        */
     }
  
-    receive( mesh, value, recursiv = false, allowPause ) {
+    receive( mesh, value /*, recursiv = false, allowPause*/ ) {
         
-        this.#meshRecurse( mesh, ( m ) => this.#meshReceive( m, value, allowPause ), recursiv );
-        
+        this.#meshRecurse( mesh, ( m ) => this.#meshReceive( m, value /*, allowPause*/ ), false/*recursiv*/ );
+        /*
         if ( this.config.defaultPause === true ) {
 
             this.pause( mesh, recursiv );
         }
+        */
     }
 
+    /*
     pause( mesh, recursiv = false ) {
 
         this.#meshRecurse( mesh, ( m ) => this.#meshPause( m ), recursiv );
@@ -73,6 +76,7 @@ class StarShadow {
 
         this.#meshRecurse( mesh, ( m ) => this.#meshResume( m ), recursiv );
     }
+    */
 
     update() {
 
@@ -148,10 +152,10 @@ class StarShadow {
         }
     }
 
-    #meshCast( mesh, value, allowPause ) {
+    #meshCast( mesh, value /*, allowPause*/ ) {
 
         mesh.castShadow = value === undefined ? true : value;
-        mesh.allowCastShadowsPause = allowPause === undefined ? true : allowPause;
+        //mesh.allowCastShadowsPause = allowPause === undefined ? true : allowPause;
         
         if ( mesh.castShadow === true ) {
 
@@ -163,14 +167,15 @@ class StarShadow {
         }
     }
 
-    #meshReceive( mesh, value, allowPause ) {
+    #meshReceive( mesh, value /*, allowPause*/ ) {
 
         mesh.receiveShadow = value === undefined ? true : value;
-        mesh.allowReceiveShadowsPause = allowPause === undefined ? true : allowPause;
+        //mesh.allowReceiveShadowsPause = allowPause === undefined ? true : allowPause;
 
         mesh.receiveShadows = mesh.receiveShadow;
     }
 
+    /*
     #meshPause( mesh ) {
         
         if ( mesh.allowCastShadowsPause === true ) {
@@ -185,7 +190,7 @@ class StarShadow {
     }
 
     #meshResume( mesh ) {
-
+        
         if ( mesh.allowCastShadowsPause === true && mesh.castShadow === true ) {
 
             this.#shadowMap.renderList.add( mesh );
@@ -196,5 +201,6 @@ class StarShadow {
             mesh.receiveShadows = true;
         }
     }
+    */
 
 }

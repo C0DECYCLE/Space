@@ -6,23 +6,17 @@
     2022
 */
 
-class LOD {
+class LOD extends AbstractLOD {
 
-    static minimum = 0.01;
-
-    levels = [];
-    coverage = undefined;
-
-    #game = null;
-    #isEnabled = true;
-    #isVisible = false;
-    #lastLevel = 0;
-
-    constructor( game ) {
-
-        this.#game = game;
-    }
+    #doShadow = false;
     
+    /* override */ constructor( game, size, doShadow = false ) {
+
+        super( game, size );
+
+        this.#doShadow = doShadow;
+    }
+
     get root() {
 
         return this.levels[0][0];
@@ -51,30 +45,20 @@ class LOD {
         }
     }
 
-    get isVisible() {
-
-        return this.#isVisible;
-    }
-
-    get maxVisibleDistance() {
-
-        return EngineUtils.getBoundingSize( this.root ) / LOD.minimum;
-    }
-
     fromSingle( node ) {
 
-        this.add( node, LOD.minimum );
+        this.add( node, AbstractLOD.minimum );
     }
 
     fromModels( models, onEveryMesh ) {
         
         for ( let i = 0; i < models.length; i++ ) {
             
-            this.add( this.#game.scene.assets.instance( models[i], mesh => onEveryMesh( mesh, i ) ), Number( models[i].name.split( "_" )[2] ) );
+            this.add( this.game.scene.assets.instance( models[i], mesh => onEveryMesh( mesh, i ) ), Number( models[i].name.split( "_" )[2] ) );
         }
     }
 
-    add( node, min ) {
+    /* override */ add( node, min ) {
 
         if ( this.levels.length > 0 ) {
 
@@ -87,55 +71,38 @@ class LOD {
             node.rotationQuaternion = node.rotation.toQuaternion();
         }
 
-        this.levels.push( [ node, min.clamp( LOD.minimum, Infinity ) ] );
+        node.setEnabled( false );
+
+        super.add( node, min );
     }
 
-    setEnabled( value ) {
+    /* override */ disposeCurrent( currentLevel ) {
 
-        this.set( value === true ? this.#lastLevel : -1 );
-    }
+        if ( currentLevel !== undefined ) {
 
-    set( level ) {
+            this.levels[ currentLevel ][0].setEnabled( false );
+            
+            if ( this.#doShadow === true ) {
 
-        this.#isVisible = false;
-        this.#lastLevel = undefined;
-
-        for ( let i = 0; i < this.levels.length; i++ ) {
-
-            this.levels[i][0].setEnabled( i === level );
-
-            if ( i === level ) {
-
-                this.#isVisible = true;
-                this.#lastLevel = i;
+                this.game.star.shadow.cast( this.levels[ currentLevel ][0], false /*, undefined, false*/ );        
             }
-        }
 
-        this.#isEnabled = this.#isVisible;
+            super.disposeCurrent( currentLevel );
+        }
     }
 
-    // !!! Instead of toggle all, remember the current, if new is diffrent toggle the current and new ( O(2) instead of O(n) ) !!!
-    // !!! Initialize the levels and location abstract and request / return to entity managers instead of toggle on of !!!
+    /* override */ makeCurrent( level ) {
 
-    update() {
-        
-        if ( this.#isEnabled === false ) {
+        if ( level >= 0 && level < this.levels.length ) {
 
-            return;
-        }
-
-        this.coverage = this.#game.camera.getScreenCoverage( this.root );
-        this.#isVisible = false;
-
-        for ( let i = 0; i < this.levels.length; i++ ) {
-
-            this.levels[i][0].setEnabled( ( i - 1 < 0 ? this.coverage <= Infinity : this.coverage < this.levels[ i - 1 ][1] ) && this.coverage >= this.levels[i][1] );
-
-            if ( this.levels[i][0].isEnabled( false ) === true ) {
-
-                this.#isVisible = true;
-                this.#lastLevel = i;
+            super.makeCurrent( level );
+            
+            if ( this.#doShadow === true && level === 0 ) {
+                
+                this.game.star.shadow.cast( this.levels[ level ][0] /*, undefined, undefined, false*/ );        
             }
+
+            this.levels[ level ][0].setEnabled( true );
         }
     }
 

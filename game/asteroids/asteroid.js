@@ -38,7 +38,7 @@ class Asteroid {
         this.#addPhysics();
     }
 
-    get root() {
+    get root() { //remove
 
         return this.lod.root;
     }
@@ -75,7 +75,7 @@ class Asteroid {
 
             if ( level === 0 ) {
 
-                this.game.star.shadow.cast( mesh );
+                //this.game.star.shadow.cast( mesh /*, undefined, undefined, false*/ );
             }
         } );
     }
@@ -88,7 +88,7 @@ class Asteroid {
 
     #addPhysics() {
 
-        PhysicsEntity.collidable( this.root );
+        //PhysicsEntity.collidable( this.root );
     }
 
 }

@@ -52,18 +52,14 @@ class ObjectContainerUtils {
         if ( node.objectcontainer !== undefined ) {
 
             return node.objectcontainer;
-
-        } else {
-
-            if ( node.parent !== null ) {
-
-                return ObjectContainerUtils.getObjectContainer( node.parent );
-
-            } else {
-
-                return null;
-            }
         }
+
+        if ( node.parent !== null ) {
+
+            return ObjectContainerUtils.getObjectContainer( node.parent );
+        }
+        
+        return null;
     }
 
 }

@@ -96,6 +96,9 @@ Space.add( "install", function() {
     //IS: calculated spawn locations for entitys, make a lod there with n instances, later get toggled the needed instance
     //SHOULD: calculate spawn locations for entity, create entity managers for every enitity/lodlevel, make a lod ther with 0 instances but abstract information needed for instance, later request / return instance from entity manager instead of toggle on off
 
+    //rework container system so that
+    //implement entity lod with better mechanic
+
     //investigate why disabled onces not give back cpu ms
     //implement remove/add mesh to scene behavior
 
@@ -127,17 +130,19 @@ Space.add( "stage", function() {
     this.spaceships.list[0].root.rotate( BABYLON.Axis.Y, 90 * EngineUtils.toRadian, BABYLON.Space.LOCAL );
     
     this.player.position.copyFrom( this.spaceships.list[0].position ).addInPlace( new BABYLON.Vector3( 0, 0, -10 ) );
-    
 
-    this.objectcontainers.add( this.planets.list[0].root, ObjectContainers.TYPES.STATIC, true );
-    this.objectcontainers.add( this.planets.list[1].root, ObjectContainers.TYPES.STATIC, true );
-    this.objectcontainers.add( this.planets.list[2].root, ObjectContainers.TYPES.STATIC, true );
-    this.objectcontainers.add( this.planets.list[3].root, ObjectContainers.TYPES.STATIC, true );
     
-    this.objectcontainers.addAll( this.asteroids.list[0].root.getChildMeshes() );
-    this.objectcontainers.addAll( this.asteroids.list[1].root.getChildMeshes() );
+    //wtf does a objectcontainer node need???
 
-    this.objectcontainers.add( this.spaceships.list[0].root, ObjectContainers.TYPES.DYNAMIC );
+    this.objectcontainers.add( this.planets.list[0].root, ObjectContainers.TYPES.STATIC, true ); //insert planet object?
+    this.objectcontainers.add( this.planets.list[1].root, ObjectContainers.TYPES.STATIC, true ); //insert planet object?
+    this.objectcontainers.add( this.planets.list[2].root, ObjectContainers.TYPES.STATIC, true ); //insert planet object?
+    this.objectcontainers.add( this.planets.list[3].root, ObjectContainers.TYPES.STATIC, true ); //insert planet object?
+    
+    this.objectcontainers.addAll( this.asteroids.list[0].root.getChildMeshes() ); //insert lods
+    this.objectcontainers.addAll( this.asteroids.list[1].root.getChildMeshes() ); //insert lods
+
+    this.objectcontainers.add( this.spaceships.list[0].root, ObjectContainers.TYPES.DYNAMIC ); //insert spaceship object?
 
 
     this.scene.debugLayer.show( { embedMode: true } );

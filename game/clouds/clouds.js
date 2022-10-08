@@ -12,7 +12,7 @@ class Clouds {
 
         [ 6, 0.25 ],
         [ 3, 0.1 ],
-        [ 1, LOD.minimum ]
+        [ 1, AbstractLOD.minimum ]
     ]
 
     config = {

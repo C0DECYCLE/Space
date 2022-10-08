@@ -76,23 +76,25 @@ class ObjectContainer {
     }
 
     onEnter( oldIndex ) {
-
+        /*
         this.#preventDisposed();
 
         for ( let i = 0; i < this.#list.size; i++ ) {
         
             this.#containers.game.star.shadow.resume( this.#list[i] );
         }
+        */
     }
 
     onLeave( newIndex ) {
-
+        /*
         this.#preventDisposed();
 
         for ( let i = 0; i < this.#list.size; i++ ) {
         
             this.#containers.game.star.shadow.pause( this.#list[i] );
         }
+        */
     }
 
     debug( parent = null ) {
