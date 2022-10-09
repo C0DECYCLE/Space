@@ -26,7 +26,7 @@ class PlanetHelper {
         if ( this.#maskValue !== value ) {
 
             this.#planet.mask.setEnabled( value );
-            this.#planet.game.star.shadow.cast( this.#planet.mask, value /*, undefined, false*/ );
+            this.#planet.game.star.shadow.cast( this.#planet.mask, value );
             this.#maskValue = value;
         }
     }
@@ -67,7 +67,7 @@ class PlanetHelper {
         this.#planet.mask.material = this.#planet.game.planets.getMaskMaterial();
         this.#planet.mask.parent = this.#planet.root;
 
-        this.#planet.game.star.shadow.cast( this.#planet.mask /*, undefined, undefined, false*/ );
+        this.#planet.game.star.shadow.cast( this.#planet.mask );
         this.#maskValue = true;
     }
 

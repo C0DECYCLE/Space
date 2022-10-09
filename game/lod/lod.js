@@ -84,7 +84,7 @@ class LOD extends AbstractLOD {
             
             if ( this.#doShadow === true ) {
 
-                this.game.star.shadow.cast( this.levels[ currentLevel ][0], false /*, undefined, false*/ );        
+                this.game.star.shadow.cast( this.levels[ currentLevel ][0], false );        
             }
 
             super.disposeCurrent( currentLevel );
@@ -99,7 +99,7 @@ class LOD extends AbstractLOD {
             
             if ( this.#doShadow === true && level === 0 ) {
                 
-                this.game.star.shadow.cast( this.levels[ level ][0] /*, undefined, undefined, false*/ );        
+                this.game.star.shadow.cast( this.levels[ level ][0] );        
             }
 
             this.levels[ level ][0].setEnabled( true );

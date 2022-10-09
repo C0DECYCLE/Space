@@ -55,7 +55,9 @@ class Clouds {
         mesh.parent = this.game.scene.assets.cache;
         mesh.setEnabled( false );
 
-        //mesh.entitymanager = new EntityManager( mesh.name, this.scene, () => this.game.scene.assets.instance( model, mesh => {} ), 100, 25 );
+        const invMin = Math.round( 1 / AbstractLOD.getMinimum( mesh.name ) );
+            
+        mesh.entitymanager = new EntityManager( mesh.name, this.scene, () => this.game.scene.assets.instance( mesh, mesh => {} ), invMin * 4, invMin );
 
         return mesh;
     }

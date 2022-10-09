@@ -20,12 +20,12 @@ class Spaceship {
             
                 if ( i === 0 ) {
 
-                    game.star.shadow.receive( mesh /*, undefined, undefined, false*/ );
+                    game.star.shadow.receive( mesh );
                 }
             }, this.interactables );
             
             //model = game.scene.assets.merge( model );
-            //game.star.shadow.receive( model /*, undefined, undefined, false*/ );
+            //game.star.shadow.receive( model );
             
             this.model.push( model );
         }

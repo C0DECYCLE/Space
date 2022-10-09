@@ -75,7 +75,7 @@ Space.add( "install", function() {
 
         { 
             key: 2, radius: 4096, spin: 0.0025, 
-            gravity: 0.8, atmosphere: 1024, waveLengths: new BABYLON.Color3( 700, 600, 500 ), clouds: { density: 0.0 },
+            gravity: 0.8, atmosphere: 1024, waveLengths: new BABYLON.Color3( 700, 600, 500 ), clouds: { density: 0.2 },
             seed: new BABYLON.Vector3( -925, -2011, 7770 ),
             colors: { main: "#7a8161", second: "#856160", third: "#a8ceb0", steep: "#252123" }
         },
@@ -98,11 +98,7 @@ Space.add( "install", function() {
     //octree?
 
     // set lod level dynamicly and also cull clouds
-    // when culled or lod -1 aka disabled remove it from the parent planet
-    // also asteroids remove.... means::: every lod, when -1 take the parent awa (remember it for putting back) and store it in offscreen cache
-    // entity manager offscreen canvas like assets cache
     // maybe change to bigger cloud models https://p.turbosquid.com/ts-thumb/zj/KTfbV4/5o/turbosquid/png/1627741230/600x600/fit_q87/3c5b3be5285562313f22304dae476581c673ce87/turbosquid.jpg
-    // use the entity manager for clouds and maybe also asteroids??
 
 } );
 
@@ -117,7 +113,7 @@ Space.add( "stage", function() {
     this.asteroids.list[0].position.copyFrom( this.planets.list[0].position );
     this.asteroids.list[1].position.copyFrom( this.planets.list[0].position );
 
-    this.spaceships.list[0].position.copyFrom( this.planets.list[0].position ).addInPlace( new BABYLON.Vector3( 5 * 1000, 0, 0 ) );
+    this.spaceships.list[0].position.copyFrom( this.planets.list[2].position ).addInPlace( new BABYLON.Vector3( 5 * 1000, 0, 0 ) );
     this.spaceships.list[0].root.rotate( BABYLON.Axis.Y, 90 * EngineUtils.toRadian, BABYLON.Space.LOCAL );
     
     this.player.position.copyFrom( this.spaceships.list[0].position ).addInPlace( new BABYLON.Vector3( 0, 0, -10 ) );

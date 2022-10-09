@@ -49,7 +49,7 @@ class CloudsPlanet {
 
         const planetSurfaceArea = 4 * Math.PI * this.#planet.config.radius;
         const nSamples = Math.floor( planetSurfaceArea * this.config.density );
-        log(nSamples)
+        window.count = 0;
         for ( let i = 0; i < nSamples; i++ ) {
 
             const theta = 2 * Math.PI * i / Math.PHI;
@@ -57,6 +57,7 @@ class CloudsPlanet {
 
             this.#evalCloud( theta, phi, nSamples );
         }
+        log(window.count);
     }
 
     #evalCloud( theta, phi, nSamples ) {
@@ -70,7 +71,7 @@ class CloudsPlanet {
         position.scaleInPlace( this.#planet.config.radius + this.#planet.config.maxHeight * (0.25 + height * 0.5) );
 
         if ( cull < 0.35 ) {
-            
+            window.count++;
             this.#makeCloud( position, nSamples );
         }
     }
@@ -80,12 +81,15 @@ class CloudsPlanet {
         const cloud = new Cloud( this.#clouds.game, {} );
 
         cloud.position.copyFrom( position );
-        //cloud.root.setDirection( position.negate(), undefined, -Math.PI / 2, undefined );
-        //cloud.root.rotate( BABYLON.Axis.Y, Math.random() * Math.PI * 2, BABYLON.Space.LOCAL );
-        cloud.scaling.copyFromFloats( Math.random(), Math.random(), Math.random() ).scaleInPlace( 0.75 ).addInPlaceFromFloats( 0.5, 0.5, 0.5 ).scaleInPlace( 75 );
+
+        EngineUtils.setDirection( cloud, position.negate(), 0, -Math.PI / 2, 0 );
+        EngineUtils.rotate( cloud, BABYLON.Axis.Y, Math.random() * Math.PI * 2 );
+
+        cloud.scaling.copyFromFloats( Math.random(), Math.random(), Math.random() ).scaleInPlace( 0.75 ).addInPlaceFromFloats( 0.5, 0.5, 0.5 ).scaleInPlace( 150 );
+        cloud.post();
 
         cloud.parent = this.#planet.root;
-        cloud.lod.set( -1 ); //dynamic lod
+        cloud.lod.set( 0 ); //dynamic lod
         cloud.randomValue = Math.random() * nSamples;
 
         this.list.push( cloud );

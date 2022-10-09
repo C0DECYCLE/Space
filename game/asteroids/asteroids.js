@@ -61,7 +61,7 @@ class Asteroids {
             
                 if ( i === 0 ) {
 
-                    this.game.star.shadow.receive( mesh /*, undefined, undefined, false*/ );
+                    this.game.star.shadow.receive( mesh );
                 } 
             } );
 

@@ -24,6 +24,7 @@ class Cloud {
     clouds = null;
 
     lod = null;
+    randomValue = 0;
 
     constructor( game, config ) {
 
@@ -34,11 +35,6 @@ class Cloud {
         EngineUtils.configure.call( this, config );
         
         this.#createLod();   
-    }
-
-    get root() {
-
-        return this.lod.root;
     }
 
     get position() {
@@ -61,23 +57,25 @@ class Cloud {
         this.lod.parent = value;
     }
 
-    set randomValue( value ) {
-
-        for ( let i = 0; i < this.lod.levels.length; i++ ) {
-
-            EngineUtilsShader.setInstanceAttribute( this.lod.levels[i][0], "randomValue", value );
-        }
-    }
-
     update() {
 
         this.lod.update();
     }
 
+    post() {
+
+        this.lod.setBounding( EngineUtils.createBoundingCache( this.clouds.models[0], this.scaling ) );
+    }
+
     #createLod() {
         
-        this.lod = new LOD( this.game );
-        this.lod.fromModels( this.clouds.models, ( mesh, level ) => {} );
+        this.lod = new EntityLOD( this.game, false, false, ( instance ) => this.#onLODRequest( instance ) );
+        this.lod.fromModels( this.clouds.models );
+    }
+
+    #onLODRequest( instance ) {
+        
+        EngineUtilsShader.setInstanceAttribute( instance, "randomValue", this.randomValue );
     }
 
 }

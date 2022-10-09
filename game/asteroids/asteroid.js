@@ -35,7 +35,7 @@ class Asteroid {
         
         this.#createLod();   
         this.#makeUnique();
-        this.#post();
+        this.post();
     }
 
     get position() {
@@ -63,6 +63,11 @@ class Asteroid {
         this.lod.update();
     }
 
+    post() {
+
+        this.lod.setBounding( EngineUtils.createBoundingCache( this.asteroids.models[0], this.scaling ) );
+    }
+
     #createLod() {
         
         this.lod = new EntityLOD( this.game, true, true );
@@ -73,11 +78,6 @@ class Asteroid {
 
         this.rotationQuaternion.copyFrom( new BABYLON.Vector3( this.config.random() * 2 - 1, this.config.random() * 2 - 1, this.config.random() * 2 - 1 ).scaleInPlace( Math.PI ).toQuaternion() );
         this.scaling.copyFromFloats( this.config.width(), this.config.height(), this.config.depth() ).scaleInPlace( this.config.scale() );
-    }
-
-    #post() {
-
-        this.lod.setBounding( EngineUtils.createBoundingCache( this.asteroids.models[0], this.scaling ) );
     }
 
 }

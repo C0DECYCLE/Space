@@ -125,6 +125,20 @@ class EngineUtils {
         node.rotationQuaternion.copyFrom( lerp === undefined ? direction : BABYLON.Quaternion.Slerp( node.rotationQuaternion, direction, lerp ) );
     }
 
+    static setDirection( node, forward, yawCor = 0, pitchCor = 0, rollCor = 0 ) {
+
+        const yaw = -Math.atan2( forward.z, forward.x ) + Math.PI / 2;
+        const len = Math.sqrt( forward.x * forward.x + forward.z * forward.z );
+        const pitch = -Math.atan2( forward.y, len );
+
+        BABYLON.Quaternion.RotationYawPitchRollToRef( yaw + yawCor, pitch + pitchCor, rollCor, node.rotationQuaternion );
+    }
+
+    static rotate( node, axis, value ) {
+
+        node.rotationQuaternion.multiplyInPlace( BABYLON.Quaternion.RotationAxisToRef( axis, value, BABYLON.TransformNode._RotationAxisCache ) );
+    }
+
     static minmax( vector ) {
 
         vector.min = Math.min( vector.x, vector.y, vector.z );

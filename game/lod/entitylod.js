@@ -15,14 +15,19 @@ class EntityLOD extends AbstractLOD {
 
     #doCollidable = false;
     #doShadow = false;
+    #onRequest = undefined;
+    #onReturn = undefined;
+
     #currentEntity = null;
 
-    /* override */ constructor( game, doCollidable = false, doShadow = false ) {
+    /* override */ constructor( game, doCollidable = false, doShadow = false, onRequest = undefined, onReturn = undefined ) {
 
         super( game );
 
         this.#doCollidable = doCollidable;
         this.#doShadow = doShadow;
+        this.#onRequest = onRequest;
+        this.#onReturn = onReturn;
     }
 
     fromModels( models ) {
@@ -42,6 +47,8 @@ class EntityLOD extends AbstractLOD {
 
         if ( currentLevel !== undefined ) {
 
+            this.#onReturn?.( this.#currentEntity );
+
             if ( this.#doCollidable === true ) {
 
                 PhysicsEntity.collidable( this.#currentEntity, undefined, false );
@@ -49,7 +56,7 @@ class EntityLOD extends AbstractLOD {
 
             if ( this.#doShadow === true ) {
 
-                this.game.star.shadow.cast( this.#currentEntity, false /*, undefined, false*/ );        
+                this.game.star.shadow.cast( this.#currentEntity, false );        
             }
 
             this.#currentEntity = this.levels[ currentLevel ][0].return( this.#currentEntity );
@@ -76,8 +83,10 @@ class EntityLOD extends AbstractLOD {
 
             if ( this.#doShadow === true && level === 0 ) {
 
-                this.game.star.shadow.cast( this.#currentEntity /*, undefined, undefined, false*/ );        
+                this.game.star.shadow.cast( this.#currentEntity );        
             }
+
+            this.#onRequest?.( this.#currentEntity );
         }
     }
 
