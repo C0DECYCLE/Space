@@ -77,7 +77,8 @@ class Asteroid {
     #makeUnique() {
 
         this.rotationQuaternion.copyFrom( new BABYLON.Vector3( this.config.random() * 2 - 1, this.config.random() * 2 - 1, this.config.random() * 2 - 1 ).scaleInPlace( Math.PI ).toQuaternion() );
-        this.scaling.copyFromFloats( this.config.width(), this.config.height(), this.config.depth() ).scaleInPlace( this.config.scale() );
+        //this.scaling.copyFromFloats( this.config.width(), this.config.height(), this.config.depth() ).scaleInPlace( this.config.scale() );
+        this.scaling.copyFromFloats( 1, 1, 1 ).scaleInPlace( 1 );
     }
 
 }
