@@ -93,15 +93,6 @@ Space.add( "install", function() {
     this.asteroids.register( "ring", { key: 0, seed: "7417", radius: 5 * 1000, spread: 400, height: 200, density: 0.02 } );
     this.asteroids.register( "ring", { key: 1, seed: "4674", radius: 5 * 1000, spread: 2 * 1000, height: 100, density: 0.03 } );
 
-    //IS: calculated spawn locations for entitys, make a lod there with n instances, later get toggled the needed instance
-    //SHOULD: calculate spawn locations for entity, create entity managers for every enitity/lodlevel, make a lod ther with 0 instances but abstract information needed for instance, later request / return instance from entity manager instead of toggle on off
-
-    //rework container system so that
-    //implement entity lod with better mechanic
-
-    //investigate why disabled onces not give back cpu ms
-    //implement remove/add mesh to scene behavior
-
     //optimzie scene from docs
     //look where to use unindexed mesh? compare index length + positions length < unindex positions length
     //octree?

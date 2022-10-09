@@ -24,14 +24,14 @@ class EntityManager {
 
         this.#setupObjectArrays( size );
         this.#createRoot( name );
-        this.#make( size );
+        this.#make( size );log(name+" init size "+size)
     }
 
     request() {
 
         if ( this.#free.size === 0 ) {
 
-            this.#make( this.#increase );
+            this.#make( this.#increase );log(this.#root.name+" increase size by "+this.#increase+", in use: "+this.#used.size);
         }
 
         return this.#release( this.#free.pop() );

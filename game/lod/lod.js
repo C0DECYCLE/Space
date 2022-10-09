@@ -54,7 +54,7 @@ class LOD extends AbstractLOD {
         
         for ( let i = 0; i < models.length; i++ ) {
             
-            this.add( this.game.scene.assets.instance( models[i], mesh => onEveryMesh( mesh, i ) ), Number( models[i].name.split( "_" )[2] ) );
+            this.add( this.game.scene.assets.instance( models[i], mesh => onEveryMesh( mesh, i ) ), AbstractLOD.getMinimum( models[i].name ) );
         }
     }
 

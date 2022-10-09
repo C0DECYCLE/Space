@@ -25,6 +25,14 @@ class EntityLOD extends AbstractLOD {
         this.#doShadow = doShadow;
     }
 
+    fromModels( models ) {
+
+        for ( let i = 0; i < models.length; i++ ) {
+            
+            this.add( models[i].entitymanager, AbstractLOD.getMinimum( models[i].name ) );
+        }
+    }
+
     setBounding( boundingCache ) {
 
         this.boundingCache = boundingCache;

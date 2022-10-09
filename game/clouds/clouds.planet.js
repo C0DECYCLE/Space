@@ -45,8 +45,7 @@ class CloudsPlanet {
         this.#perlin.noiseSeed( this.config.seed );
     }
 
-    #spawnClouds() { this.testcache = new BABYLON.Node( "test_cache", this.scene );
-    this.testcache.setEnabled( false );
+    #spawnClouds() {
 
         const planetSurfaceArea = 4 * Math.PI * this.#planet.config.radius;
         const nSamples = Math.floor( planetSurfaceArea * this.config.density );
@@ -81,11 +80,11 @@ class CloudsPlanet {
         const cloud = new Cloud( this.#clouds.game, {} );
 
         cloud.position.copyFrom( position );
-        cloud.root.setDirection( position.negate(), undefined, -Math.PI / 2, undefined );
-        cloud.root.rotate( BABYLON.Axis.Y, Math.random() * Math.PI * 2, BABYLON.Space.LOCAL );
+        //cloud.root.setDirection( position.negate(), undefined, -Math.PI / 2, undefined );
+        //cloud.root.rotate( BABYLON.Axis.Y, Math.random() * Math.PI * 2, BABYLON.Space.LOCAL );
         cloud.scaling.copyFromFloats( Math.random(), Math.random(), Math.random() ).scaleInPlace( 0.75 ).addInPlaceFromFloats( 0.5, 0.5, 0.5 ).scaleInPlace( 75 );
 
-        cloud.parent = this.testcache;//this.#planet.root;
+        cloud.parent = this.#planet.root;
         cloud.lod.set( -1 ); //dynamic lod
         cloud.randomValue = Math.random() * nSamples;
 

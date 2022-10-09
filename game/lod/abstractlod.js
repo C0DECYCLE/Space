@@ -10,6 +10,11 @@ class AbstractLOD {
 
     static minimum = 0.01;
 
+    static getMinimum( name ) {
+
+        return Number( name.split( "_" )[2] ).clamp( AbstractLOD.minimum, Infinity );
+    }
+
     game = null;
     levels = [];
 
@@ -31,7 +36,7 @@ class AbstractLOD {
 
     add( level, min ) {
 
-        this.levels.push( [ level, min.clamp( AbstractLOD.minimum, Infinity ) ] );
+        this.levels.push( [ level, min ] );
     }
 
     setEnabled( value ) {

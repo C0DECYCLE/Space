@@ -55,6 +55,8 @@ class Clouds {
         mesh.parent = this.game.scene.assets.cache;
         mesh.setEnabled( false );
 
+        //mesh.entitymanager = new EntityManager( mesh.name, this.scene, () => this.game.scene.assets.instance( model, mesh => {} ), 100, 25 );
+
         return mesh;
     }
 

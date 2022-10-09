@@ -66,11 +66,7 @@ class Asteroid {
     #createLod() {
         
         this.lod = new EntityLOD( this.game, true, true );
-
-        for ( let i = 0; i < this.asteroids.models.length; i++ ) {
-            
-            this.lod.add( this.asteroids.models[i].entitymanager, Number( this.asteroids.models[i].name.split( "_" )[2] ) );
-        }
+        this.lod.fromModels( this.asteroids.models );
     }
 
     #makeUnique() {

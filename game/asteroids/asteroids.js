@@ -54,7 +54,7 @@ class Asteroids {
     #setupModels() {
         
         const importLods = this.scene.assets.list.get( "asteroid" ).getChildren();
-        
+
         for ( let i = 0; i < importLods.length; i++ ) {
             
             const model = this.scene.assets.traverse( importLods[i], mesh => {
@@ -65,7 +65,9 @@ class Asteroids {
                 } 
             } );
 
-            model.entitymanager = new EntityManager( model.name, this.scene, () => this.game.scene.assets.instance( model, mesh => {} ), 100, 25 );
+            const invMin = Math.round( 1 / AbstractLOD.getMinimum( model.name ) );
+            
+            model.entitymanager = new EntityManager( model.name, this.scene, () => this.game.scene.assets.instance( model, mesh => {} ), invMin * 4, invMin );
 
             this.models.push( model );
         }
