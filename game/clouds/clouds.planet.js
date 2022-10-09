@@ -68,9 +68,9 @@ class CloudsPlanet {
         const cull = this.#noise( position.clone().scaleInPlace( this.#planet.config.radius * 0.005 ).addInPlace( noiseOffset ) );
         const height = this.#noise( position.clone().scaleInPlace( this.#planet.config.radius * -0.0025 ).addInPlace( noiseOffset ) );
 
-        position.scaleInPlace( this.#planet.config.radius + this.#planet.config.maxHeight * (0.25 + height * 0.5) );
+        position.scaleInPlace( this.#planet.config.radius + this.#planet.config.maxHeight * (0.5 + height * 0.5) );
 
-        if ( cull < 0.35 ) {
+        if ( cull < 0.3 ) {
             window.count++;
             this.#makeCloud( position, nSamples );
         }
@@ -85,7 +85,7 @@ class CloudsPlanet {
         EngineUtils.setDirection( cloud, position.negate(), 0, -Math.PI / 2, 0 );
         EngineUtils.rotate( cloud, BABYLON.Axis.Y, Math.random() * Math.PI * 2 );
 
-        cloud.scaling.copyFromFloats( Math.random(), Math.random(), Math.random() ).scaleInPlace( 0.75 ).addInPlaceFromFloats( 0.5, 0.5, 0.5 ).scaleInPlace( 150 );
+        cloud.scaling.copyFromFloats( Math.random(), Math.random(), Math.random() ).scaleInPlace( 0.5 ).addInPlaceFromFloats( 0.75, 0.75, 0.75 ).scaleInPlace( 150 );
         cloud.post();
 
         cloud.parent = this.#planet.root;
