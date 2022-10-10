@@ -10,7 +10,7 @@ class EntityLOD extends AbstractLOD {
 
     position = new BABYLON.Vector3();
     rotationQuaternion = new BABYLON.Quaternion();
-    scaling = new BABYLON.Vector3();
+    scaling = BABYLON.Vector3.One();
     parent = null;
 
     #doCollidable = false;

@@ -19,7 +19,7 @@ class Star {
     game = null;
     scene = null;
 
-    pointLight = null;
+    //pointLight = null;
     directionalLight = null;
     hemisphericLight = null;
 
@@ -36,9 +36,9 @@ class Star {
         EngineUtils.configure.call( this, config );
 
         this.#createMesh();
-        this.#createPointLight( 0.3 );
-        this.#createDirectionalLight( 0.7 );
-        this.#createHemisphericLight( 0.1 );
+        //this.#createPointLight( 0.3 );
+        this.#createDirectionalLight( 0.4 );
+        this.#createHemisphericLight( 0.02 );
         this.#createShadow( config_shadow );
         this.#addGodrays();
         this.#createBackground();
@@ -78,26 +78,26 @@ class Star {
         PhysicsEntity.collidable( this.mesh );
     }
 
-    #createPointLight( split ) {
+    #createPointLight( intensity ) {
 
         this.pointLight = new BABYLON.PointLight( "star_pointLight", BABYLON.Vector3.Zero(), this.scene );
         this.pointLight.setColor( this.config.color );
-        this.pointLight.setIntensity( 0.25 * split );
+        this.pointLight.setIntensity( intensity );
     }
 
-    #createDirectionalLight( split ) {
+    #createDirectionalLight( intensity ) {
 
         this.directionalLight = new BABYLON.DirectionalLight( "star_directionalLight", BABYLON.Vector3.Zero(), this.scene );
         this.directionalLight.setColor( this.config.color );
-        this.directionalLight.setIntensity( 0.25 * split );
+        this.directionalLight.setIntensity( intensity );
     }
 
-    #createHemisphericLight( split ) {
+    #createHemisphericLight( intensity ) {
 
         this.hemisphericLight = new BABYLON.HemisphericLight( "star_hemisphericLight", BABYLON.Vector3.Up(), this.scene );
         this.hemisphericLight.setColor( this.config.color, this.scene.clearColor );
         this.hemisphericLight.groundColor = new BABYLON.Color3( 0, 0, 0 );
-        this.hemisphericLight.setIntensity( 0.25 * split );
+        this.hemisphericLight.setIntensity( intensity );
     }
 
     #createShadow( config ) {

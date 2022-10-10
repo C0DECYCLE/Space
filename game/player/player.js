@@ -10,7 +10,7 @@ class Player {
 
     config = {
 
-        float: 10.005,
+        float: 4.005,
 
         walk: 0.005,
         run: 0.015,
@@ -117,6 +117,12 @@ class Player {
         
         this.game.star.shadow.cast( this.mesh );
         this.game.star.shadow.receive( this.mesh );
+
+        /*
+        var light = new BABYLON.SpotLight("spotLight", new BABYLON.Vector3(0, 0, 0), new BABYLON.Vector3(0, 0, 1), Math.PI / 3, 20, this.scene);
+        light.intensity = 4;
+        light.parent = this.root;
+        */
     }
 
     #setupPhysics() {

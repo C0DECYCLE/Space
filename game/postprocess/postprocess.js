@@ -34,8 +34,8 @@ class PostProcess {
 
     godrays( mesh ) {
 
-        const postprocess = new BABYLON.VolumetricLightScatteringPostProcess( `${ mesh.name }_godrays`, 1.0, this.camera, mesh, 100, BABYLON.Texture.BILINEAR_SAMPLINGMODE, this.game.engine.babylon, false );
-        postprocess.weight = 0.1;
+        const postprocess = new BABYLON.VolumetricLightScatteringPostProcess( `${ mesh.name }_godrays`, 1.0, this.camera, mesh, 60, BABYLON.Texture.BILINEAR_SAMPLINGMODE, this.game.engine.babylon, false );
+        postprocess.weight = 0.15;
 
         this.pipelines.push( postprocess );
 

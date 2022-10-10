@@ -14,8 +14,8 @@ Space.addOnReady( function() {
     const background = "#af7ede";
     
     this.scene = new BABYLON.Scene( this.engine.babylon );
-    BABYLON.Color3.FromHexString( background ).scaleToRef( 0.25 * 0.5, this.scene.clearColor );
-    this.scene.ambient = new EngineAmbient( this.scene, background, 0.25 * 1.25 );
+    BABYLON.Color3.FromHexString( background ).scaleToRef( 0.15, this.scene.clearColor );
+    this.scene.ambient = new EngineAmbient( this.scene, background, 0.3 );
     this.scene.debugMaterialRed = EngineUtils.makeDebugMaterial( this.scene, "#ff226b" );
     this.scene.debugMaterialWhite = EngineUtils.makeDebugMaterial( this.scene, "#ffffff" );
 
@@ -23,8 +23,9 @@ Space.addOnReady( function() {
     this.scene.assets.onLoadObservable.addOnce( () => { this.install(); this.stage(); Space.update( this.scene, this.run ); } );
     this.scene.assets.load( [
 
-        { key: "asteroid", path: "assets/models/asteroid.glb" },
+        //{ key: "asteroid", path: "assets/models/asteroid.glb" },
         { key: "asteroid-a", path: "assets/models/asteroid-a.glb" },
+        { key: "asteroid-b", path: "assets/models/asteroid-b.glb" },
         { key: "spaceship_vulcan", path: "assets/models/spaceship_vulcan.glb" }
     ] );
     
@@ -91,8 +92,8 @@ Space.add( "install", function() {
 
     this.asteroids = new Asteroids( this, {} );
 
-    this.asteroids.register( "ring", { key: 0, seed: "7417", radius: 5 * 1000, spread: 400, height: 200, density: 0.02 } );
-    this.asteroids.register( "ring", { key: 1, seed: "4674", radius: 5 * 1000, spread: 2 * 1000, height: 100, density: 0.03 } );
+    this.asteroids.register( "ring", { key: 0, seed: "7417", radius: 5 * 1000, spread: 400, height: 60, density: 0.05 } );
+    this.asteroids.register( "ring", { key: 1, seed: "4674", radius: 5 * 1000, spread: 1200, height: 40, density: 0.04 } );
 
     //optimzie scene from docs
     //look where to use unindexed mesh? compare index length + positions length < unindex positions length
