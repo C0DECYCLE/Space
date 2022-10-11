@@ -32,9 +32,26 @@ class CloudsPlanet {
         this.#spawnClouds();
     }
 
-    update() {
+    update( distance ) {
 
+        const planetToCamera = this.#planet.game.camera.position.subtract( this.#planet.position ).normalize();
+        const occlusionFallOf = this.#planet.helper.getOcclusionFallOf( distance ).clamp( 0, 1 );
 
+        for ( let i = 0; i < this.list.length; i++ ) {
+
+            const cloud = this.list[i];
+            const cloudWorld = BABYLON.Vector3.TransformCoordinates( cloud.position, this.#planet.root._worldMatrix );
+            const dot = BABYLON.Vector3.Dot( planetToCamera, cloudWorld.subtract( this.#planet.position ).normalize() );
+            
+            if ( dot > occlusionFallOf ) {
+                
+                cloud.set( Math.round( 2 * (1 - occlusionFallOf) ).clamp( 0, 1 )  );
+
+            } else {
+
+                cloud.setEnabled( false );
+            }
+        }
     }
 
     #setupPerlin() {
@@ -85,11 +102,10 @@ class CloudsPlanet {
         EngineUtils.setDirection( cloud, position.negate(), 0, -Math.PI / 2, 0 );
         EngineUtils.rotate( cloud, BABYLON.Axis.Y, Math.random() * Math.PI * 2 );
 
-        cloud.scaling.copyFromFloats( Math.random(), Math.random(), Math.random() ).scaleInPlace( 0.5 ).addInPlaceFromFloats( 0.75, 0.75, 0.75 ).scaleInPlace( 150 );
+        cloud.scaling.copyFromFloats( Math.random(), Math.random(), Math.random() ).scaleInPlace( 0.5 ).addInPlaceFromFloats( 0.75, 0.75, 0.75 ).scaleInPlace( 200 );
         cloud.post();
 
         cloud.parent = this.#planet.root;
-        cloud.lod.set( 0 ); //dynamic lod
         cloud.randomValue = Math.random() * nSamples;
 
         this.list.push( cloud );

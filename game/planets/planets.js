@@ -53,7 +53,7 @@ class Planets {
         return this.#maskMaterial;
     }
 
-    update() { //if ( window.freeze === true ) return;
+    update() { if ( window.freeze === true ) return;
 
         this.#insert();
         this.#update();
@@ -71,7 +71,7 @@ class Planets {
             this.spaceships.planetInsert( planet, distance, planetThreashold );
            
             planet.insert( distance );
-            planet.helper.toggleMask( distance < planet.config.radius * 4 );
+            planet.helper.toggleShadow( distance < planet.config.radius * 4 );
         }
     }
 

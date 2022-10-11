@@ -6,71 +6,31 @@
     2022
 */
 
-class Cloud {
+class Cloud extends EntityLOD {
 
     config = {
 
-        random: Math.random,
-
-        width: () => Math.ceil( this.config.random() * 10 ) + 10,
-        height: () => Math.ceil( this.config.random() * 10 ) + 10,
-        depth: () => Math.ceil( this.config.random() * 10 ) + 10,
-
-        scale: () => Math.ceil( this.config.random() * 5 )
     };
 
-    game = null;
-    scene = null;
-    clouds = null;
-
-    lod = null;
     randomValue = 0;
 
     constructor( game, config ) {
 
-        this.game = game;
-        this.scene = this.game.scene;
-        this.clouds = this.game.clouds;
+        super( game, false, false, ( instance ) => this.#onLODRequest( instance ) );
 
         EngineUtils.configure.call( this, config );
-        
-        this.#createLod();   
-    }
-
-    get position() {
-        
-        return this.lod.position;
-    }
-
-    get rotationQuaternion() {
-        
-        return this.lod.rotationQuaternion;
-    }
-
-    get scaling() {
-        
-        return this.lod.scaling;
-    }
-
-    set parent( value ) {
-
-        this.lod.parent = value;
-    }
-
-    update() {
-
-        this.lod.update();
+         
+        this.#createModels();   
     }
 
     post() {
 
-        this.lod.setBounding( EngineUtils.createBoundingCache( this.clouds.models[0], this.scaling ) );
+        this.setBounding( EngineUtils.createBoundingCache( this.game.clouds.models[0], this.scaling ) );
     }
 
-    #createLod() {
+    #createModels() {
         
-        this.lod = new EntityLOD( this.game, false, false, ( instance ) => this.#onLODRequest( instance ) );
-        this.lod.fromModels( this.clouds.models );
+        this.fromModels( this.game.clouds.models );
     }
 
     #onLODRequest( instance ) {

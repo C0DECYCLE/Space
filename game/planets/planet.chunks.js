@@ -31,6 +31,11 @@ class PlanetChunks {
         }
     }
 
+    toggleShadows( value ) {
+
+        this.#nodes.forEach( ( data, nodeKey ) => data.chunk.toggleShadow( value ) );
+    }
+
     #doQuadtree( distance ) {
         
         const params = { 
@@ -39,7 +44,7 @@ class PlanetChunks {
             distanceRadiusFactor: distance / this.#planet.config.radius,
 
             centerToInsertion: this.#planet.game.camera.position.subtract( this.#planet.position ).normalize(),
-            occlusionFallOf: ( 1 - ( (distance / this.#planet.config.radius) - 1 ) ).clamp( -1.05, 0.95 )
+            occlusionFallOf: this.#planet.helper.getOcclusionFallOf( distance )
         };
 
         this.#planet.faces.forEach( ( face, suffic ) => face.insert( params ) );

@@ -6,75 +6,39 @@
     2022
 */
 
-class Asteroid {
+class Asteroid extends EntityLOD {
 
     config = {
 
         random: Math.random
     };
 
-    game = null;
-    scene = null;
-    asteroids = null;
-
     variant = undefined;
-    lod = null;
+    models = null;
 
     constructor( game, config ) {
 
-        this.game = game;
-        this.scene = this.game.scene;
-        this.asteroids = this.game.asteroids;
+        super( game, true, true );
 
         EngineUtils.configure.call( this, config );
         
         this.#pickVariant();
-        this.#createLod();   
+        this.#createModels();   
         this.#makeUnique();
-        this.post();
-    }
-
-    get position() {
-        
-        return this.lod.position;
-    }
-
-    get rotationQuaternion() {
-        
-        return this.lod.rotationQuaternion;
-    }
-
-    get scaling() {
-        
-        return this.lod.scaling;
-    }
-
-    set parent( value ) {
-
-        this.lod.parent = value;
-    }
-
-    update() {
-
-        this.lod.update();
-    }
-
-    post() {
-
-        this.lod.setBounding( EngineUtils.createBoundingCache( this.asteroids.variants[ this.variant ][0], this.scaling ) );
+        this.#post();
     }
 
     #pickVariant() {
 
-        const variants = this.asteroids.variants.keys;
+        const variants = this.game.asteroids.variants.keys;
         
         this.variant = variants[ Math.round( variants.length * Math.random() ).clamp( 0, variants.length - 1 ) ];
+        this.models = this.game.asteroids.variants[ this.variant ];
     }
 
-    #createLod() {
+    #createModels() {
 
-        this.lod = new EntityLOD( this.game, true, true );
-        this.lod.fromModels( this.asteroids.variants[ this.variant ] );
+        this.fromModels( this.models );
     }
 
     #makeUnique() {
@@ -82,4 +46,9 @@ class Asteroid {
         this.rotationQuaternion.copyFrom( new BABYLON.Vector3( this.config.random() * 2 - 1, this.config.random() * 2 - 1, this.config.random() * 2 - 1 ).scaleInPlace( Math.PI ).toQuaternion() );
     }
 
+    #post() {
+
+        this.setBounding( EngineUtils.createBoundingCache( this.models[0], this.scaling ) );
+    }
+    
 }

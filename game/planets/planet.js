@@ -114,6 +114,7 @@ class Planet {
             if ( this.#oversteppedInsertLimit === false ) {
                 
                 this.#oversteppedInsertLimit = true;
+                this.root.computeWorldMatrix( true );
                 //two times: first time removes half limit resolution chunk, second makes the lowest resolution chunk for outside of the limit
                 this.chunks.insertQuadtrees( distance );
                 this.chunks.insertQuadtrees( distance );
@@ -189,6 +190,14 @@ class Planet {
             this.clouds = new CloudsPlanet( this.game.clouds, this, this.config.clouds );
         }
     }
+    
+    #updateClouds( distance ) {
+
+        if ( this.clouds !== null ) {
+
+            this.clouds.update( distance );
+        }
+    }
 
     #updateLod() {
 
@@ -229,11 +238,13 @@ class Planet {
     
     #evalInsertionWithString( distance ) {
 
+        this.root.computeWorldMatrix( true );
         const insertionString = this.#getInsertionString();
         
         if ( insertionString !== this.#cachedInsertionString ) {
             
             this.chunks.insertQuadtrees( distance );
+            this.#updateClouds( distance );
             
             this.#cachedInsertionString = insertionString;
         }
@@ -242,7 +253,7 @@ class Planet {
     #getInsertionString() {
 
         const rdez = 10;
-        const diffrence = this.game.camera.position.subtract( BABYLON.Vector3.TransformCoordinates( BABYLON.Vector3.One().scaleInPlace( this.config.radius ), this.root.computeWorldMatrix( true ) ) );
+        const diffrence = this.game.camera.position.subtract( BABYLON.Vector3.TransformCoordinates( BABYLON.Vector3.One().scaleInPlace( this.config.radius ), this.root._worldMatrix ) );
         diffrence.copyFromFloats( Math.round( diffrence.x / rdez ) * rdez,  Math.round( diffrence.y / rdez ) * rdez, Math.round( diffrence.z / rdez ) * rdez );
 
         return diffrence.toString();

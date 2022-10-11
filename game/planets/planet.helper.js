@@ -17,18 +17,24 @@ class PlanetHelper {
 
         this.#createFaces( faces );
         this.#createMask();
-        this.toggleMask( false );
         //this.#debugInfluence();
     }
 
-    toggleMask( value ) {
+    toggleShadow( value ) {
 
         if ( this.#maskValue !== value ) {
 
             this.#planet.mask.setEnabled( value );
             this.#planet.game.star.shadow.cast( this.#planet.mask, value );
             this.#maskValue = value;
+
+            this.#planet.chunks.toggleShadows( value );
         }
+    }
+
+    getOcclusionFallOf( distance ) {
+
+        return ( 1 - ( (distance / this.#planet.config.radius) - 1 ) ).clamp( -1.05, 0.95 );
     }
 
     createBasicMaterial() {

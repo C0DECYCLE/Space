@@ -43,6 +43,18 @@ class PlanetChunk extends BABYLON.Mesh {
         //this.#stitchGeometry( neighbors, this.size, this.resolution );
     }
 
+    toggleShadow( value ) {
+
+        if ( value === true ) {
+
+            this.#addShadow( this.#size );
+
+        } else {
+
+            this.#removeShadow();
+        }
+    }
+
     /* override */ dispose() {
     
         this.#removeShadow();
@@ -77,9 +89,18 @@ class PlanetChunk extends BABYLON.Mesh {
 
     #setupShadow( size ) {
 
+        if ( this.#planet.mask.isEnabled() === true ) {
+
+            this.#addShadow( size );
+        }
+    }
+
+    #addShadow( size ) {
+
         //causes weird glitch
-        if ( true /* size < this.#planet.game.star.shadow.config.radius / PlanetQuadtree.divisionSizeFactor */ ) {
-            
+        /* if size < this.#planet.game.star.shadow.config.radius / PlanetQuadtree.divisionSizeFactor */
+        if ( this.#doesShadows === false ) {    
+
             this.#planet.game.star.shadow.cast( this );        
             this.#planet.game.star.shadow.receive( this );  
 
@@ -93,6 +114,8 @@ class PlanetChunk extends BABYLON.Mesh {
 
             this.#planet.game.star.shadow.cast( this, false );        
             this.#planet.game.star.shadow.receive( this, false );  
+
+            this.#doesShadows = false;
         }
     }
 

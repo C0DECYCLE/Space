@@ -74,7 +74,7 @@ class PlanetQuadtree {
     #getDistanceDot( params, position ) {
 
         const terrainifyPosition = PlanetUtils.terrainify( this.#planet, position.clone() );
-        const terrainifyWorldRotatePosition = BABYLON.Vector3.TransformCoordinates( terrainifyPosition, this.#planet.root.computeWorldMatrix( true ) );
+        const terrainifyWorldRotatePosition = BABYLON.Vector3.TransformCoordinates( terrainifyPosition, this.#planet.root._worldMatrix );
         
         return {
             distance: this.#planet.game.camera.getScreenDistance( undefined, terrainifyWorldRotatePosition ),
