@@ -17,7 +17,7 @@ class Asteroids {
 
     variants = {
 
-        keys: [ "a", "b" ]
+        keys: [ "a", "b", "c" ]
     };
 
     list = [];

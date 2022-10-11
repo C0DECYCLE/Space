@@ -26,6 +26,8 @@ Space.addOnReady( function() {
         //{ key: "asteroid", path: "assets/models/asteroid.glb" },
         { key: "asteroid-a", path: "assets/models/asteroid-a.glb" },
         { key: "asteroid-b", path: "assets/models/asteroid-b.glb" },
+        { key: "asteroid-c", path: "assets/models/asteroid-c.glb" },
+
         { key: "spaceship_vulcan", path: "assets/models/spaceship_vulcan.glb" }
     ] );
     
@@ -92,8 +94,8 @@ Space.add( "install", function() {
 
     this.asteroids = new Asteroids( this, {} );
 
-    this.asteroids.register( "ring", { key: 0, seed: "7417", radius: 5 * 1000, spread: 400, height: 60, density: 0.05 } );
-    this.asteroids.register( "ring", { key: 1, seed: "4674", radius: 5 * 1000, spread: 1200, height: 40, density: 0.04 } );
+    this.asteroids.register( "ring", { key: 0, seed: "7417", radius: 5 * 1000, spread: 400, height: 80, density: 0.04 } );
+    this.asteroids.register( "ring", { key: 1, seed: "4674", radius: 5 * 1000, spread: 1200, height: 40, density: 0.03 } );
 
     //optimzie scene from docs
     //look where to use unindexed mesh? compare index length + positions length < unindex positions length
