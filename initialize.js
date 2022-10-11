@@ -18,6 +18,9 @@ Space.addOnReady( function() {
     this.scene.ambient = new EngineAmbient( this.scene, background, 0.3 );
     this.scene.debugMaterialRed = EngineUtils.makeDebugMaterial( this.scene, "#ff226b" );
     this.scene.debugMaterialWhite = EngineUtils.makeDebugMaterial( this.scene, "#ffffff" );
+    this.scene.skipPointerMovePicking = true;
+    this.scene.autoClear = false;
+    this.scene.autoClearDepthAndStencil = false;
 
     this.scene.assets = new EngineAssets( this );
     this.scene.assets.onLoadObservable.addOnce( () => { this.install(); this.stage(); Space.update( this.scene, this.run ); } );
@@ -97,14 +100,8 @@ Space.add( "install", function() {
     this.asteroids.register( "ring", { key: 0, seed: "7417", radius: 5 * 1000, spread: 400, height: 80, density: 0.04 } );
     this.asteroids.register( "ring", { key: 1, seed: "4674", radius: 5 * 1000, spread: 1200, height: 40, density: 0.03 } );
 
-    //optimzie scene from docs
-    //look where to use unindexed mesh? compare index length + positions length < unindex positions length
-    //octree?
-
     // set lod level dynamicly and also cull clouds
     // maybe change to bigger cloud models https://p.turbosquid.com/ts-thumb/zj/KTfbV4/5o/turbosquid/png/1627741230/600x600/fit_q87/3c5b3be5285562313f22304dae476581c673ce87/turbosquid.jpg
-
-    //https://www.artstation.com/artwork/ZX10Z
 
 } );
 

@@ -51,6 +51,7 @@ class PlanetChunk extends BABYLON.Mesh {
 
     #setupMesh() {
 
+        this.isPickable = false;
         this.material = this.#planet.material;
         this.parent = this.#planet.root;
     }

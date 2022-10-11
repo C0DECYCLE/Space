@@ -96,6 +96,7 @@ class EngineAssets {
             collisionMeshes[i].clone( collisionMeshes[i].name ).parent = result;
         }
 
+        result.isPickable = false;
         result.parent = this.cache;
         result.setEnabled( false );
 
@@ -172,6 +173,7 @@ class EngineAssets {
 
         const mesh = new BABYLON.Mesh( importMesh.name, this.scene );
         
+        mesh.isPickable = false;
         mesh.material = this.#getColorMaterial( importMesh, color, interactable );
         importMesh.geometry.applyToMesh( mesh );
         mesh.flipFaces( true );
@@ -217,7 +219,10 @@ class EngineAssets {
 
         if ( interactable === false ) {
 
-            return new BABYLON.StandardMaterial( name, this.scene );
+            const material = new BABYLON.StandardMaterial( name, this.scene );
+            material.freeze();
+
+            return material;
 
         } else {
 
@@ -230,6 +235,7 @@ class EngineAssets {
     #instanceMesh( mesh, onInstance = undefined ) {
 
         const instance = mesh.createInstance( `i-${ mesh.name }` );
+        instance.isPickable = false;
 
         if ( !instance.rotationQuaternion ) {
             
@@ -244,6 +250,7 @@ class EngineAssets {
     #instanceCollisionMesh( mesh ) {
 
         const instance = mesh.createInstance( `i-${ mesh.name }` );
+        instance.isPickable = false;
 
         if ( !instance.rotationQuaternion ) {
             

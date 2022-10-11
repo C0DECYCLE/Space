@@ -111,8 +111,10 @@ class Player {
         this.mesh.removeVerticesData( BABYLON.VertexBuffer.UVKind );
         this.mesh.id = "player";
         this.mesh.name = this.mesh.id;
+        this.mesh.isPickable = false;
         this.mesh.material = new BABYLON.StandardMaterial( "player_material", this.scene );
         this.mesh.material.setColorIntensity( "#ff226b", 0.5 );
+        this.mesh.material.freeze();
         this.mesh.rotationQuaternion = this.mesh.rotation.toQuaternion();
         
         this.game.star.shadow.cast( this.mesh );

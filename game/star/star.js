@@ -68,11 +68,13 @@ class Star {
         material.specularColor.set( 0, 0, 0 );
         material.emissiveColor = BABYLON.Color3.FromHexString( this.config.color );
         material.ambientColor.set( 0, 0, 0 );
+        material.freeze();log("freeze",material.name);
 
         this.mesh = BABYLON.MeshBuilder.CreateSphere( "star", { diameter: this.config.size, segments: this.config.resolution }, this.scene );
         this.mesh.removeVerticesData( BABYLON.VertexBuffer.NormalKind );
         this.mesh.removeVerticesData( BABYLON.VertexBuffer.UVKind );
         this.mesh.rotationQuaternion = this.mesh.rotation.toQuaternion();
+        this.mesh.isPickable = false;
         this.mesh.material = material;
 
         PhysicsEntity.collidable( this.mesh );
@@ -114,6 +116,8 @@ class Star {
 
         this.background = BABYLON.MeshBuilder.CreateSphere( "star_background", { diameter: this.game.camera.config.max, segments: 4, sideOrientation: BABYLON.Mesh.BACKSIDE }, this.scene );
         this.background.removeVerticesData( BABYLON.VertexBuffer.NormalKind );
+        
+        this.background.isPickable = false;
 
         this.background.material = new BABYLON.StandardMaterial( "star_background_material", this.scene );
         this.background.material.disableLighting = true;
@@ -126,6 +130,8 @@ class Star {
         this.background.material.emissiveTexture = new BABYLON.Texture( "assets/textures/space.png", this.scene );
         this.background.material.emissiveTexture.uScale = 6;
         this.background.material.emissiveTexture.vScale = 6;
+
+        this.background.material.freeze();
     }
 
     #target( camera ) {

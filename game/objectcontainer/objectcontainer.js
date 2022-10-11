@@ -96,6 +96,7 @@ class ObjectContainer {
             const scene = this.#containers.game.scene;
 
             this.#debugMesh = BABYLON.MeshBuilder.CreateBox( `objectcontainer_${ this.index }`, { size: ObjectContainer.size }, scene );
+            this.#debugMesh.isPickable = false;
             this.#debugMesh.material = scene.debugMaterialWhite;
             this.#debugMesh.position.copyFrom( ObjectContainerUtils.indexToApproximatePosition( this.index ) );
 

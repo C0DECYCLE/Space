@@ -22,6 +22,7 @@ class CloudModel extends BABYLON.Mesh {
 
     #setupMesh() {
 
+        this.isPickable = false;
         this.material = this.#clouds.material;
 
         EngineUtilsShader.registerInstanceAttribute( this, "randomValue", 0 );

@@ -92,5 +92,7 @@ class Planets {
         this.#maskMaterial.specularColor = new BABYLON.Color3( 0, 0, 0 );
         this.#maskMaterial.emissiveColor = new BABYLON.Color3( 0, 0, 0 );
         this.#maskMaterial.ambientColor = new BABYLON.Color3( 0, 0, 0 );
+
+        this.#maskMaterial.freeze();
     }
 }
