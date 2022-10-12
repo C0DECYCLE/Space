@@ -10,9 +10,9 @@ class Clouds {
 
     static lods = [
 
-        [ 6, 0.25 ],
-        [ 3, 0.1 ],
-        [ 1, AbstractLOD.minimum ]
+        [ 7, 0.25 ],
+        [ 4, 0.1 ],
+        [ 2, AbstractLOD.minimum ]
     ]
 
     config = {

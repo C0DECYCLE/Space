@@ -73,7 +73,12 @@ class Camera {
 
     getScreenDistance( node = null, alreadyWorld = false ) {
 
-        return BABYLON.Vector3.Distance( alreadyWorld === false ? EngineUtils.getWorldPosition( node ) : alreadyWorld, this.position );
+        return Math.sqrt( this.getScreenSquaredDistance( node, alreadyWorld ) );
+    }
+
+    getScreenSquaredDistance( node = null, alreadyWorld = false ) {
+
+        return BABYLON.Vector3.DistanceSquared( alreadyWorld === false ? EngineUtils.getWorldPosition( node ) : alreadyWorld, this.position );
     }
 
     getApproximateScreenDistance( node, alreadyWorld = false ) {

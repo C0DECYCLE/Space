@@ -23,9 +23,9 @@ class PlanetChunks {
         this.#doChunks();
     }
 
-    node( params, factors, nodeKey, position, fixRotationQuaternion, size, faceSize ) {
+    node( params, dot, nodeKey, position, fixRotationQuaternion, size, faceSize ) {
 
-        if ( factors.dot > params.occlusionFallOf ) {
+        if ( dot > params.occlusionFallOf ) {
                 
             this.#evalNode( params, nodeKey, position, fixRotationQuaternion, size, faceSize );
         }
@@ -46,7 +46,7 @@ class PlanetChunks {
             centerToInsertion: this.#planet.game.camera.position.subtract( this.#planet.position ).normalize(),
             occlusionFallOf: this.#planet.helper.getOcclusionFallOf( distance )
         };
-
+        
         this.#planet.faces.forEach( ( face, suffic ) => face.insert( params ) );
     }
 

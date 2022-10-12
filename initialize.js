@@ -75,14 +75,14 @@ Space.add( "install", function() {
 
         { 
             key: 1, radius: 2048, spin: 0.005, 
-            gravity: 0.7, atmosphere: 512, waveLengths: new BABYLON.Color3( 450, 500, 680 ),
+            gravity: 0.7, atmosphere: 512, waveLengths: new BABYLON.Color3( 450, 500, 680 ), //clouds: { },
             seed: new BABYLON.Vector3( 8513, -9011, -5910 ), variant: "1", mountainy: 3.5, warp: 1.0,
-            colors: { main: "#d4b96d", second: "#ffb765", third: "#f4ffb5", steep: "#51515f" }
+            colors: { main: "#f1993b", second: "#fab05c", third: "#945e41", steep: "#51515f" }
         },
 
         { 
             key: 2, radius: 4096, spin: 0.0025, 
-            gravity: 0.8, atmosphere: 1024, waveLengths: new BABYLON.Color3( 700, 600, 500 ), clouds: { density: 0.25 },
+            gravity: 0.8, atmosphere: 1024, waveLengths: new BABYLON.Color3( 700, 600, 500 ), clouds: { },
             seed: new BABYLON.Vector3( -925, -2011, 7770 ),
             colors: { main: "#7a8161", second: "#856160", third: "#a8ceb0", steep: "#252123" }
         },
@@ -91,7 +91,7 @@ Space.add( "install", function() {
             key: 3, radius: 512, spin: 0.01, 
             gravity: 0.4, atmosphere: false,
             seed: new BABYLON.Vector3( 2253, 7001, 4099 ), mountainy: 2, warp: 0.6,
-            colors: { main: "#9a9aac", second: "#aa9cc0", third: "#6d7a7a", steep: "#65606e" }
+            colors: { main: "#a8a6d2", second: "#b3b1e0", third: "#a09dcc", steep: "#8582a8" }
         }
     ] );
 
@@ -100,8 +100,11 @@ Space.add( "install", function() {
     this.asteroids.register( "ring", { key: 0, seed: "7417", radius: 5 * 1000, spread: 400, height: 80, density: 0.04 } );
     this.asteroids.register( "ring", { key: 1, seed: "4674", radius: 5 * 1000, spread: 1200, height: 40, density: 0.03 } );
 
-    // set lod level dynamicly
-    // blend out clouds by planet distance
+    // do initial insert
+    // diffrent cloud colors
+    // not lit on backside of planet: by shader when ray-planet sphere intersect make color dimm (https://gist.github.com/wwwtyro/beecc31d65d1004f5a9d)
+
+    // diffrent cloud variant config, apply to 2. planet
 
     // maybe change to bigger cloud models https://p.turbosquid.com/ts-thumb/zj/KTfbV4/5o/turbosquid/png/1627741230/600x600/fit_q87/3c5b3be5285562313f22304dae476581c673ce87/turbosquid.jpg
 

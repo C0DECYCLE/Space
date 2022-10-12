@@ -54,6 +54,11 @@ class Star {
         return this.mesh.rotationQuaternion;
     }
 
+    get lightDirection() {
+
+        return this.directionalLight.direction;
+    }
+
     update() {
 
         this.#target( this.game.camera );

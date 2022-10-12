@@ -19,13 +19,19 @@ class CloudMaterial extends BABYLON.CustomMaterial {
         this.#setupColor();
         this.#setupTransparency();
         this.#setupAttributes();
+        //this.#setupUniforms();
         this.#hookShader();
     }
 
     #setupColor() {
-        
-        this.setColorIntensity( this.#clouds.config.color, 1.0 );
 
+        const diffuse = this.#clouds.config.color;
+        
+        this.setColorIntensity( diffuse, 1.0 );
+
+        BABYLON.Color3.LerpToRef( this.emissiveColor, BABYLON.Color3.FromHexString( diffuse ), 0.25, this.emissiveColor );
+        this.ambientColor.scaleToRef( 2.0, this.ambientColor );
+        
         //multiple colors by instanceBuffer and unforms
     }
 
@@ -38,6 +44,18 @@ class CloudMaterial extends BABYLON.CustomMaterial {
     #setupAttributes() {
 
         this.AddAttribute( "randomValue" );
+    }
+
+    #setupUniforms() {
+
+        this.AddUniform( "starLightDirection", "vec3" );
+
+        this.onBindObservable.add( ( /*mesh*/ ) => { 
+
+            const effect = this.getEffect();
+
+            //effect.setVector3( "starLightDirection", this.#clouds.game.star.lightDirection.applyRotationQuaternion( this.#planet.rotationQuaternion.invert() ) );
+        } );
     }
 
     #hookShader() {

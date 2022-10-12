@@ -8,10 +8,12 @@
 
 class CloudsPlanet {
 
+    static LOD_LIMIT = 2 ** 2.5;
+
     config = {
 
         seed: undefined,
-        density: 0.1,
+        density: 0.015,
     };
 
     list = [];
@@ -34,22 +36,28 @@ class CloudsPlanet {
 
     update( distance ) {
 
-        const planetToCamera = this.#planet.game.camera.position.subtract( this.#planet.position ).normalize();
-        const occlusionFallOf = this.#planet.helper.getOcclusionFallOf( distance ).clamp( 0, 1 );
+        const radiusDistance = distance / this.#planet.config.radius;
 
-        for ( let i = 0; i < this.list.length; i++ ) {
+        if ( radiusDistance < CloudsPlanet.LOD_LIMIT ) {
 
-            const cloud = this.list[i];
-            const cloudWorld = BABYLON.Vector3.TransformCoordinates( cloud.position, this.#planet.root._worldMatrix );
-            const dot = BABYLON.Vector3.Dot( planetToCamera, cloudWorld.subtract( this.#planet.position ).normalize() );
+            const planetToCamera = this.#planet.game.camera.position.subtract( this.#planet.position ).normalize();
+            const occlusionFallOf = this.#planet.helper.getOcclusionFallOf( distance ).clamp( -0.1, Infinity );
+            const distanceLODLevel = (radiusDistance / CloudsPlanet.LOD_LIMIT).clamp( 0, 1 );
             
-            if ( dot > occlusionFallOf ) {
+            for ( let i = 0; i < this.list.length; i++ ) {
+    
+                const cloud = this.list[i];
+                const cloudWorld = BABYLON.Vector3.TransformCoordinates( cloud.position, this.#planet.root._worldMatrix );
+                const dot = BABYLON.Vector3.Dot( planetToCamera, cloudWorld.subtract( this.#planet.position ).normalize() );
                 
-                cloud.set( Math.round( 2 * (1 - occlusionFallOf) ).clamp( 0, 1 )  );
-
-            } else {
-
-                cloud.setEnabled( false );
+                if ( dot > occlusionFallOf ) {
+                    
+                    cloud.set( Math.round( cloud.levels.length * ((1 - dot) + distanceLODLevel) * 0.5 ).clamp( 0, cloud.levels.length - 1 )  );
+    
+                } else {
+    
+                    cloud.setEnabled( false );
+                }
             }
         }
     }
@@ -82,18 +90,19 @@ class CloudsPlanet {
         const position = new BABYLON.Vector3( Math.cos( theta ) * Math.sin( phi ), Math.sin( theta ) * Math.sin( phi ), Math.cos( phi ) ); 
         
         const noiseOffset = new BABYLON.Vector3( this.#planet.position.x, this.config.seed, this.#planet.position.z );
-        const cull = this.#noise( position.clone().scaleInPlace( this.#planet.config.radius * 0.005 ).addInPlace( noiseOffset ) );
+        const cull = this.#noise( position.clone().scaleInPlace( this.#planet.config.radius * 0.001 ).addInPlace( noiseOffset ) );
         const height = this.#noise( position.clone().scaleInPlace( this.#planet.config.radius * -0.0025 ).addInPlace( noiseOffset ) );
+        const limit = 0.35;
 
         position.scaleInPlace( this.#planet.config.radius + this.#planet.config.maxHeight * (0.5 + height * 0.5) );
 
-        if ( cull < 0.3 ) {
+        if ( cull < limit ) {
             window.count++;
-            this.#makeCloud( position, nSamples );
+            this.#makeCloud( position, nSamples, 1 - (cull / limit) );
         }
     }
 
-    #makeCloud( position, nSamples ) {
+    #makeCloud( position, nSamples, cull ) {
 
         const cloud = new Cloud( this.#clouds.game, {} );
 
@@ -102,7 +111,9 @@ class CloudsPlanet {
         EngineUtils.setDirection( cloud, position.negate(), 0, -Math.PI / 2, 0 );
         EngineUtils.rotate( cloud, BABYLON.Axis.Y, Math.random() * Math.PI * 2 );
 
-        cloud.scaling.copyFromFloats( Math.random(), Math.random(), Math.random() ).scaleInPlace( 0.5 ).addInPlaceFromFloats( 0.75, 0.75, 0.75 ).scaleInPlace( 200 );
+        cloud.scaling.copyFromFloats( Math.random(), Math.random(), Math.random() ).scaleInPlace( 0.2 );
+        cloud.scaling.addInPlaceFromFloats( 0.7, 0.6, 0.7 );
+        cloud.scaling.scaleInPlace( 2 + cull * 3 ).scaleInPlace( 100 * 2 );
         cloud.post();
 
         cloud.parent = this.#planet.root;
