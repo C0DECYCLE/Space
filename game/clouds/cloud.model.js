@@ -26,6 +26,10 @@ class CloudModel extends BABYLON.Mesh {
         this.material = this.#clouds.material;
 
         EngineUtilsShader.registerInstanceAttribute( this, "randomValue", 0 );
+
+        EngineUtilsShader.registerInstanceAttribute( this, "cloudPosition", new BABYLON.Vector3() );
+        EngineUtilsShader.registerInstanceAttribute( this, "starLightDirection", new BABYLON.Vector3() );
+        EngineUtilsShader.registerInstanceAttribute( this, "planetRadius", 0 );
     }
 
     #setupGeometry( subdivisions ) {

@@ -40,25 +40,7 @@ class CloudsPlanet {
 
         if ( radiusDistance < CloudsPlanet.LOD_LIMIT ) {
 
-            const planetToCamera = this.#planet.game.camera.position.subtract( this.#planet.position ).normalize();
-            const occlusionFallOf = this.#planet.helper.getOcclusionFallOf( distance ).clamp( -0.1, Infinity );
-            const distanceLODLevel = (radiusDistance / CloudsPlanet.LOD_LIMIT).clamp( 0, 1 );
-            
-            for ( let i = 0; i < this.list.length; i++ ) {
-    
-                const cloud = this.list[i];
-                const cloudWorld = BABYLON.Vector3.TransformCoordinates( cloud.position, this.#planet.root._worldMatrix );
-                const dot = BABYLON.Vector3.Dot( planetToCamera, cloudWorld.subtract( this.#planet.position ).normalize() );
-                
-                if ( dot > occlusionFallOf ) {
-                    
-                    cloud.set( Math.round( cloud.levels.length * ((1 - dot) + distanceLODLevel) * 0.5 ).clamp( 0, cloud.levels.length - 1 )  );
-    
-                } else {
-    
-                    cloud.setEnabled( false );
-                }
-            }
+            this.#updateLODs( distance, radiusDistance );
         }
     }
 
@@ -74,7 +56,7 @@ class CloudsPlanet {
 
         const planetSurfaceArea = 4 * Math.PI * this.#planet.config.radius;
         const nSamples = Math.floor( planetSurfaceArea * this.config.density );
-        window.count = 0;
+        
         for ( let i = 0; i < nSamples; i++ ) {
 
             const theta = 2 * Math.PI * i / Math.PHI;
@@ -82,7 +64,6 @@ class CloudsPlanet {
 
             this.#evalCloud( theta, phi, nSamples );
         }
-        log(window.count);
     }
 
     #evalCloud( theta, phi, nSamples ) {
@@ -97,7 +78,7 @@ class CloudsPlanet {
         position.scaleInPlace( this.#planet.config.radius + this.#planet.config.maxHeight * (0.5 + height * 0.5) );
 
         if ( cull < limit ) {
-            window.count++;
+            
             this.#makeCloud( position, nSamples, 1 - (cull / limit) );
         }
     }
@@ -114,11 +95,12 @@ class CloudsPlanet {
         cloud.scaling.copyFromFloats( Math.random(), Math.random(), Math.random() ).scaleInPlace( 0.2 );
         cloud.scaling.addInPlaceFromFloats( 0.7, 0.6, 0.7 );
         cloud.scaling.scaleInPlace( 2 + cull * 3 ).scaleInPlace( 100 * 2 );
-        cloud.post();
 
         cloud.parent = this.#planet.root;
         cloud.randomValue = Math.random() * nSamples;
+        cloud.planetRadius = this.#planet.config.radius + this.#planet.config.maxHeight * 0.5;
 
+        cloud.post();
         this.list.push( cloud );
     }
 
@@ -130,6 +112,36 @@ class CloudsPlanet {
         }
 
         return this.#perlin.get( vector.x, vector.y, vector.z );
+    }
+
+    #updateLODs( distance, radiusDistance ) {
+
+        const planetToCamera = this.#planet.game.camera.position.subtract( this.#planet.position ).normalize();
+        const occlusionFallOf = this.#planet.helper.getOcclusionFallOf( distance ).clamp( -0.1, Infinity );
+        const distanceLODLevel = (radiusDistance / CloudsPlanet.LOD_LIMIT).clamp( 0, 1 );
+
+        const starLightDirection = this.#planet.position.normalizeToNew().applyRotationQuaternionInPlace( this.#planet.rotationQuaternion.invert() );
+        
+        for ( let i = 0; i < this.list.length; i++ ) {
+
+            this.#updateCloud( this.list[i], planetToCamera, occlusionFallOf, distanceLODLevel, starLightDirection );
+        }
+    }
+
+    #updateCloud( cloud, planetToCamera, occlusionFallOf, distanceLODLevel, starLightDirection ) {
+
+        const cloudWorld = BABYLON.Vector3.TransformCoordinates( cloud.position, this.#planet.root._worldMatrix );
+        const dot = BABYLON.Vector3.Dot( planetToCamera, cloudWorld.subtract( this.#planet.position ).normalize() );
+        
+        if ( dot > occlusionFallOf ) {
+            
+            cloud.set( Math.round( cloud.levels.length * ((1 - dot) + distanceLODLevel) * 0.5 ).clamp( 0, cloud.levels.length - 1 )  );
+            cloud.updateStarLightDirection( starLightDirection );
+
+        } else {
+
+            cloud.setEnabled( false );
+        }
     }
 
 }

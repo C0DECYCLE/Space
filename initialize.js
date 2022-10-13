@@ -26,7 +26,6 @@ Space.addOnReady( function() {
     this.scene.assets.onLoadObservable.addOnce( () => { this.install(); this.stage(); Space.update( this.scene, this.run ); } );
     this.scene.assets.load( [
 
-        //{ key: "asteroid", path: "assets/models/asteroid.glb" },
         { key: "asteroid-a", path: "assets/models/asteroid-a.glb" },
         { key: "asteroid-b", path: "assets/models/asteroid-b.glb" },
         { key: "asteroid-c", path: "assets/models/asteroid-c.glb" },
@@ -100,13 +99,17 @@ Space.add( "install", function() {
     this.asteroids.register( "ring", { key: 0, seed: "7417", radius: 5 * 1000, spread: 400, height: 80, density: 0.04 } );
     this.asteroids.register( "ring", { key: 1, seed: "4674", radius: 5 * 1000, spread: 1200, height: 40, density: 0.03 } );
 
+    // make planet occluded look good, smooth blend at edges? with dot? between starLight and cloudPosition
+    // clean up entire cloud code base
+    // take appart generall cloud vs planet cloud classes
+
+    // fog inside clouds
     // do initial insert
     // diffrent cloud colors
-    // not lit on backside of planet: by shader when ray-planet sphere intersect make color dimm (https://gist.github.com/wwwtyro/beecc31d65d1004f5a9d)
 
     // diffrent cloud variant config, apply to 2. planet
-
-    // maybe change to bigger cloud models https://p.turbosquid.com/ts-thumb/zj/KTfbV4/5o/turbosquid/png/1627741230/600x600/fit_q87/3c5b3be5285562313f22304dae476581c673ce87/turbosquid.jpg
+    // asteroids adjust min values
+    // look for improvements through matricies
 
 } );
 

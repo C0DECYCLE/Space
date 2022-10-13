@@ -43,6 +43,14 @@ class EntityLOD extends AbstractLOD {
         this.boundingCache = boundingCache;
     }
 
+    getInstance() {
+
+        if ( this.#currentEntity !== null ) {
+
+            return this.#currentEntity;
+        }
+    }
+
     /* override */ disposeCurrent( currentLevel ) {
 
         if ( currentLevel !== undefined ) {

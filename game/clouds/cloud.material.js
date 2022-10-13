@@ -44,18 +44,10 @@ class CloudMaterial extends BABYLON.CustomMaterial {
     #setupAttributes() {
 
         this.AddAttribute( "randomValue" );
-    }
 
-    #setupUniforms() {
-
-        this.AddUniform( "starLightDirection", "vec3" );
-
-        this.onBindObservable.add( ( /*mesh*/ ) => { 
-
-            const effect = this.getEffect();
-
-            //effect.setVector3( "starLightDirection", this.#clouds.game.star.lightDirection.applyRotationQuaternion( this.#planet.rotationQuaternion.invert() ) );
-        } );
+        this.AddAttribute( "cloudPosition" );
+        this.AddAttribute( "starLightDirection" );
+        this.AddAttribute( "planetRadius" );
     }
 
     #hookShader() {
@@ -69,14 +61,14 @@ class CloudMaterial extends BABYLON.CustomMaterial {
         //this.Vertex_MainEnd( this.#getVertex_MainEnd() );
 
         //this.Fragment_Begin( this.#getFragment_Begin() );
-        //this.Fragment_Definitions( this.#getFragment_Definitions() );
+        this.Fragment_Definitions( this.#getFragment_Definitions() );
         //this.Fragment_MainBegin( this.#getFragment_MainBegin() ); 
+        this.Fragment_Custom_Diffuse( this.#getFragment_Custom_Diffuse() );
+        //this.Fragment_Custom_Alpha( this.#getFragment_Custom_Alpha() );
         //this.Fragment_Before_Lights( this.#getFragment_Before_Lights() );
         //this.Fragment_Before_Fog( this.#getFragment_Before_Fog() );
         //this.Fragment_Before_FragColor( this.#getFragment_Before_FragColor() );
-        //this.Fragment_Custom_Diffuse( this.#getFragment_Custom_Diffuse() );
-        //this.Fragment_Custom_Alpha( this.#getFragment_Custom_Alpha() );
-        //this.Fragment_MainEnd( this.#getFragment_MainEnd() ); 
+        this.Fragment_MainEnd( this.#getFragment_MainEnd() ); 
     }
 
     #getVertex_Definitions() { return `
@@ -85,12 +77,44 @@ class CloudMaterial extends BABYLON.CustomMaterial {
 
         attribute float randomValue;
 
+        attribute vec3 cloudPosition;
+        attribute vec3 starLightDirection;
+        attribute float planetRadius;
+
+        flat out float planetNotOccluded;
+
     `; }
 
     #getVertex_Before_PositionUpdated() { return `
         
         positionUpdated *= 1.0 + ( noise( (position + randomValue) * 2.0 ) - 0.5 ) * 0.75;
 
+        planetNotOccluded = raySphereIntersect( cloudPosition, starLightDirection, vec3( 0, 0, 0 ), planetRadius );
+
+    `; }
+
+    #getFragment_Definitions() { return `
+
+        flat in float planetNotOccluded;
+        
+    `; }
+
+    #getFragment_Custom_Diffuse() { return `
+
+        if ( planetNotOccluded < 0.0 ) {
+
+            diffuseColor *= 0.1;
+        }
+        
+    `; }
+
+    #getFragment_MainEnd() { return `
+
+        if ( planetNotOccluded < 0.0 ) {
+
+            glFragColor.rgb *= 0.25;
+        }
+        
     `; }
 
 }
