@@ -34,7 +34,7 @@ class PlanetHelper {
 
     getOcclusionFallOf( distance ) {
 
-        return ( 1 - ( (distance / this.#planet.config.radius) - 0.8 ) ).clamp( -1.1, 0.9 ) || -1.1;
+        return ( 1 - ( (distance / this.#planet.config.radius) - 0.8 ) ).clamp( -1.05, 0.9 ) || -1.05;
     }
 
     createBasicMaterial() {

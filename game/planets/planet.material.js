@@ -111,23 +111,18 @@ class PlanetMaterial extends BABYLON.CustomMaterial {
 
         vec3 vColorSteep = colorSteep;
         vec3 vColorMain = colorMain;
-     
         if ( noise( ( (position * -1.0) - noise(position) * 50.0 ) * 0.0025 ) < 0.25 ) {
             vColorMain = colorThird;
         }
-
         if ( noise( (position + noise(position) * 50.0) * 0.005 ) < 0.5 ) {
             vColorMain = colorSecond;
         }
 
         float steep = dot( normalize(position), normal );
-        
         if ( steep <= 0.9 ) {
             diffuseColor = vColorSteep;
-
         } else if ( steep > 0.9 && steep <= 0.95 ) {
             diffuseColor = mix( vColorSteep, vColorMain, 0.66 );
-
         } else {
             diffuseColor = vColorMain;
         }

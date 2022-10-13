@@ -29,6 +29,11 @@ class AbstractLOD {
         this.game = game;
     }
 
+    get isEnabled() {
+
+        return this.#isEnabled;
+    }
+
     get isVisible() {
 
         return this.#currentLevel !== undefined;
@@ -52,7 +57,7 @@ class AbstractLOD {
 
     update() {
         
-        if ( this.#isEnabled === false ) {
+        if ( this.isEnabled === false ) {
 
             return;
         }

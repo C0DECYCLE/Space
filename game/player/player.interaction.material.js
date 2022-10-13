@@ -102,7 +102,6 @@ class PlayerInteractionMaterial extends BABYLON.CustomMaterial {
     #getFragment_MainEnd() { return `
 
         if ( vInteractable > 0.9 && vInteractable < 1.1 ) {
-
             gl_FragColor += vec4( interactableColor * pattern(), 1.0 ) * 0.25;
         }
         
