@@ -99,14 +99,10 @@ Space.add( "install", function() {
     this.asteroids.register( "ring", { key: 0, seed: "7417", radius: 5 * 1000, spread: 400, height: 80, density: 0.04 } );
     this.asteroids.register( "ring", { key: 1, seed: "4674", radius: 5 * 1000, spread: 1200, height: 40, density: 0.03 } );
 
-    // take appart generall cloud vs planet cloud classes
-
-    // fog inside clouds
     // diffrent cloud colors
 
     // diffrent cloud variant config, apply to 2. planet
     // asteroids adjust min values
-    // look for improvements through matricies
 
 } );
 
