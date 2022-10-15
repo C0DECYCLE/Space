@@ -17,9 +17,11 @@ class Planet {
         influence: 512,
         maxHeight: 512 * 0.75,
         gravity: 0.8,
+
         atmosphere: 512,
         waveLengths: new BABYLON.Color3( 700, 530, 440 ),
-        
+        clouds: false,
+
         min: 64,
         resolution: 24,
 
@@ -47,6 +49,7 @@ class Planet {
     material = null;
     perlin = null;
     atmosphere = null;
+    clouds = null;
 
     faces = new Map();
     chunks = null;
@@ -71,6 +74,7 @@ class Planet {
         this.#setupPhysics();
         this.#addAtmosphere();
         this.#farInsertion();
+        this.#addClouds();
     }
 
     get position() {
@@ -110,6 +114,7 @@ class Planet {
             if ( this.#oversteppedInsertLimit === false ) {
                 
                 this.#oversteppedInsertLimit = true;
+                this.root.computeWorldMatrix( true );
                 //two times: first time removes half limit resolution chunk, second makes the lowest resolution chunk for outside of the limit
                 this.chunks.insertQuadtrees( distance );
                 this.chunks.insertQuadtrees( distance );
@@ -170,6 +175,30 @@ class Planet {
         }
     }
 
+    #farInsertion() {
+        
+        const farFarAway = EngineUtils.getFarAway();
+        this.insert( farFarAway, farFarAway.y, true );
+        
+        EngineUtils.getBounding( this.root, true );
+    }
+
+    #addClouds() {
+
+        if ( this.config.clouds !== false ) {
+
+            this.clouds = new CloudsPlanet( this.game.clouds, this, this.config.clouds );
+        }
+    }
+    
+    #updateClouds( distance ) {
+
+        if ( this.clouds !== null ) {
+
+            this.clouds.update( distance );
+        }
+    }
+
     #updateLod() {
 
         this.lod.update();
@@ -206,22 +235,16 @@ class Planet {
             this.root.rotate( BABYLON.Axis.Y, this.config.spin * EngineUtils.toRadian * deltaCorrection, BABYLON.Space.LOCAL ); //make very movement speed * delta time
         }
     }
-
-    #farInsertion() {
-        
-        const farFarAway = EngineUtils.getFarAway();
-        this.insert( farFarAway, farFarAway.y, true );
-        
-        EngineUtils.getBounding( this.root, true );
-    }
     
     #evalInsertionWithString( distance ) {
 
+        this.root.computeWorldMatrix( true );
         const insertionString = this.#getInsertionString();
         
         if ( insertionString !== this.#cachedInsertionString ) {
             
             this.chunks.insertQuadtrees( distance );
+            this.#updateClouds( distance );
             
             this.#cachedInsertionString = insertionString;
         }
@@ -230,7 +253,7 @@ class Planet {
     #getInsertionString() {
 
         const rdez = 10;
-        const diffrence = this.game.camera.position.subtract( BABYLON.Vector3.TransformCoordinates( BABYLON.Vector3.One().scaleInPlace( this.config.radius ), this.root.computeWorldMatrix( true ) ) );
+        const diffrence = this.game.camera.position.subtract( BABYLON.Vector3.TransformCoordinates( BABYLON.Vector3.One().scaleInPlace( this.config.radius ), this.root._worldMatrix ) );
         diffrence.copyFromFloats( Math.round( diffrence.x / rdez ) * rdez,  Math.round( diffrence.y / rdez ) * rdez, Math.round( diffrence.z / rdez ) * rdez );
 
         return diffrence.toString();

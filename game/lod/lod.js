@@ -6,21 +6,17 @@
     2022
 */
 
-class LOD {
+class LOD extends AbstractLOD {
 
-    static minimum = 0.01;
-
-    levels = [];
-    coverage = undefined;
-
-    #game = null;
-    #isVisible = false;
-
-    constructor( game ) {
-
-        this.#game = game;
-    }
+    #doShadow = false;
     
+    /* override */ constructor( game, doShadow = false ) {
+
+        super( game );
+
+        this.#doShadow = doShadow;
+    }
+
     get root() {
 
         return this.levels[0][0];
@@ -49,30 +45,20 @@ class LOD {
         }
     }
 
-    get isVisible() {
-
-        return this.#isVisible;
-    }
-
-    get maxVisibleDistance() {
-
-        return EngineUtils.getBoundingSize( this.root ) / LOD.minimum;
-    }
-
     fromSingle( node ) {
 
-        this.add( node, LOD.minimum );
+        this.add( node, AbstractLOD.minimum );
     }
 
     fromModels( models, onEveryMesh ) {
         
         for ( let i = 0; i < models.length; i++ ) {
             
-            this.add( this.#game.scene.assets.instance( models[i], onEveryMesh ), Number( models[i].name.split( "_" )[2] ) );
+            this.add( this.game.scene.assets.instance( models[i], mesh => onEveryMesh( mesh, i ) ), AbstractLOD.getMinimum( models[i].name ) );
         }
     }
 
-    add( node, min ) {
+    /* override */ add( node, min ) {
 
         if ( this.levels.length > 0 ) {
 
@@ -85,19 +71,38 @@ class LOD {
             node.rotationQuaternion = node.rotation.toQuaternion();
         }
 
-        this.levels.push( [ node, min.clamp( LOD.minimum, Infinity ) ] );
+        node.setEnabled( false );
+
+        super.add( node, min );
     }
 
-    update() {
-        
-        this.coverage = this.#game.camera.getScreenCoverage( this.root );
-        this.#isVisible = false;
+    /* override */ disposeCurrent( currentLevel ) {
 
-        for ( let i = 0; i < this.levels.length; i++ ) {
+        if ( currentLevel !== undefined ) {
 
-            this.levels[i][0].setEnabled( ( i - 1 < 0 ? this.coverage <= Infinity : this.coverage < this.levels[ i - 1 ][1] ) && this.coverage >= this.levels[i][1] );
+            this.levels[ currentLevel ][0].setEnabled( false );
+            
+            if ( this.#doShadow === true ) {
 
-            this.#isVisible = this.levels[i][0].isEnabled( false ) === true ? true : this.#isVisible;
+                this.game.star.shadow.cast( this.levels[ currentLevel ][0], false );        
+            }
+
+            super.disposeCurrent( currentLevel );
+        }
+    }
+
+    /* override */ makeCurrent( level ) {
+
+        if ( level >= 0 && level < this.levels.length ) {
+
+            super.makeCurrent( level );
+            
+            if ( this.#doShadow === true && level === 0 ) {
+                
+                this.game.star.shadow.cast( this.levels[ level ][0] );        
+            }
+
+            this.levels[ level ][0].setEnabled( true );
         }
     }
 

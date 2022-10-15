@@ -16,6 +16,9 @@ function UUIDv4() {
 };
 
 
+Math.PHI = ( 1 + 5 ** 0.5 ) / 2;
+
+
 Number.prototype.between = function( a, b ) {
 
     return this > Math.min( a, b ) && this < Math.max( a, b );

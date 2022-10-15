@@ -53,9 +53,9 @@ class EngineAssets {
         }
     }
 
-    traverse( importLod, onEveryMesh, interactable = false ) {
+    traverse( importLod, onEveryMesh, interactables = [] ) {
         
-        const lod = this.#traverseMesh( importLod, onEveryMesh, interactable );
+        const lod = this.#traverseMesh( importLod, onEveryMesh, interactables );
         const subs = importLod.getChildMeshes( true );
         
         for ( let i = 0; i < subs.length; i++ ) {
@@ -67,7 +67,7 @@ class EngineAssets {
 
             } else {
 
-                this.#traverseMesh( subs[i], onEveryMesh, interactable ).parent = lod;
+                this.#traverseMesh( subs[i], onEveryMesh, interactables ).parent = lod;
             }
         }
 
@@ -96,6 +96,7 @@ class EngineAssets {
             collisionMeshes[i].clone( collisionMeshes[i].name ).parent = result;
         }
 
+        result.isPickable = false;
         result.parent = this.cache;
         result.setEnabled( false );
 
@@ -144,14 +145,14 @@ class EngineAssets {
         }, 100 );
     }
 
-    #traverseMesh( importMesh, onMesh = undefined, interactable = false ) {
+    #traverseMesh( importMesh, onMesh = undefined, interactables = [] ) {
         
+        const interactable = interactables.includes( importMesh.name );
         const mesh = this.#traverseMeshGeneral( importMesh, undefined, interactable );
-        
+
         if ( interactable === true ) {
 
-            mesh.registerInstancedBuffer( "color", 4 );
-            mesh.instancedBuffers.color = new BABYLON.Color4( 0, 0, 0, 0 );
+            EngineUtilsShader.registerInstanceAttribute( mesh, "interactable", 0 );
         }
 
         onMesh?.( mesh );
@@ -172,6 +173,7 @@ class EngineAssets {
 
         const mesh = new BABYLON.Mesh( importMesh.name, this.scene );
         
+        mesh.isPickable = false;
         mesh.material = this.#getColorMaterial( importMesh, color, interactable );
         importMesh.geometry.applyToMesh( mesh );
         mesh.flipFaces( true );
@@ -179,6 +181,11 @@ class EngineAssets {
         mesh.position.copyFrom( importMesh.position );
         mesh.rotation.copyFrom( importMesh.rotation );
         mesh.scaling.copyFrom( importMesh.scaling );
+
+        if ( !mesh.rotationQuaternion ) {
+            
+            mesh.rotationQuaternion = mesh.rotation.toQuaternion();
+        }
 
         return mesh;
     }
@@ -212,7 +219,10 @@ class EngineAssets {
 
         if ( interactable === false ) {
 
-            return new BABYLON.StandardMaterial( name, this.scene );
+            const material = new BABYLON.StandardMaterial( name, this.scene );
+            material.freeze();
+
+            return material;
 
         } else {
 
@@ -225,6 +235,12 @@ class EngineAssets {
     #instanceMesh( mesh, onInstance = undefined ) {
 
         const instance = mesh.createInstance( `i-${ mesh.name }` );
+        instance.isPickable = false;
+
+        if ( !instance.rotationQuaternion ) {
+            
+            instance.rotationQuaternion = instance.rotation.toQuaternion();
+        }
 
         onInstance?.( instance );
 
@@ -234,6 +250,12 @@ class EngineAssets {
     #instanceCollisionMesh( mesh ) {
 
         const instance = mesh.createInstance( `i-${ mesh.name }` );
+        instance.isPickable = false;
+
+        if ( !instance.rotationQuaternion ) {
+            
+            instance.rotationQuaternion = instance.rotation.toQuaternion();
+        }
 
         instance.isCollisionMesh = true;
         instance.isVisible = false;

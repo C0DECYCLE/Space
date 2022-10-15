@@ -18,11 +18,14 @@ class Spaceship {
             
             let model = game.scene.assets.traverse( importLods[i], mesh => {
             
-                game.star.shadow.receive( mesh, undefined, undefined, false );
-            }, true );
+                if ( i === 0 ) {
+
+                    game.star.shadow.receive( mesh );
+                }
+            }, this.interactables );
             
             //model = game.scene.assets.merge( model );
-            //game.star.shadow.receive( model, undefined, undefined, false );
+            //game.star.shadow.receive( model );
             
             this.model.push( model );
         }
@@ -134,11 +137,8 @@ class Spaceship {
 
     #createLod() {
 
-        this.lod = new LOD( this.game );
-        this.lod.fromModels( this.constructor.model, mesh => {
-
-            this.game.star.shadow.cast( mesh );
-        } );
+        this.lod = new LOD( this.game, true );
+        this.lod.fromModels( this.constructor.model, ( mesh, level ) => {} );
 
         this.root.name = `spaceships_spaceship${ this.config.key }`;
 

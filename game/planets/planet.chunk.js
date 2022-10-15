@@ -12,20 +12,19 @@ class PlanetChunk extends BABYLON.Mesh {
     
     #size = undefined;
     #resolution = undefined;
+
+    #doesShadows = false;
     
     /* override */ constructor( planet, nodeKey, config ) {
     
         super( `planet${ planet.config.key }_chunk_${ nodeKey }`, planet.scene );
-        this._setReady( false );
-
+    
         this.#planet = planet;
 
         this.#setupMesh();
         this.#setupGeometry( config );
 
-        this._setReady( true );
-
-        this.#setupShadow();
+        this.#setupShadow( config.size );
         this.#setupPhysics( config.size );
     }
 
@@ -41,7 +40,19 @@ class PlanetChunk extends BABYLON.Mesh {
 
     stitch( neighbors ) {
 
-        //this.#stitchGeometry( neighbors, this.#size, this.#resolution );
+        //this.#stitchGeometry( neighbors, this.size, this.resolution );
+    }
+
+    toggleShadow( value ) {
+
+        if ( value === true ) {
+
+            this.#addShadow( this.#size );
+
+        } else {
+
+            this.#removeShadow();
+        }
     }
 
     /* override */ dispose() {
@@ -52,6 +63,7 @@ class PlanetChunk extends BABYLON.Mesh {
 
     #setupMesh() {
 
+        this.isPickable = false;
         this.material = this.#planet.material;
         this.parent = this.#planet.root;
     }
@@ -67,7 +79,7 @@ class PlanetChunk extends BABYLON.Mesh {
         //
         //vertexData.normals = []; BABYLON.VertexData.ComputeNormals( vertexData.positions, vertexData.indices, vertexData.normals );
         //
-        vertexData.applyToMesh( this, true );
+        vertexData.applyToMesh( this, false );
     } 
 
     #setupPhysics( size ) {
@@ -75,16 +87,36 @@ class PlanetChunk extends BABYLON.Mesh {
         this.#planet.physics.enable( this, size );
     }
 
-    #setupShadow() {
-        
-        this.#planet.game.star.shadow.cast( this, undefined, undefined, false );        
-        this.#planet.game.star.shadow.receive( this, undefined, undefined, false );  
+    #setupShadow( size ) {
+
+        if ( this.#planet.mask.isEnabled() === true ) {
+
+            this.#addShadow( size );
+        }
+    }
+
+    #addShadow( size ) {
+
+        //causes weird glitch
+        /* if size < this.#planet.game.star.shadow.config.radius / PlanetQuadtree.divisionSizeFactor */
+        if ( this.#doesShadows === false ) {    
+
+            this.#planet.game.star.shadow.cast( this );        
+            this.#planet.game.star.shadow.receive( this );  
+
+            this.#doesShadows = true;
+        }
     }
 
     #removeShadow() {
 
-        this.#planet.game.star.shadow.cast( this, false, undefined, false );        
-        this.#planet.game.star.shadow.receive( this, false, undefined, false );  
+        if ( this.#doesShadows === true ) {
+
+            this.#planet.game.star.shadow.cast( this, false );        
+            this.#planet.game.star.shadow.receive( this, false );  
+
+            this.#doesShadows = false;
+        }
     }
 
     #buildPositions( offset, fixRotationQuaternion, size, resolution ) {
@@ -163,7 +195,7 @@ class PlanetChunk extends BABYLON.Mesh {
     }
 
     #stitchVertex( positions, neighbors, row, col, size, resolution ) {
-
+        //set updatable true!
         const edgeCase = this.#getEdgeCase( neighbors, row, col, size, resolution );
 
         if ( edgeCase !== false ) {
@@ -206,4 +238,5 @@ class PlanetChunk extends BABYLON.Mesh {
     
         return false;
     }
+    
 }

@@ -10,6 +10,8 @@ class SpaceshipVulcan extends Spaceship {
 
     static name = "Vulcan";
 
+    static interactables = [ "glass" ];
+
     /* override */ config = {
 
         seat: new BABYLON.Vector3( 0, 1.5, -1.2 ),

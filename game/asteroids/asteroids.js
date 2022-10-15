@@ -15,8 +15,11 @@ class Asteroids {
     game = null;
     scene = null;
 
-    models = [];
-    
+    variants = {
+
+        keys: [ "a", "b", "c" ]
+    };
+
     list = [];
 
     constructor( game, config ) {
@@ -26,7 +29,7 @@ class Asteroids {
 
         EngineUtils.configure.call( this, config );
 
-        this.#setupModels();
+        this.#setupVariants();
     }
 
     register( type, config ) {
@@ -51,17 +54,36 @@ class Asteroids {
         }
     }
 
-    #setupModels() {
+    #setupVariants() {
+
+        for ( let i = 0; i < this.variants.keys.length; i++ ) {
+
+            this.variants[ this.variants.keys[i] ] = this.#setupModels( this.variants.keys[i] );
+        }
+    }
+
+    #setupModels( variant ) {
         
-        const importLods = this.scene.assets.list.get( "asteroid" ).getChildren();
-        
+        const models = [];
+        const importLods = this.scene.assets.list.get( `asteroid-${ variant }` ).getChildren();
+
         for ( let i = 0; i < importLods.length; i++ ) {
             
-            this.models.push( this.scene.assets.traverse( importLods[i], mesh => {
+            const model = this.scene.assets.traverse( importLods[i], mesh => {
             
-                this.game.star.shadow.receive( mesh, undefined, undefined, false );
-            } ) );
+                if ( i === 0 ) {
+
+                    this.game.star.shadow.receive( mesh );
+                } 
+            } );
+
+            const invMin = Math.round( 1 / AbstractLOD.getMinimum( model.name ) );
+            
+            model.entitymanager = new EntityManager( model.name, this.scene, () => this.game.scene.assets.instance( model, mesh => {} ), invMin * 4, invMin );
+            models.push( model );
         }
+
+        return models;
     }
 
 }

@@ -102,8 +102,7 @@ class Player {
     #createMesh() {
 
         const body = BABYLON.MeshBuilder.CreateCapsule( "player_mesh_body", { height: 2, radius: 0.5, tessellation: 8, subdivisions: 1, capSubdivisions: 3 }, this.scene );
-        //body.convertToFlatShadedMesh();
-        
+
         const head = BABYLON.MeshBuilder.CreateBox( "player_mesh_head", { width: 0.7, height: 0.35, depth: 0.3 }, this.scene );
         head.position.copyFromFloats( 0, 0.5, 0.4 );
 
@@ -112,12 +111,20 @@ class Player {
         this.mesh.removeVerticesData( BABYLON.VertexBuffer.UVKind );
         this.mesh.id = "player";
         this.mesh.name = this.mesh.id;
+        this.mesh.isPickable = false;
         this.mesh.material = new BABYLON.StandardMaterial( "player_material", this.scene );
         this.mesh.material.setColorIntensity( "#ff226b", 0.5 );
+        this.mesh.material.freeze();
         this.mesh.rotationQuaternion = this.mesh.rotation.toQuaternion();
         
-        this.game.star.shadow.cast( this.mesh, undefined, undefined, false );
-        this.game.star.shadow.receive( this.mesh, undefined, undefined, false );
+        this.game.star.shadow.cast( this.mesh );
+        this.game.star.shadow.receive( this.mesh );
+
+        /*
+        var light = new BABYLON.SpotLight("spotLight", new BABYLON.Vector3(0, 0, 0), new BABYLON.Vector3(0, 0, 1), Math.PI / 3, 20, this.scene);
+        light.intensity = 4;
+        light.parent = this.root;
+        */
     }
 
     #setupPhysics() {
@@ -147,14 +154,12 @@ class Player {
         log( "player entered planet" );
 
         this.physics.planet = planet;
-        //this.physics.planet.generator.toggleMask( true );
     }
     
     #onPlanetLeave( newState ) {
         
         log( "player left planet" );
 
-        //this.physics.planet.generator.toggleMask( false );
         this.physics.planet = null;
     }
 

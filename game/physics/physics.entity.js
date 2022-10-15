@@ -233,6 +233,7 @@ class PhysicsEntity {
         }
 
         this.#debugMesh = BABYLON.MeshBuilder.CreateSphere( "debugMesh", { diameter: 1, segments: 8 }, this.#scene );
+        this.#debugMesh.isPickable = false;
         this.#debugMesh.material = this.#scene.debugMaterialRed;
         this.#updateDebug( mesh );
         

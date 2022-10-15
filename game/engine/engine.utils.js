@@ -46,18 +46,31 @@ class EngineUtils {
         return new BABYLON.Vector3( 0, 1000 * 1000 * 1000, 0 );
     }
 
+    static createBoundingCache( node, scaling = null ) {
+    
+        const positionWorld = EngineUtils.getWorldPosition( node );
+
+        const boundingCache = node.getHierarchyBoundingVectors( true );
+        boundingCache.min.subtractInPlace( positionWorld );
+        boundingCache.max.subtractInPlace( positionWorld );
+
+        if ( scaling !== null ) {
+
+            boundingCache.min.multiplyInPlace( scaling );
+            boundingCache.max.multiplyInPlace( scaling );
+        }
+
+        boundingCache.diagonal = boundingCache.max.subtract( boundingCache.min );
+        boundingCache.size = boundingCache.diagonal.length();
+
+        return boundingCache;
+    }
+
     static getBounding( node, force = false ) {
         
         if ( node.boundingCache === undefined || force === true ) {
             
-            const positionWorld = EngineUtils.getWorldPosition( node );
-
-            node.boundingCache = node.getHierarchyBoundingVectors( true );
-            node.boundingCache.min.subtractInPlace( positionWorld );
-            node.boundingCache.max.subtractInPlace( positionWorld );
-
-            node.boundingCache.diagonal = node.boundingCache.max.subtract( node.boundingCache.min );
-            node.boundingCache.size = node.boundingCache.diagonal.length();
+            node.boundingCache = EngineUtils.createBoundingCache( node );
         }
 
         return node.boundingCache;
@@ -79,14 +92,21 @@ class EngineUtils {
 
     static #recurseParentsPosition( result, node ) {
 
-        if ( node.parent !== null ) {
-            
-            result.multiplyInPlace( node.parent.scaling )
-            .applyRotationQuaternionInPlace( node.parent.rotationQuaternion )
-            .addInPlace( node.parent.position );
+        if ( node.parent === null ) {
 
-            EngineUtils.#recurseParentsPosition( result, node.parent );
+            return;
         }
+
+        if ( !node.parent.scaling || !node.parent.rotationQuaternion || !node.parent.position ) {
+
+            return;
+        }
+        
+        result.multiplyInPlace( node.parent.scaling )
+        .applyRotationQuaternionInPlace( node.parent.rotationQuaternion )
+        .addInPlace( node.parent.position );
+
+        EngineUtils.#recurseParentsPosition( result, node.parent );
     }
 
     static makeDebugMaterial( scene, color ) {
@@ -94,6 +114,7 @@ class EngineUtils {
         const debugMaterial = new BABYLON.StandardMaterial( `debug_${ color }`, scene );
         debugMaterial.setColorIntensity( color, 1.0 );
         debugMaterial.wireframe = true;
+        debugMaterial.freeze();
 
         return debugMaterial;
     }
@@ -103,6 +124,20 @@ class EngineUtils {
         const direction = BABYLON.Quaternion.FromLookDirectionRH( forward || node.forward, up || node.up );
 
         node.rotationQuaternion.copyFrom( lerp === undefined ? direction : BABYLON.Quaternion.Slerp( node.rotationQuaternion, direction, lerp ) );
+    }
+
+    static setDirection( node, forward, yawCor = 0, pitchCor = 0, rollCor = 0 ) {
+
+        const yaw = -Math.atan2( forward.z, forward.x ) + Math.PI / 2;
+        const len = Math.sqrt( forward.x * forward.x + forward.z * forward.z );
+        const pitch = -Math.atan2( forward.y, len );
+
+        BABYLON.Quaternion.RotationYawPitchRollToRef( yaw + yawCor, pitch + pitchCor, rollCor, node.rotationQuaternion );
+    }
+
+    static rotate( node, axis, value ) {
+
+        node.rotationQuaternion.multiplyInPlace( BABYLON.Quaternion.RotationAxisToRef( axis, value, BABYLON.TransformNode._RotationAxisCache ) );
     }
 
     static minmax( vector ) {

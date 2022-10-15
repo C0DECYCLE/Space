@@ -8,8 +8,10 @@
 
 class PlanetQuadtree {
 
-    static INSERT_LIMIT = 48;
-    static INSERT_HALF_LIMIT = 16;
+    static divisionSizeFactor = 1.2;
+
+    static INSERT_HALF_LIMIT = 2 ** 4;
+    static INSERT_LIMIT = PlanetQuadtree.INSERT_HALF_LIMIT + 2 ** 5;
 
     suffix = undefined;
 
@@ -51,13 +53,13 @@ class PlanetQuadtree {
 
         const factors = this.#getDistanceDot( params, position );
         
-        if ( factors.distance < size * 1.5 && size > this.#planet.config.min ) {
+        if ( factors.distanceSquared < (size * PlanetQuadtree.divisionSizeFactor) ** 2 && size > this.#planet.config.min ) {
 
             this.#recurseQuad( params, nodeKey, position, size );
             
         } else {
 
-            this.#planet.chunks.node( params, factors, nodeKey, position, this.#fixRotationQuaternion, size, this.#size );
+            this.#planet.chunks.node( params, factors.dot, nodeKey, position, this.#fixRotationQuaternion, size, this.#size );
         }
     }
 
@@ -72,10 +74,10 @@ class PlanetQuadtree {
     #getDistanceDot( params, position ) {
 
         const terrainifyPosition = PlanetUtils.terrainify( this.#planet, position.clone() );
-        const terrainifyWorldRotatePosition = BABYLON.Vector3.TransformCoordinates( terrainifyPosition, this.#planet.root.computeWorldMatrix( true ) );
+        const terrainifyWorldRotatePosition = BABYLON.Vector3.TransformCoordinates( terrainifyPosition, this.#planet.root._worldMatrix );
         
         return {
-            distance: this.#planet.game.camera.getScreenDistance( undefined, terrainifyWorldRotatePosition ),
+            distanceSquared: this.#planet.game.camera.getScreenSquaredDistance( undefined, terrainifyWorldRotatePosition ),
             dot: BABYLON.Vector3.Dot( params.centerToInsertion, terrainifyWorldRotatePosition.subtract( this.#planet.position ).normalize() )
         };
     }
