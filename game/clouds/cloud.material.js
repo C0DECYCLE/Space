@@ -10,25 +10,25 @@ class CloudMaterial extends BABYLON.CustomMaterial {
 
     #clouds = null;
     
-    constructor( clouds ) {
+    constructor( clouds, color ) {
     
-        super( `cloud_material`, clouds.scene );
+        super( `cloud_material_${ color }`, clouds.scene );
 
         this.#clouds = clouds;
 
-        this.#setupColor();
+        this.#setupColor( color );
         this.#setupTransparency();
         this.#setupAttributes();
         this.#hookShader();
+
+        this.#clouds.materials.set( color, this );
     }
 
-    #setupColor() {
-
-        const diffuse = this.#clouds.config.color;
+    #setupColor( color ) {
         
-        this.setColorIntensity( diffuse, 1.0 );
+        this.setColorIntensity( color, 1.0 );
 
-        BABYLON.Color3.LerpToRef( this.emissiveColor, BABYLON.Color3.FromHexString( diffuse ), 0.5, this.emissiveColor );
+        BABYLON.Color3.LerpToRef( this.emissiveColor, BABYLON.Color3.FromHexString( color ), 0.5, this.emissiveColor );
         this.ambientColor.scaleToRef( 1.5, this.ambientColor );
     }
 
@@ -36,6 +36,7 @@ class CloudMaterial extends BABYLON.CustomMaterial {
 
         this.alpha = 0.99;
         this.needDepthPrePass = true;
+        this.backFaceCulling = false;
     }
 
     #setupAttributes() {
@@ -75,7 +76,8 @@ class CloudMaterial extends BABYLON.CustomMaterial {
         attribute vec3 cloudPosition;
         attribute vec3 starLightDirection;
 
-        flat out float planetOcclusion;
+        flat out vec3 vNoisePosition;
+        flat out float vPlanetOcclusion;
         float cloudLightBlur = 0.5;
         float cloudLightDark = 0.05;
 
@@ -84,13 +86,14 @@ class CloudMaterial extends BABYLON.CustomMaterial {
     #getVertex_Before_PositionUpdated() { return `
         
         positionUpdated *= 1.0 + ( noise( (position + randomValue) * 2.0 ) - 0.5 ) * 0.75;
+        vNoisePosition = cloudPosition + positionUpdated * 2.0;
 
         float cloudLightDot = dot( normalize( cloudPosition ), starLightDirection ) * -1.0;
-        planetOcclusion = 1.0;
+        vPlanetOcclusion = 1.0;
         if ( cloudLightDot < cloudLightBlur ) {
-            planetOcclusion = cloudLightDark;
+            vPlanetOcclusion = cloudLightDark;
             if ( cloudLightDot > -cloudLightBlur ) {
-                planetOcclusion = cloudLightDark + (1.0 - cloudLightDark) * ((cloudLightDot + cloudLightBlur) / (cloudLightBlur * 2.0));
+                vPlanetOcclusion = cloudLightDark + (1.0 - cloudLightDark) * ((cloudLightDot + cloudLightBlur) / (cloudLightBlur * 2.0));
             }
         }
 
@@ -98,21 +101,28 @@ class CloudMaterial extends BABYLON.CustomMaterial {
 
     #getFragment_Definitions() { return `
 
-        flat in float planetOcclusion;
+        ${ EngineUtilsShader.code }
+
+        flat in vec3 vNoisePosition;
+        flat in float vPlanetOcclusion;
         
     `; }
 
     #getFragment_Custom_Diffuse() { return `
 
-        diffuseColor *= planetOcclusion;
+        diffuseColor *= vPlanetOcclusion;
         
     `; }
 
     #getFragment_Before_FragColor() { return `
 
-        color.rgb -= emissiveColor * (1.0 - planetOcclusion) * 0.65;
-        color.rgb *= 0.05 + planetOcclusion;
-        color.a *= 0.75 + planetOcclusion * 0.25;
+        color.rgb -= emissiveColor * (1.0 - vPlanetOcclusion) * 0.75;
+        color.rgb += vAmbientColor * (1.0 - vPlanetOcclusion) * 0.65;
+        color.rgb = clamp( color.rgb, 0.0, 1.0 );
+        color.rgb *= 0.05 + vPlanetOcclusion;
+        color.a = 0.5 + vPlanetOcclusion * 0.5;
+        color.a *= 0.5 + noise( vNoisePosition );
+        color = clamp( color, 0.0, 1.0 );
         
     `; }
 

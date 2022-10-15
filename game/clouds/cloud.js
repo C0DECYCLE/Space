@@ -15,18 +15,20 @@ class Cloud extends EntityLOD {
     randomValue = 0;
     starLightDirection = new BABYLON.Vector3();
 
-    constructor( game, config ) {
+    #models = null;
+
+    constructor( game, models, config ) {
 
         super( game, false, false, ( instance ) => this.#onLODRequest( instance ) );
 
         EngineUtils.configure.call( this, config );
          
-        this.#createModels();   
+        this.#createModels( models );   
     }
 
     post() {
 
-        this.setBounding( EngineUtils.createBoundingCache( this.game.clouds.models[0], this.scaling ) );
+        this.setBounding( EngineUtils.createBoundingCache( this.#models[0], this.scaling ) );
     }
 
     updateStarLightDirection( starLightDirection ) {
@@ -35,9 +37,10 @@ class Cloud extends EntityLOD {
         EngineUtilsShader.setInstanceAttribute( this.getInstance(), "starLightDirection", this.starLightDirection );
     }
 
-    #createModels() {
+    #createModels( models ) {
         
-        this.fromModels( this.game.clouds.models );
+        this.#models = models;
+        this.fromModels( this.#models );
     }
 
     #onLODRequest( instance ) {

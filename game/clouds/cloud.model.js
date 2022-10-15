@@ -10,20 +10,20 @@ class CloudModel extends BABYLON.Mesh {
 
     #clouds = null;
     
-    /* override */ constructor( clouds, level, subdivisions, min ) {
+    /* override */ constructor( clouds, level, subdivisions, min, material ) {
     
         super( `cloud_${ level }_${ min }`, clouds.scene );
     
         this.#clouds = clouds;
 
         this.#setupGeometry( subdivisions );
-        this.#setupMesh();
+        this.#setupMesh( material );
     }
 
-    #setupMesh() {
+    #setupMesh( material ) {
 
         this.isPickable = false;
-        this.material = this.#clouds.material;
+        this.material = material;
 
         EngineUtilsShader.registerInstanceAttribute( this, "randomValue", 0 );
         EngineUtilsShader.registerInstanceAttribute( this, "cloudPosition", new BABYLON.Vector3() );

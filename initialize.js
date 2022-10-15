@@ -74,14 +74,14 @@ Space.add( "install", function() {
 
         { 
             key: 1, radius: 2048, spin: 0.005, 
-            gravity: 0.7, atmosphere: 512, waveLengths: new BABYLON.Color3( 450, 500, 680 ), //clouds: { },
+            gravity: 0.7, atmosphere: 512, waveLengths: new BABYLON.Color3( 450, 500, 680 ), clouds: { color: "#a56325", cullScale: 0.003, limit: 0.375, mainScale: 0.85, heightScale: 0.5 },
             seed: new BABYLON.Vector3( 8513, -9011, -5910 ), variant: "1", mountainy: 3.5, warp: 1.0,
             colors: { main: "#f1993b", second: "#fab05c", third: "#945e41", steep: "#51515f" }
         },
 
         { 
             key: 2, radius: 4096, spin: 0.0025, 
-            gravity: 0.8, atmosphere: 1024, waveLengths: new BABYLON.Color3( 700, 600, 500 ), clouds: { },
+            gravity: 0.8, atmosphere: 1024, waveLengths: new BABYLON.Color3( 700, 600, 500 ), clouds: {},
             seed: new BABYLON.Vector3( -925, -2011, 7770 ),
             colors: { main: "#7a8161", second: "#856160", third: "#a8ceb0", steep: "#252123" }
         },
@@ -99,10 +99,6 @@ Space.add( "install", function() {
     this.asteroids.register( "ring", { key: 0, seed: "7417", radius: 5 * 1000, spread: 400, height: 80, density: 0.04 } );
     this.asteroids.register( "ring", { key: 1, seed: "4674", radius: 5 * 1000, spread: 1200, height: 40, density: 0.03 } );
 
-    // diffrent cloud colors
-
-    // diffrent cloud variant config, apply to 2. planet
-    // asteroids adjust min values
 
 } );
 
@@ -117,7 +113,7 @@ Space.add( "stage", function() {
     this.asteroids.list[0].position.copyFrom( this.planets.list[0].position );
     this.asteroids.list[1].position.copyFrom( this.planets.list[0].position );
 
-    this.spaceships.list[0].position.copyFrom( this.planets.list[2].position ).addInPlace( new BABYLON.Vector3( 5 * 1000, 0, 0 ) );
+    this.spaceships.list[0].position.copyFrom( this.planets.list[0].position ).addInPlace( new BABYLON.Vector3( 5 * 1000, 0, 0 ) );
     this.spaceships.list[0].root.rotate( BABYLON.Axis.Y, 90 * EngineUtils.toRadian, BABYLON.Space.LOCAL );
     
     this.player.position.copyFrom( this.spaceships.list[0].position ).addInPlace( new BABYLON.Vector3( 0, 0, -10 ) );

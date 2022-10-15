@@ -17,15 +17,12 @@ class Clouds {
 
     config = {
 
-        color: "#ffffff"
     };
 
     game = null;
     scene = null;
-
-    material = null;
-    models = [];
     
+    materials = new Map();
     list = [];
 
     constructor( game, config ) {
@@ -34,23 +31,23 @@ class Clouds {
         this.scene = this.game.scene;
 
         EngineUtils.configure.call( this, config );
-
-        this.#createModels( Clouds.lods );
     }
 
-    #createModels( blueprints ) {
-        
-        this.material = new CloudMaterial( this );
+    createModels( blueprints, material ) {
+
+        const models = [];
 
         for ( let i = 0; i < blueprints.length; i++ ) {
 
-            this.models.push( this.#createModel( i, blueprints[i][0], blueprints[i][1] ) );
+            models.push( this.#createModel( i, blueprints[i][0], blueprints[i][1], material ) );
         }
+
+        return models;
     }
 
-    #createModel( level, subdivisions, min ) {
+    #createModel( level, subdivisions, min, material ) {
 
-        const mesh = new CloudModel( this, level, subdivisions, min );
+        const mesh = new CloudModel( this, level, subdivisions, min, material );
 
         mesh.parent = this.game.scene.assets.cache;
         mesh.setEnabled( false );

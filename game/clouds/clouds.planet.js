@@ -12,14 +12,18 @@ class CloudsPlanet {
 
     config = {
 
+        color: "#ffffff",
         seed: undefined,
         
-        density: 0.015,
-        cullScale: 0.001,
+        density: 0.04,
+        cullScale: 0.00175,
         limit: 0.35,
-        mainScale: 2
+        mainScale: 1.5,
+        heightScale: 1.0
     };
 
+    material = null;
+    models = null;
     list = [];
 
     #clouds = null;
@@ -34,6 +38,7 @@ class CloudsPlanet {
 
         EngineUtils.configure.call( this, config );
 
+        this.#setupModels();
         this.#setupPerlin();
         this.#spawnClouds();
         this.#register();
@@ -45,6 +50,12 @@ class CloudsPlanet {
 
             this.#updateClouds( distance );
         }
+    }
+
+    #setupModels() {
+
+        this.material = this.#clouds.materials.get( this.config.color ) || new CloudMaterial( this.#clouds, this.config.color );
+        this.models = this.#clouds.createModels( Clouds.lods, this.material );
     }
 
     #setupPerlin() {
@@ -84,15 +95,15 @@ class CloudsPlanet {
 
     #makeCloud( position, nSamples, cull ) {
 
-        const cloud = new Cloud( this.#clouds.game, {} );
+        const cloud = new Cloud( this.#clouds.game, this.models, {} );
 
         cloud.position.copyFrom( position );
 
         EngineUtils.setDirection( cloud, position.negate(), 0, -Math.PI / 2, 0 );
         EngineUtils.rotate( cloud, BABYLON.Axis.Y, Math.random() * Math.PI * 2 );
 
-        cloud.scaling.copyFromFloats( Math.random(), Math.random(), Math.random() ).scaleInPlace( 0.2 );
-        cloud.scaling.addInPlaceFromFloats( 0.7, 0.6, 0.7 );
+        cloud.scaling.copyFromFloats( Math.random(), Math.random(), Math.random() ).scaleInPlace( 0.25 );
+        cloud.scaling.addInPlaceFromFloats( 0.75, 0.5, 0.75 );
         cloud.scaling.scaleInPlace( 2 + cull * 3 ).scaleInPlace( 100 * this.config.mainScale );
 
         cloud.parent = this.#planet.root;
@@ -114,7 +125,7 @@ class CloudsPlanet {
 
         const height = this.#noise( position.clone().scaleInPlace( this.#planet.config.radius * -this.config.cullScale * 2.5 ).addInPlace( noiseOffset ) );
 
-        position.scaleInPlace( this.#planet.config.radius + this.#planet.config.maxHeight * (0.5 + height * 0.5) );
+        position.scaleInPlace( this.#planet.config.radius + this.#planet.config.maxHeight * (0.5 + height * 0.5) * this.config.heightScale );
 
         return position;
     }
