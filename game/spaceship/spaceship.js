@@ -44,6 +44,7 @@ class Spaceship {
     spaceships = null;
 
     lod = null;
+    thrusters = null;
     physics = null;
 
     #seatDiffrence = new BABYLON.Vector3();
@@ -93,11 +94,21 @@ class Spaceship {
 
         return this.#isLanded;
     }
+    
+    post() {
+
+        this.#addThrusters();
+    }
 
     update() {
 
         this.lod.update();
         this.physics.update();
+
+        if ( this.thrusters !== null ) {
+            
+            this.thrusters.update();
+        }
     }
 
     planetInsert( planet, distance, planetThreashold ) {
@@ -143,6 +154,11 @@ class Spaceship {
         this.root.name = `spaceships_spaceship${ this.config.key }`;
 
         this.game.ui.registerMarker( this.root, { type: "hint" } );
+    }
+
+    #addThrusters() {
+        
+        this.thrusters = new SpaceshipThrusters( this, this.config.thrusters );
     }
 
     #addPhysics() {

@@ -100,6 +100,9 @@ Space.add( "install", function() {
     this.asteroids.register( "ring", { key: 1, seed: "4674", radius: 5 * 1000, spread: 1200, height: 40, density: 0.03 } );
 
 
+    //adjust asteroid min values
+    //investigate planet black
+
 } );
 
 Space.add( "stage", function() {

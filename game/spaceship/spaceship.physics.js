@@ -24,6 +24,16 @@ class SpaceshipPhysics extends PhysicsEntity {
         this.#setupTravel();
     }
 
+    get thrust() {
+
+        if ( this.spaceship.isLanded === true || this.travel.isJumping === true ) {
+
+            return 0.0;
+        }
+
+        return this.#localVelocity.length();
+    }
+
     /* override */ update() {
         
         this.preUpdate();
