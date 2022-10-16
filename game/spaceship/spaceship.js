@@ -45,6 +45,7 @@ class Spaceship {
 
     lod = null;
     thrusters = null;
+    travel = null;
     physics = null;
 
     #seatDiffrence = new BABYLON.Vector3();
@@ -61,6 +62,7 @@ class Spaceship {
         EngineUtils.configure.call( this, config );
         
         this.#createLod();   
+        this.#setupTravel();
         this.#addPhysics();
         this.#registerInteractable();
     }
@@ -103,6 +105,7 @@ class Spaceship {
     update() {
 
         this.lod.update();
+        this.travel.update();
         this.physics.update();
 
         if ( this.thrusters !== null ) {
@@ -154,6 +157,11 @@ class Spaceship {
         this.root.name = `spaceships_spaceship${ this.config.key }`;
 
         this.game.ui.registerMarker( this.root, { type: "hint" } );
+    }
+
+    #setupTravel() {
+        
+        this.travel = new SpaceshipTravel( this );
     }
 
     #addThrusters() {
