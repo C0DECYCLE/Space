@@ -45,8 +45,8 @@ class SpaceshipTravel {
         this.system.minLifeTime = 4;
         this.system.maxLifeTime = 8;
 
-        this.system.minEmitPower_c = 5;
-        this.system.maxEmitPower_c = 10;
+        this.system.minEmitPower_c = 10;
+        this.system.maxEmitPower_c = 15;
 
         this.system.minAngularSpeed = 0;
         this.system.maxAngularSpeed = Math.PI / 2.0;
@@ -80,7 +80,7 @@ class SpaceshipTravel {
             this.system.minEmitPower = 0;
             this.system.maxEmitPower = 0;
 
-            new TWEEN.Tween( this.system ).to( { emitRate: this.system.emitRate_c, minEmitPower: this.system.minEmitPower_c, maxEmitPower: this.system.maxEmitPower_c }, 2000 ).start();
+            new TWEEN.Tween( this.system ).to( { emitRate: this.system.emitRate_c, minEmitPower: this.system.minEmitPower_c, maxEmitPower: this.system.maxEmitPower_c }, 500 ).start();
 
             this.#isStarted = true;
         }
