@@ -11,6 +11,7 @@ class SpaceshipThrusters {
     list = [];
 
     #spaceship = null;
+    #isPaused = false;
 
     constructor( spaceship, config ) {
 
@@ -21,6 +22,15 @@ class SpaceshipThrusters {
 
     update() {
         
+        if ( this.#spaceship.lod.isVisible === false ) {
+
+            this.#pause();
+
+            return;
+        }
+        
+        this.#resume();
+
         const thrust = this.#spaceship.physics.thrust * 20;
 
         for ( let i = 0; i < this.list.length; i++ ) {
@@ -53,8 +63,6 @@ class SpaceshipThrusters {
         thruster.minLifeTime = 0.2;
         thruster.maxLifeTime = 0.8;
 
-        thruster.minEmitPower = 0.1;
-
         thruster.minAngularSpeed = Math.PI;
         thruster.maxAngularSpeed = Math.PI * 2.0;
         thruster.minInitialRotation = 0;
@@ -82,6 +90,32 @@ class SpaceshipThrusters {
         thruster.maxEmitPower = 0.4 * thrust;
 
         thruster.updateSpeed = 0.02 + thrust * 0.003;
+    }
+
+    #pause() {
+
+        if ( this.#isPaused === false ) {
+
+            for ( let i = 0; i < this.list.length; i++ ) {
+
+                this.list[i].stop();
+            }
+            
+            this.#isPaused = true;
+        }
+    }
+
+    #resume() {
+
+        if ( this.#isPaused === true ) {
+
+            for ( let i = 0; i < this.list.length; i++ ) {
+
+                this.list[i].start();
+            }
+
+            this.#isPaused = false;
+        }
     }
 
 }
