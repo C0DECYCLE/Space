@@ -15,7 +15,7 @@ class StarShadow {
 
         bias: 0.005,
         blend: 0.3,
-        lambda: 0.98,
+        lambda: 0.85,
 
         filter: "PCF", //"NONE" "PCF" "CONHRD"
         quality: "HIGH", //LOW MEDIUM HIGH
@@ -30,7 +30,7 @@ class StarShadow {
     #star = null;
     #light = null;
 
-    #debug = true;
+    #debug = false;
     #frustumViewer = null;
 
     constructor( star, light, config ) {

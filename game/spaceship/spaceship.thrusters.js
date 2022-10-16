@@ -50,8 +50,8 @@ class SpaceshipThrusters {
         thruster.minSize = 0.2;
         thruster.maxSize = 0.6;
         
-        thruster.minLifeTime = 0.1;
-        thruster.maxLifeTime = 1.0;
+        thruster.minLifeTime = 0.2;
+        thruster.maxLifeTime = 0.8;
 
         thruster.minEmitPower = 0.1;
 

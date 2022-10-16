@@ -67,7 +67,7 @@ class Planets {
             const distance = this.camera.getScreenDistance( planet.root );
             const planetThreashold = planet.config.radius + planet.config.influence;
             
-            //this.player.planetInsert( planet, distance, planetThreashold );
+            this.player.planetInsert( planet, distance, planetThreashold );
             this.spaceships.planetInsert( planet, distance, planetThreashold );
            
             planet.helper.toggleShadow( distance < planet.config.radius * 5 );
