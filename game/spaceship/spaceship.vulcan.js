@@ -16,6 +16,12 @@ class SpaceshipVulcan extends Spaceship {
 
         seat: new BABYLON.Vector3( 0, 1.5, -1.2 ),
 
+        thrusters: [
+
+            new BABYLON.Vector3( -3.5, -0.15, -12 ),
+            new BABYLON.Vector3( 3.5, -0.15, -12 )
+        ],
+
         mainAcceleration: 0.01,
         brakeAcceleration: 0.25,
         minorAcceleration: 0.0025,
@@ -30,6 +36,8 @@ class SpaceshipVulcan extends Spaceship {
         super( game, config );
         
         EngineUtils.configure.call( this, config );
+
+        this.post();
     }
 
 }

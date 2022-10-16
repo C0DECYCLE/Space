@@ -20,6 +20,11 @@ class PlanetHelper {
         //this.#debugInfluence();
     }
 
+    get maskEnabled() {
+
+        return this.#maskValue;
+    }
+
     toggleShadow( value ) {
 
         if ( this.#maskValue !== value ) {
@@ -32,9 +37,9 @@ class PlanetHelper {
         }
     }
 
-    getOcclusionFallOf( distance ) {
+    getOcclusionFallOf( distance, c = 0.8 ) {
 
-        return ( 1 - ( (distance / this.#planet.config.radius) - 0.8 ) ).clamp( -1.05, 0.9 ) || -1.05;
+        return ( 1 - ( (distance / this.#planet.config.radius) - c ) ).clamp( -1.05, 0.9 ) || -1.05;
     }
 
     createBasicMaterial() {

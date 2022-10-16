@@ -10,12 +10,12 @@ class StarShadow {
 
     config = {
 
-        radius: 4096 * 2,
+        radius: 2048,
         resolution: 2048,
 
         bias: 0.005,
         blend: 0.3,
-        lambda: 0.98,
+        lambda: 0.85,
 
         filter: "PCF", //"NONE" "PCF" "CONHRD"
         quality: "HIGH", //LOW MEDIUM HIGH
