@@ -129,7 +129,7 @@ class Planet {
 
     update() {
 
-        this.#updateLod();
+        this.lod.update();
         this.#updateSpin();
     }
 
@@ -197,11 +197,6 @@ class Planet {
 
             this.clouds.update( distance );
         }
-    }
-
-    #updateLod() {
-
-        this.lod.update();
     }
 
     #updateAtmosphereDensity( distance ) {

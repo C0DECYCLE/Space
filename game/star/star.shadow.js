@@ -10,7 +10,7 @@ class StarShadow {
 
     config = {
 
-        radius: 4096 * 2,
+        radius: 2048,
         resolution: 2048,
 
         bias: 0.005,
@@ -30,7 +30,7 @@ class StarShadow {
     #star = null;
     #light = null;
 
-    #debug = false;
+    #debug = true;
     #frustumViewer = null;
 
     constructor( star, light, config ) {

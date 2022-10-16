@@ -89,7 +89,7 @@ class PlanetChunk extends BABYLON.Mesh {
 
     #setupShadow( size ) {
 
-        if ( this.#planet.mask.isEnabled() === true ) {
+        if ( this.#planet.helper.maskEnabled === true ) {
 
             this.#addShadow( size );
         }
@@ -98,10 +98,10 @@ class PlanetChunk extends BABYLON.Mesh {
     #addShadow( size ) {
 
         //causes weird glitch
-        /* if size < this.#planet.game.star.shadow.config.radius / PlanetQuadtree.divisionSizeFactor */
+        //if ( size < this.#planet.game.star.shadow.config.radius / PlanetQuadtree.divisionSizeFactor ) {
         if ( this.#doesShadows === false ) {    
 
-            this.#planet.game.star.shadow.cast( this );        
+            //this.#planet.game.star.shadow.cast( this );        
             this.#planet.game.star.shadow.receive( this );  
 
             this.#doesShadows = true;
@@ -112,7 +112,7 @@ class PlanetChunk extends BABYLON.Mesh {
 
         if ( this.#doesShadows === true ) {
 
-            this.#planet.game.star.shadow.cast( this, false );        
+            //this.#planet.game.star.shadow.cast( this, false );        
             this.#planet.game.star.shadow.receive( this, false );  
 
             this.#doesShadows = false;

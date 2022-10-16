@@ -44,7 +44,7 @@ class PlanetChunks {
             distanceRadiusFactor: distance / this.#planet.config.radius,
 
             centerToInsertion: this.#planet.game.camera.position.subtract( this.#planet.position ).normalize(),
-            occlusionFallOf: this.#planet.helper.getOcclusionFallOf( distance )
+            occlusionFallOf: this.#planet.helper.getOcclusionFallOf( distance, 0.9 )
         };
         
         this.#planet.faces.forEach( ( face, suffic ) => face.insert( params ) );
