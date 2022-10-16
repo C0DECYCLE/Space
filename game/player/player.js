@@ -10,7 +10,7 @@ class Player {
 
     config = {
 
-        float: 0.05,
+        float: 0.05, //0.005
 
         walk: 0.005,
         run: 0.015,
