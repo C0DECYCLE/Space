@@ -18,7 +18,11 @@ class Asteroid extends EntityLOD {
 
     constructor( game, config ) {
 
-        super( game, true, true );
+        super( game, ( instance, value ) => { 
+
+            this.game.star.shadow.cast( instance, value );  
+
+        }, true );
 
         EngineUtils.configure.call( this, config );
         

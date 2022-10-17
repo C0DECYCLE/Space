@@ -54,8 +54,8 @@ class SpaceshipThrusters {
         thruster.emitter = this.#spaceship.root;
         thruster.config = config;
         
-        thruster.minEmitBox = new BABYLON.Vector3( -0.1, -0.8, -0.4 );  
-        thruster.maxEmitBox = new BABYLON.Vector3( 0.1, 0.8, 0.4 );
+        thruster.minEmitBox = new BABYLON.Vector3( -0.5, -0.8, -0.1 );  
+        thruster.maxEmitBox = new BABYLON.Vector3( 0.5, 0.8, 0.1 );
 
         thruster.minSize = 0.2;
         thruster.maxSize = 0.6;

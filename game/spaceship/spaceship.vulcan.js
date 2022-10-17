@@ -14,12 +14,12 @@ class SpaceshipVulcan extends Spaceship {
 
     /* override */ config = {
 
-        seat: new BABYLON.Vector3( 0, 1.5, -1.2 ),
+        seat: new BABYLON.Vector3( 0, 0.75, 7.25 ),
 
         thrusters: [
 
-            new BABYLON.Vector3( -3.5, -0.15, -12 ),
-            new BABYLON.Vector3( 3.5, -0.15, -12 )
+            new BABYLON.Vector3( -2, 0, -7.25 ),
+            new BABYLON.Vector3( 2, 0, -7.25 )
         ],
 
         mainAcceleration: 0.01,

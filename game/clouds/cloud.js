@@ -19,7 +19,7 @@ class Cloud extends EntityLOD {
 
     constructor( game, models, config ) {
 
-        super( game, false, false, ( instance ) => this.#onLODRequest( instance ) );
+        super( game, undefined, false, ( instance ) => this.#onLODRequest( instance ) );
 
         EngineUtils.configure.call( this, config );
          

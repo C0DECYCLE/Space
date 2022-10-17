@@ -8,7 +8,7 @@
 
 class PlayerInteraction {
 
-    static RADIUS = 8;
+    static RADIUS = 4;
     static EDGE = 8;
 
     list = [];

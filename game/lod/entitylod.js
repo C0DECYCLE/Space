@@ -13,19 +13,19 @@ class EntityLOD extends AbstractLOD {
     scaling = BABYLON.Vector3.One();
     parent = null;
 
+    #doShadow = undefined;
     #doCollidable = false;
-    #doShadow = false;
     #onRequest = undefined;
     #onReturn = undefined;
 
     #currentEntity = null;
 
-    /* override */ constructor( game, doCollidable = false, doShadow = false, onRequest = undefined, onReturn = undefined ) {
+    /* override */ constructor( game, doShadow = undefined, doCollidable = false, onRequest = undefined, onReturn = undefined ) {
 
         super( game );
 
-        this.#doCollidable = doCollidable;
         this.#doShadow = doShadow;
+        this.#doCollidable = doCollidable;
         this.#onRequest = onRequest;
         this.#onReturn = onReturn;
     }
@@ -62,10 +62,7 @@ class EntityLOD extends AbstractLOD {
                 PhysicsEntity.collidable( this.#currentEntity, undefined, false );
             }
 
-            if ( this.#doShadow === true ) {
-
-                this.game.star.shadow.cast( this.#currentEntity, false );        
-            }
+            this.#doShadow?.( this.#currentEntity, false );
 
             this.#currentEntity = this.levels[ currentLevel ][0].return( this.#currentEntity );
             super.disposeCurrent( currentLevel );
@@ -89,9 +86,9 @@ class EntityLOD extends AbstractLOD {
                 PhysicsEntity.collidable( this.#currentEntity );
             }
 
-            if ( this.#doShadow === true && level === 0 ) {
-
-                this.game.star.shadow.cast( this.#currentEntity );        
+            if ( level === 0 ) {
+                
+                this.#doShadow?.( this.#currentEntity, true );     
             }
 
             this.#onRequest?.( this.#currentEntity );
