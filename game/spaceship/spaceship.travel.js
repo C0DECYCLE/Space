@@ -42,8 +42,8 @@ class SpaceshipTravel {
         this.system.minSize = 0.2;
         this.system.maxSize = 0.4;
         
-        this.system.minLifeTime = 4;
-        this.system.maxLifeTime = 8;
+        this.system.minLifeTime = 8;
+        this.system.maxLifeTime = 12;
 
         this.system.minEmitPower_c = 10;
         this.system.maxEmitPower_c = 15;

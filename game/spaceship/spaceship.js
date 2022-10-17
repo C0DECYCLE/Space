@@ -12,7 +12,7 @@ class Spaceship {
         
         this.model = [];
         
-        const importLods = game.scene.assets.list.get( `spaceship_${ this.name.toLowerCase() }` ).getChildren();
+        const importLods = game.scene.assets.list.get( `spaceship-${ this.name.toLowerCase() }` ).getChildren();
         
         for ( let i = 0; i < importLods.length; i++ ) {
             
@@ -151,7 +151,11 @@ class Spaceship {
 
     #createLod() {
 
-        this.lod = new LOD( this.game, true );
+        this.lod = new LOD( this.game, ( instance, value ) => { 
+
+            this.game.star.shadow.cast( instance, value, true ); 
+        } );
+
         this.lod.fromModels( this.constructor.model, ( mesh, level ) => {} );
 
         this.root.name = `spaceships_spaceship${ this.config.key }`;
@@ -176,7 +180,7 @@ class Spaceship {
 
     #registerInteractable() {
         
-        const cockpit = this.root.getChildMeshes( false, mesh => mesh.name == "i-glass" )[0];
+        const cockpit = this.root.getChildMeshes( false, mesh => mesh.name.split("i-")[1] == "glass" )[0];
 
         this.game.player.interaction.register( cockpit, () => {
 

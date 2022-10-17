@@ -44,9 +44,9 @@ class StarShadow {
         this.#createGenerator();
     }
 
-    cast( mesh, value /*, recursiv = false, allowPause*/ ) {
+    cast( mesh, value, recursiv = false /*, allowPause*/ ) {
 
-        this.#meshRecurse( mesh, ( m ) => this.#meshCast( m, value /*, allowPause*/ ), false/*recursiv*/ );
+        this.#meshRecurse( mesh, ( m ) => this.#meshCast( m, value /*, allowPause*/ ), recursiv );
         /*
         if ( this.config.defaultPause === true ) {
 
@@ -55,9 +55,9 @@ class StarShadow {
         */
     }
  
-    receive( mesh, value /*, recursiv = false, allowPause*/ ) {
+    receive( mesh, value, recursiv = false /*, allowPause*/ ) {
         
-        this.#meshRecurse( mesh, ( m ) => this.#meshReceive( m, value /*, allowPause*/ ), false/*recursiv*/ );
+        this.#meshRecurse( mesh, ( m ) => this.#meshReceive( m, value /*, allowPause*/ ), recursiv );
         /*
         if ( this.config.defaultPause === true ) {
 

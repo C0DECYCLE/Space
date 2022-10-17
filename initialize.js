@@ -30,7 +30,7 @@ Space.addOnReady( function() {
         { key: "asteroid-b", path: "assets/models/asteroid-b.glb" },
         { key: "asteroid-c", path: "assets/models/asteroid-c.glb" },
 
-        { key: "spaceship_vulcan", path: "assets/models/spaceship_vulcan.glb" }
+        { key: "spaceship-vulcan", path: "assets/models/spaceship-vulcan.glb" }
     ] );
     
 
@@ -115,7 +115,7 @@ Space.add( "stage", function() {
     this.asteroids.list[0].position.copyFrom( this.planets.list[0].position );
     this.asteroids.list[1].position.copyFrom( this.planets.list[0].position );
 
-    this.spaceships.list[0].position.copyFrom( this.planets.list[2].position ).addInPlace( new BABYLON.Vector3( 5 * 1000, 0, 0 ) );
+    this.spaceships.list[0].position.copyFrom( this.planets.list[0].position ).addInPlace( new BABYLON.Vector3( 5 * 1000, 0, 0 ) );
     this.spaceships.list[0].root.rotate( BABYLON.Axis.Y, 90 * EngineUtils.toRadian, BABYLON.Space.LOCAL );
     
     this.player.position.copyFrom( this.spaceships.list[0].position ).addInPlace( new BABYLON.Vector3( 0, 0, -10 ) );

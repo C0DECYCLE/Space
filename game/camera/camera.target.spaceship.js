@@ -67,7 +67,7 @@ class CameraTargetSpaceship extends CameraTarget {
 
     #adaptOffsetRadius( spaceship ) {
 
-        this.config.offsetRadius = EngineUtils.getBoundingSize( spaceship.root );
+        this.config.offsetRadius = EngineUtils.getBoundingSize( spaceship.root ) * 1.2;
     }
 
 }

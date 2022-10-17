@@ -8,9 +8,9 @@
 
 class LOD extends AbstractLOD {
 
-    #doShadow = false;
+    #doShadow = undefined;
     
-    /* override */ constructor( game, doShadow = false ) {
+    /* override */ constructor( game, doShadow = undefined ) {
 
         super( game );
 
@@ -82,10 +82,7 @@ class LOD extends AbstractLOD {
 
             this.levels[ currentLevel ][0].setEnabled( false );
             
-            if ( this.#doShadow === true ) {
-
-                this.game.star.shadow.cast( this.levels[ currentLevel ][0], false );        
-            }
+            this.#doShadow?.( this.levels[ currentLevel ][0], false );
 
             super.disposeCurrent( currentLevel );
         }
@@ -97,9 +94,9 @@ class LOD extends AbstractLOD {
 
             super.makeCurrent( level );
             
-            if ( this.#doShadow === true && level === 0 ) {
+            if ( level === 0 ) {
                 
-                this.game.star.shadow.cast( this.levels[ level ][0] );        
+                this.#doShadow?.( this.levels[ level ][0], true );      
             }
 
             this.levels[ level ][0].setEnabled( true );
