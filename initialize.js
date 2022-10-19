@@ -30,6 +30,8 @@ Space.addOnReady( function() {
         { key: "asteroid-b", path: "assets/models/asteroid-b.glb" },
         { key: "asteroid-c", path: "assets/models/asteroid-c.glb" },
 
+        { key: "tree-a", path: "assets/models/tree-a.glb" },
+
         { key: "spaceship-vulcan", path: "assets/models/spaceship-vulcan.glb" }
     ] );
     
