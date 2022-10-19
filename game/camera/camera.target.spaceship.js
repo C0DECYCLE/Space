@@ -21,6 +21,9 @@ class CameraTargetSpaceship extends CameraTarget {
         follow: 0.0015
     };
 
+    #followXVelocity = 0;
+    #followYVelocity = 0;
+
     /* override */ constructor( camera, config ) {
 
         super( camera, config );
@@ -38,6 +41,8 @@ class CameraTargetSpaceship extends CameraTarget {
 
             this.focus();
         }
+
+        this.#applyFollowVelocity( spaceship );
     }
 
     /* override */ onPointerMove( spaceship, event ) {
@@ -55,6 +60,12 @@ class CameraTargetSpaceship extends CameraTarget {
         }
     }
 
+    /* override */ followPointer( spaceship, event ) {
+        
+        this.#followXVelocity += event.event.movementX * this.config.follow * 0.1;
+        this.#followYVelocity += event.event.movementY * this.config.follow * 0.1;
+    }
+
     /* override */ syncPosition( spaceship ) {
 
         if ( spaceship.physics.travel.isJumping === true ) {
@@ -68,6 +79,17 @@ class CameraTargetSpaceship extends CameraTarget {
     #adaptOffsetRadius( spaceship ) {
 
         this.config.offsetRadius = EngineUtils.getBoundingSize( spaceship.root ) * 1.2;
+    }
+
+    #applyFollowVelocity( spaceship ) {
+
+        const deltaCorrection = this.camera.game.engine.deltaCorrection;
+
+        spaceship.root.rotate( BABYLON.Axis.Y, this.#followXVelocity * deltaCorrection, BABYLON.Space.LOCAL );
+        spaceship.root.rotate( BABYLON.Axis.X, this.#followYVelocity * deltaCorrection, BABYLON.Space.LOCAL );
+
+        this.#followXVelocity = BABYLON.Scalar.Lerp( this.#followXVelocity, 0, 0.05 );
+        this.#followYVelocity = BABYLON.Scalar.Lerp( this.#followYVelocity, 0, 0.05 );
     }
 
 }
