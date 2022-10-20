@@ -80,14 +80,14 @@ class EntityLOD extends AbstractLOD {
             this.#currentEntity.rotationQuaternion.copyFrom( this.rotationQuaternion );
             this.#currentEntity.scaling.copyFrom( this.scaling );
             this.#currentEntity.parent = this.parent;
-    
-            if ( this.#doCollidable === true && level === 0 ) {
-    
-                PhysicsEntity.collidable( this.#currentEntity );
-            }
 
             if ( level === 0 ) {
                 
+                if ( this.#doCollidable === true ) {
+    
+                    PhysicsEntity.collidable( this.#currentEntity );
+                }
+
                 this.#doShadow?.( this.#currentEntity, true );     
             }
 

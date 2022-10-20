@@ -99,8 +99,8 @@ class CloudsPlanet {
 
         cloud.position.copyFrom( position );
 
-        EngineUtils.setDirection( cloud, position.negate(), 0, -Math.PI / 2, 0 );
-        EngineUtils.rotate( cloud, BABYLON.Axis.Y, Math.random() * Math.PI * 2 );
+        EngineUtils.setDirection( cloud.rotationQuaternion, position.negate(), 0, -Math.PI / 2, 0 );
+        EngineUtils.rotate( cloud.rotationQuaternion, BABYLON.Axis.Y, Math.random() * Math.PI * 2 );
 
         cloud.scaling.copyFromFloats( Math.random(), Math.random(), Math.random() ).scaleInPlace( 0.25 );
         cloud.scaling.addInPlaceFromFloats( 0.75, 0.5, 0.75 );

@@ -6,7 +6,7 @@
     2022
 */
 
-class Asteroid extends EntityLOD {
+class PlanetSurfaceObsticle extends EntityLOD {
 
     config = {
 
@@ -16,7 +16,7 @@ class Asteroid extends EntityLOD {
     variant = undefined;
     models = null;
 
-    constructor( game, config ) {
+    constructor( game, obsticle, config ) {
 
         super( game, ( instance, value ) => { 
 
@@ -26,18 +26,18 @@ class Asteroid extends EntityLOD {
 
         EngineUtils.configure.call( this, config );
         
-        this.#pickVariant();
+        this.#pickVariant( obsticle );
         this.#createModels();   
         this.#makeUnique();
         this.#post();
     }
 
-    #pickVariant() {
+    #pickVariant( obsticle ) {
 
-        const variants = this.game.asteroids.variants.keys;
+        const variants = this.game.planets.obsticles[ obsticle ].keys;
         
         this.variant = variants[ Math.round( variants.length * Math.random() ).clamp( 0, variants.length - 1 ) ];
-        this.models = this.game.asteroids.variants[ this.variant ];
+        this.models = this.game.planets.obsticles[ obsticle ][ this.variant ];
     }
 
     #createModels() {
@@ -52,7 +52,7 @@ class Asteroid extends EntityLOD {
     }
 
     #post() {
-
+ 
         this.setBounding( EngineUtils.createBoundingCache( this.models[0], this.scaling ) );
     }
     

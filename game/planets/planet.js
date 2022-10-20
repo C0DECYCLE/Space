@@ -34,7 +34,9 @@ class Planet {
             
             main: "#7e7e7e",
             steep: "#222222"
-        }
+        },
+
+        surface: false
     };
 
     game = null;
@@ -50,6 +52,7 @@ class Planet {
     perlin = null;
     atmosphere = null;
     clouds = null;
+    surface = null;
 
     faces = new Map();
     chunks = null;
@@ -75,6 +78,7 @@ class Planet {
         this.#addAtmosphere();
         this.#farInsertion();
         this.#addClouds();
+        this.#setupSurface();
     }
 
     get position() {
@@ -191,6 +195,14 @@ class Planet {
         }
     }
     
+    #setupSurface() {
+
+        if ( this.config.surface !== false ) {
+
+            this.surface = new PlanetSurface( this, this.config.surface );
+        }
+    }
+    
     #updateClouds( distance ) {
 
         if ( this.clouds !== null ) {
@@ -220,6 +232,14 @@ class Planet {
             }
         }
     }
+    
+    #updateSurface( distance ) {
+
+        if ( this.surface !== null ) {
+
+            this.surface.update( distance );
+        }
+    }
 
     #updateSpin() {
         
@@ -239,6 +259,7 @@ class Planet {
         if ( insertionString !== this.#cachedInsertionString ) {
             
             this.chunks.insertQuadtrees( distance );
+            this.#updateSurface( distance );
             this.#updateClouds( distance );
             
             this.#cachedInsertionString = insertionString;

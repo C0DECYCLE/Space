@@ -18,6 +18,14 @@ class Planets {
     player = null;
     spaceships = null;
 
+    obsticles = {
+
+        tree: {
+
+            keys: [ "a" ]
+        }
+    };
+
     list = [];
 
     #maskMaterial = null;
@@ -33,6 +41,7 @@ class Planets {
         EngineUtils.configure.call( this, config );
         
         this.#createMaskMaterial();
+        this.#setupObsticles();
     }
 
     register( config ) {
@@ -67,7 +76,7 @@ class Planets {
             const distance = this.camera.getScreenDistance( planet.root );
             const planetThreashold = planet.config.radius + planet.config.influence;
             
-            this.player.planetInsert( planet, distance, planetThreashold );
+            //this.player.planetInsert( planet, distance, planetThreashold );
             this.spaceships.planetInsert( planet, distance, planetThreashold );
            
             planet.helper.toggleShadow( distance < planet.config.radius * 5 );
@@ -95,4 +104,49 @@ class Planets {
 
         this.#maskMaterial.freeze();
     }
+
+    #setupObsticles() {
+        
+        const keys = Object.keys( this.obsticles );
+
+        for ( let i = 0; i < keys.length; i++ ) {
+
+            this.#setupObsticle( keys[i] );
+        }
+    }
+    
+    #setupObsticle( obsticle ) {
+
+        const target = this.obsticles[ obsticle ];
+
+        for ( let i = 0; i < target.keys.length; i++ ) {
+
+            target[ target.keys[i] ] = this.#setupModels( obsticle, target.keys[i] );
+        }
+    }
+
+    #setupModels( obsticle, variant ) {
+        
+        const models = [];
+        const importLods = this.scene.assets.list.get( `${ obsticle }-${ variant }` ).getChildren();
+
+        for ( let i = 0; i < importLods.length; i++ ) {
+            
+            const model = this.scene.assets.traverse( importLods[i], mesh => {
+            
+                if ( i === 0 ) {
+
+                    this.game.star.shadow.receive( mesh );
+                } 
+            } );
+
+            const invMin = Math.round( 1 / AbstractLOD.getMinimum( model.name ) );
+            
+            model.entitymanager = new EntityManager( model.name, this.scene, () => this.game.scene.assets.instance( model, mesh => {} ), invMin * 4, invMin );
+            models.push( model );
+        }
+
+        return models;
+    }
+
 }
