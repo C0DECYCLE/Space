@@ -6,16 +6,14 @@
     2022
 */
 
-class CloudsPlanet {
+class CloudsPlanet extends EntitySpawner {
 
     static LOD_LIMIT = 2 ** 2.5;
 
     config = {
 
         color: "#ffffff",
-        seed: undefined,
         
-        density: 0.04,
         cullScale: 0.00175,
         limit: 0.35,
         mainScale: 1.5,
@@ -24,29 +22,48 @@ class CloudsPlanet {
 
     material = null;
     models = null;
-    list = [];
 
     #clouds = null;
-    #planet = null;
 
-    #perlin = null;
+    /* override */ constructor( clouds, planet, config ) {
 
-    constructor( clouds, planet, config ) {
+        super( planet, config );
 
         this.#clouds = clouds;
-        this.#planet = planet;
 
         EngineUtils.configure.call( this, config );
 
         this.#setupModels();
-        this.#setupPerlin();
-        this.#spawnClouds();
+        this.#setupFilters();
+        this.spawn();
         this.#register();
+    }
+
+    /* override */ create( position, n, varyings ) {
+        
+        const height = this.noise( position.clone().scaleInPlace( this.planet.config.radius * -this.config.cullScale * 2.5 ).addInPlace( varyings.noiseOffset ) );
+
+        const cloud = new Cloud( this.#clouds.game, this.models, {} );
+
+        cloud.position.copyFrom( position ).scaleInPlace( this.planet.config.radius + this.planet.config.maxHeight * (0.5 + height * 0.5) * this.config.heightScale );
+
+        EngineUtils.setDirection( cloud.rotationQuaternion, cloud.position, 0, Math.PI / 2, 0 );
+        EngineUtils.rotate( cloud.rotationQuaternion, BABYLON.Axis.Y, Math.random() * Math.PI * 2 );
+
+        cloud.scaling.copyFromFloats( Math.random(), Math.random(), Math.random() ).scaleInPlace( 0.25 );
+        cloud.scaling.addInPlaceFromFloats( 0.75, 0.5, 0.75 );
+        cloud.scaling.scaleInPlace( 2 + varyings.cull * 3 ).scaleInPlace( 100 * this.config.mainScale );
+
+        cloud.parent = this.planet.root;
+        cloud.randomValue = Math.random() * n;
+        cloud.post();
+
+        return [ cloud, {} ];
     }
 
     update( distance ) {
 
-        if ( this.#planet.lod.isVisible === true ) {
+        if ( this.planet.lod.isVisible === true ) {
 
             this.#updateClouds( distance );
         }
@@ -58,12 +75,22 @@ class CloudsPlanet {
         this.models = this.#clouds.createModels( Clouds.lods, this.material );
     }
 
-    #setupPerlin() {
+    #setupFilters() {
 
-        this.config.seed = this.config.seed || this.#planet.config.seed.y;
+        this.addPreFilter( position => this.#cull_filter( position ) );
+    }
 
-        this.#perlin = new perlinNoise3d();
-        this.#perlin.noiseSeed( this.config.seed );
+    #cull_filter( position ) {
+        
+        const noiseOffset = new BABYLON.Vector3( this.planet.position.x, this.config.seed, this.planet.position.z );
+        const cull = this.noise( position.clone().scaleInPlace( this.planet.config.radius * this.config.cullScale ).addInPlace( noiseOffset ) );
+
+        if ( cull < this.config.limit ) {
+
+            return { noiseOffset: noiseOffset, cull: 1 - (cull / this.config.limit) };
+        }
+
+        return false;
     }
 
     #register() {
@@ -71,82 +98,16 @@ class CloudsPlanet {
         this.#clouds.list.push( this );
     }
 
-    #spawnClouds() {
 
-        const planetSurfaceArea = 4 * Math.PI * this.#planet.config.radius;
-        const nSamples = Math.floor( planetSurfaceArea * this.config.density );
-        
-        for ( let i = 0; i < nSamples; i++ ) {
-
-            this.#evalCloud( this.#getPosition( i, nSamples ), nSamples );
-        }
-    }
-
-    #evalCloud( position, nSamples ) {
-        
-        const noiseOffset = new BABYLON.Vector3( this.#planet.position.x, this.config.seed, this.#planet.position.z );
-        const cull = this.#noise( position.clone().scaleInPlace( this.#planet.config.radius * this.config.cullScale ).addInPlace( noiseOffset ) );
-
-        if ( cull < this.config.limit ) {
-            
-            this.#makeCloud( this.#placeAtHeight( position, noiseOffset ), nSamples, 1 - (cull / this.config.limit) );
-        }
-    }
-
-    #makeCloud( position, nSamples, cull ) {
-
-        const cloud = new Cloud( this.#clouds.game, this.models, {} );
-
-        cloud.position.copyFrom( position );
-
-        EngineUtils.setDirection( cloud.rotationQuaternion, position.negate(), 0, -Math.PI / 2, 0 );
-        EngineUtils.rotate( cloud.rotationQuaternion, BABYLON.Axis.Y, Math.random() * Math.PI * 2 );
-
-        cloud.scaling.copyFromFloats( Math.random(), Math.random(), Math.random() ).scaleInPlace( 0.25 );
-        cloud.scaling.addInPlaceFromFloats( 0.75, 0.5, 0.75 );
-        cloud.scaling.scaleInPlace( 2 + cull * 3 ).scaleInPlace( 100 * this.config.mainScale );
-
-        cloud.parent = this.#planet.root;
-        cloud.randomValue = Math.random() * nSamples;
-        cloud.post();
-
-        this.list.push( cloud );
-    }
-
-    #getPosition( i, nSamples ) {
-
-        const theta = 2 * Math.PI * i / Math.PHI;
-        const phi = Math.acos( 1 - 2 * ( i + 0.5 ) / nSamples );
-
-        return new BABYLON.Vector3( Math.cos( theta ) * Math.sin( phi ), Math.sin( theta ) * Math.sin( phi ), Math.cos( phi ) ); 
-    }
-
-    #placeAtHeight( position, noiseOffset ) {
-
-        const height = this.#noise( position.clone().scaleInPlace( this.#planet.config.radius * -this.config.cullScale * 2.5 ).addInPlace( noiseOffset ) );
-
-        position.scaleInPlace( this.#planet.config.radius + this.#planet.config.maxHeight * (0.5 + height * 0.5) * this.config.heightScale );
-
-        return position;
-    }
-
-    #noise( vector ) {
-
-        if ( typeof vector === "number" ) {
-
-            return this.#perlin.get( vector, vector, vector );
-        }
-
-        return this.#perlin.get( vector.x, vector.y, vector.z );
-    }
+    /////////////////////////////////////////////////////////////////
 
     #updateClouds( distance ) {
 
-        const radiusDistance = distance / this.#planet.config.radius;
-        const planetToCamera = this.#planet.game.camera.position.subtract( this.#planet.position ).normalize();
-        const occlusionFallOf = this.#planet.helper.getOcclusionFallOf( distance ).clamp( -0.35, Infinity );
+        const radiusDistance = distance / this.planet.config.radius;
+        const planetToCamera = this.planet.game.camera.position.subtract( this.planet.position ).normalize();
+        const occlusionFallOf = this.planet.helper.getOcclusionFallOf( distance ).clamp( -0.35, Infinity );
         const distanceLODLevel = (radiusDistance / CloudsPlanet.LOD_LIMIT).clamp( 0, 1 );
-        const starLightDirection = this.#planet.position.normalizeToNew().applyRotationQuaternionInPlace( this.#planet.rotationQuaternion.invert() );
+        const starLightDirection = this.planet.position.normalizeToNew().applyRotationQuaternionInPlace( this.planet.rotationQuaternion.invert() );
 
         for ( let i = 0; i < this.list.length; i++ ) {
 
@@ -157,8 +118,8 @@ class CloudsPlanet {
 
     #updateLOD( cloud, radiusDistance, planetToCamera, occlusionFallOf, distanceLODLevel ) {
 
-        const cloudWorld = BABYLON.Vector3.TransformCoordinates( cloud.position, this.#planet.root._worldMatrix );
-        const dot = BABYLON.Vector3.Dot( planetToCamera, cloudWorld.subtract( this.#planet.position ).normalize() );
+        const cloudWorld = BABYLON.Vector3.TransformCoordinates( cloud.position, this.planet.root._worldMatrix );
+        const dot = BABYLON.Vector3.Dot( planetToCamera, cloudWorld.subtract( this.planet.position ).normalize() );
         
         if ( dot > occlusionFallOf ) {
             
