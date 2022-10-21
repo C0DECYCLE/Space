@@ -7,4 +7,5 @@
 interface ISync {
 
     next(): void;
+    
 }

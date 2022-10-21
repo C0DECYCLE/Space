@@ -6,6 +6,8 @@
 
 interface IState {
 
-    onEnter: ( oldKey: string, params: any ) => void;
-    onLeave: ( newKey: string, params: any ) => void;
+    readonly onEnter: ( oldKey: string, params: any ) => void;
+    
+    readonly onLeave: ( newKey: string, params: any ) => void;
+    
 }

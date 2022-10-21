@@ -7,9 +7,14 @@
 class StateMachine implements IStateMachine {
 
     private currentKey: string = "";
-    private list: Map<string, IState> = new Map<string, IState>();
+    private list: Map< string, IState > = new Map< string, IState >();
 
-    public add( key: string, onEnter: IState["onEnter"], onLeave: IState["onLeave"] ): void {
+    public get current(): string {
+
+        return this.currentKey;
+    }
+
+    public add( key: string, onEnter: IState[ "onEnter" ], onLeave: IState[ "onLeave" ] ): void {
 
         if ( key === "" ) {
             
@@ -28,7 +33,7 @@ class StateMachine implements IStateMachine {
             return;
         }
 
-        const oldKey = this.currentKey;
+        const oldKey: string = this.currentKey;
         this.currentKey = key;
 
         this.list.get( oldKey )?.onLeave( this.currentKey, params );

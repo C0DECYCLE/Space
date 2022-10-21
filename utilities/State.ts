@@ -6,10 +6,10 @@
 
 class State implements IState {
 
-    public onEnter: (oldKey: string, params: any) => void;
-    public onLeave: (newKey: string, params: any) => void;
+    public readonly onEnter: ( oldKey: string, params: any ) => void;
+    public readonly onLeave: ( newKey: string, params: any ) => void;
 
-    constructor( onEnter: IState["onEnter"], onLeave: IState["onLeave"] ) {
+    constructor( onEnter: IState[ "onEnter" ], onLeave: IState[ "onLeave" ] ) {
 
         this.onEnter = onEnter;
         this.onLeave = onLeave;

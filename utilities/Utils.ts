@@ -7,22 +7,25 @@
 
 const log = console.log;
 
-const PHI = ( 1 + 5 ** 0.5 ) / 2;
+const PHI: number = ( 1 + 5 ** 0.5 ) / 2;
 
 
 
 function UUIDv4(): string {
 
     return ( `${1e7}-${1e3}-${4e3}-${8e3}-${1e11}` ).replace( /[018]/g, ( c: any ) => ( c ^ crypto.getRandomValues( new Uint8Array(1) )[0] & 15 >> c / 4 ).toString( 16 ) );
-};
+}
 
 
 
 interface Number {
     
     between( a: number, b: number ): boolean;
+
     dotit(): string;
+
     clamp( min: number, max: number ): number;
+
 }
 
 Number.prototype.between = function( a: number, b: number ): boolean {
@@ -45,7 +48,9 @@ Number.prototype.clamp = function( min: number, max: number ): number {
 interface String {
     
     firstLetterUppercase(): string;
+
     replaceAt( index: number, replacement: string ): string;
+
 }
 
 String.prototype.firstLetterUppercase = function(): string {
@@ -63,6 +68,7 @@ String.prototype.replaceAt = function( index: number, replacement: string ): str
 interface Array<T> {
     
     clear(): void;
+
 }
 
 Array.prototype.clear = function(): void {

@@ -6,7 +6,12 @@
 
 interface IStateMachine {
 
-    add( key: string, onEnter: IState["onEnter"], onLeave: IState["onLeave"] ): void;
+    get current(): string;
+
+    add( key: string, onEnter: IState[ "onEnter" ], onLeave: IState[ "onLeave" ] ): void;
+
     set( key: string, params: any ): void;
+    
     is( key: string ): boolean;
+    
 }
