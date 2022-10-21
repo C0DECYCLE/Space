@@ -79,7 +79,7 @@ class EntitySpawner {
     
     #getPosition( i, n ) {
 
-        const theta = 2 * Math.PI * i / Math.PHI;
+        const theta = 2 * Math.PI * i / PHI;
         const phi = Math.acos( 1 - 2 * ( i + 0.5 ) / n );
 
         return new BABYLON.Vector3( Math.cos( theta ) * Math.sin( phi ), Math.sin( theta ) * Math.sin( phi ), Math.cos( phi ) ); 

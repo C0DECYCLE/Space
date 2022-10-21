@@ -44,8 +44,7 @@ class EngineAssets {
 
             BABYLON.SceneLoader.LoadAssetContainer( "", list[i].path, this.scene, container => {
                 
-                const asset = container.transformNodes.getByProperty( "id", list[i].key ) || 
-                              container.transformNodes.getByProperty( "name", list[i].key );
+                const asset = container.transformNodes.filter( transformNode => ( transformNode.id === list[i].key || transformNode.name === list[i].key ) )[0] || null;
 
                 this.list.set( list[i].key, asset );
                 sync.next();
