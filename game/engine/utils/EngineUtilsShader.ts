@@ -8,10 +8,10 @@
 
 class EngineUtilsShader {
 
-    static code = EngineUtilsShaderGLSL;
+    static code = ( async function() { const file = await fetch( "../game/engine/utils/engine.utils.shader.glsl" ); return await file.text(); } )();
 
     static registerInstanceAttribute( mesh, name, defaultValue ) {
-
+        
         const arrayValue = [];
 
         defaultValue.toArray?.( arrayValue );

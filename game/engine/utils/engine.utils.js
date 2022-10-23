@@ -112,7 +112,7 @@ class EngineUtils {
     static makeDebugMaterial( scene, color ) {
 
         const debugMaterial = new BABYLON.StandardMaterial( `debug_${ color }`, scene );
-        debugMaterial.setColorIntensity( color, 1.0 );
+        EngineExtensions.setStandardMaterialColorIntensity( debugMaterial, color, 1.0 );
         debugMaterial.wireframe = true;
         debugMaterial.freeze();
 

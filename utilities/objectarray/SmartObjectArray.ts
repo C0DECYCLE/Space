@@ -8,12 +8,12 @@ class SmartObjectArray extends ObjectArray implements ISmartObjectArray {
 
     private static readonly default: any = 0;
 
-    private capacity: number = 0;
-
     public get size(): number {
 
         return this.capacity;
     }
+    
+    private capacity: number = 0;
 
     public constructor( capacity: number ) {
     

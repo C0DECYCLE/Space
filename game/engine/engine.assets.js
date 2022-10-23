@@ -197,7 +197,7 @@ class EngineAssets {
         if ( materialList.has( color ) === false ) {
                 
             const material = this.#makeMaterial( color, interactable );
-            material.setColorIntensity( color, 0.5 );
+            EngineExtensions.setStandardMaterialColorIntensity( material, color, 0.5 );
             material.alpha = importMesh.material.alpha;
 
             if ( color === EngineAssets.collisionColor ) {

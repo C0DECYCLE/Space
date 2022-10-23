@@ -113,7 +113,7 @@ class Player {
         this.mesh.name = this.mesh.id;
         this.mesh.isPickable = false;
         this.mesh.material = new BABYLON.StandardMaterial( "player_material", this.scene );
-        this.mesh.material.setColorIntensity( "#ff226b", 0.5 );
+        EngineExtensions.setStandardMaterialColorIntensity( this.mesh.material, "#ff226b", 0.5 );
         this.mesh.material.freeze();
         this.mesh.rotationQuaternion = this.mesh.rotation.toQuaternion();
         

@@ -26,7 +26,7 @@ class CloudMaterial extends BABYLON.CustomMaterial {
 
     #setupColor( color ) {
         
-        this.setColorIntensity( color, 1.0 );
+        EngineExtensions.setStandardMaterialColorIntensity( this, color, 1.0 );
 
         BABYLON.Color3.LerpToRef( this.emissiveColor, BABYLON.Color3.FromHexString( color ), 0.5, this.emissiveColor );
         this.ambientColor.scaleToRef( 1.5, this.ambientColor );

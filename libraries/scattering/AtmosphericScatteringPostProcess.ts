@@ -8,15 +8,15 @@ class AtmosphericScatteringPostProcess extends BABYLON.PostProcess implements IA
 
     public settings: IAtmosphericScatteringSettings = new AtmosphericScatteringSettings( 15, 15, 1, 1, 700, 530, 440 );
 
-    private readonly planet: Planet;
-    private readonly star: Star;
+    private readonly planet: IPlanet;
+    private readonly star: IStar;
     private readonly camera: BABYLON.Camera;
     private readonly depthMap: BABYLON.RenderTargetTexture;
 
     private readonly planetRadius: number;
     private readonly atmosphereRadius: number;
 
-    public constructor( name: string, planet: Planet, star: Star, camera: Camera, scene: BABYLON.Scene ) {
+    public constructor( name: string, planet: IPlanet, star: IStar, camera: ICamera, scene: BABYLON.Scene ) {
         
         super( name, "../libraries/scattering/atmosphericScattering", [
 

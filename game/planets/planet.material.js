@@ -34,7 +34,7 @@ class PlanetMaterial extends BABYLON.CustomMaterial {
             colorList.push( this.colors[ this.colors.length - 1 ][2] );
         }
         
-        this.setupDefault( colorList );
+        EngineExtensions.setupStandardMaterialDefault( this, colorList );
 
         for ( let i = 0; i < this.colors.length; i++ ) {
 

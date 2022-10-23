@@ -137,7 +137,8 @@ Space.add( "install", function() {
     //more precise: approx. dist. = distance to chunk center - precalc distance from target to chunk center * dot( direction chunk center to player, precalc direction chunkcenter to target )
     //instead of reduce/avoid sqrt -> reduce / avoid loops
 
-    //milestone 2.5 migrate everything to typescript?!!!!!!è
+    //milestone 2.5 migrate everything to typescript?!!!!!!
+    // -> get rid of ambient system
 
 } );
 

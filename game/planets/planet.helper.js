@@ -45,7 +45,7 @@ class PlanetHelper {
     createBasicMaterial() {
         
         const material = new BABYLON.StandardMaterial( `planet${ this.#planet.config.key }_basicMaterial`, this.#planet.scene );
-        material.setColorIntensity( "#534d5f", 1.0 );
+        EngineExtensions.setStandardMaterialColorIntensity( material, "#534d5f", 1.0 );
         material.wireframe = true;
         material.freeze();
 

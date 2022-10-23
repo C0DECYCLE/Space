@@ -88,23 +88,22 @@ class Star {
     #createPointLight( intensity ) {
 
         this.pointLight = new BABYLON.PointLight( "star_pointLight", BABYLON.Vector3.Zero(), this.scene );
-        this.pointLight.setColor( this.config.color );
-        this.pointLight.setIntensity( intensity );
+        EngineExtensions.setLightColor( this.pointLight, this.config.color );
+        EngineExtensions.setLightIntensity( this.pointLight, intensity );
     }
 
     #createDirectionalLight( intensity ) {
 
         this.directionalLight = new BABYLON.DirectionalLight( "star_directionalLight", BABYLON.Vector3.Zero(), this.scene );
-        this.directionalLight.setColor( this.config.color );
-        this.directionalLight.setIntensity( intensity );
+        EngineExtensions.setLightColor( this.directionalLight, this.config.color );
+        EngineExtensions.setLightIntensity( this.directionalLight, intensity );
     }
 
     #createHemisphericLight( intensity ) {
 
         this.hemisphericLight = new BABYLON.HemisphericLight( "star_hemisphericLight", BABYLON.Vector3.Up(), this.scene );
-        this.hemisphericLight.setColor( this.config.color, this.scene.clearColor );
-        this.hemisphericLight.groundColor = new BABYLON.Color3( 0, 0, 0 );
-        this.hemisphericLight.setIntensity( intensity );
+        EngineExtensions.setLightColor( this.hemisphericLight, this.config.color );
+        EngineExtensions.setLightIntensity( this.hemisphericLight, intensity );
     }
 
     #createShadow( config ) {
