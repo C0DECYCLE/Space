@@ -1,50 +1,48 @@
-"use strict";
-
 /*
     Palto Studio
     Developed by Noah Bussinger
     2022
 */
 
-class EngineAssets {
+class EngineAssets implements IEngineAssets {
     
-    static collisionKey = "COLLISION";
-    static collisionColor = "#43ff53";
+    private static collisionKey: string = "COLLISION";
+    private static collisionColor: string = "#43ff53";
 
-    game = null;
-    scene = null;
-    cache = null;
+    public readonly game: IGame;
+    public readonly scene: BABYLON.Scene;
+    public cache: BABYLON.Node;
 
-    list = new Map();
-    materials = new Map();
-    interactableMaterials = new Map();
-    onLoadObservable = new BABYLON.Observable();
+    public readonly list: Map< ILoadConfig[ "key" ], BABYLON.TransformNode > = new Map< ILoadConfig[ "key" ], BABYLON.TransformNode >();
+    public readonly materials: Map< string, BABYLON.StandardMaterial > = new Map< string, BABYLON.StandardMaterial >();
+    public readonly interactableMaterials: Map< string, IPlayerInteractableMaterial > = new Map< string, IPlayerInteractableMaterial >();
+    public readonly onLoadObservable: BABYLON.Observable< IEngineAssets > = new BABYLON.Observable< IEngineAssets >();
 
-    #notify = false;
+    private notify: boolean = false;
 
-    constructor( game ) {
+    public constructor( game: IGame ) {
         
         this.game = game;
         this.scene = this.game.scene;
-
-        this.#createCache();
-        this.#listen();
+        
+        this.createCache();
+        this.listen();
     }
     
-    load( list ) {
+    public load( list: ILoadConfig[] ): void {
         
-        const sync = new Sync( list.length, () => this.#notify = true );
+        const sync: ISync = new Sync( list.length, () => this.notify = true );
 
-        for ( let i = 0; i < list.length; i++ ) {
+        for ( let i: number = 0; i < list.length; i++ ) {
 
             if ( this.list.has( list[i].key ) === true ) {
 
                 console.warn( `EngineAssets: ${ list[i].key } already loaded.` );
             }
 
-            BABYLON.SceneLoader.LoadAssetContainer( "", list[i].path, this.scene, container => {
+            BABYLON.SceneLoader.LoadAssetContainer( "", list[i].path, this.scene, ( container: BABYLON.AssetContainer ) => {
                 
-                const asset = container.transformNodes.filter( transformNode => ( transformNode.id === list[i].key || transformNode.name === list[i].key ) )[0] || null;
+                const asset: BABYLON.TransformNode = container.transformNodes.filter( ( transformNode: BABYLON.TransformNode ) => ( transformNode.id === list[i].key || transformNode.name === list[i].key ) )[0] || null;
 
                 this.list.set( list[i].key, asset );
                 sync.next();
@@ -52,7 +50,7 @@ class EngineAssets {
         }
     }
 
-    traverse( importLod, onEveryMesh, interactables = [] ) {
+    public traverse( importLod, onEveryMesh, interactables = [] ): BABYLON.Mesh {
         
         const lod = this.#traverseMesh( importLod, onEveryMesh, interactables );
         const subs = importLod.getChildMeshes( true );

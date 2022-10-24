@@ -175,7 +175,7 @@ class SpaceshipPhysics extends PhysicsEntity {
 
             this.#freezeCollider();
             this.velocity.copyFromFloats( 0, 0, 0 );
-            EngineUtils.setNodeDirection( this.spaceship.root, undefined, up, this.spaceship.config.upLerp );
+            EngineUtils.setTransformNodeDirection( this.spaceship.root, undefined, up, this.spaceship.config.upLerp );
             this.#checkTakeoff();
         }
     }

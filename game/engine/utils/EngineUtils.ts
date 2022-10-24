@@ -4,9 +4,15 @@
     2022
 */
 
-interface BABYLON.Node {
+interface Object {
 
     boundingCache: IBoundingCache;
+
+    min: number;
+    
+    max: number;
+
+    biggest: number;
 
 }
 
@@ -50,10 +56,10 @@ class EngineUtils implements IEngineUtils {
         return new BABYLON.Vector3( 0, 1000 * 1000 * 1000, 0 );
     }
 
-    public static createBoundingCache( node: BABYLON.Node, scaling?: BABYLON.Vector3 ): IBoundingCache {
+    public static createBoundingCache( transformNode: BABYLON.TransformNode, scaling?: BABYLON.Vector3 ): IBoundingCache {
     
-        const positionWorld: BABYLON.Vector3 = EngineUtils.getWorldPosition( node );
-        const boundingCache: IBoundingCache = new BoundingCache( node );
+        const positionWorld: BABYLON.Vector3 = EngineUtils.getWorldPosition( transformNode );
+        const boundingCache: IBoundingCache = new BoundingCache( transformNode );
 
         boundingCache.min.subtractInPlace( positionWorld );
         boundingCache.max.subtractInPlace( positionWorld );
@@ -69,88 +75,93 @@ class EngineUtils implements IEngineUtils {
         return boundingCache;
     }
 
-    public static getBounding( node: BABYLON.Node, force: boolean = false ): IBoundingCache {
+    public static getBounding( transformNode: BABYLON.TransformNode, force: boolean = false ): IBoundingCache {
         
-        if ( node.boundingCache === undefined || force === true ) {
+        if ( transformNode.boundingCache === undefined || force === true ) {
             
-            node.boundingCache = EngineUtils.createBoundingCache( node );
+            transformNode.boundingCache = EngineUtils.createBoundingCache( transformNode );
         }
 
-        return node.boundingCache;
+        return transformNode.boundingCache;
     }
 
-    static getBoundingSize( node, force = false ) {
+    public static getBoundingSize( transformNode: BABYLON.TransformNode, force: boolean = false ): number {
 
-        return EngineUtils.getBounding( node, force ).size;
+        return EngineUtils.getBounding( transformNode, force ).size;
     }
 
-    static getWorldPosition( node ) {
+    public static getWorldPosition( transformNode: BABYLON.TransformNode ): BABYLON.Vector3 {
+    
+        const position: BABYLON.Vector3 = transformNode.position.clone();
         
-        const position = node.position.clone();
-        
-        EngineUtils.#recurseParentsPosition( position, node );
+        EngineUtils.recurseParentsPosition( position, transformNode );
         
         return position;
     }
 
-    static #recurseParentsPosition( result, node ) {
+    private static recurseParentsPosition( result: BABYLON.Vector3, transformNode: BABYLON.TransformNode ): void {
 
-        if ( node.parent === null ) {
+        if ( transformNode.parent === null || !( transformNode.parent instanceof BABYLON.TransformNode ) ) {
 
             return;
         }
 
-        if ( !node.parent.scaling || !node.parent.rotationQuaternion || !node.parent.position ) {
+        if ( !transformNode.parent.scaling || !transformNode.parent.rotationQuaternion || !transformNode.parent.position ) {
 
             return;
         }
         
-        result.multiplyInPlace( node.parent.scaling )
-        .applyRotationQuaternionInPlace( node.parent.rotationQuaternion )
-        .addInPlace( node.parent.position );
+        result.multiplyInPlace( transformNode.parent.scaling )
+        .applyRotationQuaternionInPlace( transformNode.parent.rotationQuaternion )
+        .addInPlace( transformNode.parent.position );
 
-        EngineUtils.#recurseParentsPosition( result, node.parent );
+        EngineUtils.recurseParentsPosition( result, transformNode.parent );
     }
 
-    static makeDebugMaterial( scene, color ) {
-
-        const debugMaterial = new BABYLON.StandardMaterial( `debug_${ color }`, scene );
-        EngineExtensions.setStandardMaterialColorIntensity( debugMaterial, color, 1.0 );
+    public static makeDebugMaterial( scene: BABYLON.Scene, hexColor: string ): BABYLON.StandardMaterial {
+    
+        const debugMaterial: BABYLON.StandardMaterial = new BABYLON.StandardMaterial( `debug_${ hexColor }`, scene );
+        EngineExtensions.setStandardMaterialColorIntensity( debugMaterial, hexColor, 1.0 );
         debugMaterial.wireframe = true;
         debugMaterial.freeze();
 
         return debugMaterial;
     }
 
-    static setNodeDirection( node, forward, up, lerp = undefined ) {
+    public static setTransformNodeDirection( transformNode: BABYLON.TransformNode, forward?: BABYLON.Vector3, up?: BABYLON.Vector3, lerp: number = 1.0 ): void {
+    
+        if ( transformNode.rotationQuaternion === null ) {
 
-        const direction = BABYLON.Quaternion.FromLookDirectionRH( forward || node.forward, up || node.up );
+            transformNode.rotationQuaternion = transformNode.rotation.toQuaternion();
+        }
 
-        node.rotationQuaternion.copyFrom( lerp === undefined ? direction : BABYLON.Quaternion.Slerp( node.rotationQuaternion, direction, lerp ) );
+        const direction: BABYLON.Quaternion = BABYLON.Quaternion.FromLookDirectionRH( forward || transformNode.forward, up || transformNode.up );
+
+        transformNode.rotationQuaternion.copyFrom( lerp === 1.0 ? direction : BABYLON.Quaternion.Slerp( transformNode.rotationQuaternion, direction, lerp ) );
     }
 
-    static setDirection( rotationQuaternion, forward, yawCor = 0, pitchCor = 0, rollCor = 0 ) {
-
-        const yaw = -Math.atan2( forward.z, forward.x ) + Math.PI / 2;
-        const len = Math.sqrt( forward.x * forward.x + forward.z * forward.z );
-        const pitch = -Math.atan2( forward.y, len );
-
+    public static setDirection( rotationQuaternion: BABYLON.Quaternion, forward: BABYLON.Vector3, yawCor: number = 0, pitchCor: number = 0, rollCor: number = 0 ): void {
+    
+        const yaw: number = -Math.atan2( forward.z, forward.x ) + Math.PI / 2;
+        const len: number = Math.sqrt( forward.x * forward.x + forward.z * forward.z );
+        const pitch: number = -Math.atan2( forward.y, len );
+        
         BABYLON.Quaternion.RotationYawPitchRollToRef( yaw + yawCor, pitch + pitchCor, rollCor, rotationQuaternion );
     }
 
-    static rotate( rotationQuaternion, axis, value ) {
-
-        rotationQuaternion.multiplyInPlace( BABYLON.Quaternion.RotationAxisToRef( axis, value, BABYLON.TransformNode._RotationAxisCache ) );
+    public static rotate( rotationQuaternion: BABYLON.Quaternion, axis: BABYLON.Vector3, value: number ): void {
+    
+        rotationQuaternion.multiplyInPlace( BABYLON.Quaternion.RotationAxisToRef( axis, value, new BABYLON.Quaternion() ) );
     }
 
-    static minmax( vector ) {
+    public static minmax( vector: BABYLON.Vector3 ): void {
 
         vector.min = Math.min( vector.x, vector.y, vector.z );
         vector.max = Math.max( vector.x, vector.y, vector.z );
         vector.biggest = Math.abs( vector.min ) > Math.abs( vector.max ) ? vector.min : vector.max;
     }
 
-    static round( vector ) {
+    public static round( vector: BABYLON.Vector3 ): BABYLON.Vector3 {
 
         vector.x = Math.round( vector.x );
         vector.y = Math.round( vector.y );
@@ -159,7 +170,7 @@ class EngineUtils implements IEngineUtils {
         return vector;
     }
 
-    static color3ToVector3( color ) {
+    public static color3ToVector3( color: BABYLON.Color3 ): BABYLON.Vector3 {
 
         return new BABYLON.Vector3( color.r, color.g, color.b );
     }

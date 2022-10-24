@@ -123,7 +123,7 @@ class SpaceshipPhysicsTravel {
     #startJumping( potential ) {
 
         this.#jumping = potential;
-        EngineUtils.setNodeDirection( this.#spaceshipPhysics.spaceship.root, this.#jumping.direction );   
+        EngineUtils.setTransformNodeDirection( this.#spaceshipPhysics.spaceship.root, this.#jumping.direction );   
         //this.#spaceshipPhysics.pause( false, true );
     }
     

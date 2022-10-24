@@ -7,6 +7,7 @@
 class Game implements IGame {
 
     public engine: IEngine;
+    public scene: BABYLON.Scene;
 
     public install: () => void = () => {};
     public stage: () => void = () => {};

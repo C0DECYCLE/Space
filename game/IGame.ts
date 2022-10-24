@@ -7,6 +7,8 @@
 interface IGame {
 
     engine: IEngine;
+    
+    scene: BABYLON.Scene;
 
     install: () => void;
 
