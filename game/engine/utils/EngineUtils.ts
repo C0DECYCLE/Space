@@ -1,72 +1,75 @@
-"use strict";
-
 /*
     Palto Studio
     Developed by Noah Bussinger
     2022
 */
 
-class EngineUtils {
+interface BABYLON.Node {
 
-    static toAngle = 180 / Math.PI;
-    static toRadian = Math.PI / 180;
+    boundingCache: IBoundingCache;
 
-    static getDeltaCorrection( delta, fpsTarget ) {
+}
+
+class EngineUtils implements IEngineUtils {
+
+    public static readonly toAngle: number = 180 / Math.PI;
+    public static readonly toRadian: number = Math.PI / 180;
+
+    public static getDeltaCorrection( delta: number, fpsTarget: number ): number {
 
         return delta * fpsTarget / 1000;
     }
 
-    static configure( inject ) {
+    public static configure( self: IConfigurable, inject: IConfig ): void {
 
-        const keys = Object.keys( this.config );
+        const keys: string[] = Object.keys( self.config );
 
-        for ( let i = 0; i < keys.length; i++ ) {
+        for ( let i: number = 0; i < keys.length; i++ ) {
 
-            const key = keys[i];
-            const value = inject[ key ];
+            const key: string = keys[i];
+            const value: any = inject[ key ];
 
             if ( value !== undefined ) {
 
-                this.config[ key ] = value;
+                self.config[ key ] = value;
             }
         }
         
-        if ( this.__config === undefined ) {
+        if ( self.__config === undefined ) {
 
-            this.__config = this.config;
+            self.__config = self.config;
             
         } else {
 
-            this.config = Object.assign( this.__config, this.config );
+            self.config = Object.assign( self.__config, self.config );
         }
     }
 
-    static getFarAway() {
+    public static getFarAway(): BABYLON.Vector3 {
 
         return new BABYLON.Vector3( 0, 1000 * 1000 * 1000, 0 );
     }
 
-    static createBoundingCache( node, scaling = null ) {
+    public static createBoundingCache( node: BABYLON.Node, scaling?: BABYLON.Vector3 ): IBoundingCache {
     
-        const positionWorld = EngineUtils.getWorldPosition( node );
+        const positionWorld: BABYLON.Vector3 = EngineUtils.getWorldPosition( node );
+        const boundingCache: IBoundingCache = new BoundingCache( node );
 
-        const boundingCache = node.getHierarchyBoundingVectors( true );
         boundingCache.min.subtractInPlace( positionWorld );
         boundingCache.max.subtractInPlace( positionWorld );
 
-        if ( scaling !== null ) {
+        if ( scaling instanceof BABYLON.Vector3 ) {
 
             boundingCache.min.multiplyInPlace( scaling );
             boundingCache.max.multiplyInPlace( scaling );
         }
 
-        boundingCache.diagonal = boundingCache.max.subtract( boundingCache.min );
-        boundingCache.size = boundingCache.diagonal.length();
+        boundingCache.update();
 
         return boundingCache;
     }
 
-    static getBounding( node, force = false ) {
+    public static getBounding( node: BABYLON.Node, force: boolean = false ): IBoundingCache {
         
         if ( node.boundingCache === undefined || force === true ) {
             

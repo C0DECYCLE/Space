@@ -1,18 +1,26 @@
-"use strict";
-
 /*
     Palto Studio
     Developed by Noah Bussinger
     2022
 */
 
-class EngineUtilsShader {
+class EngineUtilsShader implements IEngineUtilsShader {
 
-    static code = ( async function() { const file = await fetch( "../game/engine/utils/engine.utils.shader.glsl" ); return await file.text(); } )();
-
-    static registerInstanceAttribute( mesh, name, defaultValue ) {
+    public static code: string = ( function(): string { 
         
-        const arrayValue = [];
+        ( async function(): Promise<string> { 
+            
+            return await ( await fetch( "../game/engine/utils/EngineUtilsShader.glsl" ) ).text();
+
+        } )().then( ( decode: string ) => { EngineUtilsShader.code = decode; } );
+        
+       return "";
+
+    } )();
+
+    public static registerInstanceAttribute( mesh: BABYLON.Mesh, name: string, defaultValue: any ): void {
+        
+        const arrayValue: number[] = [];
 
         defaultValue.toArray?.( arrayValue );
         
@@ -20,7 +28,7 @@ class EngineUtilsShader {
         mesh.instancedBuffers[ name ] = defaultValue;
     }
 
-    static setInstanceAttribute( instance, name, value ) {
+    public static setInstanceAttribute( instance: BABYLON.InstancedMesh, name: string, value: any ): void {
 
         instance.instancedBuffers[ name ] = value;
     }

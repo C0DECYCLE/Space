@@ -10,9 +10,7 @@ interface IEngine {
 
     screenSize: BABYLON.Vector2;
 
-    extensions: IEngineExtensions;
-
-    stats: Stats[];
+    readonly stats: Stats[];
     
     get deltaCorrection(): number;
 

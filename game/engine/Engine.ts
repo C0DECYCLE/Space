@@ -8,8 +8,7 @@ class Engine implements IEngine {
     
     public babylon: BABYLON.Engine;
     public screenSize: BABYLON.Vector2;
-    public extensions: IEngineExtensions;
-    public stats: Stats[] = [];
+    public readonly stats: Stats[] = [];
 
     public get deltaCorrection(): number {
 
@@ -27,7 +26,6 @@ class Engine implements IEngine {
         this.browserSupport( () => {
 
             this.createBabylon();
-            this.createExtensions();
             this.createStats();
 
             this.babylon.runRenderLoop( () => this.render() );
@@ -66,11 +64,6 @@ class Engine implements IEngine {
 
         this.babylon = new BABYLON.Engine( this.canvas );
         this.screenSize = new BABYLON.Vector2( this.babylon.getRenderWidth(), this.babylon.getRenderHeight() );
-    }
-
-    private createExtensions(): void {
-
-        this.extensions = new EngineExtensions( this );
     }
 
     private createStats(): void {
