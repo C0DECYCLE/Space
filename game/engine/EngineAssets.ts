@@ -4,6 +4,14 @@
     2022
 */
 
+interface Object {
+
+    collisionMesh: BABYLON.Mesh | BABYLON.InstancedMesh;
+
+    isCollisionMesh: boolean;
+
+}
+
 class EngineAssets implements IEngineAssets {
     
     private static collisionKey: string = "COLLISION";
@@ -15,10 +23,11 @@ class EngineAssets implements IEngineAssets {
 
     public readonly list: Map< ILoadConfig[ "key" ], BABYLON.TransformNode > = new Map< ILoadConfig[ "key" ], BABYLON.TransformNode >();
     public readonly materials: Map< string, BABYLON.StandardMaterial > = new Map< string, BABYLON.StandardMaterial >();
-    public readonly interactableMaterials: Map< string, IPlayerInteractableMaterial > = new Map< string, IPlayerInteractableMaterial >();
-    public readonly onLoadObservable: BABYLON.Observable< IEngineAssets > = new BABYLON.Observable< IEngineAssets >();
+    public readonly interactableMaterials: Map< string, IPlayerInteractionMaterial > = new Map< string, IPlayerInteractionMaterial >();
+    public readonly onLoadObservable: BABYLON.Observable< void > = new BABYLON.Observable< void >();
 
     private notify: boolean = false;
+    private fallbackMaterial: BABYLON.StandardMaterial;
 
     public constructor( game: IGame ) {
         
@@ -26,6 +35,7 @@ class EngineAssets implements IEngineAssets {
         this.scene = this.game.scene;
         
         this.createCache();
+        this.createFallbackMaterial();
         this.listen();
     }
     
@@ -50,21 +60,21 @@ class EngineAssets implements IEngineAssets {
         }
     }
 
-    public traverse( importLod, onEveryMesh, interactables = [] ): BABYLON.Mesh {
+    public traverse( importLod: BABYLON.Mesh, onEveryMesh: ( mesh: BABYLON.Mesh ) => void, interactables: string[] = [] ): BABYLON.Mesh {
         
-        const lod = this.#traverseMesh( importLod, onEveryMesh, interactables );
-        const subs = importLod.getChildMeshes( true );
+        const lod: BABYLON.Mesh = this.traverseMesh( importLod, onEveryMesh, interactables );
+        const subs: BABYLON.Mesh[] = importLod.getChildMeshes( true );
         
-        for ( let i = 0; i < subs.length; i++ ) {
+        for ( let i: number = 0; i < subs.length; i++ ) {
 
             if ( subs[i].name.includes( EngineAssets.collisionKey ) === true || subs[i].id.includes( EngineAssets.collisionKey ) ) {
 
-                lod.collisionMesh = this.#traverseCollisionMesh( subs[i] );
+                lod.collisionMesh = this.traverseCollisionMesh( subs[i] );
                 lod.collisionMesh.parent = lod;
 
             } else {
 
-                this.#traverseMesh( subs[i], onEveryMesh, interactables ).parent = lod;
+                this.traverseMesh( subs[i], onEveryMesh, interactables ).parent = lod;
             }
         }
 
@@ -74,47 +84,52 @@ class EngineAssets implements IEngineAssets {
         return lod;
     }
 
-    merge( mesh ) {
+    public merge( mesh: BABYLON.Mesh ): BABYLON.Mesh {
 
-        const meshes = [ mesh ];
-        const subs = mesh.getChildMeshes( true );
-        const collisionMeshes = [];
+        const meshes: BABYLON.Mesh[] = [ mesh ];
+        const subs: BABYLON.Mesh[] = mesh.getChildMeshes( true );
+        const collisionMeshes: BABYLON.Mesh[] = [];
 
-        for ( let i = 0; i < subs.length; i++ ) {
+        for ( let i: number = 0; i < subs.length; i++ ) {
 
-            const list = subs[i].isCollisionMesh === true ? collisionMeshes : meshes;
+            const list: BABYLON.Mesh[] = subs[i].isCollisionMesh === true ? collisionMeshes : meshes;
             list.push( subs[i] );
         }
 
-        const result = BABYLON.Mesh.MergeMeshes( meshes, false, undefined, undefined, undefined, true );
+        const result: BABYLON.Mesh | null = BABYLON.Mesh.MergeMeshes( meshes, false, undefined, undefined, undefined, true );
 
-        for ( let i = 0; i < collisionMeshes.length; i++ ) {
+        if ( result instanceof BABYLON.Mesh ) {
 
-            collisionMeshes[i].clone( collisionMeshes[i].name ).parent = result;
+            for ( let i: number = 0; i < collisionMeshes.length; i++ ) {
+
+                collisionMeshes[i].clone( collisionMeshes[i].name ).parent = result;
+            }
+
+            result.isPickable = false;
+            result.parent = this.cache;
+            result.setEnabled( false );
+
+            return result;
         }
-
-        result.isPickable = false;
-        result.parent = this.cache;
-        result.setEnabled( false );
-
-        return result;
+        
+        return mesh;
     }
 
-    instance( lod, onEveryInstance ) {
+    public instance( lod: BABYLON.Mesh, onEveryInstance?: ( instance: BABYLON.InstancedMesh ) => void ): BABYLON.InstancedMesh {
 
-        const instance = this.#instanceMesh( lod, onEveryInstance );
-        const subs = lod.getChildMeshes( true );
+        const instance: BABYLON.InstancedMesh = this.instanceMesh( lod, onEveryInstance );
+        const subs: BABYLON.Mesh[] = lod.getChildMeshes( true );
 
-        for ( let i = 0; i < subs.length; i++ ) {
+        for ( let i: number = 0; i < subs.length; i++ ) {
 
             if ( subs[i].isCollisionMesh === true ) {
 
-                instance.collisionMesh = this.#instanceCollisionMesh( subs[i], onEveryInstance );
+                instance.collisionMesh = this.instanceCollisionMesh( subs[i] );
                 instance.collisionMesh.parent = instance;
 
             } else {
 
-                this.#instanceMesh( subs[i], onEveryInstance ).parent = instance;
+                this.instanceMesh( subs[i], onEveryInstance ).parent = instance;
             }
         }
 
@@ -124,17 +139,22 @@ class EngineAssets implements IEngineAssets {
         return instance;
     }
 
-    #createCache() {
+    private createCache(): void {
 
         this.cache = new BABYLON.Node( "EngineAssets_cache", this.scene );
         this.cache.setEnabled( false );
     }
 
-    #listen() {
+    private createFallbackMaterial(): void {
 
-        const id = setInterval( () => {
+        this.fallbackMaterial = this.makeMaterial( "#FFFFFF", false );
+    }
 
-            if ( this.#notify === true ) {
+    private listen(): void {
+
+        const id: number = setInterval( () => {
+
+            if ( this.notify === true ) {
 
                 clearInterval( id );
                 this.onLoadObservable.notifyObservers();
@@ -142,10 +162,10 @@ class EngineAssets implements IEngineAssets {
         }, 100 );
     }
 
-    #traverseMesh( importMesh, onMesh = undefined, interactables = [] ) {
+    private traverseMesh( importMesh: BABYLON.Mesh, onMesh?: ( mesh: BABYLON.Mesh ) => void, interactables: string[] = [] ): BABYLON.Mesh {
         
-        const interactable = interactables.includes( importMesh.name );
-        const mesh = this.#traverseMeshGeneral( importMesh, undefined, interactable );
+        const interactable: boolean = interactables.includes( importMesh.name );
+        const mesh: BABYLON.Mesh = this.traverseMeshGeneral( importMesh, undefined, interactable );
 
         if ( interactable === true ) {
 
@@ -157,23 +177,27 @@ class EngineAssets implements IEngineAssets {
         return mesh;
     }
 
-    #traverseCollisionMesh( importCollisionMesh ) {
+    private traverseCollisionMesh( importCollisionMesh: BABYLON.Mesh ): BABYLON.Mesh {
 
-        const mesh = this.#traverseMeshGeneral( importCollisionMesh, EngineAssets.collisionColor, false );
+        const mesh: BABYLON.Mesh = this.traverseMeshGeneral( importCollisionMesh, EngineAssets.collisionColor, false );
 
         mesh.isCollisionMesh = true;
         
         return mesh;
     }
 
-    #traverseMeshGeneral( importMesh, color = undefined, interactable = false ) {
+    private traverseMeshGeneral( importMesh: BABYLON.Mesh, color?: string, interactable: boolean = false ): BABYLON.Mesh {
 
-        const mesh = new BABYLON.Mesh( importMesh.name, this.scene );
+        const mesh: BABYLON.Mesh = new BABYLON.Mesh( importMesh.name, this.scene );
         
         mesh.isPickable = false;
-        mesh.material = this.#getColorMaterial( importMesh, color, interactable );
-        importMesh.geometry.applyToMesh( mesh );
-        mesh.flipFaces( true );
+        mesh.material = this.getColorMaterial( importMesh, color, interactable );
+        
+        if ( importMesh.geometry instanceof BABYLON.Geometry ) {
+
+            importMesh.geometry.applyToMesh( mesh );
+            mesh.flipFaces( true );
+        }
         
         mesh.position.copyFrom( importMesh.position );
         mesh.rotation.copyFrom( importMesh.rotation );
@@ -187,51 +211,70 @@ class EngineAssets implements IEngineAssets {
         return mesh;
     }
 
-    #getColorMaterial( importMesh, color = undefined, interactable = false ) {
+    private getColorMaterial( importMesh: BABYLON.Mesh, color?: string, interactable: boolean = false ): BABYLON.StandardMaterial {
 
-        color = color === undefined ? importMesh.material.albedoColor.toHexString() : color;
-        const materialList = interactable === false ? this.materials : this.interactableMaterials;
+        if ( color === undefined ) {
+            
+            if ( importMesh.material instanceof BABYLON.PBRMaterial ) {
+
+                color = importMesh.material.albedoColor.toHexString();
+        
+            } else {
+
+                color = this.fallbackMaterial.diffuseColor.toHexString()
+            }
+        }
+
+        const materialList: Map< string, BABYLON.StandardMaterial > = interactable === false ? this.materials : this.interactableMaterials;
 
         if ( materialList.has( color ) === false ) {
                 
-            const material = this.#makeMaterial( color, interactable );
+            const material: BABYLON.StandardMaterial = this.makeMaterial( color, interactable );
             EngineExtensions.setStandardMaterialColorIntensity( material, color, 0.5 );
-            material.alpha = importMesh.material.alpha;
+            
+            if ( importMesh.material instanceof BABYLON.Material ) {
+                
+                material.alpha = importMesh.material.alpha;                
+            }
 
             if ( color === EngineAssets.collisionColor ) {
 
                 material.alpha = 0.25;
-                BABYLON.Color3.FromHexString( EngineAssets.collisionColor ).scaleToRef( material.alph, material.emissiveColor );
+                BABYLON.Color3.FromHexString( EngineAssets.collisionColor ).scaleToRef( material.alpha, material.emissiveColor );
             }
 
             materialList.set( color, material );
+
+            return material;
+
+        } else {
+            
+            return materialList.get( color ) ||  this.fallbackMaterial;
         }
-        
-        return materialList.get( color );
     }
 
-    #makeMaterial( color, interactable ) {
+    private makeMaterial( color: string, interactable: boolean ): BABYLON.StandardMaterial {
 
-        const name = `c-${ color }`;
+        const name: string = `c-${ color }`;
 
         if ( interactable === false ) {
 
-            const material = new BABYLON.StandardMaterial( name, this.scene );
+            const material: BABYLON.StandardMaterial = new BABYLON.StandardMaterial( name, this.scene );
             material.freeze();
 
             return material;
 
         } else {
 
-            const material = new PlayerInteractionMaterial( name, this.game );
+            const material: IPlayerInteractionMaterial = new PlayerInteractionMaterial( name, this.game );
 
             return material;
         }
     }
 
-    #instanceMesh( mesh, onInstance = undefined ) {
+    private instanceMesh( mesh: BABYLON.Mesh, onInstance?: ( instance: BABYLON.InstancedMesh ) => void ): BABYLON.InstancedMesh {
 
-        const instance = mesh.createInstance( `i-${ mesh.name }` );
+        const instance: BABYLON.InstancedMesh = mesh.createInstance( `i-${ mesh.name }` );
         instance.isPickable = false;
 
         if ( !instance.rotationQuaternion ) {
@@ -244,9 +287,9 @@ class EngineAssets implements IEngineAssets {
         return instance;
     }
 
-    #instanceCollisionMesh( mesh ) {
+    private instanceCollisionMesh( mesh: BABYLON.Mesh ): BABYLON.InstancedMesh {
 
-        const instance = mesh.createInstance( `i-${ mesh.name }` );
+        const instance: BABYLON.InstancedMesh = mesh.createInstance( `i-${ mesh.name }` );
         instance.isPickable = false;
 
         if ( !instance.rotationQuaternion ) {

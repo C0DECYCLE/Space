@@ -8,25 +8,25 @@ interface IObjectArray {
 
     push( ...elements: object[] ): number;
 
-    indexOf( element: object, fromIndex?: number | undefined ): number;
+    indexOf( element: object, fromIndex?: number ): number;
+
+    includes( element: object, _fromIndex?: number ): boolean;
 
     pop(): object | undefined;
 
-    splice( start: number, deleteCount?: number | undefined ): object[];
+    splice( start: number, deleteCount?: number ): object[];
 
     splice( start: number, _deleteCount: number, ..._items: object[] ): object[];
 
     shift(): object | undefined;
 
-    sort( _compareFn?: ( ( a: object, b: object ) => number) | undefined ): this;
+    sort( _compareFn?: ( ( a: object, b: object ) => number) ): this;
 
     unshift( ..._items: object[] ): number;
 
     clear(): void;
     
     add( element: object ): void;
-
-    includes( element: object ): boolean;
 
     has( element: object ): boolean;
 

@@ -20,35 +20,40 @@ class ObjectArray extends Array<object> implements IObjectArray {
 
         return this.length;
     }
-
-    public override indexOf( element: object, fromIndex?: number | undefined ): number {
+    
+    public override indexOf( element: object, fromIndex?: number ): number {
         
         if ( element.metalist === undefined ) {
-
+            
             return -1;
         }
         
         const index: number | undefined = element.metalist.get( this.uuid );
-
+        
         if ( index === undefined || ( fromIndex !== undefined && index < fromIndex ) ) {
-
+            
             return -1;
         }
-
+        
         if ( index > this.length ) {
             
             console.error( `ObjectArray: index ${ index } was out of bounds, real index is ${ super.indexOf( element ) }.` ); 
         }
-
+        
         return index;
     }
+    
+    public override includes( element: object, _fromIndex?: number ): boolean {
 
+        return element.metalist === undefined ? false : element.metalist.has( this.uuid );
+    }
+    
     public override pop(): object | undefined {
         
         return this.decommission( super.pop() );
     }
     
-    public override splice( start: number, deleteCount?: number | undefined ): object[];
+    public override splice( start: number, deleteCount?: number ): object[];
     public override splice( start: number, _deleteCount: number, ..._items: object[] ): object[] {
         
         if ( start !== Number.MIN_VALUE ) {
@@ -66,7 +71,7 @@ class ObjectArray extends Array<object> implements IObjectArray {
         return undefined;
     }
     
-    public override sort( _compareFn?: ( ( a: object, b: object ) => number) | undefined ): this {
+    public override sort( _compareFn?: ( ( a: object, b: object ) => number) ): this {
         
         console.warn( "ObjectArray: Illegal sort operation." );
 
@@ -98,11 +103,6 @@ class ObjectArray extends Array<object> implements IObjectArray {
 
             this.push( element );
         }
-    }
-    
-    public includes( element: object ): boolean {
-
-        return element.metalist === undefined ? false : element.metalist.has( this.uuid );
     }
 
     public has( element: object ): boolean {
