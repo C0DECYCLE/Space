@@ -10,7 +10,7 @@
 
     function fetchConfig() {
 
-        fetch( "/tsconfig.json").then( response => response.json() ).then( onConfigLoaded );
+        fetch( "/tsconfig.json" ).then( response => response.json() ).then( onConfigLoaded );
     }
     
     const transpileWorker = window.URL.createObjectURL( new Blob( [ `
