@@ -15,7 +15,7 @@ Space.addOnReady( function() {
     
     this.scene = new BABYLON.Scene( this.engine.babylon );
     BABYLON.Color3.FromHexString( background ).scaleToRef( 0.15, this.scene.clearColor );
-    this.scene.ambient = new EngineAmbient( this.scene, background, 0.3 );
+    this.scene.ambientColor = EngineUtils.makeSceneAmbient( background, 0.3 );
     this.scene.debugMaterialRed = EngineUtils.makeDebugMaterial( this.scene, "#ff226b" );
     this.scene.debugMaterialWhite = EngineUtils.makeDebugMaterial( this.scene, "#ffffff" );
     this.scene.skipPointerMovePicking = true;
@@ -136,9 +136,6 @@ Space.add( "install", function() {
     //if chunk size small approx dist = dist to chunk center
     //more precise: approx. dist. = distance to chunk center - precalc distance from target to chunk center * dot( direction chunk center to player, precalc direction chunkcenter to target )
     //instead of reduce/avoid sqrt -> reduce / avoid loops
-
-    //milestone 2.5 migrate everything to typescript?!!!!!!
-    // -> get rid of ambient system
 
 } );
 

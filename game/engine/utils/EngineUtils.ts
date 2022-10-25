@@ -14,6 +14,14 @@ interface Object {
 
     biggest: number;
 
+    hexString: string;
+
+    intensity: number;
+
+    materialFactor: number;
+
+    lightFactor: number;
+
 }
 
 class EngineUtils implements IEngineUtils {
@@ -116,6 +124,19 @@ class EngineUtils implements IEngineUtils {
         .addInPlace( transformNode.parent.position );
 
         EngineUtils.recurseParentsPosition( result, transformNode.parent );
+    }
+
+    public static makeSceneAmbient( hexColor: string, intensity: number ): BABYLON.Color3 {
+
+        const ambientColor: BABYLON.Color3 = new BABYLON.Color3( 1, 1, 1 );
+
+        ambientColor.hexString = hexColor;
+        ambientColor.intensity = intensity;
+
+        ambientColor.materialFactor = ambientColor.intensity * 0.5;
+        ambientColor.lightFactor = 1 / ambientColor.materialFactor;
+
+        return ambientColor;
     }
 
     public static makeDebugMaterial( scene: BABYLON.Scene, hexColor: string ): BABYLON.StandardMaterial {

@@ -21,12 +21,9 @@ class EngineExtensions implements IEngineExtensions {
 
         light.intensity = intensity;
 
-        const ambient = light.getScene().ambient;
+        const scene: BABYLON.Scene = light.getScene();
 
-        if ( typeof ambient !== "undefined" ) {
-
-            light.intensity *= ambient.lightFactor();
-        }
+        light.intensity *= scene.ambientColor.lightFactor;
     }
 
     public static setStandardMaterialColorIntensity( material: BABYLON.StandardMaterial, hexColor: string, intensity: number = 1.0 ): void {
@@ -53,17 +50,14 @@ class EngineExtensions implements IEngineExtensions {
         material.emissiveColor = new BABYLON.Color3( 0, 0, 0 );
         material.ambientColor = new BABYLON.Color3( 0, 0, 0 );
 
-        const ambient = material.getScene().ambient;
+        const scene: BABYLON.Scene = material.getScene();
 
-        if ( typeof ambient !== "undefined" ) {
+        for ( let i = 0; i < list.length; i++ ) {
 
-            for ( let i = 0; i < list.length; i++ ) {
-
-                list[i].scaleToRef( ambient.intensity, list[i] );
-            }
-
-            BABYLON.Color3.FromHexString( ambient.color ).scaleToRef( ambient.materialFactor(), material.ambientColor );
+            list[i].scaleToRef( scene.ambientColor.intensity, list[i] );
         }
+
+        BABYLON.Color3.FromHexString( scene.ambientColor.hexString ).scaleToRef( scene.ambientColor.materialFactor, material.ambientColor );
     }
 
 }
