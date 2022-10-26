@@ -6,4 +6,16 @@
 
 interface IAsteroids {
 
+    readonly game: IGame;
+    
+    readonly scene: BABYLON.Scene;
+
+    readonly variants: Map< string, IModels >;
+
+    readonly list: IAsteroidsDistributer[];
+
+    register( type: string, config: IConfig ): void;
+
+    update(): void;
+
 }

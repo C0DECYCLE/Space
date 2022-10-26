@@ -6,6 +6,12 @@
     2022
 */
 
+interface Object {
+
+    entitymanager: IEntityManager;
+
+}
+
 class EntityManager {
 
     #free = null;

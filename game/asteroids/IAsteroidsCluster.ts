@@ -4,6 +4,12 @@
     2022
 */
 
-interface IAsteroidsCluster {
+interface IAsteroidsCluster extends IAsteroidsDistributer {
+
+    readonly list: IAsteroid[];
+    
+    set parent( value: BABYLON.TransformNode );
+
+    offsetAllAsteroids( position: BABYLON.Vector3 ): void;
 
 }

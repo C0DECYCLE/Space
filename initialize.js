@@ -6,6 +6,12 @@
     2022
 */
 
+interface Object {
+
+    assets: IEngineAssets;
+
+}
+
 const Space = new Game();
 
 Space.addOnReady( function() {

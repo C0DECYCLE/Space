@@ -4,6 +4,10 @@
     2022
 */
 
-interface IAsteroidsRing {
+interface IAsteroidsRing extends IAsteroidsDistributer {
+
+    readonly list: IAsteroidsCluster[];
+
+    get numberOfClusters(): number;
 
 }
