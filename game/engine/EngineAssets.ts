@@ -41,7 +41,7 @@ class EngineAssets implements IEngineAssets {
     
     public load( list: ILoadConfig[] ): void {
         
-        const sync: ISync = new Sync( list.length, () => this.notify = true );
+        const sync: ISync = new Sync( list.length, (): void  => { this.notify = true; } );
 
         for ( let i: number = 0; i < list.length; i++ ) {
 
@@ -50,9 +50,9 @@ class EngineAssets implements IEngineAssets {
                 console.warn( `EngineAssets: ${ list[i].key } already loaded.` );
             }
 
-            BABYLON.SceneLoader.LoadAssetContainer( "", list[i].path, this.scene, ( container: BABYLON.AssetContainer ) => {
+            BABYLON.SceneLoader.LoadAssetContainer( "", list[i].path, this.scene, ( container: BABYLON.AssetContainer ): void => {
                 
-                const asset: BABYLON.TransformNode = container.transformNodes.filter( ( transformNode: BABYLON.TransformNode ) => ( transformNode.id === list[i].key || transformNode.name === list[i].key ) )[0] || null;
+                const asset: BABYLON.TransformNode = container.transformNodes.filter( ( transformNode: BABYLON.TransformNode ): boolean => ( transformNode.id === list[i].key || transformNode.name === list[i].key ) )[0] || null;
 
                 this.list.set( list[i].key, asset );
                 sync.next();
@@ -152,7 +152,7 @@ class EngineAssets implements IEngineAssets {
 
     private listen(): void {
 
-        const id: number = setInterval( () => {
+        const id: number = setInterval( (): void => {
 
             if ( this.notify === true ) {
 

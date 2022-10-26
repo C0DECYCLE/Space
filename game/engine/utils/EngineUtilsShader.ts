@@ -12,7 +12,7 @@ class EngineUtilsShader implements IEngineUtilsShader {
             
             return await ( await fetch( "../game/engine/utils/EngineUtilsShader.glsl" ) ).text();
 
-        } )().then( ( decode: string ) => { EngineUtilsShader.code = decode; } );
+        } )().then( ( decode: string ): void => { EngineUtilsShader.code = decode; } );
         
        return "";
 

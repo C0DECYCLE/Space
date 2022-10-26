@@ -9,15 +9,15 @@ class Game implements IGame {
     public engine: IEngine;
     public scene: BABYLON.Scene;
 
-    public install: () => void = () => {};
-    public stage: () => void = () => {};
-    public run: () => void = () => {};
+    public install: () => void = (): void => {};
+    public stage: () => void = (): void => {};
+    public run: () => void = (): void => {};
 
     public constructor() {
 
         const ready: Event = new Event( "ready" );
 
-        window.addEventListener( "load", ( _event: Event ) => {
+        window.addEventListener( "load", ( _event: Event ): void => {
 
             console.log( `\n\n${ document.title }\n\nPalto Studio\nCopyright Noah Bussinger ${ new Date().getUTCFullYear() }\n\n` );
 
@@ -29,22 +29,22 @@ class Game implements IGame {
     
     public addOnReady( callback: () => void ): void {
 
-        window.addEventListener( "ready", () => callback.call( this ) );
+        window.addEventListener( "ready", (): void => callback.call( this ) );
     }
 
     public add( key: string, callback: () => void ): void {
 
         switch( key ) {
 
-            case "install": this.install = () => callback.call( this ); break;
-            case "stage": this.stage = () => callback.call( this ); break;
-            case "run": this.run = () => callback.call( this ); break;
+            case "install": this.install = (): void => callback.call( this ); break;
+            case "stage": this.stage = (): void => callback.call( this ); break;
+            case "run": this.run = (): void => callback.call( this ); break;
         }
     }
 
     public update( scene: BABYLON.Scene, update: ( delta: number ) => void ): void {
 
-        this.engine.set( ( delta: number ) => {
+        this.engine.set( ( delta: number ): void => {
         
             this.engine.stats[3].begin();
 

@@ -18,18 +18,18 @@ class Engine implements IEngine {
     private canvas: HTMLCanvasElement;
     private readonly fpsTarget: number = 60;
     private deltaCorrectionValue: number = 1.0;
-    private update: ( delta: number ) => void = ( _delta: number ) => {};
+    private update: ( delta: number ) => void = ( _delta: number ): void => {};
 
     public constructor() {
     
         this.createCanvas();
-        this.browserSupport( () => {
+        this.browserSupport( (): void => {
 
             this.createBabylon();
             this.createStats();
 
-            this.babylon.runRenderLoop( () => this.render() );
-            window.addEventListener( "resize", () => this.babylon.resize() );
+            this.babylon.runRenderLoop( (): void => this.render() );
+            window.addEventListener( "resize", (): void => this.babylon.resize() );
         } );
     }
 

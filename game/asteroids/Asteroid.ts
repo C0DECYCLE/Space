@@ -1,24 +1,22 @@
-"use strict";
-
 /*
     Palto Studio
     Developed by Noah Bussinger
     2022
 */
 
-class Asteroid extends EntityLOD {
+class Asteroid extends EntityLOD implements IAsteroids, IConfigurable {
 
-    config = {
+    public config: IConfig = new Config( 
 
-        random: Math.random
-    };
+        [ "random", Math.random ] 
+    );
 
-    variant = undefined;
-    models = null;
+    private variantKey: string;
+    private models: IModels;
 
-    constructor( game, config ) {
+    public constructor( game: IGame, config: IConfig ) {
 
-        super( game, ( instance, value ) => { 
+        super( game, ( instance: BABYLON.InstancedMesh, value: boolean ): void => { 
 
             this.game.star.shadow.cast( instance, value );  
 

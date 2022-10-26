@@ -10,7 +10,7 @@ class Sync implements ISync {
     private hasFired: boolean = false;
     private callback: () => void;
 
-    constructor( length: number = 0, callback: () => void = () => {} ) {
+    constructor( length: number = 0, callback: () => void = (): void => {} ) {
         
         this.length = length;
         this.callback = callback;
