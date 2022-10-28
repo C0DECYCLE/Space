@@ -71,8 +71,17 @@
             }
         }
 
-        await Promise.all( pending );
+        function onError( error ) {
 
+            error.preventDefault();
+
+            console.error(error);
+        }
+
+        await Promise.all( pending );
+        
+        window.addEventListener( "error", onError);
+        
         for ( let i = 0; i < transpilations.length; i++ ) {
 
             const newScript = document.createElement( "script" );
@@ -82,6 +91,8 @@
         }
 
         console.log( "[Typescript]: TRANSPILED" );
+        
+        window.removeEventListener( "error", onError);
     }
 
     window.addEventListener( "DOMContentLoaded", fetchConfig );

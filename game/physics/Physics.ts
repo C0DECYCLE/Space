@@ -20,7 +20,7 @@ class Physics implements IPhysics, IConfigurable {
 
     private isPausedValue: boolean = false;
 
-    public constructor( game: IGame, config: IConfig ) {
+    public constructor( game: IGame, config: IConfig  {
 
         this.game = game;
         this.scene = this.game.scene;
