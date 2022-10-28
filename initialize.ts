@@ -8,8 +8,12 @@
 
 interface Object {
 
-    assets: IEngineAssets;
+    debugMaterialRed: BABYLON.StandardMaterial;
 
+    debugMaterialWhite: BABYLON.StandardMaterial;
+
+    assets: IEngineAssets;
+    
 }
 
 const Space = new Game();

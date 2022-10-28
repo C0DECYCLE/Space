@@ -81,7 +81,7 @@
             transpilations[i][1].replaceWith( newScript );
         }
 
-        console.log( "[Typescript: TRANSPILATION COMPLETE]" );
+        console.log( "[Typescript]: TRANSPILED" );
     }
 
     window.addEventListener( "DOMContentLoaded", fetchConfig );
