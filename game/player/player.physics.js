@@ -91,38 +91,38 @@ class PlayerPhysics extends PhysicsEntity {
 
         const float = floatConfig * deltaCorrection;
 
-        if ( this.#controls.activeKeys.has( Controls.KEYS.for ) === true ) {
+        if ( this.#controls.activeKeys.has( Controls.KEYS.For ) === true ) {
 
             translate.z = float;
 
-        } else if ( this.#controls.activeKeys.has( Controls.KEYS.back ) === true ) {
+        } else if ( this.#controls.activeKeys.has( Controls.KEYS.Back ) === true ) {
 
             translate.z = -float;
         }
         
-        if ( this.#controls.activeKeys.has( Controls.KEYS.right ) === true ) {
+        if ( this.#controls.activeKeys.has( Controls.KEYS.Right ) === true ) {
 
             translate.x = float;
 
-        } else if ( this.#controls.activeKeys.has( Controls.KEYS.left ) === true ) {
+        } else if ( this.#controls.activeKeys.has( Controls.KEYS.Left ) === true ) {
 
             translate.x = -float;
         }
         
-        if ( this.#controls.activeKeys.has( Controls.KEYS.up ) === true ) {
+        if ( this.#controls.activeKeys.has( Controls.KEYS.Up ) === true ) {
 
             translate.y = float;
 
-        } else if ( this.#controls.activeKeys.has( Controls.KEYS.down ) === true ) {
+        } else if ( this.#controls.activeKeys.has( Controls.KEYS.Down ) === true ) {
 
             translate.y = -float;
         }
 
-        if ( this.#controls.activeKeys.has( Controls.KEYS.leftRoll ) === true ) {
+        if ( this.#controls.activeKeys.has( Controls.KEYS.LeftRoll ) === true ) {
 
             this.#player.root.rotate( BABYLON.Axis.Z, float, BABYLON.Space.LOCAL );
 
-        } else if ( this.#controls.activeKeys.has( Controls.KEYS.rightRoll ) === true ) {
+        } else if ( this.#controls.activeKeys.has( Controls.KEYS.RightRoll ) === true ) {
 
             this.#player.root.rotate( BABYLON.Axis.Z, -float, BABYLON.Space.LOCAL );
         }
@@ -144,30 +144,30 @@ class PlayerPhysics extends PhysicsEntity {
 
         let speed = walk;
 
-        if ( this.#controls.activeKeys.has( Controls.KEYS.fast ) === true ) {
+        if ( this.#controls.activeKeys.has( Controls.KEYS.Fast ) === true ) {
 
             speed = run;
         }
 
-        if ( this.#controls.activeKeys.has( Controls.KEYS.for ) === true ) {
+        if ( this.#controls.activeKeys.has( Controls.KEYS.For ) === true ) {
 
             translate.z = speed;
 
-        } else if ( this.#controls.activeKeys.has( Controls.KEYS.back ) === true ) {
+        } else if ( this.#controls.activeKeys.has( Controls.KEYS.Back ) === true ) {
 
             translate.z = -speed;
         }
         
-        if ( this.#controls.activeKeys.has( Controls.KEYS.right ) === true ) {
+        if ( this.#controls.activeKeys.has( Controls.KEYS.Right ) === true ) {
 
             translate.x = speed;
 
-        } else if ( this.#controls.activeKeys.has( Controls.KEYS.left ) === true ) {
+        } else if ( this.#controls.activeKeys.has( Controls.KEYS.Left ) === true ) {
 
             translate.x = -speed;
         }
 
-        if ( this.#controls.activeKeys.has( Controls.KEYS.jump ) === true ) {
+        if ( this.#controls.activeKeys.has( Controls.KEYS.Jump ) === true ) {
 
             translate.y = jump;
         }

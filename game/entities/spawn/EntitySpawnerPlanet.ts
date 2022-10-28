@@ -15,7 +15,7 @@ class EntitySpawnerPlanet implements IEntitySpawnerPlanet, IConfigurable {
 
     public readonly planet: IPlanet;
 
-    public readonly list: any[] = [];
+    public readonly list: ISpawnable[] = [];
 
     private perlin: perlinNoise3d;
 
@@ -52,9 +52,11 @@ class EntitySpawnerPlanet implements IEntitySpawnerPlanet, IConfigurable {
         }
     }
 
-    protected create( _position: BABYLON.Vector3, _n: number, _varyings: IVaryings ): any {
+    protected create( _position: BABYLON.Vector3, _n: number, _varyings: IVaryings ): [ ISpawnable, IVaryings ] {
 
-        return null;
+        console.warn( "EntitySpawnerPlanet: This function should never be executed." );
+
+        return [ new Spawnable(), new Varyings() ];
     }
 
     protected noise( input: number | BABYLON.Vector3 ): number {
@@ -77,19 +79,19 @@ class EntitySpawnerPlanet implements IEntitySpawnerPlanet, IConfigurable {
     
     protected getPosition( i: number, n: number ): BABYLON.Vector3 {
 
-        const theta = 2 * Math.PI * i / PHI;
-        const phi = Math.acos( 1 - 2 * ( i + 0.5 ) / n );
+        const theta: number = 2 * Math.PI * i / PHI;
+        const phi: number = Math.acos( 1 - 2 * ( i + 0.5 ) / n );
 
         return new BABYLON.Vector3( Math.cos( theta ) * Math.sin( phi ), Math.sin( theta ) * Math.sin( phi ), Math.cos( phi ) ); 
     }
 
     private evaluate( position: BABYLON.Vector3, n: number ): void {
 
-        const pretest = this.test( this.preFilters, [ position ] );
+        const pretest: boolean | IVaryings = this.test( this.preFilters, [ position ] );
 
         if ( pretest instanceof Varyings ) {
             
-            const creation = this.create( position, n, pretest );
+            const creation: [ ISpawnable, IVaryings ] = this.create( position, n, pretest );
 
             if ( this.test( this.postFilters, creation ) instanceof Varyings ) {
             

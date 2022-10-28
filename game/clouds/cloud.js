@@ -6,7 +6,7 @@
     2022
 */
 
-class Cloud extends EntityLOD {
+class Cloud extends EntityLOD implements ICloud, ISpawnable, IConfigurable {
 
     config = {
 

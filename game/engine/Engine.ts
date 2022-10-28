@@ -6,6 +6,7 @@
 
 class Engine implements IEngine {
     
+    public canvas: HTMLCanvasElement;
     public babylon: BABYLON.Engine;
     public screenSize: BABYLON.Vector2;
     public readonly stats: Stats[] = [];
@@ -15,7 +16,6 @@ class Engine implements IEngine {
         return this.deltaCorrectionValue;
     }
 
-    private canvas: HTMLCanvasElement;
     private readonly fpsTarget: number = 60;
     private deltaCorrectionValue: number = 1.0;
     private update: ( delta: number ) => void = ( _delta: number ): void => {};

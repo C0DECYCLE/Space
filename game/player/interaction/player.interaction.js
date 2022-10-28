@@ -58,7 +58,7 @@ class PlayerInteraction {
 
     #interactingUpdate() {
 
-        if ( this.#player.controls.activeKeys.has( Controls.KEYS.exit ) === true ) {
+        if ( this.#player.controls.activeKeys.has( Controls.KEYS.Exit ) === true ) {
 
             this.#isInteracting();
             this.#isInteracting = false;
@@ -81,7 +81,7 @@ class PlayerInteraction {
 
             this.#highlight( interaction );
 
-            if ( this.#player.controls.activeKeys.has( Controls.KEYS.interact ) === true ) {
+            if ( this.#player.controls.activeKeys.has( Controls.KEYS.Interact ) === true ) {
 
                 interaction.event();
                 this.#isInteracting = interaction.leaveEvent;

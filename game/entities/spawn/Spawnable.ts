@@ -4,6 +4,6 @@
     2022
 */
 
-interface IEntitySpawnerPlanet {
-
+class Spawnable extends Object implements ISpawnable {
+    
 }

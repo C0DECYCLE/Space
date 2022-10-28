@@ -91,7 +91,7 @@ class SpaceshipPhysicsTravel {
 
     #evaluateKeyPress() {
 
-        if ( this.#spaceshipPhysics.controls.activeKeys.has( Controls.KEYS.travel ) === true && Date.now() - this.#pressedTime > this.#pressedThreshold ) {
+        if ( this.#spaceshipPhysics.controls.activeKeys.has( Controls.KEYS.Travel ) === true && Date.now() - this.#pressedTime > this.#pressedThreshold ) {
 
             this.#pressedTime = Date.now();
 

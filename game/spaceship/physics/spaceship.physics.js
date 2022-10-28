@@ -76,40 +76,40 @@ class SpaceshipPhysics extends PhysicsEntity {
         const rollSpeed = this.spaceship.config.rollSpeed * deltaCorrection;
         const acceleration = new BABYLON.Vector3( 0, 0, 0 );
 
-        if ( this.controls.activeKeys.has( Controls.KEYS.for ) === true ) {
+        if ( this.controls.activeKeys.has( Controls.KEYS.For ) === true ) {
 
             acceleration.z = mainAcceleration;
 
-        } else if ( this.controls.activeKeys.has( Controls.KEYS.back ) === true ) {
+        } else if ( this.controls.activeKeys.has( Controls.KEYS.Back ) === true ) {
 
             this.#brakeVelocity( brakeScale );
         }
         
-        if ( this.controls.activeKeys.has( Controls.KEYS.right ) === true ) {
+        if ( this.controls.activeKeys.has( Controls.KEYS.Right ) === true ) {
 
             acceleration.x = minorAcceleration;
 
-        } else if ( this.controls.activeKeys.has( Controls.KEYS.left ) === true ) {
+        } else if ( this.controls.activeKeys.has( Controls.KEYS.Left ) === true ) {
 
             acceleration.x = -minorAcceleration;
         }
         
-        if ( this.controls.activeKeys.has( Controls.KEYS.up ) === true ) {
+        if ( this.controls.activeKeys.has( Controls.KEYS.Up ) === true ) {
 
             acceleration.y = minorAcceleration;
 
-        } else if ( this.controls.activeKeys.has( Controls.KEYS.down ) === true ) {
+        } else if ( this.controls.activeKeys.has( Controls.KEYS.Down ) === true ) {
 
             acceleration.y = -minorAcceleration;
         }
 
         if ( this.spaceship.isLanded === false ) {
                 
-            if ( this.controls.activeKeys.has( Controls.KEYS.leftRoll ) === true ) {
+            if ( this.controls.activeKeys.has( Controls.KEYS.LeftRoll ) === true ) {
 
                 this.spaceship.root.rotate( BABYLON.Axis.Z, rollSpeed, BABYLON.Space.LOCAL );
 
-            } else if ( this.controls.activeKeys.has( Controls.KEYS.rightRoll ) === true ) {
+            } else if ( this.controls.activeKeys.has( Controls.KEYS.RightRoll ) === true ) {
 
                 this.spaceship.root.rotate( BABYLON.Axis.Z, -rollSpeed, BABYLON.Space.LOCAL );
             }

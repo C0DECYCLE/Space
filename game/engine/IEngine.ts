@@ -6,6 +6,8 @@
 
 interface IEngine {
 
+    canvas: HTMLCanvasElement;
+
     babylon: BABYLON.Engine;
 
     screenSize: BABYLON.Vector2;
