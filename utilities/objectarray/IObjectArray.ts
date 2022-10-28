@@ -4,32 +4,32 @@
     2022
 */
 
-interface IObjectArray {
+interface IObjectArray< T extends object > {
 
-    push( ...elements: object[] ): number;
+    push( ...elements: T[] ): number;
 
-    indexOf( element: object, fromIndex?: number ): number;
+    indexOf( element: T, fromIndex?: number ): number;
 
-    includes( element: object, _fromIndex?: number ): boolean;
+    includes( element: T, _fromIndex?: number ): boolean;
 
-    pop(): object | undefined;
+    pop(): T | undefined;
 
-    splice( start: number, deleteCount?: number ): object[];
+    splice( start: number, deleteCount?: number ): T[];
 
-    splice( start: number, _deleteCount: number, ..._items: object[] ): object[];
+    splice( start: number, _deleteCount: number, ..._items: T[] ): T[];
 
-    shift(): object | undefined;
+    shift(): T | undefined;
 
-    sort( _compareFn?: ( ( a: object, b: object ) => number) ): this;
+    sort( _compareFn?: ( ( a: T, b: T ) => number) ): this;
 
-    unshift( ..._items: object[] ): number;
+    unshift( ..._items: T[] ): number;
 
     clear(): void;
     
-    add( element: object ): void;
+    add( element: T ): void;
 
-    has( element: object ): boolean;
+    has( element: T ): boolean;
 
-    delete( element: object, length: number ): void;
+    delete( element: T, length: number ): void;
 
 }

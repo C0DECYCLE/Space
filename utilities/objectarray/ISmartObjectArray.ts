@@ -4,16 +4,16 @@
     2022
 */
 
-interface ISmartObjectArray {
+interface ISmartObjectArray< T extends object > extends IObjectArray< T > {
 
     get size(): number;
 
-    push( ...elements: object[] ): number;
+    push( ...elements: T[] ): number;
 
-    pop(): object | undefined;
+    pop(): T | undefined;
 
     clear(): void;
 
-    delete( element: object ): void;
+    delete( element: T ): void;
 
 }

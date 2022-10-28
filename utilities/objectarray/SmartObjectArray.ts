@@ -4,7 +4,7 @@
     2022
 */
 
-class SmartObjectArray extends ObjectArray implements ISmartObjectArray {
+class SmartObjectArray< T extends object > extends ObjectArray< T > implements ISmartObjectArray< T > {
 
     private static readonly default: any = 0;
 
@@ -21,7 +21,7 @@ class SmartObjectArray extends ObjectArray implements ISmartObjectArray {
         this.flood();
     }
 
-    public override push( ...elements: object[] ): number {
+    public override push( ...elements: T[] ): number {
             
         this[ this.capacity ] = this.initialize( elements[0], this.capacity++ );
 
@@ -34,11 +34,11 @@ class SmartObjectArray extends ObjectArray implements ISmartObjectArray {
         return this.capacity;
     }
 
-    public override pop(): object | undefined {
+    public override pop(): T | undefined {
         
         if ( this.capacity > 0 ) {
 
-            const object: object = this[ --this.capacity ];
+            const object: T = this[ --this.capacity ];
             this.decommission( object );
             this.clean( this.capacity );
 
@@ -61,7 +61,7 @@ class SmartObjectArray extends ObjectArray implements ISmartObjectArray {
         this.capacity = 0;
     }
 
-    public override delete( element: object ): void {
+    public override delete( element: T ): void {
         
         super.delete( element, this.capacity );
     }

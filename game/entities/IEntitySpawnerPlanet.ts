@@ -4,6 +4,6 @@
     2022
 */
 
-interface IModels extends Array< BABYLON.TransformNode > {
+interface IEntitySpawnerPlanet {
 
 }

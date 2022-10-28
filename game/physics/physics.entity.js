@@ -23,7 +23,7 @@ class PhysicsEntity {
     };
     
     static collidable( mesh, type = PhysicsEntity.TYPES.STATIC, value ) {
-
+        //!!!!EntityLOD line 60 investigate!!!!
         mesh.physicsEntityType = type;
         
         PhysicsEntity.#collisions( mesh, value === undefined ? true : value );

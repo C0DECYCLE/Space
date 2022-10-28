@@ -4,6 +4,6 @@
     2022
 */
 
-interface IModels extends Array< BABYLON.TransformNode > {
-
+class Varyings extends Object implements IVaryings {
+    
 }

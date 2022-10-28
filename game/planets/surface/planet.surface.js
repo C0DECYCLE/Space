@@ -6,7 +6,7 @@
     2022
 */
 
-class PlanetSurface extends EntitySpawner {
+class PlanetSurface extends EntitySpawnerPlanet {
 
     static LOD_LIMIT = 2.0;
 

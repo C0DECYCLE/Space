@@ -10,18 +10,18 @@ interface Object {
 
 }
 
-class ObjectArray extends Array<object> implements IObjectArray {
+class ObjectArray< T extends object > extends Array< T > implements IObjectArray< T > {
 
     protected readonly uuid: string = UUIDv4();
 
-    public override push( ...elements: object[] ): number {
+    public override push( ...elements: T[] ): number {
             
         super.push( this.initialize( elements[0] ) );
 
         return this.length;
     }
     
-    public override indexOf( element: object, fromIndex?: number ): number {
+    public override indexOf( element: T, fromIndex?: number ): number {
         
         if ( element.metalist === undefined ) {
             
@@ -43,18 +43,18 @@ class ObjectArray extends Array<object> implements IObjectArray {
         return index;
     }
     
-    public override includes( element: object, _fromIndex?: number ): boolean {
+    public override includes( element: T, _fromIndex?: number ): boolean {
 
         return element.metalist === undefined ? false : element.metalist.has( this.uuid );
     }
     
-    public override pop(): object | undefined {
+    public override pop(): T | undefined {
         
         return this.decommission( super.pop() );
     }
     
-    public override splice( start: number, deleteCount?: number ): object[];
-    public override splice( start: number, _deleteCount: number, ..._items: object[] ): object[] {
+    public override splice( start: number, deleteCount?: number ): T[];
+    public override splice( start: number, _deleteCount: number, ..._items: T[] ): T[] {
         
         if ( start !== Number.MIN_VALUE ) {
             
@@ -64,21 +64,21 @@ class ObjectArray extends Array<object> implements IObjectArray {
         return [];
     }
 
-    public override shift(): object | undefined {
+    public override shift(): T | undefined {
         
         console.warn( "ObjectArray: Illegal shift operation." );
     
         return undefined;
     }
     
-    public override sort( _compareFn?: ( ( a: object, b: object ) => number) ): this {
+    public override sort( _compareFn?: ( ( a: T, b: T ) => number) ): this {
         
         console.warn( "ObjectArray: Illegal sort operation." );
 
         return this;
     }
     
-    public override unshift( ..._items: object[] ): number {
+    public override unshift( ..._items: T[] ): number {
         
         console.warn( "ObjectArray: Illegal unshift operation." );
     
@@ -97,7 +97,7 @@ class ObjectArray extends Array<object> implements IObjectArray {
         super.clear();
     }
     
-    public add( element: object ): void {
+    public add( element: T ): void {
 
         if ( this.has( element ) === false ) {
 
@@ -105,12 +105,12 @@ class ObjectArray extends Array<object> implements IObjectArray {
         }
     }
 
-    public has( element: object ): boolean {
+    public has( element: T ): boolean {
 
         return this.includes( element );
     }
 
-    public delete( element: object, length: number = this.length ): void {
+    public delete( element: T, length: number = this.length ): void {
 
         if ( this.has( element ) === false ) {
 
@@ -122,7 +122,7 @@ class ObjectArray extends Array<object> implements IObjectArray {
         this.splice( Number.MIN_VALUE ); //for babylon rtt hook
     }
 
-    protected initialize( element: object, length: number = this.length ): object {
+    protected initialize( element: T, length: number = this.length ): T {
 
         if ( element.metalist === undefined ) {
 
@@ -134,7 +134,7 @@ class ObjectArray extends Array<object> implements IObjectArray {
         return element;
     }
 
-    protected decommission( element: object | undefined ): object | undefined {
+    protected decommission( element: T | undefined ): T | undefined {
 
         if ( typeof element === "object" ) {
 
@@ -144,9 +144,9 @@ class ObjectArray extends Array<object> implements IObjectArray {
         return element;
     }
 
-    private interchange( element: object, length: number = this.length ): void {
+    private interchange( element: T, length: number = this.length ): void {
 
-        const lastElement: object = this[ length - 1 ];
+        const lastElement: T = this[ length - 1 ];
            
         if ( element !== lastElement ) {
             

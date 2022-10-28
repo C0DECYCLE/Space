@@ -58,7 +58,7 @@ class AsteroidsCluster implements IAsteroidsCluster, IAsteroidsDistributer, ICon
         return this.list.length;
     }
 
-    public set parent( value: BABYLON.TransformNode ): void {
+    public set parent( value: BABYLON.TransformNode ) {
 
         if ( this.hasCustomParent === false ) {
 

@@ -6,7 +6,7 @@
     2022
 */
 
-class CloudsPlanet extends EntitySpawner {
+class CloudsPlanet extends EntitySpawnerPlanet {
 
     static LOD_LIMIT = 2 ** 2.5;
 

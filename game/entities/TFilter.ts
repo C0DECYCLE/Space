@@ -4,6 +4,4 @@
     2022
 */
 
-interface IModels extends Array< BABYLON.TransformNode > {
-
-}
+type TFilter = ( ...args: any[] ) => boolean | IVaryings;

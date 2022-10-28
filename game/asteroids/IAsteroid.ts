@@ -4,6 +4,6 @@
     2022
 */
 
-interface IAsteroid {
+interface IAsteroid extends IEntityLOD {
 
 }

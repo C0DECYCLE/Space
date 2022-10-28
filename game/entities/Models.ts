@@ -4,6 +4,6 @@
     2022
 */
 
-class Models extends Array< BABYLON.Mesh > implements IModels {
+class Models extends Array< BABYLON.TransformNode > implements IModels {
     
 }

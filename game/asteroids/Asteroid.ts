@@ -4,7 +4,7 @@
     2022
 */
 
-class Asteroid extends EntityLOD implements IAsteroids, IConfigurable {
+class Asteroid extends EntityLOD implements IAsteroid, IConfigurable {
 
     public config: IConfig = new Config(  
 
