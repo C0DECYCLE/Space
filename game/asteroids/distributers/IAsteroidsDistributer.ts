@@ -4,7 +4,7 @@
     2022
 */
 
-interface IAsteroidsDistributer {
+interface IAsteroidsDistributer extends IConfigurable {
 
     readonly game: IGame;
 

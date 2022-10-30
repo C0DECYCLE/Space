@@ -4,7 +4,7 @@
     2022
 */
 
-class Asteroids implements IAsteroids, IConfigurable {
+class Asteroids implements IAsteroids {
 
     public config: IConfig = new Config(
 

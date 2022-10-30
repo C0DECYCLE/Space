@@ -147,8 +147,9 @@ Space.add( "install", function() {
     //more precise: approx. dist. = distance to chunk center - precalc distance from target to chunk center * dot( direction chunk center to player, precalc direction chunkcenter to target )
     //instead of reduce/avoid sqrt -> reduce / avoid loops
 
-//!!!! After all typescript ported go through all files again to see if no errors anymore and game still works!!!
+//!!!! After all typescript ported go through all files again to see if no errors anymore and game still works and check that no use stricts at beginning of file!!!
 //!!!! before merge make javascript backup branch!!!!
+//!!!! remove objectcontainer system and do better approach!! backup objectcontainer before removal!!! plan removal and better approach!!!
 
 } );
 

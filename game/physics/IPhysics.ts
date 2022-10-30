@@ -4,7 +4,7 @@
     2022
 */
 
-interface IPhysics {
+interface IPhysics extends IConfigurable {
 
     readonly game: IGame;
     

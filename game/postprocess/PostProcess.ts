@@ -1,5 +1,3 @@
-"use strict";
-
 /*
     Palto Studio
     Developed by Noah Bussinger

@@ -4,7 +4,7 @@
     2022
 */
 
-class Physics implements IPhysics, IConfigurable {
+class Physics implements IPhysics {
 
     public config: IConfig = new Config(  
 
@@ -20,7 +20,7 @@ class Physics implements IPhysics, IConfigurable {
 
     private isPausedValue: boolean = false;
 
-    public constructor( game: IGame, config: IConfig  {
+    public constructor( game: IGame, config: IConfig ) {
 
         this.game = game;
         this.scene = this.game.scene;

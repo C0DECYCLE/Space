@@ -8,6 +8,8 @@
 
 ( function () {
 
+    console.log( `[Typescript]: Initialization` );
+
     function fetchConfig() {
 
         fetch( "/tsconfig.json" ).then( response => response.json() ).then( onConfigLoaded );
@@ -59,7 +61,7 @@
                 
                     const w = new Worker( transpileWorker );
 
-                    w.postMessage( [ src, innerHTML, tsconfig, `${ document.location }libraries/typescript/typescript.4.8.4.js` ] );
+                    w.postMessage( [ src, innerHTML, tsconfig, `${ document.location.origin }/libraries/typescript/typescript.4.8.4.js` ] );
                     w.onmessage = ( { data: transpiled } ) => {
 
                         transpilations[ index ] = [ transpiled, scripts[i] ];
@@ -71,14 +73,18 @@
             }
         }
 
+        await Promise.all( pending );
+
+        let t = 0;
+        let e = 0;
+
         function onError( error ) {
 
             error.preventDefault();
 
-            console.error(error);
+            console.error( `[Typescript]: ${ error.message }\n    (at ${ transpilations[t][1].src })` );
+            e++;
         }
-
-        await Promise.all( pending );
         
         window.addEventListener( "error", onError);
         
@@ -88,11 +94,12 @@
             newScript.innerHTML = transpilations[i][0];
 
             transpilations[i][1].replaceWith( newScript );
+            t++;
         }
-
-        console.log( "[Typescript]: TRANSPILED" );
         
         window.removeEventListener( "error", onError);
+
+        console.log( `[Typescript]: Files: ${ transpilations.length }, Errors: ${ e }` );
     }
 
     window.addEventListener( "DOMContentLoaded", fetchConfig );

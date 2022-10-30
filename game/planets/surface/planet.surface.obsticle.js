@@ -6,7 +6,7 @@
     2022
 */
 
-class PlanetSurfaceObsticle extends EntityLOD implements IPlanetSurfaceObsticle, ISpawnable, IConfigurable {
+class PlanetSurfaceObsticle extends EntityLOD implements IPlanetSurfaceObsticle, ISpawnable {
 
     config = {
 

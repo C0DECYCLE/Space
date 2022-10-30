@@ -4,7 +4,7 @@
     2022
 */
 
-interface IEntitySpawnerPlanet {
+interface IEntitySpawnerPlanet extends IConfigurable {
 
     readonly planet: IPlanet;
 

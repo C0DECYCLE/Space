@@ -4,6 +4,8 @@
     2022
 */
 
-interface IAsteroid extends IEntityLOD, IConfigurable {
+enum EObjectContainerTypes {
 
+    STATIC = 0,
+    DYNAMIC = 1
 }

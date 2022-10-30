@@ -4,7 +4,7 @@
     2022
 */
 
-class Controls implements IControls, IConfigurable {
+class Controls implements IControls {
 
     public static readonly KEYS = EControlsKeys;
 

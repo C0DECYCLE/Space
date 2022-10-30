@@ -4,7 +4,7 @@
     2022
 */
 
-class EntitySpawnerPlanet implements IEntitySpawnerPlanet, IConfigurable {
+class EntitySpawnerPlanet implements IEntitySpawnerPlanet {
 
     public config: IConfig = new Config(  
 

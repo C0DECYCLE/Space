@@ -4,6 +4,6 @@
     2022
 */
 
-interface IAsteroid extends IEntityLOD, IConfigurable {
+interface IObjectContainerUtils {
 
 }
