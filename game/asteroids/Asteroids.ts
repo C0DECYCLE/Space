@@ -64,7 +64,7 @@ class Asteroids implements IAsteroids {
     private setupModels( variant: string ): IModels {
         
         const models: IModels = new Models();
-        const importLods: BABYLON.Mesh[] = this.scene.assets.list.get( `asteroid-${ variant }` ).getChildren();
+        const importLods: BABYLON.Mesh[] = this.scene.assets.list.get( `asteroid-${ variant }` )?.getChildren() || [];
         
         for ( let i: number = 0; i < importLods.length; i++ ) {
             
@@ -72,7 +72,7 @@ class Asteroids implements IAsteroids {
             
                 if ( i === 0 ) {
 
-                    this.game.star.shadow.receive( mesh );
+                    this.game.star.shadow.receive( mesh, false, true );
                 } 
             } );
 

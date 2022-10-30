@@ -22,7 +22,7 @@ interface IEngineAssets {
     
     load( list: ILoadConfig[] ): void;
         
-    traverse( importLod: BABYLON.Mesh, onEveryMesh: ( mesh: BABYLON.Mesh ) => void, interactables: string[] ): BABYLON.Mesh;
+    traverse( importLod: BABYLON.Mesh, onEveryMesh: ( mesh: BABYLON.Mesh ) => void, interactables?: string[] ): BABYLON.Mesh;
 
     merge( mesh: BABYLON.Mesh ): BABYLON.Mesh;
 

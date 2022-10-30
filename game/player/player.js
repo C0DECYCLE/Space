@@ -117,8 +117,8 @@ class Player {
         this.mesh.material.freeze();
         this.mesh.rotationQuaternion = this.mesh.rotation.toQuaternion();
         
-        this.game.star.shadow.cast( this.mesh );
-        this.game.star.shadow.receive( this.mesh );
+        this.game.star.shadow.cast( this.mesh, false, true );
+        this.game.star.shadow.receive( this.mesh, false, true );
 
         /*
         var light = new BABYLON.SpotLight("spotLight", new BABYLON.Vector3(0, 0, 0), new BABYLON.Vector3(0, 0, 1), Math.PI / 3, 20, this.scene);

@@ -4,35 +4,35 @@
     2022
 */
 
-class PostProcess {
+class PostProcess implements IPostProcess {
 
-    config = {
+    public config: IConfig = new Config(  
 
-        samples: 3
-    };
+        [ "samples", 3 ]
+    );
 
-    game = null;
-    scene = null;
-    camera = null;
+    public readonly game: IGame;
+    public readonly scene: BABYLON.Scene;
+    public readonly camera: BABYLON.Camera;
 
-    pipelines = [];
+    public readonly pipelines: any[] = [];
 
-    constructor( game, config ) {
+    public constructor( game: IGame, config: IConfig ) {
 
         this.game = game;
         this.scene = this.game.scene;
         this.camera = this.game.camera.camera;
 
-        EngineUtils.configure.call( this, config );
+        EngineUtils.configure( this, config );
 
         this.scene.clearColor = this.scene.clearColor.toLinearSpace();
 
-        this.#defaultPipeline();
+        this.defaultPipeline();
     }
 
-    godrays( mesh ) {
+    public godrays( mesh: BABYLON.Mesh ): BABYLON.VolumetricLightScatteringPostProcess {
 
-        const postprocess = new BABYLON.VolumetricLightScatteringPostProcess( `${ mesh.name }_godrays`, 1.0, this.camera, mesh, 60, BABYLON.Texture.BILINEAR_SAMPLINGMODE, this.game.engine.babylon, false );
+        const postprocess: BABYLON.VolumetricLightScatteringPostProcess = new BABYLON.VolumetricLightScatteringPostProcess( `${ mesh.name }_godrays`, 1.0, this.camera, mesh, 60, BABYLON.Texture.BILINEAR_SAMPLINGMODE, this.game.engine.babylon, false );
         postprocess.weight = 0.15;
 
         this.pipelines.push( postprocess );
@@ -40,9 +40,9 @@ class PostProcess {
         return postprocess;
     }
 
-    atmosphere( planet ) {
+    public atmosphere( planet: IPlanet ): AtmosphericScatteringPostProcess {
 
-        const postprocess = new AtmosphericScatteringPostProcess( `${ planet.root.name }_atmosphere`, planet, this.game.star, this.game.camera, this.scene );
+        const postprocess: AtmosphericScatteringPostProcess = new AtmosphericScatteringPostProcess( `${ planet.root.name }_atmosphere`, planet, this.game.star, this.game.camera, this.scene );
 
         postprocess.settings.redWaveLength = planet.config.waveLengths.r;
         postprocess.settings.greenWaveLength = planet.config.waveLengths.g;
@@ -53,9 +53,9 @@ class PostProcess {
         return postprocess;
     }
 
-    #defaultPipeline() {
+    private defaultPipeline(): void {
 
-        const pipeline = new BABYLON.DefaultRenderingPipeline( "postprocess_default", true, this.scene, [ this.camera ] );
+        const pipeline: BABYLON.DefaultRenderingPipeline = new BABYLON.DefaultRenderingPipeline( "postprocess_default", true, this.scene, [ this.camera ] );
         pipeline.samples = this.config.samples;
         pipeline.chromaticAberrationEnabled = true;
         pipeline.chromaticAberration.radialIntensity = 1;

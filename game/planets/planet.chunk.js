@@ -101,8 +101,8 @@ class PlanetChunk extends BABYLON.Mesh {
         //if ( size < this.#planet.game.star.shadow.config.radius / PlanetQuadtree.divisionSizeFactor ) {
         if ( this.#doesShadows === false ) {    
 
-            //this.#planet.game.star.shadow.cast( this );        
-            this.#planet.game.star.shadow.receive( this );  
+            //this.#planet.game.star.shadow.cast( this, false, true );        
+            this.#planet.game.star.shadow.receive( this, false, true );  
 
             this.#doesShadows = true;
         }
@@ -112,8 +112,8 @@ class PlanetChunk extends BABYLON.Mesh {
 
         if ( this.#doesShadows === true ) {
 
-            //this.#planet.game.star.shadow.cast( this, false );        
-            this.#planet.game.star.shadow.receive( this, false );  
+            //this.#planet.game.star.shadow.cast( this, false, false );        
+            this.#planet.game.star.shadow.receive( this, false, false );  
 
             this.#doesShadows = false;
         }

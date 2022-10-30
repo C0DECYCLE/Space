@@ -20,7 +20,7 @@ class PlanetSurfaceObsticle extends EntityLOD implements IPlanetSurfaceObsticle,
 
         super( game, ( instance, value ) => { 
 
-            this.game.star.shadow.cast( instance, value );  
+            this.game.star.shadow.cast( instance, false, value );  
 
         }, true );
 

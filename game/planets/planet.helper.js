@@ -30,7 +30,7 @@ class PlanetHelper {
         if ( this.#maskValue !== value ) {
 
             this.#planet.mask.setEnabled( value );
-            this.#planet.game.star.shadow.cast( this.#planet.mask, value );
+            this.#planet.game.star.shadow.cast( this.#planet.mask, false, value );
             this.#maskValue = value;
 
             this.#planet.chunks.toggleShadows( value );
@@ -80,7 +80,7 @@ class PlanetHelper {
         this.#planet.mask.material = this.#planet.game.planets.getMaskMaterial();
         this.#planet.mask.parent = this.#planet.root;
 
-        this.#planet.game.star.shadow.cast( this.#planet.mask );
+        this.#planet.game.star.shadow.cast( this.#planet.mask, false, true );
         this.#maskValue = true;
     }
 

@@ -18,7 +18,7 @@ class Asteroid extends EntityLOD implements IAsteroid {
 
         super( game, ( instance: BABYLON.InstancedMesh, value: boolean ): void => { 
 
-            game.star.shadow.cast( instance, value );  
+            game.star.shadow.cast( instance, false, value );  
 
         }, true );
 

@@ -136,7 +136,7 @@ class Planets {
             
                 if ( i === 0 ) {
 
-                    this.game.star.shadow.receive( mesh );
+                    this.game.star.shadow.receive( mesh, false, true );
                 } 
             } );
 
