@@ -34,7 +34,7 @@ class Game implements IGame {
 
             console.log( `\n\n${ document.title }\n\nPalto Studio\nCopyright Noah Bussinger ${ new Date().getUTCFullYear() }\n\n` );
 
-            public engine = new Engine();
+            this.engine = new Engine();
 
             window.dispatchEvent( ready );
         } );
@@ -42,28 +42,28 @@ class Game implements IGame {
     
     public addOnReady( callback: () => void ): void {
 
-        window.addEventListener( "ready", (): void => callback.call( this ) );
+        window.addEventListener( "ready", (): void => callback() );
     }
 
     public add( key: string, callback: () => void ): void {
 
         switch( key ) {
 
-            case "install": public install = (): void => callback.call( this ); break;
-            case "stage": public stage = (): void => callback.call( this ); break;
-            case "run": public run = (): void => callback.call( this ); break;
+            case "install": this.install = (): void => callback(); break;
+            case "stage": this.stage = (): void => callback(); break;
+            case "run": this.run = (): void => callback(); break;
         }
     }
 
-    public update( scene: BABYLON.Scene, update: ( delta: number ) => void ): void {
+    public update( scene: BABYLON.Scene, update: () => void ): void {
 
-        public engine.set( ( delta: number ): void => {
+        this.engine.set( ( _delta: number ): void => {
         
-            public engine.stats[3].begin();
+            this.engine.stats[3].begin();
 
-            update( delta );
+            update();
 
-            public engine.stats[3].end();
+            this.engine.stats[3].end();
     
             scene.render();
         } );

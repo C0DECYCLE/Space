@@ -44,6 +44,6 @@ interface IGame {
 
     add( key: string, callback: () => void ): void;
 
-    update( scene: BABYLON.Scene, update: ( delta: number ) => void ): void;
+    update( scene: BABYLON.Scene, update: () => void ): void;
 
 }

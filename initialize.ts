@@ -1,5 +1,3 @@
-"use strict";
-
 /*
     Palto Studio
     Developed by Noah Bussinger
@@ -16,67 +14,68 @@ interface Object {
     
 }
 
-const Space = new Game();
+const Space: IGame = new Game();
 
-Space.addOnReady( function() {
+Space.addOnReady( (): void => {
     
     
-    const background = "#af7ede";
+    const background: string = "#af7ede";
     
-    this.scene = new BABYLON.Scene( this.engine.babylon );
-    BABYLON.Color3.FromHexString( background ).scaleToRef( 0.15, this.scene.clearColor );
-    this.scene.ambientColor = EngineUtils.makeSceneAmbient( background, 0.3 );
-    this.scene.debugMaterialRed = EngineUtils.makeDebugMaterial( this.scene, "#ff226b" );
-    this.scene.debugMaterialWhite = EngineUtils.makeDebugMaterial( this.scene, "#ffffff" );
-    this.scene.skipPointerMovePicking = true;
-    this.scene.autoClear = false;
-    this.scene.autoClearDepthAndStencil = false;
+    Space.scene = new BABYLON.Scene( Space.engine.babylon );
+    BABYLON.Color4.FromHexString( background ).scaleToRef( 0.15, Space.scene.clearColor );
+    Space.scene.ambientColor = EngineUtils.makeSceneAmbient( background, 0.3 );
+    Space.scene.debugMaterialRed = EngineUtils.makeDebugMaterial( Space.scene, "#ff226b" );
+    Space.scene.debugMaterialWhite = EngineUtils.makeDebugMaterial( Space.scene, "#ffffff" );
+    Space.scene.skipPointerMovePicking = true;
+    Space.scene.autoClear = false;
+    Space.scene.autoClearDepthAndStencil = false;
 
-    this.scene.assets = new EngineAssets( this );
-    this.scene.assets.onLoadObservable.addOnce( () => { this.install(); this.stage(); Space.update( this.scene, this.run ); } );
-    this.scene.assets.load( [
+    Space.scene.assets = new EngineAssets( Space );
+    Space.scene.assets.onLoadObservable.addOnce( (): void => { Space.install(); Space.stage(); Space.update( Space.scene, Space.run ); } );
+    Space.scene.assets.load( [
 
-        { key: "asteroid-a", path: "assets/models/asteroid-a.glb" },
-        { key: "asteroid-b", path: "assets/models/asteroid-b.glb" },
-        { key: "asteroid-c", path: "assets/models/asteroid-c.glb" },
+        new LoadConfig( "asteroid-a", "assets/models/asteroid-a.glb" ),
+        new LoadConfig( "asteroid-b", "assets/models/asteroid-b.glb" ),
+        new LoadConfig( "asteroid-c", "assets/models/asteroid-c.glb" ),
 
-        { key: "tree-a", path: "assets/models/tree-a.glb" },
+        new LoadConfig( "tree-a", "assets/models/tree-a.glb" ),
 
-        { key: "spaceship-vulcan", path: "assets/models/spaceship-vulcan.glb" }
+        new LoadConfig( "spaceship-vulcan", "assets/models/spaceship-vulcan.glb" )
     ] );
     
 
 } );
 
-Space.add( "install", function() {
+Space.add( "install", (): void => {
 
 
-    this.objectcontainers = new ObjectContainers( this, {} );
+    Space.objectcontainers = new ObjectContainers( Space, new Config() );
 
-    this.physics = new Physics( this, {} );
+    Space.physics = new Physics( Space, new Config() );
     
-    this.controls = new Controls( this, {} );
+    Space.controls = new Controls( Space, new Config() );
 
-    this.camera = new Camera( this, {} );
+    Space.camera = new Camera( Space, new Config() );
     
-    this.postprocess = new PostProcess( this, {} );
+    Space.postprocess = new PostProcess( Space, new Config() );
 
-    this.ui = new UI( this, {} );
+    Space.ui = new UI( Space, new Config() );
 
-    this.star = new Star( this, {}, {} );
+    Space.star = new Star( Space, new Config(), new Config() );
 
-    this.player = new Player( this, {} );
+    Space.player = new Player( Space, new Config() );
 
-    this.spaceships = new Spaceships( this, {} );
+    Space.spaceships = new Spaceships( Space, new Config() );
 
-    this.spaceships.register( "vulcan", { key: 0 } );
+    Space.spaceships.register( "vulcan", new Config( [ "key", 0 ] ) );
 
-    this.clouds = new Clouds( this, {} );
+    Space.clouds = new Clouds( Space, new Config() );
 
-    this.planets = new Planets( this, {} );
+    Space.planets = new Planets( Space, new Config() );
     
-    this.planets.registerFromConfigs( [
+    Space.planets.registerFromConfigs( [
 
+        //new Config( [ "key", 0 ] )...
         { 
             key: 0, radius: 1024, spin: 0.005, 
             gravity: 0.6, atmosphere: 256, waveLengths: new BABYLON.Color3( 450, 370, 420 ),
@@ -95,7 +94,7 @@ Space.add( "install", function() {
 
         { 
             key: 2, radius: 4096, spin: 0.0025, 
-            gravity: 0.8, atmosphere: 1024, waveLengths: new BABYLON.Color3( 700, 600, 500 ), clouds: {},
+            gravity: 0.8, atmosphere: 1024, waveLengths: new BABYLON.Color3( 700, 600, 500 ), clouds: new Config(),
             seed: new BABYLON.Vector3( -925, -2011, 7770 ),
             colors: { main: "#7a8161", second: "#856160", third: "#a8ceb0", steep: "#252123" },
             //surface: true
@@ -109,10 +108,10 @@ Space.add( "install", function() {
         }
     ] );
 
-    this.asteroids = new Asteroids( this, {} );
-
-    this.asteroids.register( "ring", { key: 0, seed: "7417", radius: 5 * 1000, spread: 400, height: 80, density: 0.06 } );
-    this.asteroids.register( "ring", { key: 1, seed: "4674", radius: 5 * 1000, spread: 1200, height: 40, density: 0.04 } );
+    Space.asteroids = new Asteroids( Space, new Config() );
+                                    //new Config( [ "key", 0 ] )...
+    Space.asteroids.register( "ring", { key: 0, seed: "7417", radius: 5 * 1000, spread: 400, height: 80, density: 0.06 } );
+    Space.asteroids.register( "ring", { key: 1, seed: "4674", radius: 5 * 1000, spread: 1200, height: 40, density: 0.04 } );
 
     //make better optimized lod system
     // -> optimized blend in distance
@@ -153,65 +152,65 @@ Space.add( "install", function() {
 
 } );
 
-Space.add( "stage", function() {
+Space.add( "stage", (): void => {
     
 
-    this.planets.list[0].place( this.star.position, 500 * 1000, 90 );
-    this.planets.list[1].place( this.star.position, 800 * 1000, -45 );
-    this.planets.list[2].place( this.star.position, 1000 * 1000, 240 );
-    this.planets.list[3].place( this.planets.list[2].position, 60 * 1000, 60 );
+    Space.planets.list[0].place( Space.star.position, 500 * 1000, 90 );
+    Space.planets.list[1].place( Space.star.position, 800 * 1000, -45 );
+    Space.planets.list[2].place( Space.star.position, 1000 * 1000, 240 );
+    Space.planets.list[3].place( Space.planets.list[2].position, 60 * 1000, 60 );
     
-    this.asteroids.list[0].position.copyFrom( this.planets.list[0].position );
-    this.asteroids.list[1].position.copyFrom( this.planets.list[0].position );
+    Space.asteroids.list[0].position?.copyFrom( Space.planets.list[0].position );
+    Space.asteroids.list[1].position?.copyFrom( Space.planets.list[0].position );
 
-    this.spaceships.list[0].position.copyFrom( this.planets.list[0].position ).addInPlace( new BABYLON.Vector3( 5 * 1000, 0, 0 ) );
-    this.spaceships.list[0].root.rotate( BABYLON.Axis.Y, 90 * EngineUtils.toRadian, BABYLON.Space.LOCAL );
+    Space.spaceships.list[0].position.copyFrom( Space.planets.list[0].position ).addInPlace( new BABYLON.Vector3( 5 * 1000, 0, 0 ) );
+    Space.spaceships.list[0].root.rotate( BABYLON.Axis.Y, 90 * EngineUtils.toRadian, BABYLON.Space.LOCAL );
     
-    this.player.position.copyFrom( this.spaceships.list[0].position ).addInPlace( new BABYLON.Vector3( 0, 0, -10 ) );
+    Space.player.position.copyFrom( Space.spaceships.list[0].position ).addInPlace( new BABYLON.Vector3( 0, 0, -10 ) );
 
 
-    this.objectcontainers.add( this.planets.list[0].root, ObjectContainers.TYPES.STATIC, true ); //insert planet object?
-    this.objectcontainers.add( this.planets.list[1].root, ObjectContainers.TYPES.STATIC, true ); //insert planet object?
-    this.objectcontainers.add( this.planets.list[2].root, ObjectContainers.TYPES.STATIC, true ); //insert planet object?
-    this.objectcontainers.add( this.planets.list[3].root, ObjectContainers.TYPES.STATIC, true ); //insert planet object?
+    Space.objectcontainers.add( Space.planets.list[0].root, ObjectContainers.TYPES.STATIC, true ); //insert planet object?
+    Space.objectcontainers.add( Space.planets.list[1].root, ObjectContainers.TYPES.STATIC, true ); //insert planet object?
+    Space.objectcontainers.add( Space.planets.list[2].root, ObjectContainers.TYPES.STATIC, true ); //insert planet object?
+    Space.objectcontainers.add( Space.planets.list[3].root, ObjectContainers.TYPES.STATIC, true ); //insert planet object?
 
-    for ( let r = 0; r < this.asteroids.list.length; r++ ) {
+    for ( let r = 0; r < Space.asteroids.list.length; r++ ) {
 
-        for ( let c = 0; c < this.asteroids.list[r].list.length; c++ ) {
+        for ( let c = 0; c < Space.asteroids.list[r].list.length; c++ ) {
 
-            for ( let a = 0; a < this.asteroids.list[r].list[c].list.length; a++ ) {
+            for ( let a = 0; a < Space.asteroids.list[r].list[c].list.length; a++ ) {
                 
-                this.objectcontainers.add( this.asteroids.list[r].list[c].list[a] );
+                Space.objectcontainers.add( Space.asteroids.list[r].list[c].list[a] );
             }
         }
     }
 
-    this.objectcontainers.add( this.spaceships.list[0].root, ObjectContainers.TYPES.DYNAMIC ); //insert spaceship object?
+    Space.objectcontainers.add( Space.spaceships.list[0].root, ObjectContainers.TYPES.DYNAMIC ); //insert spaceship object?
 
 
-    this.scene.debugLayer.show( { embedMode: true } );
+    Space.scene.debugLayer.show( { embedMode: true } );
 
 
 } );
 
-Space.add( "run", function( delta ) {
+Space.add( "run", (): void => {
     
 
-    this.objectcontainers.update();
+    Space.objectcontainers.update();
     
-    this.planets.update();
+    Space.planets.update();
 
-    this.asteroids.update();
+    Space.asteroids.update();
 
-    this.spaceships.update(); 
+    Space.spaceships.update(); 
 
-    this.player.update();
+    Space.player.update();
     
-    this.camera.update();
+    Space.camera.update();
 
-    this.star.update();
+    Space.star.update();
 
-    this.ui.update();
+    Space.ui.update();
 
 
 } );
