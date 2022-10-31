@@ -13,6 +13,19 @@ class Game implements IGame {
     public stage: () => void = (): void => {};
     public run: () => void = (): void => {};
 
+    public objectcontainers: IObjectContainers;
+    public physics: IPhysics;
+    public controls: IControls;
+    public camera: ICamera;
+    public postprocess: IPostProcess;
+    public ui: IUI;
+    public star: IStar;
+    public player: IPlayer;
+    public spaceships: ISpaceships;
+    public clouds: IClouds;
+    public planets: IPlanets;
+    public asteroids: IAsteroids;
+
     public constructor() {
 
         const ready: Event = new Event( "ready" );
@@ -21,7 +34,7 @@ class Game implements IGame {
 
             console.log( `\n\n${ document.title }\n\nPalto Studio\nCopyright Noah Bussinger ${ new Date().getUTCFullYear() }\n\n` );
 
-            this.engine = new Engine();
+            public engine = new Engine();
 
             window.dispatchEvent( ready );
         } );
@@ -36,21 +49,21 @@ class Game implements IGame {
 
         switch( key ) {
 
-            case "install": this.install = (): void => callback.call( this ); break;
-            case "stage": this.stage = (): void => callback.call( this ); break;
-            case "run": this.run = (): void => callback.call( this ); break;
+            case "install": public install = (): void => callback.call( this ); break;
+            case "stage": public stage = (): void => callback.call( this ); break;
+            case "run": public run = (): void => callback.call( this ); break;
         }
     }
 
     public update( scene: BABYLON.Scene, update: ( delta: number ) => void ): void {
 
-        this.engine.set( ( delta: number ): void => {
+        public engine.set( ( delta: number ): void => {
         
-            this.engine.stats[3].begin();
+            public engine.stats[3].begin();
 
             update( delta );
 
-            this.engine.stats[3].end();
+            public engine.stats[3].end();
     
             scene.render();
         } );

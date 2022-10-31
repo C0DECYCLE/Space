@@ -25,7 +25,7 @@ class StateMachine implements IStateMachine {
         this.list.set( key, new State( onEnter, onLeave ) );
     }
 
-    public set( key: string, params: any ): void {
+    public set( key: string, params?: any ): void {
 
         if ( this.list.has( key ) === false ) {
             

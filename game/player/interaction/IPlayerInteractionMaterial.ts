@@ -6,6 +6,4 @@
 
 interface IPlayerInteractionMaterial extends BABYLON.StandardMaterial {
 
-    
-
 }
