@@ -4,8 +4,6 @@
     2022
 */
 
-interface IVaryings {
+interface ICloudsDistributer extends IConfigurable {
 
-    [ key: string ]: any;
-    
 }

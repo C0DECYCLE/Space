@@ -4,7 +4,7 @@
     2022
 */
 
-class AsteroidsRing implements IAsteroidsRing, IAsteroidsDistributer {
+class AsteroidsRing implements IAsteroidsRing {
 
     public config: IConfig = new Config(
 

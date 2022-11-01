@@ -6,7 +6,7 @@
     2022
 */
 
-class PlanetSurfaceObsticle extends EntityLOD implements IPlanetSurfaceObsticle, ISpawnable {
+class PlanetSurfaceObsticle extends EntityLOD implements IPlanetSurfaceObsticle <- ISpawnable {
 
     config = {
 
@@ -27,7 +27,7 @@ class PlanetSurfaceObsticle extends EntityLOD implements IPlanetSurfaceObsticle,
         EngineUtils.configure.call( this, config );
         
         this.#pickVariant( obsticle );
-        this.#createModels();   
+        this.fromModels( this.models );
         this.#makeUnique();
         this.#post();
     }
@@ -38,11 +38,6 @@ class PlanetSurfaceObsticle extends EntityLOD implements IPlanetSurfaceObsticle,
         
         this.variant = variants[ Math.round( variants.length * Math.random() ).clamp( 0, variants.length - 1 ) ];
         this.models = this.game.planets.obsticles[ obsticle ][ this.variant ];
-    }
-
-    #createModels() {
-
-        this.fromModels( this.models );
     }
 
     #makeUnique() {

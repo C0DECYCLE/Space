@@ -108,7 +108,7 @@ class EntitySpawnerPlanet implements IEntitySpawnerPlanet {
 
             const result: boolean | IVaryings = filter[i]( ...args );
 
-            if ( result === false ) {
+            if ( typeof result === "boolean" ) {
 
                 return false;
             }

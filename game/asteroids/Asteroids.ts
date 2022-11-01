@@ -78,7 +78,7 @@ class Asteroids implements IAsteroids {
 
             const invMin: number = Math.round( 1 / AbstractLOD.getMinimum( model.name ) );
             
-            model.entitymanager = new EntityManager( model.name, this.scene, (): BABYLON.InstancedMesh => this.scene.assets.instance( model, ( mesh: BABYLON.Mesh ): void => {} ), invMin * 4, invMin );
+            model.entitymanager = new EntityManager( model.name, this.scene, (): BABYLON.InstancedMesh => this.scene.assets.instance( model, ( _mesh: BABYLON.InstancedMesh ): void => {} ), invMin * 4, invMin );
             models.push( model );
         }
 

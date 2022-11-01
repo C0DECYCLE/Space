@@ -4,6 +4,6 @@
     2022
 */
 
-interface IPlayerInteractionMaterial extends BABYLON.StandardMaterial {
+interface IPlayerInteractionMaterial extends BABYLON.CustomMaterial {
 
 }

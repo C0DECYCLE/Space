@@ -10,6 +10,8 @@
 
     console.log( `[Typescript]: Initialization` );
 
+    const initTimestamp = performance.now();
+
     function fetchConfig() {
 
         fetch( "/tsconfig.json" ).then( response => response.json() ).then( onConfigLoaded );
@@ -91,6 +93,7 @@
         for ( let i = 0; i < transpilations.length; i++ ) {
 
             const newScript = document.createElement( "script" );
+            newScript.id = `${ transpilations[i][1].src }`.replace( `${ document.location.origin }/`, "" );
             newScript.innerHTML = transpilations[i][0];
 
             transpilations[i][1].replaceWith( newScript );
@@ -99,7 +102,9 @@
         
         window.removeEventListener( "error", onError);
 
-        console.log( `[Typescript]: Files: ${ transpilations.length }, Errors: ${ e }` );
+        const time = performance.now() - initTimestamp;
+
+        console.log( `[Typescript]: Files: ${ transpilations.length }, Time: ${ Math.round( time / 1000 * 100 ) / 100 }s (${ Math.round( time / transpilations.length ) }ms/file), Errors: ${ e }` );
     }
 
     window.addEventListener( "DOMContentLoaded", fetchConfig );

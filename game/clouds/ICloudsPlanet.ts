@@ -4,8 +4,6 @@
     2022
 */
 
-interface IVaryings {
+interface ICloudsPlanet extends ICloudsDistributer {
 
-    [ key: string ]: any;
-    
 }
