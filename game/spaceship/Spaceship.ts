@@ -7,14 +7,15 @@
 class Spaceship implements ISpaceship {
 
     public static readonly model: IModels = new Models();
+    public static readonly interactables: string[] = [];
 
     public static load( game: IGame ): void {
         
-        const importLods = game.scene.assets.list.get( `spaceship-${ this.name.toLowerCase() }` ) .getChildren();
+        const importLods: BABYLON.Mesh[] = game.scene.assets.list.get( `spaceship-${ this.name.toLowerCase() }` )?.getChildren() || [];
         
-        for ( let i = 0; i < importLods.length; i++ ) {
+        for ( let i: number = 0; i < importLods.length; i++ ) {
             
-            let model = game.scene.assets.traverse( importLods[i], mesh => {
+            const model: BABYLON.Mesh = game.scene.assets.traverse( importLods[i], mesh => {
             
                 if ( i === 0 ) {
 
