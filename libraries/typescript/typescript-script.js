@@ -8,13 +8,11 @@
 
 ( function () {
 
-    console.log( `[Typescript]: Initialization` );
-
     const initTimestamp = performance.now();
 
     function fetchConfig() {
 
-        fetch( "/tsconfig.json" ).then( response => response.json() ).then( onConfigLoaded );
+        fetch( "/tsconfig.json" ).then( response => response.json() ).then( onConfigLoaded ).catch( onConfigFailed );
     }
     
     const transpileWorker = window.URL.createObjectURL( new Blob( [ `
@@ -34,22 +32,30 @@
 
         onmessage = ( { data: [ sourceUrl, sourceCode, tsconfig, tspath ] } ) => {
 
-          importScripts( tspath );
+            importScripts( tspath );
 
-          const raw = sourceCode ? sourceCode : load( sourceUrl );
-
-          postMessage( ts.transpile( raw, tsconfig.compilerOptions ) );
+            const raw = sourceCode ? sourceCode : load( sourceUrl );
+            
+            postMessage( [ ts.transpile( raw, tsconfig.compilerOptions ), raw.split( "\\n" ).length ] );
         };
 
     ` ], { type: "text/javascript" } ) );
 
+    function onConfigFailed( error ) {
+
+        console.log( `[Typescript]: Config: Failed` );
+    } 
+
     async function onConfigLoaded( tsconfig ) {
+
+        console.log( `[Typescript]: Config: Successful` );
 
         const scripts = document.getElementsByTagName( "script" );
         const pending = [];
         const transpilations = [];
 
         let j = 0;
+        let linesSum = 0;
 
         for ( let i = 0; i < scripts.length; i++ ) {
 
@@ -64,9 +70,10 @@
                     const w = new Worker( transpileWorker );
 
                     w.postMessage( [ src, innerHTML, tsconfig, `${ document.location.origin }/libraries/typescript/typescript.4.8.4.js` ] );
-                    w.onmessage = ( { data: transpiled } ) => {
+                    w.onmessage = ( { data: [ transpiled, linesCount ] } ) => {
 
-                        transpilations[ index ] = [ transpiled, scripts[i] ];
+                        transpilations[ index ] = [ transpiled, scripts[i], linesCount ];
+                        linesSum += linesCount;
 
                         w.terminate();
                         resolve();
@@ -80,7 +87,7 @@
         let t = 0;
         let e = 0;
 
-        function onError( error ) {
+        function onTranspileError( error ) {
 
             error.preventDefault();
 
@@ -88,7 +95,7 @@
             e++;
         }
         
-        window.addEventListener( "error", onError);
+        window.addEventListener( "error", onTranspileError );
         
         for ( let i = 0; i < transpilations.length; i++ ) {
 
@@ -100,11 +107,11 @@
             t++;
         }
         
-        window.removeEventListener( "error", onError);
+        window.removeEventListener( "error", onTranspileError );
 
         const time = performance.now() - initTimestamp;
 
-        console.log( `[Typescript]: Files: ${ transpilations.length }, Time: ${ Math.round( time / 1000 * 100 ) / 100 }s (${ Math.round( time / transpilations.length ) }ms/file), Errors: ${ e }` );
+        console.log( `[Typescript]: Files: ${ transpilations.length }, Lines: ${ linesSum } (${ Math.round( linesSum / transpilations.length ) }/file), Time: ${ Math.round( time / 1000 * 100 ) / 100 }s (${ Math.round( time / transpilations.length ) }ms/file), Errors: ${ e } (${ Math.round( e / transpilations.length ) }/file)` );
     }
 
     window.addEventListener( "DOMContentLoaded", fetchConfig );

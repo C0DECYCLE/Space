@@ -1,18 +1,16 @@
-"use strict";
-
 /*
     Palto Studio
     Developed by Noah Bussinger
     2022
 */
 
-class Spaceship {
+class Spaceship implements ISpaceship {
 
-    static load( game ) {
+    public static readonly model: IModels = new Models();
+
+    public static load( game: IGame ): void {
         
-        this.model = [];
-        
-        const importLods = game.scene.assets.list.get( `spaceship-${ this.name.toLowerCase() }` ).getChildren();
+        const importLods = game.scene.assets.list.get( `spaceship-${ this.name.toLowerCase() }` ) .getChildren();
         
         for ( let i = 0; i < importLods.length; i++ ) {
             
