@@ -20,7 +20,7 @@ class UIMarker implements IUIMarker {
     
     public readonly ui: IUI;
     public readonly transformNode: BABYLON.TransformNode;
-    public readonly lightUp: boolean = false;
+    public lightUp: boolean = false;
 
     public get visible(): boolean {
 

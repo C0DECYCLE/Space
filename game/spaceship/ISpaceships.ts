@@ -10,8 +10,6 @@ interface ISpaceships {
 
     readonly scene: BABYLON.Scene;
 
-    readonly variants: Map< string, Spaceship >;
-
     readonly list: ISpaceship[];
 
     register( variant: string, config: IConfig ): void;

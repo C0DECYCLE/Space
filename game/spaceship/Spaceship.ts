@@ -6,199 +6,181 @@
 
 class Spaceship implements ISpaceship {
 
-    public static readonly model: IModels = new Models();
-    public static readonly interactables: string[] = [];
+    public config: IConfig = new Config(  
 
-    public static load( game: IGame ): void {
-        
-        const importLods: BABYLON.Mesh[] = game.scene.assets.list.get( `spaceship-${ this.name.toLowerCase() }` )?.getChildren() || [];
-        
-        for ( let i: number = 0; i < importLods.length; i++ ) {
-            
-            const model: BABYLON.Mesh = game.scene.assets.traverse( importLods[i], mesh => {
-            
-                if ( i === 0 ) {
+        [ "key", UUIDv4() ],
 
-                    game.star.shadow.receive( mesh, false, true );
-                }
-            }, this.interactables );
-            
-            //model = game.scene.assets.merge( model );
-            //game.star.shadow.receive( model, false, true );
-            
-            this.model.push( model );
-        }
+        [ "landingAngle", 45 * EngineUtils.toRadian ],
+        [ "upLerp", 0.1 ]
+    );
+
+    public readonly game: IGame;
+    public readonly scene: BABYLON.Scene;
+    public readonly spaceships: ISpaceships;
+
+    public lod: ILOD;
+    public travel: ISpaceshipTravel;
+    public physics: ISpaceshipPhysics;
+    public thrusters?: ISpaceshipThrusters;
+
+    public get root(): BABYLON.TransformNode {
+
+        return this.lod.root;
     }
 
-    config = {
+    public get position(): BABYLON.Vector3 {
+        
+        return this.lod.position;
+    }
 
-        key: UUIDv4(),
+    public get rotationQuaternion(): BABYLON.Quaternion {
+        
+        return this.lod.rotationQuaternion;
+    }
 
-        landingAngle: 45 * EngineUtils.toRadian,
-        upLerp: 0.1,
-    };
+    public get hasController(): boolean {
 
-    game = null;
-    scene = null;
-    spaceships = null;
+        return this.hasControllerValue;
+    }
 
-    lod = null;
-    thrusters = null;
-    travel = null;
-    physics = null;
+    public get nearPlanet(): IPlanet | false {
 
-    #seatDiffrence = new BABYLON.Vector3();
-    #hasController = false;
-    #nearPlanet = null;
-    #isLanded = false;
+        return this.nearPlanetValue || false;
+    }
 
-    constructor( game, config ) {
+    public get isLanded(): boolean {
+
+        return this.isLandedValue;
+    }
+
+    private readonly seatDiffrence: BABYLON.Vector3 = new BABYLON.Vector3();
+    private hasControllerValue: boolean = false;
+    private nearPlanetValue?: IPlanet;
+    private isLandedValue: boolean = false;
+
+    protected constructor( game: IGame, models: IModels, config: IConfig ) {
 
         this.game = game;
         this.scene = this.game.scene;
         this.spaceships = this.game.spaceships;
         
-        EngineUtils.configure.call( this, config );
+        EngineUtils.configure( this, config );
         
-        this.#createLod();   
-        this.#setupTravel();
-        this.#addPhysics();
-        this.#registerInteractable();
-    }
-
-    get root() {
-
-        return this.lod.root;
-    }
-
-    get position() {
-        
-        return this.lod.position;
-    }
-
-    get rotationQuaternion() {
-        
-        return this.lod.rotationQuaternion;
-    }
-
-    get hasController() {
-
-        return this.#hasController;
-    }
-
-    get nearPlanet() {
-
-        return this.#nearPlanet;
-    }
-
-    get isLanded() {
-
-        return this.#isLanded;
+        this.createLod( models );   
+        this.setupTravel();
+        this.addPhysics();
+        this.registerInteractable();
     }
     
-    post() {
+    public post(): void {
 
-        this.#addThrusters();
+        this.addThrusters();
     }
 
-    update() {
+    public update(): void {
 
         this.lod.update();
         this.travel.update();
         this.physics.update();
 
-        if ( this.thrusters !== null ) {
+        if ( this.thrusters !== undefined ) {
             
             this.thrusters.update();
         }
     }
 
-    planetInsert( planet, distance, planetThreashold ) {
+    public planetInsert( planet: IPlanet, distance: number, planetThreashold: number ): void {
 
-        if ( distance <= planetThreashold && this.#nearPlanet === null ) {
+        if ( distance <= planetThreashold && this.nearPlanet === false ) {
 
-            this.#nearPlanet = planet;
+            this.nearPlanetValue = planet;
         }
 
-        if ( this.#nearPlanet !== null && PlanetUtils.compare( this.#nearPlanet, planet ) && distance > planetThreashold ) {
+        if ( this.nearPlanet !== false && PlanetUtils.compare( this.nearPlanet, planet ) && distance > planetThreashold ) {
 
-            this.#nearPlanet = null;
+            this.nearPlanetValue = undefined;
         }
     }
 
-    enter( player ) {
+    public enter( player: IPlayer ): void {
 
-        this.#rememberSeat( player );
-        this.#hasController = true;
+        this.rememberSeat( player );
+        this.hasControllerValue = true;
     }
 
-    leave( player ) {
+    public leave( player: IPlayer ): void {
 
-        this.#hasController = false;
-        this.#putOutOfSeat( player );
+        this.hasControllerValue = false;
+        this.putOutOfSeat( player );
     }
 
-    land() {
+    public land(): void {
 
-        this.#isLanded = true;
+        this.isLandedValue = true;
     }
 
-    takeoff() {
+    public takeoff(): void {
 
-        this.#isLanded = false;
+        this.isLandedValue = false;
     }
 
-    #createLod() {
+    private createLod( model: IModels ): void {
 
-        this.lod = new LOD( this.game, ( instance, value ) => { 
+        this.lod = new LOD( this.game, ( instance: BABYLON.TransformNode, value: boolean ): void => { 
 
-            this.game.star.shadow.cast( instance, true, value ); 
+            if ( instance instanceof BABYLON.AbstractMesh ) {
+
+                this.game.star.shadow.cast( instance, true, value ); 
+            }
         } );
 
-        this.lod.fromModels( this.constructor.model, ( mesh, level ) => {} );
+        this.lod.fromModels( model, ( _instance: BABYLON.InstancedMesh, _level: number ): void => {} );
 
         this.root.name = `spaceships_spaceship${ this.config.key }`;
 
-        this.game.ui.registerMarker( this.root, { type: "hint" } );
+        this.game.ui.registerMarker( this.root, new Config( [ "type", "hint" ] ) );
     }
 
-    #setupTravel() {
+    private setupTravel(): void {
         
         this.travel = new SpaceshipTravel( this );
     }
 
-    #addThrusters() {
+    private addThrusters(): void {
         
         this.thrusters = new SpaceshipThrusters( this, this.config.thrusters );
     }
 
-    #addPhysics() {
+    private addPhysics(): void {
 
         this.physics = new SpaceshipPhysics( this );
     }
 
-    #registerInteractable() {
+    private registerInteractable(): void {
         
-        const cockpit = this.root.getChildMeshes( false, mesh => mesh.name.split("i-")[1] == "glass" )[0];
+        const cockpit: BABYLON.AbstractMesh = this.root.getChildMeshes( false, ( mesh: BABYLON.Node ): boolean => mesh.name.split( "i-" )[1] == "glass" )[0];
 
-        this.game.player.interaction.register( cockpit, () => {
+        if ( cockpit instanceof BABYLON.InstancedMesh ) {
 
-            this.game.player.state.set( "spaceship", this );
-
-        }, () => {
-
-            this.game.player.state.set( "space" );
-        } );
+            this.game.player.interaction.register( cockpit, (): void => {
+    
+                this.game.player.state.set( "spaceship", this );
+    
+            }, (): void => {
+    
+                this.game.player.state.set( "space" );
+            } );
+        }
     }
 
-    #rememberSeat( player ) {
+    private rememberSeat( player: IPlayer ): void {
 
-        this.#seatDiffrence.copyFrom( this.position ).subtractInPlace( player.position ).applyRotationQuaternionInPlace( this.rotationQuaternion.invert() );
+        this.seatDiffrence.copyFrom( this.position ).subtractInPlace( player.position ).applyRotationQuaternionInPlace( this.rotationQuaternion.invert() );
     }
 
-    #putOutOfSeat( player ) {
+    private putOutOfSeat( player: IPlayer ): void {
 
-        player.position.copyFrom( this.position ).subtractInPlace( this.#seatDiffrence.applyRotationQuaternionInPlace( this.rotationQuaternion ) );
+        player.position.copyFrom( this.position ).subtractInPlace( this.seatDiffrence.applyRotationQuaternionInPlace( this.rotationQuaternion ) );
     }
 
 }

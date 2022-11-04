@@ -41,7 +41,7 @@ class PhysicsEntity implements IPhysicsEntity {
 
     public readonly game: IGame;
     public readonly scene: BABYLON.Scene;
-    public readonly mesh: BABYLON.AbstractMesh;
+    public readonly mesh: BABYLON.AbstractMesh | BABYLON.TransformNode;
     
     public readonly type: EPhysicsTypes;
 
@@ -77,7 +77,12 @@ class PhysicsEntity implements IPhysicsEntity {
 
     public get colliderMax(): number {
 
-        return this.mesh.ellipsoid.max + this.mesh.ellipsoidOffset.biggest;
+        if ( this.mesh instanceof BABYLON.AbstractMesh ) {
+
+            return this.mesh.ellipsoid.max + this.mesh.ellipsoidOffset.biggest;
+        }
+
+        return 0;
     }
 
     public get colliderMin(): number {
@@ -87,7 +92,12 @@ class PhysicsEntity implements IPhysicsEntity {
 
     public get colliderSize(): BABYLON.Vector3 {
 
-        return this.mesh.ellipsoid.clone();
+        if ( this.mesh instanceof BABYLON.AbstractMesh ) {
+
+            return this.mesh.ellipsoid.clone();
+        }
+
+        return BABYLON.Vector3.Zero();
     }
 
     protected readonly debug: boolean = false;
@@ -101,7 +111,7 @@ class PhysicsEntity implements IPhysicsEntity {
     
     private lastTimeOnGround: number = 0;
 
-    public constructor( game: IGame, mesh: BABYLON.AbstractMesh, type: EPhysicsTypes = PhysicsEntity.TYPES.DYNAMIC ) {
+    public constructor( game: IGame, mesh: BABYLON.AbstractMesh | BABYLON.TransformNode, type: EPhysicsTypes = PhysicsEntity.TYPES.DYNAMIC ) {
 
         this.game = game;
         this.scene = this.game.scene;
@@ -109,10 +119,12 @@ class PhysicsEntity implements IPhysicsEntity {
 
         this.type = type;
 
-        PhysicsEntity.collidable( this.mesh, this.type );
+        if ( this.mesh instanceof BABYLON.AbstractMesh ) {
 
-        this.setupFitCollider();
-        this.setupDebug();
+            PhysicsEntity.collidable( this.mesh, this.type );
+            this.setupFitCollider();
+            this.setupDebug();
+        }
     }
 
     public update(): void {
@@ -124,14 +136,22 @@ class PhysicsEntity implements IPhysicsEntity {
     public pause( allowCollisions: boolean = false, allowUpdate: boolean = false ): void {
 
         this.isPaused = !allowUpdate;
-        this.isCollidingPaused = !allowCollisions;
-        PhysicsEntity.collisions( this.mesh, allowCollisions );
+
+        if ( this.mesh instanceof BABYLON.AbstractMesh ) {
+
+            this.isCollidingPaused = !allowCollisions;
+            PhysicsEntity.collisions( this.mesh, allowCollisions );
+        }
     }
 
     public resume(): void {
 
-        PhysicsEntity.collisions( this.mesh, true );
-        this.isCollidingPaused = false;
+        if ( this.mesh instanceof BABYLON.AbstractMesh ) {
+
+            PhysicsEntity.collisions( this.mesh, true );
+            this.isCollidingPaused = false;
+        }
+        
         this.isPaused = false;
     }
 
@@ -156,9 +176,12 @@ class PhysicsEntity implements IPhysicsEntity {
 
     public setColliderSize( size: BABYLON.Vector3 ): void {
 
-        this.mesh.ellipsoid.copyFrom( size );
+        if ( this.mesh instanceof BABYLON.AbstractMesh ) {
+
+            this.mesh.ellipsoid.copyFrom( size );
         
-        EngineUtils.minmax( this.mesh.ellipsoid );
+            EngineUtils.minmax( this.mesh.ellipsoid );
+        }
     }
 
     protected preUpdate(): void {
@@ -185,7 +208,7 @@ class PhysicsEntity implements IPhysicsEntity {
 
         if ( this.delta.x !== 0 || this.delta.y !== 0 || this.delta.z !== 0 ) {
 
-            if ( this.isCollidingPaused === false ) {
+            if ( this.isCollidingPaused === false && this.mesh instanceof BABYLON.AbstractMesh ) {
 
                 PhysicsEntity.collisions( this.mesh, false );
                 this.mesh.moveWithCollisions( this.delta );
@@ -203,19 +226,25 @@ class PhysicsEntity implements IPhysicsEntity {
 
     private setupFitCollider(): void {
         
-        this.fitCollider();
-        this.colliderMinValue = this.mesh.ellipsoid.min;
+        if ( this.mesh instanceof BABYLON.AbstractMesh ) {
+
+            this.fitCollider();
+            this.colliderMinValue = this.mesh.ellipsoid.min;
+        }
     }
     
     private fitCollider(): void {
 
-        const boundingInfo: BABYLON.BoundingInfo = this.mesh.collisionMesh !== undefined ? this.mesh.collisionMesh.getBoundingInfo() : this.mesh.getBoundingInfo();
+        if ( this.mesh instanceof BABYLON.AbstractMesh ) {
 
-        this.mesh.ellipsoid.copyFrom( boundingInfo.boundingBox.extendSizeWorld ).scaleInPlace( PhysicsEntity.COLLIDER_SCALE );
-        this.mesh.ellipsoidOffset.copyFrom( boundingInfo.boundingBox.center ).applyRotationQuaternionInPlace( this.rotationQuaternion ).multiplyInPlace( this.mesh.scaling );
+            const boundingInfo: BABYLON.BoundingInfo = this.mesh.collisionMesh !== undefined ? this.mesh.collisionMesh.getBoundingInfo() : this.mesh.getBoundingInfo();
 
-        EngineUtils.minmax( this.mesh.ellipsoid );
-        EngineUtils.minmax( this.mesh.ellipsoidOffset );
+            this.mesh.ellipsoid.copyFrom( boundingInfo.boundingBox.extendSizeWorld ).scaleInPlace( PhysicsEntity.COLLIDER_SCALE );
+            this.mesh.ellipsoidOffset.copyFrom( boundingInfo.boundingBox.center ).applyRotationQuaternionInPlace( this.rotationQuaternion ).multiplyInPlace( this.mesh.scaling );
+
+            EngineUtils.minmax( this.mesh.ellipsoid );
+            EngineUtils.minmax( this.mesh.ellipsoidOffset );
+        }
     }
 
     private updateFitCollider(): void {
@@ -223,28 +252,34 @@ class PhysicsEntity implements IPhysicsEntity {
         this.fitCollider();
     }
 
-    private setupDebug( mesh: BABYLON.AbstractMesh = this.mesh ): void {
+    private setupDebug( mesh: BABYLON.AbstractMesh | BABYLON.TransformNode = this.mesh ): void {
 
         if ( this.debug === false ) {
 
             return;
         }
 
-        this.debugMesh = BABYLON.MeshBuilder.CreateSphere( "debugMesh", { diameter: 1, segments: 8 }, this.scene );
-        this.debugMesh.isPickable = false;
-        this.debugMesh.material = this.scene.debugMaterialRed;
-        this.updateDebug( mesh );
-        
-        if ( mesh.collisionMesh !== undefined ) {
+        if ( mesh instanceof BABYLON.AbstractMesh ) {
 
-            mesh.collisionMesh.isVisible = true;
+            this.debugMesh = BABYLON.MeshBuilder.CreateSphere( "debugMesh", { diameter: 1, segments: 8 }, this.scene );
+            this.debugMesh.isPickable = false;
+            this.debugMesh.material = this.scene.debugMaterialRed;
+            this.updateDebug( mesh );
+            
+            if ( mesh.collisionMesh !== undefined ) {
+
+                mesh.collisionMesh.isVisible = true;
+            }
         }
     }
 
-    private updateDebug( mesh: BABYLON.AbstractMesh = this.mesh ): void {
+    private updateDebug( mesh: BABYLON.AbstractMesh | BABYLON.TransformNode = this.mesh ): void {
 
-        this.debugMesh?.position.copyFrom( mesh.position ).addInPlace( mesh.ellipsoidOffset );
-        this.debugMesh?.scaling.copyFrom( mesh.ellipsoid ).scaleInPlace( 2 );
+        if ( mesh instanceof BABYLON.AbstractMesh ) {
+
+            this.debugMesh?.position.copyFrom( mesh.position ).addInPlace( mesh.ellipsoidOffset );
+            this.debugMesh?.scaling.copyFrom( mesh.ellipsoid ).scaleInPlace( 2 );
+        }
     }
 
 }

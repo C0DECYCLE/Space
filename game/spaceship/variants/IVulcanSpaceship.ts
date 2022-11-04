@@ -4,4 +4,6 @@
     2022
 */
 
-type TFilter = ( ...args: any[] ) => false | IVaryings;
+interface IVulcanSpaceship extends ISpaceship {
+
+}

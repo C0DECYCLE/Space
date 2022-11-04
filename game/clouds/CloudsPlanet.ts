@@ -75,10 +75,10 @@ class CloudsPlanet extends EntitySpawnerPlanet implements ICloudsPlanet {
 
     private setupFilters(): void {
 
-        this.addPreFilter( ( position: BABYLON.Vector3 ): boolean | IVaryings => this.cull_filter( position ) );
+        this.addPreFilter( ( position: BABYLON.Vector3 ): false | IVaryings => this.cull_filter( position ) );
     }
 
-    private cull_filter( position: BABYLON.Vector3 ): boolean | IVaryings {
+    private cull_filter( position: BABYLON.Vector3 ): false | IVaryings {
         
         const noiseOffset: BABYLON.Vector3 = new BABYLON.Vector3( this.planet.position.x, this.config.seed, this.planet.position.z );
         const cull: number = this.noise( position.clone().scaleInPlace( this.planet.config.radius * this.config.cullScale ).addInPlace( noiseOffset ) );

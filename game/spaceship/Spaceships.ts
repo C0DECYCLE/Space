@@ -13,7 +13,6 @@ class Spaceships implements ISpaceships {
     public readonly game: IGame;
     public readonly scene: BABYLON.Scene;
 
-    public readonly variants: Map< string, Spaceship > = new Map()< string, Spaceship >;
     public readonly list: ISpaceship[] = [];
 
     public constructor( game: IGame, config: IConfig ) {
@@ -28,9 +27,17 @@ class Spaceships implements ISpaceships {
 
     public register( variant: string, config: IConfig ): void {
 
-        const variantClass: Spaceship = this.variants.get( variant );
+        let spaceship: ISpaceship | null = null;
 
-        this.list.push( new variantClass( this.game, config ) );
+        switch ( variant ) {
+
+            case "vulcan": spaceship = new VulcanSpaceship( this.game, config ); break;
+        }
+
+        if ( spaceship !== null ) {
+
+            this.list.push( spaceship );
+        }
     }
 
     public update(): void {
@@ -51,13 +58,28 @@ class Spaceships implements ISpaceships {
 
     private setupVariants(): void {
         
-        this.setupVariant( VulcanSpaceship );
+        this.load( VulcanSpaceship.models, "Vulcan", VulcanSpaceship.interactables );
     }
 
-    private setupVariant( variantClass: Spaceship ): void {
+    private load( target: IModels, name: string, interactables: string[] ): void {
+        
+        const importLods: BABYLON.Mesh[] = this.game.scene.assets.list.get( `spaceship-${ name.toLowerCase() }` )?.getChildren() || [];
+        
+        for ( let i: number = 0; i < importLods.length; i++ ) {
+            
+            const model: BABYLON.Mesh = this.game.scene.assets.traverse( importLods[i], mesh => {
+            
+                if ( i === 0 ) {
 
-        variantClass.load( this.game );
-        this.variants.set( variantClass.name.toLowerCase(), variantClass );
+                    this.game.star.shadow.receive( mesh, false, true );
+                }
+            }, interactables );
+            
+            //model = game.scene.assets.merge( model );
+            //game.star.shadow.receive( model, false, true );
+            
+            target.push( model );
+        }
     }
 
 }

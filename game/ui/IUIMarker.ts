@@ -10,7 +10,7 @@ interface IUIMarker extends IConfigurable {
 
     readonly transformNode: BABYLON.TransformNode;
 
-    readonly lightUp: boolean;
+    lightUp: boolean;
 
     get visible(): boolean;
 

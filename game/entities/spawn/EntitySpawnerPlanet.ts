@@ -87,7 +87,7 @@ class EntitySpawnerPlanet implements IEntitySpawnerPlanet {
 
     private evaluate( position: BABYLON.Vector3, n: number ): void {
 
-        const pretest: boolean | IVaryings = this.test( this.preFilters, [ position ] );
+        const pretest: false | IVaryings = this.test( this.preFilters, [ position ] );
 
         if ( pretest instanceof Varyings ) {
             
@@ -100,15 +100,15 @@ class EntitySpawnerPlanet implements IEntitySpawnerPlanet {
         }
     }
 
-    private test( filter: TFilter[], args: any[] ): boolean | IVaryings {
+    private test( filter: TFilter[], args: any[] ): false | IVaryings {
 
         const varyings: IVaryings = new Varyings();
 
         for ( let i: number = 0; i < filter.length; i++ ) {
 
-            const result: boolean | IVaryings = filter[i]( ...args );
+            const result: false | IVaryings = filter[i]( ...args );
 
-            if ( typeof result === "boolean" ) {
+            if ( result === false ) {
 
                 return false;
             }

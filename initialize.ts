@@ -147,7 +147,8 @@ Space.add( "install", (): void => {
     //instead of reduce/avoid sqrt -> reduce / avoid loops
 
 //!!!! After all typescript ported go through all files again to see if no errors anymore and game still works and check that no use stricts at beginning of file!!!
-//!!!! before merge make javascript backup branch!!!!
+//repeate this until no errors anywhere, also use correctly undefined (unintentional not knowing of value) and null (intentional ansence of value)
+//!!!! before merge make javascript backup branch!!!
 //!!!! remove objectcontainer system and do better approach!! backup objectcontainer before removal!!! plan removal and better approach!!!
 //Fix/remove whole game structure? by using the game stuff as singletons
 //look where it makes more sense to use {} again, configs etc the indexable ones?

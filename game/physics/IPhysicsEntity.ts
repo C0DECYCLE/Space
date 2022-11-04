@@ -14,7 +14,7 @@ interface IPhysicsEntity {
 
     readonly scene: BABYLON.Scene;
 
-    readonly mesh: BABYLON.AbstractMesh;
+    readonly mesh: BABYLON.AbstractMesh | BABYLON.TransformNode;
     
     readonly type: EPhysicsTypes;
 
