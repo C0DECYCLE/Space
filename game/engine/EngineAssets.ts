@@ -139,6 +139,23 @@ class EngineAssets implements IEngineAssets {
         return instance;
     }
 
+    public provide( name: string, onMeshTraverse: ( mesh: BABYLON.Mesh, i: number ) => void ): IModels {
+        
+        const models: IModels = new Models();
+        const importLods: BABYLON.Mesh[] = this.scene.assets.list.get( name )?.getChildren() || [];
+        
+        for ( let i: number = 0; i < importLods.length; i++ ) {
+            
+            const model: BABYLON.Mesh = this.scene.assets.traverse( importLods[i], ( mesh: BABYLON.Mesh ): void => onMeshTraverse( mesh, i ) );
+            const invMin: number = Math.round( 1 / AbstractLOD.getMinimum( model.name ) );
+            
+            model.entitymanager = new EntityManager( model.name, this.scene, (): BABYLON.InstancedMesh => this.scene.assets.instance( model, ( _mesh: BABYLON.InstancedMesh ): void => {} ), invMin * 4, invMin );
+            models.push( model );
+        }
+
+        return models;
+    }
+
     private createCache(): void {
 
         this.cache = new BABYLON.Node( "EngineAssets_cache", this.scene );

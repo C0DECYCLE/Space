@@ -63,26 +63,13 @@ class Asteroids implements IAsteroids {
 
     private setupModels( variant: string ): IModels {
         
-        const models: IModels = new Models();
-        const importLods: BABYLON.Mesh[] = this.scene.assets.list.get( `asteroid-${ variant }` )?.getChildren() || [];
-        
-        for ( let i: number = 0; i < importLods.length; i++ ) {
+        return this.scene.assets.provide( `asteroid-${ variant }`, ( mesh: BABYLON.Mesh, i: number ): void => {
             
-            const model: BABYLON.Mesh = this.scene.assets.traverse( importLods[i], ( mesh: BABYLON.Mesh ) => {
-            
-                if ( i === 0 ) {
+            if ( i === 0 ) {
 
-                    this.game.star.shadow.receive( mesh, false, true );
-                } 
-            } );
-
-            const invMin: number = Math.round( 1 / AbstractLOD.getMinimum( model.name ) );
-            
-            model.entitymanager = new EntityManager( model.name, this.scene, (): BABYLON.InstancedMesh => this.scene.assets.instance( model, ( _mesh: BABYLON.InstancedMesh ): void => {} ), invMin * 4, invMin );
-            models.push( model );
-        }
-
-        return models;
+                this.game.star.shadow.receive( mesh, false, true );
+            } 
+        } );
     }
 
 }

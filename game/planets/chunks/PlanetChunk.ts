@@ -1,131 +1,131 @@
-"use strict";
-
 /*
     Palto Studio
     Developed by Noah Bussinger
     2022
 */
 
-class PlanetChunk extends BABYLON.Mesh {
+class PlanetChunk extends BABYLON.Mesh implements IPlanetChunk {
 
-    #planet = null;
+    public readonly planet: IPlanet;
     
-    #size = undefined;
-    #resolution = undefined;
+    public get size(): number {
 
-    #doesShadows = false;
+        return this.sizeValue;
+    }
+
+    public get resolution(): number {
+
+        return this.resolutionValue;
+    }
     
-    /* override */ constructor( planet, nodeKey, config ) {
+    private sizeValue: number;
+    private resolutionValue: number;
+
+    private doesShadows: boolean = false;
+    
+    public constructor( planet: IPlanet, nodeKey: string, config: IConfig ) {
     
         super( `planet${ planet.config.key }_chunk_${ nodeKey }`, planet.scene );
     
-        this.#planet = planet;
+        this.planet = planet;
 
-        this.#setupMesh();
-        this.#setupGeometry( config );
+        this.setupMesh();
+        this.setupGeometry( config );
 
-        this.#setupShadow( config.size );
-        this.#setupPhysics( config.size );
+        this.setupShadow( config.size );
+        this.setupPhysics( config.size );
     }
 
-    get size() {
-
-        return this.#size;
-    }
-
-    get resolution() {
-
-        return this.#resolution;
-    }
-
-    stitch( neighbors ) {
+    /*
+    public stitch( neighbors ): void {
 
         //this.#stitchGeometry( neighbors, this.size, this.resolution );
     }
+    */
 
-    toggleShadow( value ) {
+    public toggleShadow( value: boolean ): void {
 
         if ( value === true ) {
 
-            this.#addShadow( this.#size );
+            this.addShadow( this.sizeValue );
 
         } else {
 
-            this.#removeShadow();
+            this.removeShadow();
         }
     }
 
-    /* override */ dispose() {
-    
-        this.#removeShadow();
+    public override dispose(): void {
+
+        this.removeShadow();
         super.dispose( ...arguments );
     }
 
-    #setupMesh() {
+    private setupMesh(): void {
 
         this.isPickable = false;
-        this.material = this.#planet.material;
-        this.parent = this.#planet.root;
+        this.material = this.planet.material;
+        this.parent = this.planet.root;
     }
 
-    #setupGeometry( config ) {
+    private setupGeometry( config: IConfig ): void {
 
-        this.#size = config.size;
-        this.#resolution = config.resolution;
+        this.sizeValue = config.size;
+        this.resolutionValue = config.resolution;
 
-        const vertexData = new BABYLON.VertexData();
-        vertexData.positions = this.#buildPositions( config.position, config.fixRotationQuaternion, config.size, config.resolution );
-        vertexData.indices = this.#buildIndices( config.resolution ); 
+        const vertexData: BABYLON.VertexData = new BABYLON.VertexData();
+        vertexData.positions = this.buildPositions( config.position, config.fixRotationQuaternion, config.size, config.resolution );
+        vertexData.indices = this.buildIndices( config.resolution ); 
         //
         //vertexData.normals = []; BABYLON.VertexData.ComputeNormals( vertexData.positions, vertexData.indices, vertexData.normals );
         //
         vertexData.applyToMesh( this, false );
     } 
 
-    #setupPhysics( size ) {
+    private setupPhysics( size: number ): void {
 
-        this.#planet.physics.enable( this, size );
+        this.planet.physics.enable( this, size );
     }
 
-    #setupShadow( size ) {
+    private setupShadow( size: number ): void {
 
-        if ( this.#planet.helper.maskEnabled === true ) {
+        if ( this.planet.helper.maskEnabled === true ) {
 
-            this.#addShadow( size );
+            this.addShadow( size );
         }
     }
 
-    #addShadow( size ) {
+    private addShadow( _size: number ): void {
 
         //causes weird glitch
-        //if ( size < this.#planet.game.star.shadow.config.radius / PlanetQuadtree.divisionSizeFactor ) {
-        if ( this.#doesShadows === false ) {    
+        //if ( size < this.planet.game.star.shadow.config.radius / PlanetQuadtree.divisionSizeFactor ) {
+        if ( this.doesShadows === false ) {    
 
-            //this.#planet.game.star.shadow.cast( this, false, true );        
-            this.#planet.game.star.shadow.receive( this, false, true );  
+            //this.planet.game.star.shadow.cast( this, false, true );        
+            this.planet.game.star.shadow.receive( this, false, true );  
 
-            this.#doesShadows = true;
+            this.doesShadows = true;
         }
     }
 
-    #removeShadow() {
+    private removeShadow(): void {
 
-        if ( this.#doesShadows === true ) {
+        if ( this.doesShadows === true ) {
 
-            //this.#planet.game.star.shadow.cast( this, false, false );        
-            this.#planet.game.star.shadow.receive( this, false, false );  
+            //this.planet.game.star.shadow.cast( this, false, false );        
+            this.planet.game.star.shadow.receive( this, false, false );  
 
-            this.#doesShadows = false;
+            this.doesShadows = false;
         }
     }
 
-    #buildPositions( offset, fixRotationQuaternion, size, resolution ) {
+    private buildPositions( offset: BABYLON.Vector3, fixRotationQuaternion: BABYLON.Quaternion, size: number, resolution: number ): Float32Array {
 
-        let row;
-        let col;
-        const positions = new Float32Array( (resolution+1) * (resolution+1) * 3 );
-        let position;
-        let i = 0;
+        let row: number;
+        let col: number;
+        const positions: Float32Array = new Float32Array( (resolution+1) * (resolution+1) * 3 );
+        let position: BABYLON.Vector3;
+        let i: number = 0;
 
         for ( row = 0; row <= resolution; row++ ) {
             for ( col = 0; col <= resolution; col++) {
@@ -133,7 +133,7 @@ class PlanetChunk extends BABYLON.Mesh {
                 position = new BABYLON.Vector3( (col * size) / resolution - size / 2.0, 0, ((resolution - row) * size) / resolution - size / 2.0 );
                 position.applyRotationQuaternionInPlace( fixRotationQuaternion );
                 position.addInPlace( offset );
-                PlanetUtils.terrainify( this.#planet, position );
+                PlanetUtils.terrainify( this.planet, position );
 
                 positions[i] = position.x;
                 positions[i+1] = position.y;
@@ -146,12 +146,12 @@ class PlanetChunk extends BABYLON.Mesh {
         return positions;
     }
 
-    #buildIndices( resolution ) {
+    private buildIndices( resolution: number ): Uint16Array {
 
-        let row;
-        let col;
-        const indices = new Uint16Array( resolution * resolution * 6 );
-        let i = 0;
+        let row: number;
+        let col: number;
+        const indices: Uint16Array = new Uint16Array( resolution * resolution * 6 );
+        let i: number = 0;
 
         for ( row = 0; row < resolution; row++ ) {
             for ( col = 0; col < resolution; col++ ) {
@@ -171,6 +171,7 @@ class PlanetChunk extends BABYLON.Mesh {
         return indices;
     }
 
+    /*
     #stitchGeometry( neighbors, size, resolution ) {
 
         let row;
@@ -238,5 +239,6 @@ class PlanetChunk extends BABYLON.Mesh {
     
         return false;
     }
-    
+    */
+
 }

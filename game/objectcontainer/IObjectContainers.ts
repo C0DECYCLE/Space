@@ -14,9 +14,9 @@ interface IObjectContainers extends IConfigurable {
 
     get mainGrid(): BABYLON.Vector3;
     
-    addAll( nodes: BABYLON.TransformNode[], type: EObjectContainerTypes, ignoreMinMax: boolean ): void;
+    addAll( nodes: BABYLON.TransformNode[], type?: EObjectContainerTypes, ignoreMinMax?: boolean ): void;
 
-    add( node: BABYLON.TransformNode, type: EObjectContainerTypes, ignoreMinMax: boolean, positionWorld: BABYLON.Vector3, gridMinMax?: { min: BABYLON.Vector3, max: BABYLON.Vector3 } ): void;
+    add( node: BABYLON.TransformNode, type?: EObjectContainerTypes, ignoreMinMax?: boolean, positionWorld?: BABYLON.Vector3, gridMinMax?: { min: BABYLON.Vector3, max: BABYLON.Vector3 } ): void;
 
     get( index: string ): IObjectContainer | null;
 

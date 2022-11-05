@@ -1,12 +1,10 @@
-"use strict";
-
 /*
     Palto Studio
     Developed by Noah Bussinger
     2022
 */
-
-class PlanetQuadtreeStitch {
+/*
+class PlanetQuadtreeStitch implements IPlanetQuadtreeStitch {
 
     #planet = null;
 
@@ -86,3 +84,4 @@ class PlanetQuadtreeStitch {
     }
 
 }
+*/
