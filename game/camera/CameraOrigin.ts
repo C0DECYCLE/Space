@@ -16,7 +16,7 @@ class CameraOrigin implements ICameraOrigin {
 
     public get actual(): BABYLON.Vector3 {
 
-        return this.actualPosition.clone();
+        return this.actualPosition;
     }
 
     private readonly camera: ICamera;
@@ -95,7 +95,7 @@ class CameraOrigin implements ICameraOrigin {
 
                 this.setupNode( node );
             }
-
+            
             node._actualPosition.copyFrom( node.position );
 
             this.toRelative( node.position );
@@ -113,7 +113,7 @@ class CameraOrigin implements ICameraOrigin {
             const node: any = scene.rootNodes[i];
 
             if ( node.name !== "camera" && node.position && node._actualPosition ) {
-
+                
                 node.position.copyFrom( node._actualPosition );
             }
         }

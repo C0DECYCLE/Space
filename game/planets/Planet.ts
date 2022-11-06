@@ -207,7 +207,7 @@ class Planet implements IPlanet {
     
     private updateClouds( distance: number ): void {
 
-        if ( this.clouds !== null ) {
+        if ( this.clouds !== undefined ) {
 
             this.clouds.update( distance );
         }
@@ -236,8 +236,8 @@ class Planet implements IPlanet {
     }
     
     private updateSurface( distance: number ): void {
-
-        if ( this.surface !== null ) {
+        
+        if ( this.surface !== undefined ) {
 
             this.surface.update( distance );
         }

@@ -115,7 +115,7 @@ class UIMarker implements IUIMarker {
         const worldPosition: BABYLON.Vector3 = EngineUtils.getWorldPosition( this.transformNode );
         const size: number = EngineUtils.getBoundingSize( this.transformNode );
 
-        this.distanceValue = this.ui.game.camera.getScreenDistance( this.transformNode, worldPosition );
+        this.distanceValue = this.ui.game.camera.getScreenDistance( worldPosition );
         this.directionValue = worldPosition.subtractInPlace( this.ui.game.player.position ).normalize();
 
         if ( this.config.type === "travel" ) {

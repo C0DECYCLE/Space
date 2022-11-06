@@ -59,7 +59,12 @@ class LOD extends AbstractLOD implements ILOD {
         
         for ( let i = 0; i < models.length; i++ ) {
             
-            this.add( this.game.scene.assets.instance( models[i], ( instance: BABYLON.InstancedMesh ) => onEveryInstance?.( instance, i ) ), AbstractLOD.getMinimum( models[i].name ) );
+            const model: BABYLON.TransformNode = models[i];
+
+            if ( model instanceof BABYLON.Mesh ) {
+                
+                this.add( this.game.scene.assets.instance( model, ( instance: BABYLON.InstancedMesh ) => onEveryInstance?.( instance, i ) ), AbstractLOD.getMinimum( model.name ) );
+            }
         }
     }
 

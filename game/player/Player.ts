@@ -87,7 +87,7 @@ class Player implements IPlayer {
             this.state.set( "planet", planet );
         }
 
-        if ( this.state.is( "planet" ) === true && PlanetUtils.compare( this.planet, planet ) && distance > planetThreashold ) {
+        if ( this.state.is( "planet" ) === true && this.planet !== null && PlanetUtils.compare( this.planet, planet ) && distance > planetThreashold ) {
 
             this.state.set( "space" );
         }

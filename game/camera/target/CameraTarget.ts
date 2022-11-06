@@ -77,7 +77,7 @@ class CameraTarget implements ICameraTarget {
     }
 
     protected syncPosition( target: ICameraTargetable ): BABYLON.Vector3 {
-
+        
         return BABYLON.Vector3.Lerp( this.camera.position, target.position.add( this.config.offset.applyRotationQuaternion( target.rotationQuaternion ) ), this.config.lerpPos );
     }
     

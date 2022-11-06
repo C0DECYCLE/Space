@@ -6,7 +6,7 @@
 
 class SmartObjectArray< T extends object > extends ObjectArray< T > implements ISmartObjectArray< T > {
 
-    private static readonly default: any = new Object();
+    private static readonly default: any = null;
 
     public get size(): number {
 

@@ -84,6 +84,7 @@ class PlanetHelper implements IPlanetHelper {
         this.maskValue = true;
     }
 
+    /*
     private debugInfluence(): void {
 
         const debug_influence: BABYLON.Mesh = BABYLON.MeshBuilder.CreateSphere( "planet_debug_influence", { diameter: ( this.planet.config.radius + this.planet.config.influence ) * 2, segments: 32 }, this.planet.scene );
@@ -96,5 +97,6 @@ class PlanetHelper implements IPlanetHelper {
         debug_maxHeight.material = this.planet.scene.debugMaterialRed;
         debug_maxHeight.parent = this.planet.root;
     }
+    */
 
 }

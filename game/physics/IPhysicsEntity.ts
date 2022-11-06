@@ -34,7 +34,7 @@ interface IPhysicsEntity {
 
     update(): void;
 
-    pause( allowCollisions: boolean, allowUpdate: boolean ): void;
+    pause( allowCollisions?: boolean, allowUpdate?: boolean ): void;
 
     resume(): void;
 

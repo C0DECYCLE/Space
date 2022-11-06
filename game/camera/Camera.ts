@@ -72,7 +72,7 @@ class Camera implements ICamera {
     public update(): void {
 
         if ( this.target !== null ) {
-
+            
             this.targetCamera?.update( this.target );
         }
     }

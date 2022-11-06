@@ -6,18 +6,18 @@
 
 class BoundingCache implements IBoundingCache {
     
-    public readonly min: BABYLON.Vector3;
-    public readonly max: BABYLON.Vector3;
+    public readonly min: BABYLON.Vector3 = new BABYLON.Vector3();
+    public readonly max: BABYLON.Vector3 = new BABYLON.Vector3();
 
-    public readonly diagonal: BABYLON.Vector3;
-    public size: number;
+    public readonly diagonal: BABYLON.Vector3 = new BABYLON.Vector3();
+    public size: number = 0;
 
     public constructor( node: BABYLON.Node ) {
     
         const boundingVectors: { min: BABYLON.Vector3; max: BABYLON.Vector3; } = node.getHierarchyBoundingVectors( true );
 
-        this.min = boundingVectors.min;
-        this.max = boundingVectors.max;
+        this.min.copyFrom( boundingVectors.min );
+        this.max.copyFrom( boundingVectors.max );
     }
     
     public update(): void {
