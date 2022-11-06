@@ -62,7 +62,7 @@ class EntityLOD extends AbstractLOD implements IEntityLOD {
 
     protected override disposeCurrent( currentLevel: number ): void {
 
-        if ( this.doCollidable === true ) {
+        if ( this.doCollidable === true && this.currentEntity instanceof BABYLON.AbstractMesh ) {
 
             PhysicsEntity.collidable( this.currentEntity, undefined, false );
         }
