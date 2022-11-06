@@ -148,17 +148,16 @@ Space.add( "install", (): void => {
     //instead of reduce/avoid sqrt -> reduce / avoid loops
 
 
-//also use correctly undefined (unintentional not knowing of value) and null (intentional ansence of value)
-//!!!! before merge make javascript backup branch!!!
-//!!!! remove objectcontainer system and do better approach!! backup objectcontainer before removal!!! plan removal and better approach!!!
-//make configs in constructor optional, configs as enums? 
-//planet utils heightmap variants as enums
-//Fix/remove whole game structure? by using the game stuff as singletons
-//look where it makes more sense to use {} again, configs etc the indexable ones?
-//take assets and co out of scene into standalone, like ambient etc... go to everywhere Object is interfaced and try to reduce that, also stop with the indexable interface/class thing
+// 1. also use correctly undefined (unintentional not knowing of value) and null (intentional absence of value)
+// 2. make configs in constructor optional, configs as enums? 
+// 3. planet utils heightmap variants as enums
+// 4. remove objectcontainer system and do better approach!! backup objectcontainer before removal!!! plan removal and better approach!!!
+// 5. look where it makes more sense to use {} again, configs etc the indexable ones?
+// 6. Fix/remove whole game structure? by using the game stuff as singletons
+// 7. take assets and co out of scene into standalone, like ambient etc... go to everywhere Object is interfaced and try to reduce that, also stop with the indexable interface/class thing
+// 8. go through everything look whats good whats bad what change what remove
 
-//make singleton structure go through everything look whats good whats bad what change what remove, 
-//make stuff improvements that are important before surface object finish, then stuff after
+//!!!! before merge make javascript backup branch!!!
 
 } );
 
