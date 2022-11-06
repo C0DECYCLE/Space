@@ -8,7 +8,7 @@ class Player implements IPlayer {
 
     public config: IConfig = new Config(  
 
-        [ "float", 0.005 ],
+        [ "float", 10.005 ],
 
         [ "walk", 0.005 ],
         [ "run", 0.015 ],

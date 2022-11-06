@@ -122,7 +122,7 @@ class CloudsPlanet extends EntitySpawnerPlanet implements ICloudsPlanet {
 
         const cloudWorld: BABYLON.Vector3 = BABYLON.Vector3.TransformCoordinates( cloud.position, this.planet.root._worldMatrix );
         const dot: number = BABYLON.Vector3.Dot( planetToCamera, cloudWorld.subtract( this.planet.position ).normalize() );
-        
+                                                                    //cache normal cloud direction
         if ( dot > occlusionFallOf ) {
             
             if ( radiusDistance < CloudsPlanet.LOD_LIMIT ) {

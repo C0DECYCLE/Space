@@ -64,7 +64,7 @@ class AbstractLOD implements IAbstractLOD {
         this.lastValidLevel = this.currentLevel;
     }
 
-    protected setLevel( level: number ): void {
+    protected setLevel( level: number | false ): void {
 
         if ( level !== this.currentLevel ) {
 
@@ -77,9 +77,9 @@ class AbstractLOD implements IAbstractLOD {
         }
     }
 
-    protected getLevelFromCoverage( coverage: number ): number {
+    protected getLevelFromCoverage( coverage: number ): number | false {
 
-        for ( let i = 0; i < this.levels.length; i++ ) {
+        for ( let i: number = 0; i < this.levels.length; i++ ) {
 
             if ( ( i - 1 < 0 ? coverage <= Infinity : coverage < this.levels[ i - 1 ][1] ) && coverage >= this.levels[i][1] ) {
 
@@ -87,7 +87,7 @@ class AbstractLOD implements IAbstractLOD {
             }
         }
 
-        return this.levels.length - 1;
+        return false;
     }
 
 }

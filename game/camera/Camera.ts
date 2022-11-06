@@ -87,7 +87,6 @@ class Camera implements ICamera {
         if ( source instanceof BABYLON.Vector3 ) {
 
             return BABYLON.Vector3.DistanceSquared( source, this.position );
-
         }
 
         return BABYLON.Vector3.DistanceSquared( EngineUtils.getWorldPosition( source ), this.position );
