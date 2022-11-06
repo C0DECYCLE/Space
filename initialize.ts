@@ -155,6 +155,7 @@ Space.add( "install", (): void => {
 //Fix/remove whole game structure? by using the game stuff as singletons
 //look where it makes more sense to use {} again, configs etc the indexable ones?
 //take assets and co out of scene into standalone, like ambient etc... go to everywhere Object is interfaced and try to reduce that, also stop with the indexable interface/class thing
+//typescript compiler optimizations?
 
 } );
 

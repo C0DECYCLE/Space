@@ -30,7 +30,7 @@ class Game implements IGame {
 
         const ready: Event = new Event( "ready" );
 
-        window.addEventListener( "load", ( _event: Event ): void => {
+        window.addEventListener( "compile", ( _event: Event ): void => {
 
             console.log( `\n\n${ document.title }\n\nPalto Studio\nCopyright Noah Bussinger ${ new Date().getUTCFullYear() }\n\n` );
 

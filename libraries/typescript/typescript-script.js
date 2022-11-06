@@ -9,6 +9,7 @@
 ( function () {
 
     const initTimestamp = performance.now();
+    const compileEvent = new Event( "compile" );
 
     function fetchConfig() {
 
@@ -112,6 +113,8 @@
         const time = performance.now() - initTimestamp;
 
         console.log( `[Typescript]: Files: ${ transpilations.length }, Lines: ${ linesSum } (${ Math.round( linesSum / transpilations.length ) }/file), Time: ${ Math.round( time / 1000 * 100 ) / 100 }s (${ Math.round( time / transpilations.length ) }ms/file), Errors: ${ e } (${ Math.round( e / transpilations.length ) }/file)` );
+        
+        window.dispatchEvent( compileEvent );
     }
 
     window.addEventListener( "DOMContentLoaded", fetchConfig );

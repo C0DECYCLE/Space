@@ -7,7 +7,7 @@
 class VulcanSpaceship extends Spaceship implements IVulcanSpaceship {
 
     static readonly interactables: string[] = [ "glass" ];
-    static readonly models: IModels;
+    static readonly models: IModels = new Models();
 
     public override config: IConfig = new Config(  
 
