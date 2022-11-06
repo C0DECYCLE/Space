@@ -48,7 +48,9 @@ class SpaceshipTravel implements ISpaceshipTravel {
         this.system.maxLifeTime = 12;
 
         //this.minEmitPower_c = 10;
+        this.system.minEmitPower = 10;
         //this.maxEmitPower_c = 15;
+        this.system.maxEmitPower = 15;
 
         this.system.minAngularSpeed = 0;
         this.system.maxAngularSpeed = Math.PI / 2.0;
@@ -68,6 +70,7 @@ class SpaceshipTravel implements ISpaceshipTravel {
         sphereEmitter.direction2 = new BABYLON.Vector3( 0, 0, -1 );
 
         //this.emitRate_c = 1 * 1000;
+        this.system.emitRate = 1 * 1000;
         this.system.updateSpeed = 1.0;
     }
 
@@ -78,9 +81,9 @@ class SpaceshipTravel implements ISpaceshipTravel {
             this.system.reset();
             this.system.start();
 
-            this.system.emitRate = 0;
-            this.system.minEmitPower = 0;
-            this.system.maxEmitPower = 0;
+            //this.system.emitRate = 0;
+            //this.system.minEmitPower = 0;
+            //this.system.maxEmitPower = 0;
 
             //new TWEEN.Tween( this.system ).to( { emitRate: this.system.emitRate_c, minEmitPower: this.system.minEmitPower_c, maxEmitPower: this.system.maxEmitPower_c }, 500 ).start();
 

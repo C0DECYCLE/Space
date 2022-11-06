@@ -53,17 +53,16 @@ class SpaceshipPhysicsTravel implements ISpaceshipPhysicsTravel {
 
     private evaluate(): void {
 
-        if ( this.evaluateKeyPress() === true ) {
+        const potential = this.getPotentialMarker();
 
-            const potential = this.getPotentialMarker();
+        if ( potential !== null ) {
 
-            if ( potential !== null ) {
+            potential.lightUp = true;
 
-                potential.lightUp = true;
+            if ( this.evaluateKeyPress() === true ) {
 
+                this.onKeyPress( potential );
             }
-
-            this.onKeyPress( potential );
         }
     }
 

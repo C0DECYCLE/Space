@@ -73,7 +73,10 @@ class AbstractLOD implements IAbstractLOD {
                 this.disposeCurrent( this.currentLevel );
             }
 
-            this.makeCurrent( level );
+            if ( level !== false ) {
+
+                this.makeCurrent( level );
+            }
         }
     }
 

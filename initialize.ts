@@ -89,7 +89,7 @@ Space.add( "install", (): void => {
             gravity: 0.7, atmosphere: 512, waveLengths: new BABYLON.Color3( 450, 500, 680 ), clouds: { color: "#a56325", cullScale: 0.003, limit: 0.375, mainScale: 0.85, heightScale: 0.5 },
             seed: new BABYLON.Vector3( 8513, -9011, -5910 ), variant: "1", mountainy: 3.5, warp: 1.0,
             colors: { main: "#f1993b", second: "#fab05c", third: "#945e41", steep: "#51515f" },
-            surface: true
+            //surface: true
         },
 
         { 
@@ -140,14 +140,15 @@ Space.add( "install", (): void => {
     //for what is the objectcontainer system good for??? remove!
     //find all times where the code dummly loops over big n of things (asteroids, clouds, surface obsticles, chunks) -> target: no loop n greater than 100-500? possible?
     //stop avoiding sqrt! thats not the problem, other things are more expencive, go back to every time avoided the distance function! and find a better solution like chunking, which was done with objectcontainer
+    //DOTs are not faster than sqrt when first normalizing vectors, not every frame normalize entities on planet again! store normal direction of entity!
     //when chunked, distance approximation player -> target: 
     //(precalc: distance and direction from chunk center to target)
     //if chunk size small approx dist = dist to chunk center
     //more precise: approx. dist. = distance to chunk center - precalc distance from target to chunk center * dot( direction chunk center to player, precalc direction chunkcenter to target )
     //instead of reduce/avoid sqrt -> reduce / avoid loops
 
-//!!!! After all typescript ported go through all files again to see if no errors anymore and game still works and check that no use stricts at beginning of file!!!
-//repeate this until no errors anywhere, also use correctly undefined (unintentional not knowing of value) and null (intentional ansence of value)
+
+//also use correctly undefined (unintentional not knowing of value) and null (intentional ansence of value)
 //!!!! before merge make javascript backup branch!!!
 //!!!! remove objectcontainer system and do better approach!! backup objectcontainer before removal!!! plan removal and better approach!!!
 //make configs in constructor optional, configs as enums? 
@@ -155,7 +156,9 @@ Space.add( "install", (): void => {
 //Fix/remove whole game structure? by using the game stuff as singletons
 //look where it makes more sense to use {} again, configs etc the indexable ones?
 //take assets and co out of scene into standalone, like ambient etc... go to everywhere Object is interfaced and try to reduce that, also stop with the indexable interface/class thing
-//typescript compiler optimizations?
+
+//make singleton structure go through everything look whats good whats bad what change what remove, 
+//make stuff improvements that are important before surface object finish, then stuff after
 
 } );
 
