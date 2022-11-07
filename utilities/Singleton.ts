@@ -4,16 +4,20 @@
     2022
 */
 
-class Singleton implements ISingleton {
+class Singleton< T > implements ISingleton {
 
-    protected static instance: ISingleton;
+    protected static instance: Singleton< T >;
+
+    private constructor() {
+
+    }
 
     public static instantiate(): void {
 
-        this.instance = new this();
+        this.instance = new Singleton< T >();
     } 
 
-    public static get i(): ISingleton {
+    public static get i(): Singleton< T > {
 
         if ( this.instance === undefined ) {
 

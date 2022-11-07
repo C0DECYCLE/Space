@@ -36,8 +36,6 @@ interface IGame {
 
     planets: IPlanets;
     
-    asteroids: IAsteroids;
-    
     addOnReady( callback: () => void ): void;
 
     add( key: string, callback: () => void ): void;

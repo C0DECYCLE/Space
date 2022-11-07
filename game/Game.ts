@@ -23,7 +23,6 @@ class Game implements IGame {
     public spaceships: ISpaceships;
     public clouds: IClouds;
     public planets: IPlanets;
-    public asteroids: IAsteroids;
 
     public constructor() {
 

@@ -106,10 +106,10 @@ Space.add( "install", (): void => {
         }
     ] );
 
-    Space.asteroids = new Asteroids( Space, new Config() );
+    Asteroids.instantiate(); log(Asteroids.i);
                                     //new Config( [ "key", 0 ] )...
-    Space.asteroids.register( "ring", { key: 0, seed: "7417", radius: 5 * 1000, spread: 400, height: 80, density: 0.06 } );
-    Space.asteroids.register( "ring", { key: 1, seed: "4674", radius: 5 * 1000, spread: 1200, height: 40, density: 0.04 } );
+    Asteroids.i.register( "ring", { key: 0, seed: "7417", radius: 5 * 1000, spread: 400, height: 80, density: 0.06 } );
+    Asteroids.i.register( "ring", { key: 1, seed: "4674", radius: 5 * 1000, spread: 1200, height: 40, density: 0.04 } );
 
     //make better optimized lod system
     // -> optimized blend in distance
@@ -176,8 +176,8 @@ Space.add( "stage", (): void => {
     Space.planets.list[2].place( Space.star.position, 1000 * 1000, 240 );
     Space.planets.list[3].place( Space.planets.list[2].position, 60 * 1000, 60 );
     
-    Space.asteroids.list[0].position?.copyFrom( Space.planets.list[0].position );
-    Space.asteroids.list[1].position?.copyFrom( Space.planets.list[0].position );
+    Asteroids.i.list[0].position?.copyFrom( Space.planets.list[0].position );
+    Asteroids.i.list[1].position?.copyFrom( Space.planets.list[0].position );
 
     Space.spaceships.list[0].position.copyFrom( Space.planets.list[0].position ).addInPlace( new BABYLON.Vector3( 5 * 1000, 0, 0 ) );
     Space.spaceships.list[0].root.rotate( BABYLON.Axis.Y, 90 * EngineUtils.toRadian, BABYLON.Space.LOCAL );
@@ -195,7 +195,7 @@ Space.add( "run", (): void => {
     
     Space.planets.update();
 
-    Space.asteroids.update();
+    Asteroids.i.update();
 
     Space.spaceships.update(); 
 
