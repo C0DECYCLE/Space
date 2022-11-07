@@ -10,7 +10,7 @@ class PlanetSurface extends AbstractEntitySpawnerPlanet implements IPlanetSurfac
 
     public override config: IConfig = new Config(  
 
-        [ "density", 5.0 ],
+        [ "density", 0.5 ],
         [ "cullScale", 0.002 ],
         [ "limit", 0.4 ]
     );

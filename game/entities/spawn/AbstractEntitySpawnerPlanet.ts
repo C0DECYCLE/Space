@@ -10,7 +10,7 @@ abstract class AbstractEntitySpawnerPlanet implements IAbstractEntitySpawnerPlan
 
         [ "seed", undefined ],
 
-        [ "density", 0.04 ]
+        [ "density", 0.0015 ]
     );
 
     public readonly planet: IPlanet;
@@ -43,8 +43,8 @@ abstract class AbstractEntitySpawnerPlanet implements IAbstractEntitySpawnerPlan
 
     protected spawn(): void {
 
-        const planetSurfaceArea: number = 4 * Math.PI * this.planet.config.radius;
-        const n: number = Math.floor( planetSurfaceArea * this.config.density );
+        const planetSurfaceArea: number = 4 * Math.PI * (this.planet.config.radius ** 2);
+        const n: number = Math.floor( planetSurfaceArea * 0.01 * this.config.density );
         
         for ( let i: number = 0; i < n; i++ ) {
 

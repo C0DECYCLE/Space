@@ -99,7 +99,7 @@ function register(): void {
             seed: new BABYLON.Vector3( -925, -2011, 7770 ),
             colors: { main: "#7a8161", second: "#856160", third: "#a8ceb0", steep: "#252123" },
             //surface: true
-        },
+        } /*,
 
         { 
             key: 3, radius: 512, spin: 0.01, 
@@ -107,6 +107,7 @@ function register(): void {
             seed: new BABYLON.Vector3( 2253, 7001, 4099 ), mountainy: 2, warp: 0.6,
             colors: { main: "#a8a6d2", second: "#b3b1e0", third: "#a09dcc", steep: "#8582a8" }
         }
+        */
     ] );
 
     Asteroids.getInstance().register( "ring", { key: 0, seed: "7417", radius: 5 * 1000, spread: 400, height: 80, density: 0.06 } );
@@ -125,7 +126,7 @@ function stage(): void {
     Planets.getInstance().list[0].place( Star.getInstance().position, 500 * 1000, 90 );
     Planets.getInstance().list[1].place( Star.getInstance().position, 800 * 1000, -45 );
     Planets.getInstance().list[2].place( Star.getInstance().position, 1000 * 1000, 240 );
-    Planets.getInstance().list[3].place( Planets.getInstance().list[2].position, 60 * 1000, 60 );
+    //Planets.getInstance().list[3].place( Planets.getInstance().list[2].position, 60 * 1000, 60 );
     
     Asteroids.getInstance().list[0].position?.copyFrom( Planets.getInstance().list[0].position );
     Asteroids.getInstance().list[1].position?.copyFrom( Planets.getInstance().list[0].position );
