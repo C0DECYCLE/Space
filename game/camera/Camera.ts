@@ -94,22 +94,7 @@ class Camera implements ICamera {
 
     public getApproximateScreenDistance( source: BABYLON.TransformNode ): number {
         
-        const container: IObjectContainer | null = ObjectContainerUtils.getObjectContainer( source );
-        
-        if ( container !== null ) {
-            
-            if ( container.index === this.game.objectcontainers.mainIndex ) {
-                
-                return this.getScreenDistance( source );
-    
-            } else {
-                
-                return container.distance;
-            }
-        }
-        
-        console.error( "Camera, getApproximateScreenDistance: Source has no objectcontainer!" );
-        return this.config.max;
+        return this.getScreenDistance( source );
     }
 
     public getScreenCoverage( node: BABYLON.TransformNode, size?: number ): number {

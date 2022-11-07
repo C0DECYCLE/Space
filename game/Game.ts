@@ -13,7 +13,6 @@ class Game implements IGame {
     public stage: () => void = (): void => {};
     public run: () => void = (): void => {};
 
-    public objectcontainers: IObjectContainers;
     public physics: IPhysics;
     public controls: IControls;
     public camera: ICamera;

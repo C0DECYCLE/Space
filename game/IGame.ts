@@ -16,8 +16,6 @@ interface IGame {
     
     run: () => void;
 
-    objectcontainers: IObjectContainers;
-
     physics: IPhysics;
 
     controls: IControls;

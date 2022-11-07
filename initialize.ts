@@ -49,8 +49,6 @@ Space.addOnReady( (): void => {
 Space.add( "install", (): void => {
 
 
-    Space.objectcontainers = new ObjectContainers( Space, new Config() );
-
     Space.physics = new Physics( Space, new Config() );
     
     Space.controls = new Controls( Space, new Config() );
@@ -156,8 +154,6 @@ Space.add( "install", (): void => {
     */
 
 
-    // 4. remove objectcontainer system and do better approach!! backup objectcontainer before removal!!! plan removal and better approach!!!
-
     // 6. Fix/remove whole game structure? by using the game stuff as singletons
 
     // 2. make configs in constructor optional, configs as enums? 
@@ -189,25 +185,6 @@ Space.add( "stage", (): void => {
     Space.player.position.copyFrom( Space.spaceships.list[0].position ).addInPlace( new BABYLON.Vector3( 0, 0, -10 ) );
 
 
-    Space.objectcontainers.add( Space.planets.list[0].root, ObjectContainers.TYPES.STATIC, true ); //insert planet object?
-    Space.objectcontainers.add( Space.planets.list[1].root, ObjectContainers.TYPES.STATIC, true ); //insert planet object?
-    Space.objectcontainers.add( Space.planets.list[2].root, ObjectContainers.TYPES.STATIC, true ); //insert planet object?
-    Space.objectcontainers.add( Space.planets.list[3].root, ObjectContainers.TYPES.STATIC, true ); //insert planet object?
-
-    for ( let r = 0; r < Space.asteroids.list.length; r++ ) {
-
-        for ( let c = 0; c < Space.asteroids.list[r].list.length; c++ ) {
-
-            for ( let a = 0; a < Space.asteroids.list[r].list[c].list.length; a++ ) {
-                
-                Space.objectcontainers.add( Space.asteroids.list[r].list[c].list[a] );
-            }
-        }
-    }
-
-    Space.objectcontainers.add( Space.spaceships.list[0].root, ObjectContainers.TYPES.DYNAMIC ); //insert spaceship object?
-
-
     Space.scene.debugLayer.show( { embedMode: true } );
 
 
@@ -215,8 +192,6 @@ Space.add( "stage", (): void => {
 
 Space.add( "run", (): void => {
     
-
-    Space.objectcontainers.update();
     
     Space.planets.update();
 
