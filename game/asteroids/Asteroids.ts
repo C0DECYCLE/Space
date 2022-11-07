@@ -4,7 +4,7 @@
     2022
 */
 
-class Asteroids implements IAsteroids {
+class Asteroids extends Singleton implements IAsteroids {
 
     public config: IConfig = new Config(
 
@@ -18,12 +18,12 @@ class Asteroids implements IAsteroids {
 
     private readonly variantKeys: string[] = [ "a", "b", "c" ];
 
-    public constructor( game: IGame, config: IConfig ) {
+    protected constructor() {
 
-        this.game = game;
+        super();
+
+        this.game = Space;
         this.scene = this.game.scene;
-
-        EngineUtils.configure( this, config );
 
         this.setupVariants();
     }
