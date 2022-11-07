@@ -82,7 +82,7 @@ class Engine implements IEngine {
         this.stats.push( this.createStat( 1, 1, 1 ) ); // ms update
         this.stats.push( this.createStat( 1, 1, 2 ) ); // ms render
 
-        this.stats.push( this.createStat( 3, 3, 0 ) ); // calls draw
+        //this.stats.push( this.createStat( 3, 3, 0 ) ); // calls draw
     }
 
     private createStat( i: number, x: number, y: number ): Stats { // 0: fps, 1: ms, 2: mb, 3+: custom -> 3: calls
@@ -94,7 +94,7 @@ class Engine implements IEngine {
 
         if ( i == 3 ) {
 
-            stat.calls = stat.addPanel( new Stats.Panel( "calls", "#ffc233", "#4d3808" ) );
+            //stat.calls = stat.addPanel( new Stats.Panel( "calls", "#ffc233", "#4d3808" ) );
         }
 
         return stat;
@@ -110,7 +110,7 @@ class Engine implements IEngine {
         const deltaTime: number = this.babylon.getDeltaTime();
         this.deltaCorrectionValue = EngineUtils.getDeltaCorrection( deltaTime, this.fpsTarget );
         
-        this.stats[5].begin();
+        //this.stats[5].begin();
 
         this.stats[3].begin();
         this.update?.();
@@ -120,8 +120,8 @@ class Engine implements IEngine {
         this.renderScene?.render();
         this.stats[4].end();
 
-        this.stats[5].calls.update( this.babylon._drawCalls.current, this.babylon._drawCalls.max );
-        this.stats[5].end();
+        //this.stats[5].calls.update( this.babylon._drawCalls.current, this.babylon._drawCalls.max );
+        //this.stats[5].end();
         
         for ( let i: number = 0; i < 3; i++ ) {
 

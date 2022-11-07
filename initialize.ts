@@ -14,12 +14,13 @@ interface Object {
 
 let scene: BABYLON.Scene;
 
-window.addEventListener( "compile", ( _event: Event ): void => {
 
-    console.log( `\n\n${ document.title }\n\nPalto Studio\nCopyright Noah Bussinger ${ new Date().getUTCFullYear() }\n\n` );
+function setup(): void {
+
 
     Engine.instantiate();
     
+
     const background: string = "#af7ede";
     
     scene = new BABYLON.Scene( Engine.getInstance().babylon );
@@ -31,8 +32,10 @@ window.addEventListener( "compile", ( _event: Event ): void => {
     scene.autoClear = false;
     scene.autoClearDepthAndStencil = false;
 
+
     EngineAssets.instantiate();
-    EngineAssets.getInstance().onLoadObservable.addOnce( install );
+
+    EngineAssets.getInstance().onLoadObservable.addOnce( instantiate );
     EngineAssets.getInstance().load( [
 
         new LoadConfig( "asteroid-a", "assets/models/asteroid-a.glb" ),
@@ -44,32 +47,33 @@ window.addEventListener( "compile", ( _event: Event ): void => {
         new LoadConfig( "spaceship-vulcan", "assets/models/spaceship-vulcan.glb" )
     ] );
 
-} );
+
+}
 
 
-function install(): void {
+function instantiate(): void {
 
 
     Physics.instantiate();
-    
     Controls.instantiate();
-
     Camera.instantiate();
-    
     PostProcess.instantiate();
-
     UI.instantiate();
-
     Star.instantiate();
-
     Player.instantiate();
-
     Spaceships.instantiate();
-    Spaceships.getInstance().register( "vulcan", new Config( [ "key", 0 ] ) );
-
     Clouds.instantiate();
-
     Planets.instantiate();
+    Asteroids.instantiate();
+
+
+    register();
+}
+
+
+function register(): void {
+
+
     Planets.getInstance().registerFromConfigs( [
 
         //new Config( [ "key", 0 ] )...
@@ -105,13 +109,13 @@ function install(): void {
         }
     ] );
 
-    Asteroids.instantiate();
     Asteroids.getInstance().register( "ring", { key: 0, seed: "7417", radius: 5 * 1000, spread: 400, height: 80, density: 0.06 } );
     Asteroids.getInstance().register( "ring", { key: 1, seed: "4674", radius: 5 * 1000, spread: 1200, height: 40, density: 0.04 } );
 
+    Spaceships.getInstance().register( "vulcan", new Config( [ "key", 0 ] ) );
+
 
     stage();
-    Engine.getInstance().set( update, scene );
 }
 
 
@@ -133,6 +137,7 @@ function stage(): void {
 
 
     scene.debugLayer.show( { embedMode: true } );
+    Engine.getInstance().set( update, scene );
 }
 
 
@@ -155,6 +160,9 @@ function update(): void {
 
 
 }
+
+
+window.addEventListener( "compile", ( _event: Event ): void => { console.log( `\n\n${ document.title }\n\nPalto Studio\nCopyright Noah Bussinger ${ new Date().getUTCFullYear() }\n\n` ); setup(); } );
 
 
     //make better optimized lod system
@@ -191,16 +199,12 @@ function update(): void {
     //more precise: approx. dist. = distance to chunk center - precalc distance from target to chunk center * dot( direction chunk center to player, precalc direction chunkcenter to target )
     //instead of reduce/avoid sqrt -> reduce / avoid loops
 
-
     /*
-    
         Object Container did help to speed up but aren't usfull generally rather the concept of chunking together and calculate once there is usefull
         and should be applied not generally, rather there where the other method like dot with planets doesnt work! problem is amount of update calls!
-    
     */
 
 
-    // 6. Fix/remove whole game structure?
     // 10. use abstract classes!
 
     // 2. make configs in constructor optional, configs as enums? 

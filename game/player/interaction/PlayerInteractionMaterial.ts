@@ -23,7 +23,7 @@ class PlayerInteractionMaterial extends BABYLON.CustomMaterial implements IPlaye
 
     private setupUniforms(): void {
 
-        this.AddUniform( "screenSize", "vec2", undefined ); console.warn("Investigate here!"); //3. param = default? no on BindObservable?
+        this.AddUniform( "screenSize", "vec2", undefined );
         this.AddUniform( "interactableColor", "vec3", undefined );
 
         this.onBindObservable.add( ( _mesh: BABYLON.AbstractMesh ): void => { 
