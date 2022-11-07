@@ -65,7 +65,7 @@ class Star implements IStar {
 
     private createMesh(): void {
 
-        const material: BABYLON.StandardMaterial = new BABYLON.StandardMaterial( "star_material", Space.scene );
+        const material: BABYLON.StandardMaterial = new BABYLON.StandardMaterial( "star_material", scene );
         material.disableLighting = true;
         material.diffuseColor.set( 0, 0, 0 );
         material.specularColor.set( 0, 0, 0 );
@@ -73,7 +73,7 @@ class Star implements IStar {
         material.ambientColor.set( 0, 0, 0 );
         material.freeze();
 
-        this.mesh = BABYLON.MeshBuilder.CreateSphere( "star", { diameter: this.config.size, segments: this.config.resolution }, Space.scene );
+        this.mesh = BABYLON.MeshBuilder.CreateSphere( "star", { diameter: this.config.size, segments: this.config.resolution }, scene );
         this.mesh.removeVerticesData( BABYLON.VertexBuffer.NormalKind );
         this.mesh.removeVerticesData( BABYLON.VertexBuffer.UVKind );
         this.mesh.rotationQuaternion = this.mesh.rotation.toQuaternion();
@@ -85,14 +85,14 @@ class Star implements IStar {
 
     private createDirectionalLight( intensity: number ): void {
 
-        this.directionalLight = new BABYLON.DirectionalLight( "star_directionalLight", BABYLON.Vector3.Zero(), Space.scene );
+        this.directionalLight = new BABYLON.DirectionalLight( "star_directionalLight", BABYLON.Vector3.Zero(), scene );
         EngineExtensions.setLightColor( this.directionalLight, this.config.color );
         EngineExtensions.setLightIntensity( this.directionalLight, intensity );
     }
 
     private createHemisphericLight( intensity: number ): void {
 
-        this.hemisphericLight = new BABYLON.HemisphericLight( "star_hemisphericLight", BABYLON.Vector3.Up(), Space.scene );
+        this.hemisphericLight = new BABYLON.HemisphericLight( "star_hemisphericLight", BABYLON.Vector3.Up(), scene );
         EngineExtensions.setLightColor( this.hemisphericLight, this.config.color );
         EngineExtensions.setLightIntensity( this.hemisphericLight, intensity );
     }
@@ -109,12 +109,12 @@ class Star implements IStar {
 
     private createBackground(): void {
 
-        this.background = BABYLON.MeshBuilder.CreateSphere( "star_background", { diameter: Camera.getInstance().config.max, segments: 4, sideOrientation: BABYLON.Mesh.BACKSIDE }, Space.scene );
+        this.background = BABYLON.MeshBuilder.CreateSphere( "star_background", { diameter: Camera.getInstance().config.max, segments: 4, sideOrientation: BABYLON.Mesh.BACKSIDE }, scene );
         this.background.removeVerticesData( BABYLON.VertexBuffer.NormalKind );
         
         this.background.isPickable = false;
 
-        const material: BABYLON.StandardMaterial = new BABYLON.StandardMaterial( "star_background_material", Space.scene );
+        const material: BABYLON.StandardMaterial = new BABYLON.StandardMaterial( "star_background_material", scene );
         material.disableLighting = true;
         
         material.diffuseColor = new BABYLON.Color3( 0, 0, 0 );
@@ -122,7 +122,7 @@ class Star implements IStar {
         material.emissiveColor = new BABYLON.Color3( 0, 0, 0 );
         material.ambientColor = new BABYLON.Color3( 0, 0, 0 );
 
-        const emissiveTexture: BABYLON.Texture = new BABYLON.Texture( "assets/textures/space.png", Space.scene );
+        const emissiveTexture: BABYLON.Texture = new BABYLON.Texture( "assets/textures/space.png", scene );
         emissiveTexture.uScale = 6;
         emissiveTexture.vScale = 6;
 

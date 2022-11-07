@@ -80,7 +80,7 @@ class CameraTargetSpaceship extends CameraTarget implements ICameraTargetSpacesh
 
     private applyFollowVelocity( spaceship: ISpaceship ): void {
 
-        const deltaCorrection: number = Space.engine.deltaCorrection;
+        const deltaCorrection: number = Engine.getInstance().deltaCorrection;
 
         spaceship.root.rotate( BABYLON.Axis.Y, this.followXVelocity * deltaCorrection, BABYLON.Space.LOCAL );
         spaceship.root.rotate( BABYLON.Axis.X, this.followYVelocity * deltaCorrection, BABYLON.Space.LOCAL );

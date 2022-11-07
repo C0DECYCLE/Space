@@ -97,9 +97,9 @@ class Player implements IPlayer {
 
     private createMesh(): void {
 
-        const body: BABYLON.Mesh = BABYLON.MeshBuilder.CreateCapsule( "player_mesh_body", { height: 2, radius: 0.5, tessellation: 8, subdivisions: 1, capSubdivisions: 3 }, Space.scene );
+        const body: BABYLON.Mesh = BABYLON.MeshBuilder.CreateCapsule( "player_mesh_body", { height: 2, radius: 0.5, tessellation: 8, subdivisions: 1, capSubdivisions: 3 }, scene );
 
-        const head: BABYLON.Mesh = BABYLON.MeshBuilder.CreateBox( "player_mesh_head", { width: 0.7, height: 0.35, depth: 0.3 }, Space.scene );
+        const head: BABYLON.Mesh = BABYLON.MeshBuilder.CreateBox( "player_mesh_head", { width: 0.7, height: 0.35, depth: 0.3 }, scene );
         head.position.copyFromFloats( 0, 0.5, 0.4 );
 
         const merged: BABYLON.Mesh | null = BABYLON.Mesh.MergeMeshes( [ body, head ], true );
@@ -113,7 +113,7 @@ class Player implements IPlayer {
             this.mesh.name = this.mesh.id;
             this.mesh.isPickable = false;
 
-            const material: BABYLON.StandardMaterial = new BABYLON.StandardMaterial( "player_material", Space.scene );
+            const material: BABYLON.StandardMaterial = new BABYLON.StandardMaterial( "player_material", scene );
             EngineExtensions.setStandardMaterialColorIntensity( material, "#ff226b", 0.5 );
             material.freeze();
 
@@ -125,7 +125,7 @@ class Player implements IPlayer {
         }
 
         /*
-        var light = new BABYLON.SpotLight("spotLight", new BABYLON.Vector3(0, 0, 0), new BABYLON.Vector3(0, 0, 1), Math.PI / 3, 20, Space.scene);
+        var light = new BABYLON.SpotLight("spotLight", new BABYLON.Vector3(0, 0, 0), new BABYLON.Vector3(0, 0, 1), Math.PI / 3, 20, scene);
         light.intensity = 4;
         light.parent = this.root;
         */

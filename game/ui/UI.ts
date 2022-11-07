@@ -40,7 +40,7 @@ class UI implements IUI {
 
     private setupFullscreenUI(): void {
 
-        this.gui = BABYLON.GUI.AdvancedDynamicTexture.CreateFullscreenUI( "ui", true, Space.scene );
+        this.gui = BABYLON.GUI.AdvancedDynamicTexture.CreateFullscreenUI( "ui", true, scene );
         this.gui.useInvalidateRectOptimization = false;
     }
 

@@ -60,7 +60,7 @@ class Asteroids implements IAsteroids {
 
     private setupModels( variant: string ): IModels {
         
-        return Space.scene.assets.provide( `asteroid-${ variant }`, ( mesh: BABYLON.Mesh, i: number ): void => {
+        return EngineAssets.getInstance().provide( `asteroid-${ variant }`, ( mesh: BABYLON.Mesh, i: number ): void => {
             
             if ( i === 0 ) {
 

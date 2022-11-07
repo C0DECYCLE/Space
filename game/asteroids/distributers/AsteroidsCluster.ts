@@ -108,7 +108,7 @@ class AsteroidsCluster implements IAsteroidsCluster {
 
         } else {
 
-            this.root = new BABYLON.TransformNode( `asteroids_cluster${ this.config.key }`, Space.scene );
+            this.root = new BABYLON.TransformNode( `asteroids_cluster${ this.config.key }`, scene );
             this.root.rotationQuaternion = this.root.rotation.toQuaternion();
         }
     }

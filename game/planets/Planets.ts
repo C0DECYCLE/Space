@@ -81,7 +81,7 @@ class Planets implements IPlanets {
 
     private createMaskMaterial(): void {
 
-        this.maskMaterial = new BABYLON.StandardMaterial( "planet_mask_material", Space.scene );
+        this.maskMaterial = new BABYLON.StandardMaterial( "planet_mask_material", scene );
         this.maskMaterial.disableLighting = true;
         
         this.maskMaterial.diffuseColor = new BABYLON.Color3( 0, 0, 0 );
@@ -116,7 +116,7 @@ class Planets implements IPlanets {
 
     private setupModels( obsticleKey: string, variant: string ): IModels {
         
-        return Space.scene.assets.provide( `${ obsticleKey }-${ variant }`, ( mesh: BABYLON.Mesh, i: number ): void => {
+        return EngineAssets.getInstance().provide( `${ obsticleKey }-${ variant }`, ( mesh: BABYLON.Mesh, i: number ): void => {
             
             if ( i === 0 ) {
 

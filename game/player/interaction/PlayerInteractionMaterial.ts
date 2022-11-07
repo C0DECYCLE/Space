@@ -12,9 +12,9 @@ class PlayerInteractionMaterial extends BABYLON.CustomMaterial implements IPlaye
 
     public constructor( name: string ) {
     
-        super( `${ name }-interactable`, Space.scene );
+        super( `${ name }-interactable`, scene );
 
-        this.screenSize = Space.engine.screenSize;
+        this.screenSize = Engine.getInstance().screenSize;
 
         this.setupUniforms();
         this.setupAttributes();

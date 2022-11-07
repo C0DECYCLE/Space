@@ -135,7 +135,7 @@ class Planet implements IPlanet {
 
     private createRoot(): void {
 
-        this.root = new BABYLON.TransformNode( `planets_planet${ this.config.key }`, Space.scene );
+        this.root = new BABYLON.TransformNode( `planets_planet${ this.config.key }`, scene );
         this.root.rotationQuaternion = this.root.rotation.toQuaternion();
 
         UI.getInstance().registerMarker( this.root, new Config( [ "type", "travel" ] ) );
@@ -241,7 +241,7 @@ class Planet implements IPlanet {
         
         if ( this.config.spin !== false ) {
 
-            const deltaCorrection: number = Space.engine.deltaCorrection;
+            const deltaCorrection: number = Engine.getInstance().deltaCorrection;
 
             this.root.rotate( BABYLON.Axis.Y, this.config.spin * EngineUtils.toRadian * deltaCorrection, BABYLON.Space.LOCAL ); //make very movement speed * delta time
         }

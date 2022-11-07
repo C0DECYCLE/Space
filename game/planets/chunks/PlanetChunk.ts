@@ -25,7 +25,7 @@ class PlanetChunk extends BABYLON.Mesh implements IPlanetChunk {
     
     public constructor( planet: IPlanet, nodeKey: string, config: IConfig ) {
     
-        super( `planet${ planet.config.key }_chunk_${ nodeKey }`, planet.scene );
+        super( `planet${ planet.config.key }_chunk_${ nodeKey }`, scene );
     
         this.planet = planet;
 

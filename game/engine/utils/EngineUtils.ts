@@ -139,7 +139,7 @@ class EngineUtils implements IEngineUtils {
         return ambientColor;
     }
 
-    public static makeDebugMaterial( scene: BABYLON.Scene, hexColor: string ): BABYLON.StandardMaterial {
+    public static makeDebugMaterial( hexColor: string ): BABYLON.StandardMaterial {
     
         const debugMaterial: BABYLON.StandardMaterial = new BABYLON.StandardMaterial( `debug_${ hexColor }`, scene );
         EngineExtensions.setStandardMaterialColorIntensity( debugMaterial, hexColor, 1.0 );

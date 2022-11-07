@@ -55,7 +55,7 @@ class CameraTarget implements ICameraTarget {
     
     protected free( event: BABYLON.PointerInfo ): void {
 
-        const deltaCorrection: number = Space.engine.deltaCorrection;
+        const deltaCorrection: number = Engine.getInstance().deltaCorrection;
 
         this.camera.camera.alpha -= event.event.movementX * Controls.getInstance().config.panning * deltaCorrection;
         this.camera.camera.beta -= event.event.movementY * Controls.getInstance().config.panning * deltaCorrection;
@@ -63,7 +63,7 @@ class CameraTarget implements ICameraTarget {
 
     protected followPointer( target: ICameraTargetable, event: BABYLON.PointerInfo ): void {
         
-        const deltaCorrection: number = Space.engine.deltaCorrection;
+        const deltaCorrection: number = Engine.getInstance().deltaCorrection;
         
         target.root.rotate( BABYLON.Axis.Y, event.event.movementX * this.config.follow * deltaCorrection, BABYLON.Space.LOCAL );
         target.root.rotate( BABYLON.Axis.X, event.event.movementY * this.config.follow * deltaCorrection, BABYLON.Space.LOCAL );

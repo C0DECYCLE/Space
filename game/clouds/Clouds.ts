@@ -45,12 +45,12 @@ class Clouds implements IClouds {
 
         const mesh: ICloudModel = new CloudModel( this, level, subdivisions, min, material );
 
-        mesh.parent = Space.scene.assets.cache;
+        mesh.parent = EngineAssets.getInstance().cache;
         mesh.setEnabled( false );
 
         const invMin: number = Math.round( 1 / AbstractLOD.getMinimum( mesh.name ) );
             
-        mesh.entitymanager = new EntityManager( mesh.name, Space.scene, () => Space.scene.assets.instance( mesh, ( _instance: BABYLON.InstancedMesh ): void => {} ), invMin * 4, invMin );
+        mesh.entitymanager = new EntityManager( mesh.name, () => EngineAssets.getInstance().instance( mesh, ( _instance: BABYLON.InstancedMesh ): void => {} ), invMin * 4, invMin );
 
         return mesh;
     }

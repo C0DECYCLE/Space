@@ -102,7 +102,7 @@ class Camera implements ICamera {
 
     private createRoot(): void {
 
-        this.root = new BABYLON.TransformNode( "camera", Space.scene );
+        this.root = new BABYLON.TransformNode( "camera", scene );
         this.root.rotationQuaternion = this.root.rotation.toQuaternion();
     }
 
@@ -114,7 +114,7 @@ class Camera implements ICamera {
 
     private createCamera(): void {
 
-        this.camera = new BABYLON.ArcRotateCamera( "camera_camera", -Math.PI / 2, Math.PI / 2, 0, BABYLON.Vector3.Zero(), Space.scene );
+        this.camera = new BABYLON.ArcRotateCamera( "camera_camera", -Math.PI / 2, Math.PI / 2, 0, BABYLON.Vector3.Zero(), scene );
         this.camera.maxZ = this.config.max;
         this.camera.parent = this.root;
     }

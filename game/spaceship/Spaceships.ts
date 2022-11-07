@@ -60,11 +60,11 @@ class Spaceships implements ISpaceships {
 
     private load( target: IModels, name: string, interactables: string[] ): void {
         
-        const importLods: BABYLON.Mesh[] = Space.scene.assets.list.get( `spaceship-${ name.toLowerCase() }` )?.getChildren() || [];
+        const importLods: BABYLON.Mesh[] = EngineAssets.getInstance().list.get( `spaceship-${ name.toLowerCase() }` )?.getChildren() || [];
         
         for ( let i: number = 0; i < importLods.length; i++ ) {
             
-            const model: BABYLON.Mesh = Space.scene.assets.traverse( importLods[i], mesh => {
+            const model: BABYLON.Mesh = EngineAssets.getInstance().traverse( importLods[i], mesh => {
             
                 if ( i === 0 ) {
 
@@ -72,7 +72,7 @@ class Spaceships implements ISpaceships {
                 }
             }, interactables );
             
-            //model = Space.scene.assets.merge( model );
+            //model = EngineAssets.getInstance().merge( model );
             //Star.getInstance().shadow.receive( model, false, true );
             
             target.push( model );

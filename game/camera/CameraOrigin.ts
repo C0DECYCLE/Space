@@ -4,7 +4,7 @@
     2022
 */
 
-Object {
+interface Object {
 
     _actualPosition: BABYLON.Vector3;
 
@@ -56,8 +56,8 @@ class CameraOrigin implements ICameraOrigin {
 
     private registerObservables(): void {
 
-        Space.scene.onBeforeRenderObservable.add( ( _eventData: BABYLON.Scene, _eventState: BABYLON.EventState ): void => this.beforeRender() );
-        Space.scene.onAfterRenderObservable.add( ( _eventData: BABYLON.Scene, _eventState: BABYLON.EventState ): void => this.afterRender() );
+        scene.onBeforeRenderObservable.add( ( _eventData: BABYLON.Scene, _eventState: BABYLON.EventState ): void => this.beforeRender() );
+        scene.onAfterRenderObservable.add( ( _eventData: BABYLON.Scene, _eventState: BABYLON.EventState ): void => this.afterRender() );
     }
 
     private inspectorCustomProperties(): BABYLON.IInspectable[] {
@@ -79,8 +79,6 @@ class CameraOrigin implements ICameraOrigin {
     }
 
     private beforeRender(): void {
-
-        const scene: BABYLON.Scene = Space.scene;
         
         for ( let i: number = 0; i < scene.rootNodes.length; i++ ) {
 
@@ -105,9 +103,7 @@ class CameraOrigin implements ICameraOrigin {
     }
 
     private afterRender(): void {
-        
-        const scene: BABYLON.Scene = Space.scene;
-
+    
         for ( let i: number = 0; i < scene.rootNodes.length; i++ ) {
 
             const node: any = scene.rootNodes[i];

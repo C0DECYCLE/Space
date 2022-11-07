@@ -75,7 +75,7 @@ class PlayerPhysics extends PhysicsEntity implements IPlayerPhysics {
     private spaceMovement(): void {
 
         const floatConfig: number = this.player.config.float;
-        const deltaCorrection: number = Space.engine.deltaCorrection;
+        const deltaCorrection: number = Engine.getInstance().deltaCorrection;
         const translate: BABYLON.Vector3 = new BABYLON.Vector3( 0, 0, 0 );
 
         const float: number = floatConfig * deltaCorrection;
@@ -130,7 +130,7 @@ class PlayerPhysics extends PhysicsEntity implements IPlayerPhysics {
         const walkConfig: number = this.player.config.walk;
         const runConfig: number = this.player.config.run;
         const jumpConfig: number = this.player.config.jump;
-        const deltaCorrection: number = Space.engine.deltaCorrection;
+        const deltaCorrection: number = Engine.getInstance().deltaCorrection;
         const translate: BABYLON.Vector3 = new BABYLON.Vector3( 0, 0, 0 );
 
         const walk: number = ( walkConfig / this.planet.config.gravity ) * deltaCorrection;

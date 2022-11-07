@@ -47,8 +47,8 @@ class SpaceshipThrusters implements ISpaceshipThrusters {
 
     private setupThruster(): BABYLON.GPUParticleSystem {
 
-        const thruster: BABYLON.GPUParticleSystem = new BABYLON.GPUParticleSystem( `particles_thruster_${ this.spaceship.root.name }`, { capacity: 400 }, Space.scene );
-        thruster.particleTexture = new BABYLON.Texture( "assets/textures/quad-particle.png", Space.scene );
+        const thruster: BABYLON.GPUParticleSystem = new BABYLON.GPUParticleSystem( `particles_thruster_${ this.spaceship.root.name }`, { capacity: 400 }, scene );
+        thruster.particleTexture = new BABYLON.Texture( "assets/textures/quad-particle.png", scene );
         thruster.emitter = ( this.spaceship.root instanceof BABYLON.AbstractMesh ) ? this.spaceship.root : this.spaceship.position;
         
         thruster.minEmitBox = new BABYLON.Vector3( -0.5, -0.8, -0.1 );  

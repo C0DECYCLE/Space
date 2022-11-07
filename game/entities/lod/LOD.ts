@@ -63,7 +63,7 @@ class LOD extends AbstractLOD implements ILOD {
 
             if ( model instanceof BABYLON.Mesh ) {
                 
-                this.add( Space.scene.assets.instance( model, ( instance: BABYLON.InstancedMesh ) => onEveryInstance?.( instance, i ) ), AbstractLOD.getMinimum( model.name ) );
+                this.add( EngineAssets.getInstance().instance( model, ( instance: BABYLON.InstancedMesh ) => onEveryInstance?.( instance, i ) ), AbstractLOD.getMinimum( model.name ) );
             }
         }
     }

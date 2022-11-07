@@ -136,7 +136,7 @@ class SpaceshipPhysicsTravel implements ISpaceshipPhysicsTravel {
         
         if ( this.jumping.distance > size / 2 && this.evaluateKeyPress() === false ) {
 
-            this.spaceshipPhysics.velocity.copyFrom( this.jumping.direction ).scaleInPlace( SpaceshipPhysicsTravel.VELOCITY * Space.engine.deltaCorrection );
+            this.spaceshipPhysics.velocity.copyFrom( this.jumping.direction ).scaleInPlace( SpaceshipPhysicsTravel.VELOCITY * Engine.getInstance().deltaCorrection );
 
         } else {
 

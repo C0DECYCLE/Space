@@ -256,9 +256,9 @@ class PhysicsEntity implements IPhysicsEntity {
 
         if ( mesh instanceof BABYLON.AbstractMesh ) {
 
-            this.debugMesh = BABYLON.MeshBuilder.CreateSphere( "debugMesh", { diameter: 1, segments: 8 }, Space.scene );
+            this.debugMesh = BABYLON.MeshBuilder.CreateSphere( "debugMesh", { diameter: 1, segments: 8 }, scene );
             this.debugMesh.isPickable = false;
-            this.debugMesh.material = Space.scene.debugMaterialRed;
+            this.debugMesh.material = scene.debugMaterialRed;
             this.updateDebug( mesh );
             
             if ( mesh.collisionMesh !== undefined ) {

@@ -47,7 +47,7 @@ class Controls implements IControls {
 
     private bindKeyboard(): void {
 
-        Space.scene.onKeyboardObservable.add( ( kbInfo: BABYLON.KeyboardInfo ): void => this.onKeyboardObservable( kbInfo ) );
+        scene.onKeyboardObservable.add( ( kbInfo: BABYLON.KeyboardInfo ): void => this.onKeyboardObservable( kbInfo ) );
     }
 
     private onKeyboardObservable( kbInfo: BABYLON.KeyboardInfo ): void {
@@ -66,7 +66,7 @@ class Controls implements IControls {
 
     private bindMouse(): void {
 
-        Space.scene.onPointerObservable.add( ( pointerInfo: BABYLON.PointerInfo ): void => this.onPointerObservable( pointerInfo ) );
+        scene.onPointerObservable.add( ( pointerInfo: BABYLON.PointerInfo ): void => this.onPointerObservable( pointerInfo ) );
 
         if ( this.config.experimentalPointerLock === true ) {
 
@@ -94,7 +94,7 @@ class Controls implements IControls {
 
     private pointerLock(): void {
 
-        const canvas: HTMLCanvasElement  = Space.engine.canvas;
+        const canvas: HTMLCanvasElement  = Engine.getInstance().canvas;
         const mouseMove: ( event: MouseEvent ) => void = ( event: MouseEvent ): void =>  {
 
             const pointerInfo: BABYLON.PointerInfo = new BABYLON.PointerInfo( BABYLON.PointerEventTypes.POINTERMOVE, event, null );

@@ -70,7 +70,7 @@ class AsteroidsRing implements IAsteroidsRing {
 
     private createRoot(): void {
 
-        this.root = new BABYLON.TransformNode( `asteroids_ring${ this.config.key }`, Space.scene );
+        this.root = new BABYLON.TransformNode( `asteroids_ring${ this.config.key }`, scene );
         this.root.rotationQuaternion = this.root.rotation.toQuaternion();
     }
 

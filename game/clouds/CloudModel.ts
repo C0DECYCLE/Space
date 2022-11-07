@@ -10,7 +10,7 @@ class CloudModel extends BABYLON.Mesh implements ICloudModel {
     
     public constructor( clouds: IClouds, level: number, subdivisions: number, min: number, material: BABYLON.StandardMaterial ) {
     
-        super( `cloud_${ level }_${ min }`, clouds.scene );
+        super( `cloud_${ level }_${ min }`, scene );
     
         this.clouds = clouds;
 

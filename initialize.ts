@@ -9,30 +9,31 @@ interface Object {
     debugMaterialRed: BABYLON.StandardMaterial;
 
     debugMaterialWhite: BABYLON.StandardMaterial;
-
-    assets: IEngineAssets;
     
 }
 
-const Space: IGame = new Game();
+let scene: BABYLON.Scene;
 
-Space.addOnReady( (): void => {
-    
+window.addEventListener( "compile", ( _event: Event ): void => {
+
+    console.log( `\n\n${ document.title }\n\nPalto Studio\nCopyright Noah Bussinger ${ new Date().getUTCFullYear() }\n\n` );
+
+    Engine.instantiate();
     
     const background: string = "#af7ede";
     
-    Space.scene = new BABYLON.Scene( Space.engine.babylon );
-    BABYLON.Color4.FromHexString( background ).scaleToRef( 0.15, Space.scene.clearColor );
-    Space.scene.ambientColor = EngineUtils.makeSceneAmbient( background, 0.3 );
-    Space.scene.debugMaterialRed = EngineUtils.makeDebugMaterial( Space.scene, "#ff226b" );
-    Space.scene.debugMaterialWhite = EngineUtils.makeDebugMaterial( Space.scene, "#ffffff" );
-    Space.scene.skipPointerMovePicking = true;
-    Space.scene.autoClear = false;
-    Space.scene.autoClearDepthAndStencil = false;
+    scene = new BABYLON.Scene( Engine.getInstance().babylon );
+    BABYLON.Color4.FromHexString( background ).scaleToRef( 0.15, scene.clearColor );
+    scene.ambientColor = EngineUtils.makeSceneAmbient( background, 0.3 );
+    scene.debugMaterialRed = EngineUtils.makeDebugMaterial( "#ff226b" );
+    scene.debugMaterialWhite = EngineUtils.makeDebugMaterial( "#ffffff" );
+    scene.skipPointerMovePicking = true;
+    scene.autoClear = false;
+    scene.autoClearDepthAndStencil = false;
 
-    Space.scene.assets = new EngineAssets();
-    Space.scene.assets.onLoadObservable.addOnce( (): void => { Space.install(); Space.stage(); Space.update( Space.scene, Space.run ); } );
-    Space.scene.assets.load( [
+    EngineAssets.instantiate();
+    EngineAssets.getInstance().onLoadObservable.addOnce( install );
+    EngineAssets.getInstance().load( [
 
         new LoadConfig( "asteroid-a", "assets/models/asteroid-a.glb" ),
         new LoadConfig( "asteroid-b", "assets/models/asteroid-b.glb" ),
@@ -42,11 +43,11 @@ Space.addOnReady( (): void => {
 
         new LoadConfig( "spaceship-vulcan", "assets/models/spaceship-vulcan.glb" )
     ] );
-    
 
 } );
 
-Space.add( "install", (): void => {
+
+function install(): void {
 
 
     Physics.instantiate();
@@ -108,6 +109,54 @@ Space.add( "install", (): void => {
     Asteroids.getInstance().register( "ring", { key: 0, seed: "7417", radius: 5 * 1000, spread: 400, height: 80, density: 0.06 } );
     Asteroids.getInstance().register( "ring", { key: 1, seed: "4674", radius: 5 * 1000, spread: 1200, height: 40, density: 0.04 } );
 
+
+    stage();
+    Engine.getInstance().set( update, scene );
+}
+
+
+function stage(): void {
+    
+
+    Planets.getInstance().list[0].place( Star.getInstance().position, 500 * 1000, 90 );
+    Planets.getInstance().list[1].place( Star.getInstance().position, 800 * 1000, -45 );
+    Planets.getInstance().list[2].place( Star.getInstance().position, 1000 * 1000, 240 );
+    Planets.getInstance().list[3].place( Planets.getInstance().list[2].position, 60 * 1000, 60 );
+    
+    Asteroids.getInstance().list[0].position?.copyFrom( Planets.getInstance().list[0].position );
+    Asteroids.getInstance().list[1].position?.copyFrom( Planets.getInstance().list[0].position );
+
+    Spaceships.getInstance().list[0].position.copyFrom( Planets.getInstance().list[0].position ).addInPlace( new BABYLON.Vector3( 5 * 1000, 0, 0 ) );
+    Spaceships.getInstance().list[0].root.rotate( BABYLON.Axis.Y, 90 * EngineUtils.toRadian, BABYLON.Space.LOCAL );
+    
+    Player.getInstance().position.copyFrom( Spaceships.getInstance().list[0].position ).addInPlace( new BABYLON.Vector3( 0, 0, -10 ) );
+
+
+    scene.debugLayer.show( { embedMode: true } );
+}
+
+
+function update(): void {
+    
+    
+    Planets.getInstance().update();
+
+    Asteroids.getInstance().update();
+
+    Spaceships.getInstance().update(); 
+
+    Player.getInstance().update();
+    
+    Camera.getInstance().update();
+
+    Star.getInstance().update();
+
+    UI.getInstance().update();
+
+
+}
+
+
     //make better optimized lod system
     // -> optimized blend in distance
     // -> optimized occlusionCullFalloff
@@ -151,7 +200,7 @@ Space.add( "install", (): void => {
     */
 
 
-    // 6. Fix/remove whole game structure? by using the game stuff as singletons
+    // 6. Fix/remove whole game structure?
     // 10. use abstract classes!
 
     // 2. make configs in constructor optional, configs as enums? 
@@ -163,47 +212,3 @@ Space.add( "install", (): void => {
     // 9. Make messurement of update calls to contrary of draw calls, debug both in upper corner!
     
     //!!!! before merge make javascript backup branch!!!
-
-} );
-
-Space.add( "stage", (): void => {
-    
-
-    Planets.getInstance().list[0].place( Star.getInstance().position, 500 * 1000, 90 );
-    Planets.getInstance().list[1].place( Star.getInstance().position, 800 * 1000, -45 );
-    Planets.getInstance().list[2].place( Star.getInstance().position, 1000 * 1000, 240 );
-    Planets.getInstance().list[3].place( Planets.getInstance().list[2].position, 60 * 1000, 60 );
-    
-    Asteroids.getInstance().list[0].position?.copyFrom( Planets.getInstance().list[0].position );
-    Asteroids.getInstance().list[1].position?.copyFrom( Planets.getInstance().list[0].position );
-
-    Spaceships.getInstance().list[0].position.copyFrom( Planets.getInstance().list[0].position ).addInPlace( new BABYLON.Vector3( 5 * 1000, 0, 0 ) );
-    Spaceships.getInstance().list[0].root.rotate( BABYLON.Axis.Y, 90 * EngineUtils.toRadian, BABYLON.Space.LOCAL );
-    
-    Player.getInstance().position.copyFrom( Spaceships.getInstance().list[0].position ).addInPlace( new BABYLON.Vector3( 0, 0, -10 ) );
-
-
-    Space.scene.debugLayer.show( { embedMode: true } );
-
-
-} );
-
-Space.add( "run", (): void => {
-    
-    
-    Planets.getInstance().update();
-
-    Asteroids.getInstance().update();
-
-    Spaceships.getInstance().update(); 
-
-    Player.getInstance().update();
-    
-    Camera.getInstance().update();
-
-    Star.getInstance().update();
-
-    UI.getInstance().update();
-
-
-} );

@@ -13,6 +13,11 @@ interface Object {
 }
 
 class EngineAssets implements IEngineAssets {
+
+    /* Singleton */ 
+    private static instance: IEngineAssets; 
+    public static instantiate(): void { if ( this.instance === undefined ) this.instance = new EngineAssets(); } 
+    public static getInstance(): IEngineAssets { return this.instance; }
     
     private static collisionKey: string = "COLLISION";
     private static collisionColor: string = "#43ff53";
@@ -45,7 +50,7 @@ class EngineAssets implements IEngineAssets {
                 console.warn( `EngineAssets: ${ list[i].key } already loaded.` );
             }
 
-            BABYLON.SceneLoader.LoadAssetContainer( "", list[i].path, Space.scene, ( container: BABYLON.AssetContainer ): void => {
+            BABYLON.SceneLoader.LoadAssetContainer( "", list[i].path, scene, ( container: BABYLON.AssetContainer ): void => {
                 
                 const asset: BABYLON.TransformNode = container.transformNodes.filter( ( transformNode: BABYLON.TransformNode ): boolean => ( transformNode.id === list[i].key || transformNode.name === list[i].key ) )[0] || null;
 
@@ -137,14 +142,14 @@ class EngineAssets implements IEngineAssets {
     public provide( name: string, onMeshTraverse: ( mesh: BABYLON.Mesh, i: number ) => void ): IModels {
         
         const models: IModels = new Models();
-        const importLods: BABYLON.Mesh[] = Space.scene.assets.list.get( name )?.getChildren() || [];
+        const importLods: BABYLON.Mesh[] = EngineAssets.getInstance().list.get( name )?.getChildren() || [];
         
         for ( let i: number = 0; i < importLods.length; i++ ) {
             
-            const model: BABYLON.Mesh = Space.scene.assets.traverse( importLods[i], ( mesh: BABYLON.Mesh ): void => onMeshTraverse( mesh, i ) );
+            const model: BABYLON.Mesh = EngineAssets.getInstance().traverse( importLods[i], ( mesh: BABYLON.Mesh ): void => onMeshTraverse( mesh, i ) );
             const invMin: number = Math.round( 1 / AbstractLOD.getMinimum( model.name ) );
             
-            model.entitymanager = new EntityManager( model.name, Space.scene, (): BABYLON.InstancedMesh => Space.scene.assets.instance( model, ( _mesh: BABYLON.InstancedMesh ): void => {} ), invMin * 4, invMin );
+            model.entitymanager = new EntityManager( model.name, (): BABYLON.InstancedMesh => EngineAssets.getInstance().instance( model, ( _mesh: BABYLON.InstancedMesh ): void => {} ), invMin * 4, invMin );
             models.push( model );
         }
 
@@ -153,7 +158,7 @@ class EngineAssets implements IEngineAssets {
 
     private createCache(): void {
 
-        this.cache = new BABYLON.Node( "EngineAssets_cache", Space.scene );
+        this.cache = new BABYLON.Node( "EngineAssets_cache", scene );
         this.cache.setEnabled( false );
     }
 
@@ -200,7 +205,7 @@ class EngineAssets implements IEngineAssets {
 
     private traverseMeshGeneral( importMesh: BABYLON.Mesh, color?: string, interactable: boolean = false ): BABYLON.Mesh {
 
-        const mesh: BABYLON.Mesh = new BABYLON.Mesh( importMesh.name, Space.scene );
+        const mesh: BABYLON.Mesh = new BABYLON.Mesh( importMesh.name, scene );
         
         mesh.isPickable = false;
         mesh.material = this.getColorMaterial( importMesh, color, interactable );
@@ -271,7 +276,7 @@ class EngineAssets implements IEngineAssets {
 
         if ( interactable === false ) {
 
-            const material: BABYLON.StandardMaterial = new BABYLON.StandardMaterial( name, Space.scene );
+            const material: BABYLON.StandardMaterial = new BABYLON.StandardMaterial( name, scene );
             material.freeze();
 
             return material;

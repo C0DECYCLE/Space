@@ -19,11 +19,7 @@ class EngineExtensions implements IEngineExtensions {
 
     public static setLightIntensity( light: BABYLON.DirectionalLight | BABYLON.PointLight | BABYLON.HemisphericLight, intensity: number = 1.0 ): void {
 
-        light.intensity = intensity;
-
-        const scene: BABYLON.Scene = light.getScene();
-
-        light.intensity *= scene.ambientColor.lightFactor;
+        light.intensity = intensity * scene.ambientColor.lightFactor;
     }
 
     public static setStandardMaterialColorIntensity( material: BABYLON.StandardMaterial, hexColor: string, intensity: number = 1.0 ): void {
@@ -49,8 +45,6 @@ class EngineExtensions implements IEngineExtensions {
         material.specularColor = new BABYLON.Color3( 0, 0, 0 );
         material.emissiveColor = new BABYLON.Color3( 0, 0, 0 );
         material.ambientColor = new BABYLON.Color3( 0, 0, 0 );
-
-        const scene: BABYLON.Scene = material.getScene();
 
         for ( let i = 0; i < list.length; i++ ) {
 

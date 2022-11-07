@@ -66,7 +66,7 @@ class SpaceshipPhysics extends PhysicsEntity implements ISpaceshipPhysics {
 
     private movement(): void {
 
-        const deltaCorrection: number = Space.engine.deltaCorrection;
+        const deltaCorrection: number = Engine.getInstance().deltaCorrection;
         const mainAcceleration: number = this.spaceship.config.mainAcceleration * deltaCorrection;
         const brakeScale: number = ( 1 - this.spaceship.config.brakeAcceleration ) * deltaCorrection;
         const minorAcceleration: number = this.spaceship.config.minorAcceleration * deltaCorrection;
@@ -128,7 +128,7 @@ class SpaceshipPhysics extends PhysicsEntity implements ISpaceshipPhysics {
 
         if ( brakeScale === undefined ) {
 
-            const deltaCorrection: number = Space.engine.deltaCorrection;
+            const deltaCorrection: number = Engine.getInstance().deltaCorrection;
             brakeScale = ( 1 - this.spaceship.config.brakeAcceleration ) * deltaCorrection;
         }
 

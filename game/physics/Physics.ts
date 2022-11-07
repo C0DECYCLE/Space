@@ -39,8 +39,8 @@ class Physics implements IPhysics {
     
     private setupCollisions(): void {
 
-        Space.scene.gravity = BABYLON.Vector3.Zero();
-        Space.scene.collisionsEnabled = true;
+        scene.gravity = BABYLON.Vector3.Zero();
+        scene.collisionsEnabled = true;
     }
 
 }

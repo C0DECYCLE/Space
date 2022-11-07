@@ -15,16 +15,14 @@ class EntityManager< T extends BABYLON.AbstractMesh > implements IEntityManager<
     private readonly free: ISmartObjectArray< T >;
     private readonly used: ISmartObjectArray< T >;
 
-    private readonly scene: BABYLON.Scene;
     private readonly create: () => T;
     private readonly increase: number;
 
     private root: BABYLON.Node;
 
-    public constructor( name: string, scene: BABYLON.Scene, create: () => T, size: number, increase: number ) {
+    public constructor( name: string, create: () => T, size: number, increase: number ) {
         
         this.increase = increase;
-        this.scene = scene;
         this.create = create;
 
         this.free = new SmartObjectArray< T >( size );
@@ -52,7 +50,7 @@ class EntityManager< T extends BABYLON.AbstractMesh > implements IEntityManager<
 
     private createRoot( name: string ): void {
 
-        this.root = new BABYLON.Node( `entitymanager_${ name }`, this.scene );
+        this.root = new BABYLON.Node( `entitymanager_${ name }`, scene );
         this.root.setEnabled( false );
     }
 
@@ -69,7 +67,7 @@ class EntityManager< T extends BABYLON.AbstractMesh > implements IEntityManager<
         if ( entity !== undefined ) {
 
             this.used.add( entity );
-            this.scene.addMesh( entity );
+            scene.addMesh( entity );
 
             entity.parent = null;
             entity.setEnabled( true );
@@ -85,7 +83,7 @@ class EntityManager< T extends BABYLON.AbstractMesh > implements IEntityManager<
         entity.setEnabled( false );
         entity.parent = this.root;
 
-        this.scene.removeMesh( entity );
+        scene.removeMesh( entity );
         this.free.add( entity );
 
         return null;

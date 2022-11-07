@@ -36,8 +36,8 @@ class SpaceshipTravel implements ISpaceshipTravel {
 
     private setupSystem(): void {
 
-        this.system = new BABYLON.GPUParticleSystem( `particles_travel_${ this.spaceship.root.name }`, { capacity: 20 * 1000 }, Space.scene );
-        this.system.particleTexture = new BABYLON.Texture( "assets/textures/quad-particle.png", Space.scene );
+        this.system = new BABYLON.GPUParticleSystem( `particles_travel_${ this.spaceship.root.name }`, { capacity: 20 * 1000 }, scene );
+        this.system.particleTexture = new BABYLON.Texture( "assets/textures/quad-particle.png", scene );
         this.system.emitter = ( this.spaceship.root instanceof BABYLON.AbstractMesh ) ? this.spaceship.root : this.spaceship.position;
         this.system.isLocal = false;
 

@@ -20,14 +20,14 @@ class PostProcess implements IPostProcess {
 
     private constructor() {
 
-        Space.scene.clearColor = Space.scene.clearColor.toLinearSpace();
+        scene.clearColor = scene.clearColor.toLinearSpace();
 
         this.defaultPipeline();
     }
 
     public godrays( mesh: BABYLON.Mesh ): BABYLON.VolumetricLightScatteringPostProcess {
 
-        const postprocess: BABYLON.VolumetricLightScatteringPostProcess = new BABYLON.VolumetricLightScatteringPostProcess( `${ mesh.name }_godrays`, 1.0, Camera.getInstance().camera, mesh, 60, BABYLON.Texture.BILINEAR_SAMPLINGMODE, Space.engine.babylon, false );
+        const postprocess: BABYLON.VolumetricLightScatteringPostProcess = new BABYLON.VolumetricLightScatteringPostProcess( `${ mesh.name }_godrays`, 1.0, Camera.getInstance().camera, mesh, 60, BABYLON.Texture.BILINEAR_SAMPLINGMODE, Engine.getInstance().babylon, false );
         postprocess.weight = 0.15;
 
         this.pipelines.push( postprocess );
@@ -37,7 +37,7 @@ class PostProcess implements IPostProcess {
 
     public atmosphere( planet: IPlanet ): AtmosphericScatteringPostProcess {
 
-        const postprocess: AtmosphericScatteringPostProcess = new AtmosphericScatteringPostProcess( `${ planet.root.name }_atmosphere`, planet, Star.getInstance(), Camera.getInstance(), Space.scene );
+        const postprocess: AtmosphericScatteringPostProcess = new AtmosphericScatteringPostProcess( `${ planet.root.name }_atmosphere`, planet, Star.getInstance(), Camera.getInstance(), scene );
 
         postprocess.settings.redWaveLength = planet.config.waveLengths.r;
         postprocess.settings.greenWaveLength = planet.config.waveLengths.g;
@@ -50,7 +50,7 @@ class PostProcess implements IPostProcess {
 
     private defaultPipeline(): void {
 
-        const pipeline: BABYLON.DefaultRenderingPipeline = new BABYLON.DefaultRenderingPipeline( "postprocess_default", true, Space.scene, [ Camera.getInstance().camera ] );
+        const pipeline: BABYLON.DefaultRenderingPipeline = new BABYLON.DefaultRenderingPipeline( "postprocess_default", true, scene, [ Camera.getInstance().camera ] );
         pipeline.samples = this.config.samples;
         pipeline.chromaticAberrationEnabled = true;
         pipeline.chromaticAberration.radialIntensity = 1;
