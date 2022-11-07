@@ -4,7 +4,7 @@
     2022
 */
 
-class CameraTargetSpaceship extends CameraTarget implements ICameraTargetSpaceship {
+class CameraTargetSpaceship extends AbstractCameraTarget implements ICameraTargetSpaceship {
 
     public override config: IConfig = new Config(  
 
@@ -28,7 +28,7 @@ class CameraTargetSpaceship extends CameraTarget implements ICameraTargetSpacesh
         EngineUtils.configure( this, config );
     }
 
-    public override update( spaceship: ISpaceship ): void {
+    public override update( spaceship: IAbstractSpaceship ): void {
 
         this.adaptOffsetRadius( spaceship );
 
@@ -42,7 +42,7 @@ class CameraTargetSpaceship extends CameraTarget implements ICameraTargetSpacesh
         this.applyFollowVelocity( spaceship );
     }
 
-    public override onPointerMove( spaceship: ISpaceship, event: BABYLON.PointerInfo ): void {
+    public onPointerMove( spaceship: IAbstractSpaceship, event: BABYLON.PointerInfo ): void {
 
         if ( Controls.getInstance().isPointerDown === true || Controls.getInstance().config.experimentalPointerLock === true ) {
 
@@ -57,13 +57,13 @@ class CameraTargetSpaceship extends CameraTarget implements ICameraTargetSpacesh
         }
     }
 
-    protected override followPointer( _spaceship: ISpaceship, event: BABYLON.PointerInfo ): void {
+    protected override followPointer( _spaceship: IAbstractSpaceship, event: BABYLON.PointerInfo ): void {
         
         this.followXVelocity += event.event.movementX * this.config.follow * 0.1;
         this.followYVelocity += event.event.movementY * this.config.follow * 0.1;
     }
 
-    protected override syncPosition( spaceship: ISpaceship ): BABYLON.Vector3 {
+    protected override syncPosition( spaceship: IAbstractSpaceship ): BABYLON.Vector3 {
 
         if ( spaceship.physics.travel.isJumping === true ) {
 
@@ -73,12 +73,12 @@ class CameraTargetSpaceship extends CameraTarget implements ICameraTargetSpacesh
         return super.syncPosition( spaceship );
     }
 
-    private adaptOffsetRadius( spaceship: ISpaceship ): void {
+    private adaptOffsetRadius( spaceship: IAbstractSpaceship ): void {
 
         this.config.offsetRadius = EngineUtils.getBoundingSize( spaceship.root ) * 1.2;
     }
 
-    private applyFollowVelocity( spaceship: ISpaceship ): void {
+    private applyFollowVelocity( spaceship: IAbstractSpaceship ): void {
 
         const deltaCorrection: number = Engine.getInstance().deltaCorrection;
 

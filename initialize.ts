@@ -205,7 +205,6 @@ window.addEventListener( "compile", ( _event: Event ): void => { console.log( `\
     */
 
 
-    // 10. use abstract classes!
 
     // 2. make configs in constructor optional, configs as enums? 
     // 5. look where it makes more sense to use {} again, configs etc the indexable ones?

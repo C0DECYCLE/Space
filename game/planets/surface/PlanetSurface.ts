@@ -4,7 +4,7 @@
     2022
 */
 
-class PlanetSurface extends EntitySpawnerPlanet implements IPlanetSurface {
+class PlanetSurface extends AbstractEntitySpawnerPlanet implements IPlanetSurface {
 
     public static readonly LOD_LIMIT: number = 2.0;
 
@@ -27,7 +27,7 @@ class PlanetSurface extends EntitySpawnerPlanet implements IPlanetSurface {
         this.spawn();
     }
 
-    protected override create( position: BABYLON.Vector3, _n: number, _varyings: IVaryings ): [ ISpawnable, IVaryings ] {
+    protected create( position: BABYLON.Vector3, _n: number, _varyings: IVaryings ): [ ISpawnable, IVaryings ] {
         
         const obsticle: IPlanetSurfaceObsticle = new PlanetSurfaceObsticle( "tree", new Config() );
 

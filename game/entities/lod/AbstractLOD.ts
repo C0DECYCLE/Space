@@ -4,7 +4,7 @@
     2022
 */
 
-class AbstractLOD implements IAbstractLOD {
+abstract class AbstractLOD implements IAbstractLOD {
 
     public static readonly minimum: number = 0.01;
 

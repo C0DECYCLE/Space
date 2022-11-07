@@ -6,12 +6,12 @@
 
 class SpaceshipThrusters implements ISpaceshipThrusters {
 
-    public readonly spaceship: ISpaceship;
+    public readonly spaceship: IAbstractSpaceship;
     public readonly list: [ BABYLON.GPUParticleSystem, IConfig ][] = [];
 
     private isPaused: boolean = false;
 
-    public constructor( spaceship: ISpaceship, config: IConfig ) {
+    public constructor( spaceship: IAbstractSpaceship, config: IConfig ) {
 
         this.spaceship = spaceship;
 

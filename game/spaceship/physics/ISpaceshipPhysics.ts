@@ -6,7 +6,7 @@
 
 interface ISpaceshipPhysics extends IPhysicsEntity {
 
-    readonly spaceship: ISpaceship;
+    readonly spaceship: IAbstractSpaceship;
 
     travel: ISpaceshipPhysicsTravel;
 

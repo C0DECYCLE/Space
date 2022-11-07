@@ -4,7 +4,7 @@
     2022
 */
 
-class VulcanSpaceship extends Spaceship implements IVulcanSpaceship {
+class VulcanSpaceship extends AbstractSpaceship implements IVulcanSpaceship {
 
     static readonly interactables: string[] = [ "glass" ];
     static readonly models: IModels = new Models();

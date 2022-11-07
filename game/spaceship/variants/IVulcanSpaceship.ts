@@ -4,6 +4,6 @@
     2022
 */
 
-interface IVulcanSpaceship extends ISpaceship {
+interface IVulcanSpaceship extends IAbstractSpaceship {
 
 }

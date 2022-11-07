@@ -59,7 +59,7 @@ class Camera implements ICamera {
         this.state.set( "player", player );
     }
 
-    public attachToSpaceship( spaceship: ISpaceship ): void {
+    public attachToSpaceship( spaceship: IAbstractSpaceship ): void {
 
         this.state.set( "spaceship", spaceship );
     }
@@ -109,7 +109,7 @@ class Camera implements ICamera {
     private setupStates(): void {
 
         this.state.add( "player", ( oldState: string, player: IPlayer ): void => this.onPlayerEnter( oldState, player ), ( newState: string ): void => this.onPlayerLeave( newState ) );
-        this.state.add( "spaceship", ( oldState: string, spaceship: ISpaceship ): void => this.onSpaceshipEnter( oldState, spaceship ), ( newState: string ): void => this.onSpaceshipLeave( newState ) );
+        this.state.add( "spaceship", ( oldState: string, spaceship: IAbstractSpaceship ): void => this.onSpaceshipEnter( oldState, spaceship ), ( newState: string ): void => this.onSpaceshipLeave( newState ) );
     }
 
     private createCamera(): void {
@@ -170,7 +170,7 @@ class Camera implements ICamera {
         this.leaveTarget();
     }
     
-    private onSpaceshipEnter( _oldState: string, spaceship: ISpaceship ): void {
+    private onSpaceshipEnter( _oldState: string, spaceship: IAbstractSpaceship ): void {
         
         log( "camera attached to spaceship" );
         

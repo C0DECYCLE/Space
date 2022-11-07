@@ -6,7 +6,7 @@
 
 class SpaceshipPhysics extends PhysicsEntity implements ISpaceshipPhysics {
 
-    public readonly spaceship: ISpaceship;
+    public readonly spaceship: IAbstractSpaceship;
 
     public travel: ISpaceshipPhysicsTravel;
 
@@ -22,7 +22,7 @@ class SpaceshipPhysics extends PhysicsEntity implements ISpaceshipPhysics {
 
     private localVelocity: BABYLON.Vector3 = new BABYLON.Vector3();
 
-    public constructor( spaceship: ISpaceship ) {
+    public constructor( spaceship: IAbstractSpaceship ) {
 
         super( spaceship.root );
         

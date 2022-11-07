@@ -4,7 +4,7 @@
     2022
 */
 
-class CloudsPlanet extends EntitySpawnerPlanet implements ICloudsPlanet {
+class CloudsPlanet extends AbstractEntitySpawnerPlanet implements ICloudsPlanet {
 
     public static readonly LOD_LIMIT: number = 2 ** 2.5;
 
@@ -35,7 +35,7 @@ class CloudsPlanet extends EntitySpawnerPlanet implements ICloudsPlanet {
         this.register();
     }
 
-    protected override create( position: BABYLON.Vector3, n: number, varyings: IVaryings ): [ ISpawnable, IVaryings ] {
+    protected create( position: BABYLON.Vector3, n: number, varyings: IVaryings ): [ ISpawnable, IVaryings ] {
         
         const height: number = this.noise( position.clone().scaleInPlace( this.planet.config.radius * -this.config.cullScale * 2.5 ).addInPlace( varyings.noiseOffset ) );
         

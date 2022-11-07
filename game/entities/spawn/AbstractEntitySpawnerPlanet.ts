@@ -4,7 +4,7 @@
     2022
 */
 
-class EntitySpawnerPlanet implements IEntitySpawnerPlanet {
+abstract class AbstractEntitySpawnerPlanet implements IAbstractEntitySpawnerPlanet {
 
     public config: IConfig = new Config(  
 
@@ -52,12 +52,7 @@ class EntitySpawnerPlanet implements IEntitySpawnerPlanet {
         }
     }
 
-    protected create( _position: BABYLON.Vector3, _n: number, _varyings: IVaryings ): [ ISpawnable, IVaryings ] {
-
-        console.warn( "EntitySpawnerPlanet: This function should never be executed." );
-
-        return [ new Spawnable(), new Varyings() ];
-    }
+    protected abstract create( _position: BABYLON.Vector3, _n: number, _varyings: IVaryings ): [ ISpawnable, IVaryings ];
 
     protected noise( input: number | BABYLON.Vector3 ): number {
 

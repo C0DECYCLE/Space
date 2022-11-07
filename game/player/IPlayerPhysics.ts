@@ -10,6 +10,6 @@ interface IPlayerPhysics extends IPhysicsEntity {
 
     planet: IPlanet | null;
     
-    spaceship: ISpaceship | null;
+    spaceship: IAbstractSpaceship | null;
 
 }

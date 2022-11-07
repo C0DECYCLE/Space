@@ -4,8 +4,8 @@
     2022
 */
 
-class CameraTarget implements ICameraTarget {
-
+abstract class AbstractCameraTarget implements IAbstractCameraTarget {
+    
     public config: IConfig = new Config(  
 
         [ "offset", new BABYLON.Vector3( 0, 0, 0 ) ],
@@ -40,10 +40,7 @@ class CameraTarget implements ICameraTarget {
         this.syncWithTarget( target );
     }
 
-    public onPointerMove( _target: ICameraTargetable, _event: BABYLON.PointerInfo ): void {
-
-        return;
-    }
+    public abstract onPointerMove( _target: ICameraTargetable, _event: BABYLON.PointerInfo ): void;
 
     protected redirect( target: ICameraTargetable ): void {
 

@@ -4,7 +4,7 @@
     2022
 */
 
-class CameraTargetPlayer extends CameraTarget implements ICameraTargetPlayer {
+class CameraTargetPlayer extends AbstractCameraTarget implements ICameraTargetPlayer {
 
     public override config: IConfig = new Config(  
 
@@ -41,7 +41,7 @@ class CameraTargetPlayer extends CameraTarget implements ICameraTargetPlayer {
         }
     }
 
-    public override onPointerMove( player: IPlayer, event: BABYLON.PointerInfo ): void {
+    public onPointerMove( player: IPlayer, event: BABYLON.PointerInfo ): void {
 
         if ( Controls.getInstance().isPointerDown === true || Controls.getInstance().config.experimentalPointerLock === true ) {
 

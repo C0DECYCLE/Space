@@ -6,8 +6,8 @@
 
 interface ICameraTargetSpaceship extends ICameraTarget {
 
-    update( spaceship: ISpaceship ): void;
+    update( spaceship: IAbstractSpaceship ): void;
 
-    onPointerMove( spaceship: ISpaceship, event: BABYLON.PointerInfo ): void;
+    onPointerMove( spaceship: IAbstractSpaceship, event: BABYLON.PointerInfo ): void;
 
 }

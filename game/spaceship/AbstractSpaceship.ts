@@ -4,7 +4,7 @@
     2022
 */
 
-class Spaceship implements ISpaceship {
+class AbstractSpaceship implements IAbstractSpaceship {
 
     public config: IConfig = new Config(  
 

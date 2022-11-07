@@ -54,7 +54,7 @@ class Player implements IPlayer {
         return this.physics.planet;
     }
 
-    public get spaceship(): ISpaceship | null {
+    public get spaceship(): IAbstractSpaceship | null {
 
         return this.physics.spaceship;
     }
@@ -90,7 +90,7 @@ class Player implements IPlayer {
 
         this.state.add( "space", ( oldState: string ): void => this.onSpaceEnter( oldState ), ( newState: string ): void => this.onSpaceLeave( newState ) );
         this.state.add( "planet",( oldState: string, planet: IPlanet ): void => this.onPlanetEnter( oldState, planet ), ( newState: string ): void => this.onPlanetLeave( newState ) );
-        this.state.add( "spaceship",( oldState: string, spaceship: ISpaceship ): void => this.onSpaceshipEnter( oldState, spaceship ), ( newState: string ): void => this.onSpaceshipLeave( newState ) );
+        this.state.add( "spaceship",( oldState: string, spaceship: IAbstractSpaceship ): void => this.onSpaceshipEnter( oldState, spaceship ), ( newState: string ): void => this.onSpaceshipLeave( newState ) );
 
         this.state.set( "space" );
     }
@@ -167,7 +167,7 @@ class Player implements IPlayer {
         this.physics.planet = null;
     }
 
-    private onSpaceshipEnter( _oldState: string, spaceship: ISpaceship ): void {
+    private onSpaceshipEnter( _oldState: string, spaceship: IAbstractSpaceship ): void {
         
         log( "player entered spaceship" );
 

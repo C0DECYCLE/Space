@@ -22,7 +22,7 @@ interface IPlayer extends ICameraTargetable, IConfigurable, ISingleton {
 
     get planet(): IPlanet | null;
 
-    get spaceship(): ISpaceship | null;
+    get spaceship(): IAbstractSpaceship | null;
 
     update(): void;
 

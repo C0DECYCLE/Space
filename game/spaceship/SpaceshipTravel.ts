@@ -6,7 +6,7 @@
 
 class SpaceshipTravel implements ISpaceshipTravel {
     
-    public readonly spaceship: ISpaceship;
+    public readonly spaceship: IAbstractSpaceship;
 
     private system: BABYLON.GPUParticleSystem;
     private isStarted: boolean = false;
@@ -15,7 +15,7 @@ class SpaceshipTravel implements ISpaceshipTravel {
     //private maxEmitPower_c: number;
     //private emitRate_c: number;
 
-    public constructor( spaceship: ISpaceship ) {
+    public constructor( spaceship: IAbstractSpaceship ) {
 
         this.spaceship = spaceship;
 

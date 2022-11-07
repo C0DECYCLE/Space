@@ -4,7 +4,7 @@
     2022
 */
 
-interface ISpaceship extends ICameraTargetable, IConfigurable {
+interface IAbstractSpaceship extends ICameraTargetable, IConfigurable {
 
     lod: ILOD;
 

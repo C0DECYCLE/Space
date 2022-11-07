@@ -9,7 +9,7 @@ class PlayerPhysics extends PhysicsEntity implements IPlayerPhysics {
     public readonly player: IPlayer;
 
     public planet: IPlanet | null;
-    public spaceship: ISpaceship | null;
+    public spaceship: IAbstractSpaceship | null;
 
     public constructor( player: IPlayer ) {
 

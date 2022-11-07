@@ -6,7 +6,7 @@
 
 interface ISpaceshipTravel {
 
-    readonly spaceship: ISpaceship;
+    readonly spaceship: IAbstractSpaceship;
 
     update(): void;
 

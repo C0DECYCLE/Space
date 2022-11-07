@@ -6,7 +6,7 @@
 
 interface ISpaceshipThrusters {
 
-    readonly spaceship: ISpaceship;
+    readonly spaceship: IAbstractSpaceship;
 
     readonly list: [ BABYLON.GPUParticleSystem, IConfig ][];
 

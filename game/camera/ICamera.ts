@@ -18,7 +18,7 @@ interface ICamera extends IConfigurable, ISingleton {
 
     attachToPlayer( player: IPlayer ): void;
 
-    attachToSpaceship( spaceship: ISpaceship ): void;
+    attachToSpaceship( spaceship: IAbstractSpaceship ): void;
 
     update(): void;
 

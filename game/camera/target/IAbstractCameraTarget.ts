@@ -4,7 +4,7 @@
     2022
 */
 
-interface ICameraTarget extends IConfigurable {
+interface IAbstractCameraTarget extends IConfigurable {
 
     update( target: ICameraTargetable ): void;
 

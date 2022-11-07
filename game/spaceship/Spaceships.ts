@@ -15,7 +15,7 @@ class Spaceships implements ISpaceships {
 
     );
 
-    public readonly list: ISpaceship[] = [];
+    public readonly list: IAbstractSpaceship[] = [];
 
     private constructor() {
 
@@ -24,7 +24,7 @@ class Spaceships implements ISpaceships {
 
     public register( variant: string, config: IConfig ): void {
 
-        let spaceship: ISpaceship | null = null;
+        let spaceship: IAbstractSpaceship | null = null;
 
         switch ( variant ) {
 
