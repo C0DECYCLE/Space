@@ -4,26 +4,23 @@
     2022
 */
 
-class Asteroids extends Singleton implements IAsteroids {
+class Asteroids implements IAsteroids {
+
+    /* Singleton */ 
+    private static instance: IAsteroids; 
+    public static instantiate(): void { if ( this.instance === undefined ) this.instance = new Asteroids(); } 
+    public static getInstance(): IAsteroids { return this.instance; }
 
     public config: IConfig = new Config(
 
     );
-
-    public readonly game: IGame;
-    public readonly scene: BABYLON.Scene;
 
     public readonly variants: Map< string, IModels > = new Map< string, IModels >();
     public readonly list: IAsteroidsDistributer[] = [];
 
     private readonly variantKeys: string[] = [ "a", "b", "c" ];
 
-    protected constructor() {
-
-        super();
-
-        this.game = Space;
-        this.scene = this.game.scene;
+    private constructor() {
 
         this.setupVariants();
     }
@@ -34,9 +31,9 @@ class Asteroids extends Singleton implements IAsteroids {
 
         switch ( type ) {
 
-            case "cluster": asteroids = new AsteroidsCluster( this.game, config ); break;
+            case "cluster": asteroids = new AsteroidsCluster( config ); break;
 
-            case "ring": asteroids = new AsteroidsRing( this.game, config ); break;
+            case "ring": asteroids = new AsteroidsRing( config ); break;
         }
 
         if ( asteroids !== null ) {
@@ -63,11 +60,11 @@ class Asteroids extends Singleton implements IAsteroids {
 
     private setupModels( variant: string ): IModels {
         
-        return this.scene.assets.provide( `asteroid-${ variant }`, ( mesh: BABYLON.Mesh, i: number ): void => {
+        return Space.scene.assets.provide( `asteroid-${ variant }`, ( mesh: BABYLON.Mesh, i: number ): void => {
             
             if ( i === 0 ) {
 
-                this.game.star.shadow.receive( mesh, false, true );
+                Star.getInstance().shadow.receive( mesh, false, true );
             } 
         } );
     }

@@ -37,9 +37,6 @@ class Planet implements IPlanet {
         [ "surface", false ]
     );
 
-    public readonly game: IGame;
-    public readonly scene: BABYLON.Scene;
-    
     public root: BABYLON.TransformNode;
     public lod: ILOD;
     public physics: IPlanetPhysics;
@@ -76,10 +73,7 @@ class Planet implements IPlanet {
     private distanceInOrbit: number = 0;
     private angleAroundOrbit: number = 0;
 
-    public constructor( game: IGame, config: IConfig ) {
-
-        this.game = game;
-        this.scene = game.scene;
+    public constructor( config: IConfig ) {
 
         EngineUtils.configure( this, config );
 
@@ -141,15 +135,15 @@ class Planet implements IPlanet {
 
     private createRoot(): void {
 
-        this.root = new BABYLON.TransformNode( `planets_planet${ this.config.key }`, this.scene );
+        this.root = new BABYLON.TransformNode( `planets_planet${ this.config.key }`, Space.scene );
         this.root.rotationQuaternion = this.root.rotation.toQuaternion();
 
-        this.game.ui.registerMarker( this.root, new Config( [ "type", "travel" ] ) );
+        UI.getInstance().registerMarker( this.root, new Config( [ "type", "travel" ] ) );
     }
 
     private createLod(): void {
 
-        this.lod = new LOD( this.game );
+        this.lod = new LOD();
         this.lod.fromSingle( this.root );
     }
 
@@ -177,7 +171,7 @@ class Planet implements IPlanet {
 
         if ( this.config.atmosphere !== false ) {
 
-            this.atmosphere = this.game.postprocess.atmosphere( this );
+            this.atmosphere = PostProcess.getInstance().atmosphere( this );
         }
     }
 
@@ -193,7 +187,7 @@ class Planet implements IPlanet {
 
         if ( this.config.clouds !== false ) {
 
-            this.clouds = new CloudsPlanet( this.game.clouds, this, this.config.clouds );
+            this.clouds = new CloudsPlanet( this, this.config.clouds );
         }
     }
     
@@ -247,7 +241,7 @@ class Planet implements IPlanet {
         
         if ( this.config.spin !== false ) {
 
-            const deltaCorrection: number = this.game.engine.deltaCorrection;
+            const deltaCorrection: number = Space.engine.deltaCorrection;
 
             this.root.rotate( BABYLON.Axis.Y, this.config.spin * EngineUtils.toRadian * deltaCorrection, BABYLON.Space.LOCAL ); //make very movement speed * delta time
         }
@@ -271,7 +265,7 @@ class Planet implements IPlanet {
     private getInsertionString(): string {
 
         const rdez: number = 10;
-        const diffrence: BABYLON.Vector3 = this.game.camera.position.subtract( BABYLON.Vector3.TransformCoordinates( BABYLON.Vector3.One().scaleInPlace( this.config.radius ), this.root._worldMatrix ) );
+        const diffrence: BABYLON.Vector3 = Camera.getInstance().position.subtract( BABYLON.Vector3.TransformCoordinates( BABYLON.Vector3.One().scaleInPlace( this.config.radius ), this.root._worldMatrix ) );
         diffrence.copyFromFloats( Math.round( diffrence.x / rdez ) * rdez,  Math.round( diffrence.y / rdez ) * rdez, Math.round( diffrence.z / rdez ) * rdez );
 
         return diffrence.toString();

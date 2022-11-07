@@ -43,9 +43,9 @@ class LOD extends AbstractLOD implements ILOD {
 
     private readonly doShadow?: ( currentEntity: BABYLON.TransformNode, value: boolean ) => void;
     
-    public constructor( game: IGame, doShadow?: ( currentEntity: BABYLON.TransformNode, value: boolean ) => void ) {
+    public constructor( doShadow?: ( currentEntity: BABYLON.TransformNode, value: boolean ) => void ) {
 
-        super( game );
+        super();
 
         this.doShadow = doShadow;
     }
@@ -63,7 +63,7 @@ class LOD extends AbstractLOD implements ILOD {
 
             if ( model instanceof BABYLON.Mesh ) {
                 
-                this.add( this.game.scene.assets.instance( model, ( instance: BABYLON.InstancedMesh ) => onEveryInstance?.( instance, i ) ), AbstractLOD.getMinimum( model.name ) );
+                this.add( Space.scene.assets.instance( model, ( instance: BABYLON.InstancedMesh ) => onEveryInstance?.( instance, i ) ), AbstractLOD.getMinimum( model.name ) );
             }
         }
     }
@@ -75,7 +75,7 @@ class LOD extends AbstractLOD implements ILOD {
             return;
         }
 
-        this.coverage = this.game.camera.getScreenCoverage( this.root );
+        this.coverage = Camera.getInstance().getScreenCoverage( this.root );
         this.setLevel( this.getLevelFromCoverage( this.coverage ) );
     }
     

@@ -6,10 +6,6 @@
 
 interface IEngineAssets {
 
-    readonly game: IGame;
-
-    readonly scene: BABYLON.Scene;
-
     cache: BABYLON.Node;
 
     readonly list: Map< ILoadConfig[ "key" ], BABYLON.TransformNode >;

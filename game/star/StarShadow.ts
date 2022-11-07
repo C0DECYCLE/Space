@@ -28,12 +28,10 @@ class StarShadow implements IStarShadow {
     private readonly debug: boolean = false;
     private frustumViewer: BABYLON.DirectionalLightFrustumViewer;
 
-    public constructor( star: IStar, light: BABYLON.DirectionalLight, config: IConfig ) {
+    public constructor( star: IStar, light: BABYLON.DirectionalLight ) {
         
         this.star = star;
         this.light = light;
-
-        EngineUtils.configure( this, config );
 
         this.configureLight();
         this.createGenerator();
@@ -74,7 +72,7 @@ class StarShadow implements IStarShadow {
 
         if ( this.debug === true ) {
 
-            this.frustumViewer = new BABYLON.DirectionalLightFrustumViewer( this.light, this.star.game.camera.camera );
+            this.frustumViewer = new BABYLON.DirectionalLightFrustumViewer( this.light, Camera.getInstance().camera );
         } 
     }
 

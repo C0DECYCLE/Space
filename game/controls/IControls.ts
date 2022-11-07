@@ -4,11 +4,7 @@
     2022
 */
 
-interface IControls extends IConfigurable {
-
-    readonly game: IGame;
-
-    readonly scene: BABYLON.Scene;
+interface IControls extends IConfigurable, ISingleton {
 
     readonly activeKeys: Set< string >;
 

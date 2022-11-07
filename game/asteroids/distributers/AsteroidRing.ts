@@ -17,9 +17,6 @@ class AsteroidsRing implements IAsteroidsRing {
         [ "density", 0.05 ]
     );
 
-    public readonly game: IGame;
-    public readonly scene: BABYLON.Scene;
-
     public readonly list: IAsteroidsCluster[] = [];
     public root: BABYLON.TransformNode;
     
@@ -55,10 +52,7 @@ class AsteroidsRing implements IAsteroidsRing {
         return count;
     }
 
-    public constructor( game: IGame, config: IConfig ) {
-
-        this.game = game;
-        this.scene = this.game.scene;
+    public constructor( config: IConfig ) {
 
         EngineUtils.configure( this, config );
 
@@ -76,7 +70,7 @@ class AsteroidsRing implements IAsteroidsRing {
 
     private createRoot(): void {
 
-        this.root = new BABYLON.TransformNode( `asteroids_ring${ this.config.key }`, this.scene );
+        this.root = new BABYLON.TransformNode( `asteroids_ring${ this.config.key }`, Space.scene );
         this.root.rotationQuaternion = this.root.rotation.toQuaternion();
     }
 
@@ -90,7 +84,7 @@ class AsteroidsRing implements IAsteroidsRing {
             const angle: number = ( 360 / count ) * i * EngineUtils.toRadian;
             const offset: BABYLON.Vector3 = new BABYLON.Vector3( Math.cos( angle ), 0, Math.sin( angle ) ).scaleInPlace( this.config.radius );
 
-            const cluster: IAsteroidsCluster = new AsteroidsCluster( this.game, { key: i, seed: random, radius: this.config.spread, height: this.config.height, density: this.config.density, offset: offset }, this.root );
+            const cluster: IAsteroidsCluster = new AsteroidsCluster( { key: i, seed: random, radius: this.config.spread, height: this.config.height, density: this.config.density, offset: offset }, this.root );
 
             this.list.push( cluster );
         }

@@ -6,12 +6,14 @@
 
 class Physics implements IPhysics {
 
+    /* Singleton */ 
+    private static instance: IPhysics; 
+    public static instantiate(): void { if ( this.instance === undefined ) this.instance = new Physics(); } 
+    public static getInstance(): IPhysics { return this.instance; }
+
     public config: IConfig = new Config(  
 
     );
-
-    public readonly game: IGame;
-    public readonly scene: BABYLON.Scene;
 
     public get isPaused(): boolean {
         
@@ -20,12 +22,7 @@ class Physics implements IPhysics {
 
     private isPausedValue: boolean = false;
 
-    public constructor( game: IGame, config: IConfig ) {
-
-        this.game = game;
-        this.scene = this.game.scene;
-
-        EngineUtils.configure( this, config );
+    private constructor() {
 
         this.setupCollisions();
     }
@@ -42,8 +39,8 @@ class Physics implements IPhysics {
     
     private setupCollisions(): void {
 
-        this.scene.gravity = BABYLON.Vector3.Zero();
-        this.scene.collisionsEnabled = true;
+        Space.scene.gravity = BABYLON.Vector3.Zero();
+        Space.scene.collisionsEnabled = true;
     }
 
 }

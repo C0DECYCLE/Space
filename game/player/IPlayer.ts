@@ -4,15 +4,7 @@
     2022
 */
 
-interface IPlayer extends ICameraTargetable, IConfigurable {
-
-    readonly game: IGame;
-
-    readonly scene: BABYLON.Scene;
-
-    readonly camera: ICamera;
-
-    readonly controls: IControls;
+interface IPlayer extends ICameraTargetable, IConfigurable, ISingleton {
 
     mesh: BABYLON.Mesh;
 

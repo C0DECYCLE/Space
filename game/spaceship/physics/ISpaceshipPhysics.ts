@@ -8,8 +8,6 @@ interface ISpaceshipPhysics extends IPhysicsEntity {
 
     readonly spaceship: ISpaceship;
 
-    readonly controls: IControls;
-
     travel: ISpaceshipPhysicsTravel;
 
     get thrust(): number;

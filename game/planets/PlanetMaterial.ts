@@ -12,7 +12,7 @@ class PlanetMaterial extends BABYLON.CustomMaterial implements IPlanetMaterial {
     
     public constructor( planet: IPlanet ) {
     
-        super( `planet${ planet.config.key }_material`, planet.scene );
+        super( `planet${ planet.config.key }_material`, Space.scene );
 
         this.planet = planet;
 

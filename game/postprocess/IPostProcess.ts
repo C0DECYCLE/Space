@@ -4,13 +4,7 @@
     2022
 */
 
-interface IPostProcess extends IConfigurable {
-
-    readonly game: IGame;
-
-    readonly scene: BABYLON.Scene;
-
-    readonly camera: BABYLON.Camera;
+interface IPostProcess extends IConfigurable, ISingleton {
 
     readonly pipelines: any[];
 

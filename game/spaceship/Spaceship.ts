@@ -14,10 +14,6 @@ class Spaceship implements ISpaceship {
         [ "upLerp", 0.1 ]
     );
 
-    public readonly game: IGame;
-    public readonly scene: BABYLON.Scene;
-    public readonly spaceships: ISpaceships;
-
     public lod: ILOD;
     public travel: ISpaceshipTravel;
     public physics: ISpaceshipPhysics;
@@ -58,11 +54,7 @@ class Spaceship implements ISpaceship {
     private nearPlanetValue?: IPlanet;
     private isLandedValue: boolean = false;
 
-    protected constructor( game: IGame, models: IModels, config: IConfig ) {
-
-        this.game = game;
-        this.scene = this.game.scene;
-        this.spaceships = this.game.spaceships;
+    protected constructor( models: IModels, config: IConfig ) {
         
         EngineUtils.configure( this, config );
         
@@ -126,11 +118,11 @@ class Spaceship implements ISpaceship {
 
     private createLod( model: IModels ): void {
 
-        this.lod = new LOD( this.game, ( instance: BABYLON.TransformNode, value: boolean ): void => { 
+        this.lod = new LOD( ( instance: BABYLON.TransformNode, value: boolean ): void => { 
 
             if ( instance instanceof BABYLON.AbstractMesh ) {
 
-                this.game.star.shadow.cast( instance, true, value ); 
+                Star.getInstance().shadow.cast( instance, true, value ); 
             }
         } );
 
@@ -138,7 +130,7 @@ class Spaceship implements ISpaceship {
 
         this.root.name = `spaceships_spaceship${ this.config.key }`;
 
-        this.game.ui.registerMarker( this.root, new Config( [ "type", "hint" ] ) );
+        UI.getInstance().registerMarker( this.root, new Config( [ "type", "hint" ] ) );
     }
 
     private setupTravel(): void {
@@ -162,13 +154,13 @@ class Spaceship implements ISpaceship {
 
         if ( cockpit instanceof BABYLON.InstancedMesh ) {
 
-            this.game.player.interaction.register( cockpit, (): void => {
+            Player.getInstance().interaction.register( cockpit, (): void => {
     
-                this.game.player.state.set( "spaceship", this );
+                Player.getInstance().state.set( "spaceship", this );
     
             }, (): void => {
     
-                this.game.player.state.set( "space" );
+                Player.getInstance().state.set( "space" );
             } );
         }
     }

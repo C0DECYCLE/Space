@@ -4,11 +4,7 @@
     2022
 */
 
-interface ISpaceships {
-
-    readonly game: IGame;
-
-    readonly scene: BABYLON.Scene;
+interface ISpaceships extends IConfigurable, ISingleton {
 
     readonly list: ISpaceship[];
 

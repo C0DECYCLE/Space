@@ -6,6 +6,11 @@
 
 class Star implements IStar {
 
+    /* Singleton */ 
+    private static instance: IStar; 
+    public static instantiate(): void { if ( this.instance === undefined ) this.instance = new Star(); } 
+    public static getInstance(): IStar { return this.instance; }
+    
     public config: IConfig = new Config(  
 
         [ "color", "#fff9bc" ],
@@ -13,9 +18,6 @@ class Star implements IStar {
         [ "size", 20_000 ],
         [ "resolution", 16 ]
     );
-
-    public readonly game: IGame;
-    public readonly scene: BABYLON.Scene;
 
     public directionalLight: BABYLON.DirectionalLight;
     public hemisphericLight: BABYLON.HemisphericLight;
@@ -45,30 +47,25 @@ class Star implements IStar {
         return this.directionalLight.direction;
     }
 
-    public constructor( game: IGame, config: IConfig, config_shadow: IConfig ) {
-
-        this.game = game;
-        this.scene = this.game.scene;
-
-        EngineUtils.configure( this, config );
+    private constructor() {
 
         this.createMesh();
         this.createDirectionalLight( 0.4 );
         this.createHemisphericLight( 0.02 );
-        this.createShadow( config_shadow );
+        this.createShadow();
         this.addGodrays();
         this.createBackground();
     }
 
     public update(): void {
 
-        this.target( this.game.camera );
+        this.target();
         this.shadow.update();
     }
 
     private createMesh(): void {
 
-        const material: BABYLON.StandardMaterial = new BABYLON.StandardMaterial( "star_material", this.scene );
+        const material: BABYLON.StandardMaterial = new BABYLON.StandardMaterial( "star_material", Space.scene );
         material.disableLighting = true;
         material.diffuseColor.set( 0, 0, 0 );
         material.specularColor.set( 0, 0, 0 );
@@ -76,7 +73,7 @@ class Star implements IStar {
         material.ambientColor.set( 0, 0, 0 );
         material.freeze();
 
-        this.mesh = BABYLON.MeshBuilder.CreateSphere( "star", { diameter: this.config.size, segments: this.config.resolution }, this.scene );
+        this.mesh = BABYLON.MeshBuilder.CreateSphere( "star", { diameter: this.config.size, segments: this.config.resolution }, Space.scene );
         this.mesh.removeVerticesData( BABYLON.VertexBuffer.NormalKind );
         this.mesh.removeVerticesData( BABYLON.VertexBuffer.UVKind );
         this.mesh.rotationQuaternion = this.mesh.rotation.toQuaternion();
@@ -88,36 +85,36 @@ class Star implements IStar {
 
     private createDirectionalLight( intensity: number ): void {
 
-        this.directionalLight = new BABYLON.DirectionalLight( "star_directionalLight", BABYLON.Vector3.Zero(), this.scene );
+        this.directionalLight = new BABYLON.DirectionalLight( "star_directionalLight", BABYLON.Vector3.Zero(), Space.scene );
         EngineExtensions.setLightColor( this.directionalLight, this.config.color );
         EngineExtensions.setLightIntensity( this.directionalLight, intensity );
     }
 
     private createHemisphericLight( intensity: number ): void {
 
-        this.hemisphericLight = new BABYLON.HemisphericLight( "star_hemisphericLight", BABYLON.Vector3.Up(), this.scene );
+        this.hemisphericLight = new BABYLON.HemisphericLight( "star_hemisphericLight", BABYLON.Vector3.Up(), Space.scene );
         EngineExtensions.setLightColor( this.hemisphericLight, this.config.color );
         EngineExtensions.setLightIntensity( this.hemisphericLight, intensity );
     }
 
-    private createShadow( config: IConfig ): void {
+    private createShadow(): void {
 
-        this.shadow = new StarShadow( this, this.directionalLight, config );
+        this.shadow = new StarShadow( this, this.directionalLight );
     }
 
     private addGodrays(): void {
 
-        this.godrays = this.game.postprocess.godrays( this.mesh );
+        this.godrays = PostProcess.getInstance().godrays( this.mesh );
     }
 
     private createBackground(): void {
 
-        this.background = BABYLON.MeshBuilder.CreateSphere( "star_background", { diameter: this.game.camera.config.max, segments: 4, sideOrientation: BABYLON.Mesh.BACKSIDE }, this.scene );
+        this.background = BABYLON.MeshBuilder.CreateSphere( "star_background", { diameter: Camera.getInstance().config.max, segments: 4, sideOrientation: BABYLON.Mesh.BACKSIDE }, Space.scene );
         this.background.removeVerticesData( BABYLON.VertexBuffer.NormalKind );
         
         this.background.isPickable = false;
 
-        const material: BABYLON.StandardMaterial = new BABYLON.StandardMaterial( "star_background_material", this.scene );
+        const material: BABYLON.StandardMaterial = new BABYLON.StandardMaterial( "star_background_material", Space.scene );
         material.disableLighting = true;
         
         material.diffuseColor = new BABYLON.Color3( 0, 0, 0 );
@@ -125,7 +122,7 @@ class Star implements IStar {
         material.emissiveColor = new BABYLON.Color3( 0, 0, 0 );
         material.ambientColor = new BABYLON.Color3( 0, 0, 0 );
 
-        const emissiveTexture: BABYLON.Texture = new BABYLON.Texture( "assets/textures/space.png", this.scene );
+        const emissiveTexture: BABYLON.Texture = new BABYLON.Texture( "assets/textures/space.png", Space.scene );
         emissiveTexture.uScale = 6;
         emissiveTexture.vScale = 6;
 
@@ -135,14 +132,14 @@ class Star implements IStar {
         this.background.material = material;
     }
 
-    private target( camera: ICamera ): void {
+    private target(): void {
 
-        this.directionalLight.position.copyFrom( camera.position );
-        this.directionalLight.direction.copyFrom( camera.position ).normalize(); 
+        this.directionalLight.position.copyFrom( Camera.getInstance().position );
+        this.directionalLight.direction.copyFrom( Camera.getInstance().position ).normalize(); 
 
-        this.hemisphericLight.direction.copyFrom( camera.root.up );
+        this.hemisphericLight.direction.copyFrom( Camera.getInstance().root.up );
         
-        this.background.position.copyFrom( camera.position );
+        this.background.position.copyFrom( Camera.getInstance().position );
     }
 
 }

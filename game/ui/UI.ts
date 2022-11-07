@@ -6,6 +6,11 @@
 
 class UI implements IUI {
 
+    /* Singleton */ 
+    private static instance: IUI; 
+    public static instantiate(): void { if ( this.instance === undefined ) this.instance = new UI(); } 
+    public static getInstance(): IUI { return this.instance; }
+    
     public static readonly NEUTRAL: string = "#4a9cff";
     public static readonly BAD: string = "#ff255b";
     public static readonly LIGHTUP: string = "#ffdb6f";
@@ -14,16 +19,10 @@ class UI implements IUI {
 
     );
 
-    public readonly game: IGame;
-
     public gui: BABYLON.GUI.AdvancedDynamicTexture;
     public readonly markers: Map< string, IUIMarker[] > = new Map< string, IUIMarker[] >();
 
-    public constructor( game: IGame, config: IConfig ) {
-
-        this.game = game;
-
-        EngineUtils.configure( this, config );
+    private constructor() {
 
         this.setupFullscreenUI();
         this.setupMarkers();
@@ -41,7 +40,7 @@ class UI implements IUI {
 
     private setupFullscreenUI(): void {
 
-        this.gui = BABYLON.GUI.AdvancedDynamicTexture.CreateFullscreenUI( "ui", true, this.game.scene );
+        this.gui = BABYLON.GUI.AdvancedDynamicTexture.CreateFullscreenUI( "ui", true, Space.scene );
         this.gui.useInvalidateRectOptimization = false;
     }
 

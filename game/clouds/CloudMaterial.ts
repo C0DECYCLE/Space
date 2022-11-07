@@ -10,7 +10,7 @@ class CloudMaterial extends BABYLON.CustomMaterial implements ICloudMaterial {
     
     public constructor( clouds: IClouds, color: string ) {
     
-        super( `cloud_material_${ color }`, clouds.scene );
+        super( `cloud_material_${ color }`, Space.scene );
 
         this.clouds = clouds;
 

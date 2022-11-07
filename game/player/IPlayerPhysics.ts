@@ -8,8 +8,6 @@ interface IPlayerPhysics extends IPhysicsEntity {
 
     readonly player: IPlayer;
 
-    readonly controls: IControls;
-
     planet: IPlanet | null;
     
     spaceship: ISpaceship | null;

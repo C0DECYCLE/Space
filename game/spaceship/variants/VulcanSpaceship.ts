@@ -28,9 +28,9 @@ class VulcanSpaceship extends Spaceship implements IVulcanSpaceship {
         [ "velocityDrag", 0.005 ],
     );
 
-    public constructor( game: IGame, config: IConfig ) {
+    public constructor( config: IConfig ) {
 
-        super( game, VulcanSpaceship.models, config );
+        super( VulcanSpaceship.models, config );
         
         EngineUtils.configure( this, config );
 

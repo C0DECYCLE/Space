@@ -21,9 +21,9 @@ class EntityLOD extends AbstractLOD implements IEntityLOD {
 
     private currentEntity: BABYLON.InstancedMesh | null = null;
 
-    public constructor( game: IGame, doShadow?: ( currentEntity: BABYLON.InstancedMesh, value: boolean ) => void, doCollidable: boolean = false, onRequest?: ( currentEntity: BABYLON.InstancedMesh ) => void, onReturn?: ( currentEntity: BABYLON.InstancedMesh ) => void ) {
+    public constructor( doShadow?: ( currentEntity: BABYLON.InstancedMesh, value: boolean ) => void, doCollidable: boolean = false, onRequest?: ( currentEntity: BABYLON.InstancedMesh ) => void, onReturn?: ( currentEntity: BABYLON.InstancedMesh ) => void ) {
 
-        super( game );
+        super();
 
         this.doShadow = doShadow;
         this.doCollidable = doCollidable;
@@ -56,7 +56,7 @@ class EntityLOD extends AbstractLOD implements IEntityLOD {
             return;
         }
 
-        this.coverage = this.game.camera.getScreenCoverage( this );
+        this.coverage = Camera.getInstance().getScreenCoverage( this );
         this.setLevel( this.getLevelFromCoverage( this.coverage ) );
     }
 

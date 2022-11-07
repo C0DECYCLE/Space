@@ -4,11 +4,7 @@
     2022
 */
 
-interface IStar extends IConfigurable {
-
-    readonly game: IGame;
-
-    readonly scene: BABYLON.Scene;
+interface IStar extends IConfigurable, ISingleton {
 
     directionalLight: BABYLON.DirectionalLight;
 

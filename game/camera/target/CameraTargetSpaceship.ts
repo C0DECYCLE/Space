@@ -34,7 +34,7 @@ class CameraTargetSpaceship extends CameraTarget implements ICameraTargetSpacesh
 
         super.update( spaceship );
 
-        if ( this.camera.controls.activeKeys.has( Controls.KEYS.Free ) === false && spaceship.isLanded === false && spaceship.physics.travel.isJumping === false ) {
+        if ( Controls.getInstance().activeKeys.has( Controls.KEYS.Free ) === false && spaceship.isLanded === false && spaceship.physics.travel.isJumping === false ) {
 
             this.focus();
         }
@@ -44,9 +44,9 @@ class CameraTargetSpaceship extends CameraTarget implements ICameraTargetSpacesh
 
     public override onPointerMove( spaceship: ISpaceship, event: BABYLON.PointerInfo ): void {
 
-        if ( this.camera.controls.isPointerDown === true || this.camera.controls.config.experimentalPointerLock === true ) {
+        if ( Controls.getInstance().isPointerDown === true || Controls.getInstance().config.experimentalPointerLock === true ) {
 
-            if ( this.camera.controls.activeKeys.has( Controls.KEYS.Free ) === true || spaceship.isLanded === true || spaceship.physics.travel.isJumping === true ) {
+            if ( Controls.getInstance().activeKeys.has( Controls.KEYS.Free ) === true || spaceship.isLanded === true || spaceship.physics.travel.isJumping === true ) {
 
                 this.free( event );
 
@@ -80,7 +80,7 @@ class CameraTargetSpaceship extends CameraTarget implements ICameraTargetSpacesh
 
     private applyFollowVelocity( spaceship: ISpaceship ): void {
 
-        const deltaCorrection: number = this.camera.game.engine.deltaCorrection;
+        const deltaCorrection: number = Space.engine.deltaCorrection;
 
         spaceship.root.rotate( BABYLON.Axis.Y, this.followXVelocity * deltaCorrection, BABYLON.Space.LOCAL );
         spaceship.root.rotate( BABYLON.Axis.X, this.followYVelocity * deltaCorrection, BABYLON.Space.LOCAL );

@@ -4,11 +4,7 @@
     2022
 */
 
-interface IClouds extends IConfigurable {
-
-    readonly game: IGame;
-    
-    readonly scene: BABYLON.Scene;
+interface IClouds extends IConfigurable, ISingleton {
     
     readonly materials: Map< string, ICloudMaterial >;
 

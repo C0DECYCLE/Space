@@ -17,7 +17,7 @@ class PlanetInsertParameters implements IPlanetInsertParameters {
         this.distanceCenterInsertion = distance;
         this.distanceRadiusFactor = distance / planet.config.radius;
     
-        this.centerToInsertion = planet.game.camera.position.subtract( planet.position ).normalize();
+        this.centerToInsertion = Camera.getInstance().position.subtract( planet.position ).normalize();
         this.occlusionFallOf = planet.helper.getOcclusionFallOf( distance, 0.9 );
     }
     

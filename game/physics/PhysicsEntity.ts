@@ -39,8 +39,6 @@ class PhysicsEntity implements IPhysicsEntity {
     public readonly delta: BABYLON.Vector3 = new BABYLON.Vector3( 0, 0, 0 );
     public readonly velocity: BABYLON.Vector3 = new BABYLON.Vector3( 0, 0, 0 );
 
-    public readonly game: IGame;
-    public readonly scene: BABYLON.Scene;
     public readonly mesh: BABYLON.AbstractMesh | BABYLON.TransformNode;
     
     public readonly type: EPhysicsTypes;
@@ -111,12 +109,9 @@ class PhysicsEntity implements IPhysicsEntity {
     
     private lastTimeOnGround: number = 0;
 
-    public constructor( game: IGame, mesh: BABYLON.AbstractMesh | BABYLON.TransformNode, type: EPhysicsTypes = PhysicsEntity.TYPES.DYNAMIC ) {
+    public constructor( mesh: BABYLON.AbstractMesh | BABYLON.TransformNode, type: EPhysicsTypes = PhysicsEntity.TYPES.DYNAMIC ) {
 
-        this.game = game;
-        this.scene = this.game.scene;
         this.mesh = mesh;
-
         this.type = type;
 
         if ( this.mesh instanceof BABYLON.AbstractMesh ) {
@@ -186,7 +181,7 @@ class PhysicsEntity implements IPhysicsEntity {
 
     protected preUpdate(): void {
         
-        if ( this.isPaused === true || this.game.physics.isPaused === true ) {
+        if ( this.isPaused === true || Physics.getInstance().isPaused === true ) {
 
             return;
         }
@@ -196,7 +191,7 @@ class PhysicsEntity implements IPhysicsEntity {
 
     protected postUpdate(): void {
 
-        if ( this.isPaused === true || this.game.physics.isPaused === true ) {
+        if ( this.isPaused === true || Physics.getInstance().isPaused === true ) {
 
             return;
         }
@@ -261,9 +256,9 @@ class PhysicsEntity implements IPhysicsEntity {
 
         if ( mesh instanceof BABYLON.AbstractMesh ) {
 
-            this.debugMesh = BABYLON.MeshBuilder.CreateSphere( "debugMesh", { diameter: 1, segments: 8 }, this.scene );
+            this.debugMesh = BABYLON.MeshBuilder.CreateSphere( "debugMesh", { diameter: 1, segments: 8 }, Space.scene );
             this.debugMesh.isPickable = false;
-            this.debugMesh.material = this.scene.debugMaterialRed;
+            this.debugMesh.material = Space.scene.debugMaterialRed;
             this.updateDebug( mesh );
             
             if ( mesh.collisionMesh !== undefined ) {

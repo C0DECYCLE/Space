@@ -7,17 +7,15 @@
 class PlayerPhysics extends PhysicsEntity implements IPlayerPhysics {
 
     public readonly player: IPlayer;
-    public readonly controls: IControls;
 
     public planet: IPlanet | null;
     public spaceship: ISpaceship | null;
 
     public constructor( player: IPlayer ) {
 
-        super( player.game, player.root );
+        super( player.root );
         
         this.player = player;
-        this.controls = this.player.controls;
     }
 
     public override update(): void {
@@ -77,43 +75,43 @@ class PlayerPhysics extends PhysicsEntity implements IPlayerPhysics {
     private spaceMovement(): void {
 
         const floatConfig: number = this.player.config.float;
-        const deltaCorrection: number = this.player.game.engine.deltaCorrection;
+        const deltaCorrection: number = Space.engine.deltaCorrection;
         const translate: BABYLON.Vector3 = new BABYLON.Vector3( 0, 0, 0 );
 
         const float: number = floatConfig * deltaCorrection;
 
-        if ( this.controls.activeKeys.has( Controls.KEYS.For ) === true ) {
+        if ( Controls.getInstance().activeKeys.has( Controls.KEYS.For ) === true ) {
 
             translate.z = float;
 
-        } else if ( this.controls.activeKeys.has( Controls.KEYS.Back ) === true ) {
+        } else if ( Controls.getInstance().activeKeys.has( Controls.KEYS.Back ) === true ) {
 
             translate.z = -float;
         }
         
-        if ( this.controls.activeKeys.has( Controls.KEYS.Right ) === true ) {
+        if ( Controls.getInstance().activeKeys.has( Controls.KEYS.Right ) === true ) {
 
             translate.x = float;
 
-        } else if ( this.controls.activeKeys.has( Controls.KEYS.Left ) === true ) {
+        } else if ( Controls.getInstance().activeKeys.has( Controls.KEYS.Left ) === true ) {
 
             translate.x = -float;
         }
         
-        if ( this.controls.activeKeys.has( Controls.KEYS.Up ) === true ) {
+        if ( Controls.getInstance().activeKeys.has( Controls.KEYS.Up ) === true ) {
 
             translate.y = float;
 
-        } else if ( this.controls.activeKeys.has( Controls.KEYS.Down ) === true ) {
+        } else if ( Controls.getInstance().activeKeys.has( Controls.KEYS.Down ) === true ) {
 
             translate.y = -float;
         }
 
-        if ( this.controls.activeKeys.has( Controls.KEYS.LeftRoll ) === true ) {
+        if ( Controls.getInstance().activeKeys.has( Controls.KEYS.LeftRoll ) === true ) {
 
             this.player.root.rotate( BABYLON.Axis.Z, float, BABYLON.Space.LOCAL );
 
-        } else if ( this.controls.activeKeys.has( Controls.KEYS.RightRoll ) === true ) {
+        } else if ( Controls.getInstance().activeKeys.has( Controls.KEYS.RightRoll ) === true ) {
 
             this.player.root.rotate( BABYLON.Axis.Z, -float, BABYLON.Space.LOCAL );
         }
@@ -132,7 +130,7 @@ class PlayerPhysics extends PhysicsEntity implements IPlayerPhysics {
         const walkConfig: number = this.player.config.walk;
         const runConfig: number = this.player.config.run;
         const jumpConfig: number = this.player.config.jump;
-        const deltaCorrection: number = this.player.game.engine.deltaCorrection;
+        const deltaCorrection: number = Space.engine.deltaCorrection;
         const translate: BABYLON.Vector3 = new BABYLON.Vector3( 0, 0, 0 );
 
         const walk: number = ( walkConfig / this.planet.config.gravity ) * deltaCorrection;
@@ -141,30 +139,30 @@ class PlayerPhysics extends PhysicsEntity implements IPlayerPhysics {
 
         let speed: number = walk;
 
-        if ( this.controls.activeKeys.has( Controls.KEYS.Fast ) === true ) {
+        if ( Controls.getInstance().activeKeys.has( Controls.KEYS.Fast ) === true ) {
 
             speed = run;
         }
 
-        if ( this.controls.activeKeys.has( Controls.KEYS.For ) === true ) {
+        if ( Controls.getInstance().activeKeys.has( Controls.KEYS.For ) === true ) {
 
             translate.z = speed;
 
-        } else if ( this.controls.activeKeys.has( Controls.KEYS.Back ) === true ) {
+        } else if ( Controls.getInstance().activeKeys.has( Controls.KEYS.Back ) === true ) {
 
             translate.z = -speed;
         }
         
-        if ( this.controls.activeKeys.has( Controls.KEYS.Right ) === true ) {
+        if ( Controls.getInstance().activeKeys.has( Controls.KEYS.Right ) === true ) {
 
             translate.x = speed;
 
-        } else if ( this.controls.activeKeys.has( Controls.KEYS.Left ) === true ) {
+        } else if ( Controls.getInstance().activeKeys.has( Controls.KEYS.Left ) === true ) {
 
             translate.x = -speed;
         }
 
-        if ( this.controls.activeKeys.has( Controls.KEYS.Jump ) === true ) {
+        if ( Controls.getInstance().activeKeys.has( Controls.KEYS.Jump ) === true ) {
 
             translate.y = jump;
         }

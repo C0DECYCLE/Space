@@ -30,7 +30,7 @@ class CameraTargetPlayer extends CameraTarget implements ICameraTargetPlayer {
 
         super.update( player );
 
-        if ( this.camera.controls.isKeyboarding === true ) {
+        if ( Controls.getInstance().isKeyboarding === true ) {
 
             this.refocus( player );
             this.focus();
@@ -43,9 +43,9 @@ class CameraTargetPlayer extends CameraTarget implements ICameraTargetPlayer {
 
     public override onPointerMove( player: IPlayer, event: BABYLON.PointerInfo ): void {
 
-        if ( this.camera.controls.isPointerDown === true || this.camera.controls.config.experimentalPointerLock === true ) {
+        if ( Controls.getInstance().isPointerDown === true || Controls.getInstance().config.experimentalPointerLock === true ) {
 
-            if ( this.camera.controls.isKeyboarding === true ) {
+            if ( Controls.getInstance().isKeyboarding === true ) {
 
                 this.followPointer( player, event );
 

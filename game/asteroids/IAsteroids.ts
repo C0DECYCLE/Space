@@ -4,11 +4,7 @@
     2022
 */
 
-interface IAsteroids extends IConfigurable {
-
-    readonly game: IGame;
-    
-    readonly scene: BABYLON.Scene;
+interface IAsteroids extends IConfigurable, ISingleton {
 
     readonly variants: Map< string, IModels >;
 

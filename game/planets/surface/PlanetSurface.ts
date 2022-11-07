@@ -29,7 +29,7 @@ class PlanetSurface extends EntitySpawnerPlanet implements IPlanetSurface {
 
     protected override create( position: BABYLON.Vector3, _n: number, _varyings: IVaryings ): [ ISpawnable, IVaryings ] {
         
-        const obsticle: IPlanetSurfaceObsticle = new PlanetSurfaceObsticle( this.planet.game, "tree", new Config() );
+        const obsticle: IPlanetSurfaceObsticle = new PlanetSurfaceObsticle( "tree", new Config() );
 
         obsticle.position.copyFrom( PlanetUtils.displace( this.planet, position ) );
         EngineUtils.setDirection( obsticle.rotationQuaternion, obsticle.position, 0, Math.PI / 2, 0 );
@@ -89,7 +89,7 @@ class PlanetSurface extends EntitySpawnerPlanet implements IPlanetSurface {
     private updateObsticles( distance: number ): void {
 
         const radiusDistance: number = distance / this.planet.config.radius;
-        const planetToCamera: BABYLON.Vector3 = this.planet.game.camera.position.subtract( this.planet.position ).normalize();
+        const planetToCamera: BABYLON.Vector3 = Camera.getInstance().position.subtract( this.planet.position ).normalize();
         const occlusionFallOf: number = this.planet.helper.getOcclusionFallOf( distance ).clamp( 0.85, Infinity );
         const distanceLODLevel: number = (radiusDistance / PlanetSurface.LOD_LIMIT).clamp( 0, 1 );
         

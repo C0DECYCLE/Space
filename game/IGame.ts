@@ -15,26 +15,6 @@ interface IGame {
     stage: () => void;
     
     run: () => void;
-
-    physics: IPhysics;
-
-    controls: IControls;
-
-    camera: ICamera;
-
-    postprocess: IPostProcess;
-
-    ui: IUI;
-
-    star: IStar;
-
-    player: IPlayer;
-
-    spaceships: ISpaceships;
-
-    clouds: IClouds;
-
-    planets: IPlanets;
     
     addOnReady( callback: () => void ): void;
 

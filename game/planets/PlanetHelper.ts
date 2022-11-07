@@ -30,7 +30,7 @@ class PlanetHelper implements IPlanetHelper {
         if ( this.maskValue !== value ) {
 
             this.planetMask.setEnabled( value );
-            this.planet.game.star.shadow.cast( this.planetMask, false, value );
+            Star.getInstance().shadow.cast( this.planetMask, false, value );
             this.maskValue = value;
 
             this.planet.chunks.toggleShadows( value );
@@ -44,7 +44,7 @@ class PlanetHelper implements IPlanetHelper {
 
     public createBasicMaterial(): BABYLON.StandardMaterial {
         
-        const material: BABYLON.StandardMaterial = new BABYLON.StandardMaterial( `planet${ this.planet.config.key }_basicMaterial`, this.planet.scene );
+        const material: BABYLON.StandardMaterial = new BABYLON.StandardMaterial( `planet${ this.planet.config.key }_basicMaterial`, Space.scene );
         EngineExtensions.setStandardMaterialColorIntensity( material, "#534d5f", 1.0 );
         material.wireframe = true;
         material.freeze();
@@ -73,28 +73,28 @@ class PlanetHelper implements IPlanetHelper {
     
     private createMask(): void {
 
-        this.planetMask = BABYLON.MeshBuilder.CreateSphere( "planet_mask", { diameter: this.planet.config.radius * 2, segments: 16 }, this.planet.scene );
+        this.planetMask = BABYLON.MeshBuilder.CreateSphere( "planet_mask", { diameter: this.planet.config.radius * 2, segments: 16 }, Space.scene );
         this.planetMask.removeVerticesData( BABYLON.VertexBuffer.NormalKind );
         this.planetMask.removeVerticesData( BABYLON.VertexBuffer.UVKind );
         this.planetMask.isPickable = false;
-        this.planetMask.material = this.planet.game.planets.getMaskMaterial();
+        this.planetMask.material = Planets.getInstance().getMaskMaterial();
         this.planetMask.parent = this.planet.root;
 
-        this.planet.game.star.shadow.cast( this.planetMask, false, true );
+        Star.getInstance().shadow.cast( this.planetMask, false, true );
         this.maskValue = true;
     }
 
     /*
     private debugInfluence(): void {
 
-        const debug_influence: BABYLON.Mesh = BABYLON.MeshBuilder.CreateSphere( "planet_debug_influence", { diameter: ( this.planet.config.radius + this.planet.config.influence ) * 2, segments: 32 }, this.planet.scene );
+        const debug_influence: BABYLON.Mesh = BABYLON.MeshBuilder.CreateSphere( "planet_debug_influence", { diameter: ( this.planet.config.radius + this.planet.config.influence ) * 2, segments: 32 }, Space.scene );
         debug_influence.isPickable = false;
-        debug_influence.material = this.planet.scene.debugMaterialRed;
+        debug_influence.material = Space.scene.debugMaterialRed;
         debug_influence.parent = this.planet.root;
 
-        const debug_maxHeight: BABYLON.Mesh = BABYLON.MeshBuilder.CreateSphere( "planet_debug_maxHeight", { diameter: ( this.planet.config.radius + this.planet.config.maxHeight ) * 2, segments: 32 }, this.planet.scene );
+        const debug_maxHeight: BABYLON.Mesh = BABYLON.MeshBuilder.CreateSphere( "planet_debug_maxHeight", { diameter: ( this.planet.config.radius + this.planet.config.maxHeight ) * 2, segments: 32 }, Space.scene );
         debug_maxHeight.isPickable = false;
-        debug_maxHeight.material = this.planet.scene.debugMaterialRed;
+        debug_maxHeight.material = Space.scene.debugMaterialRed;
         debug_maxHeight.parent = this.planet.root;
     }
     */

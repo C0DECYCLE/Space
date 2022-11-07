@@ -4,14 +4,8 @@
     2022
 */
 
-interface ICamera extends IConfigurable {
+interface ICamera extends IConfigurable, ISingleton {
 
-    readonly game: IGame;
-
-    readonly scene: BABYLON.Scene;
-
-    readonly controls: IControls;
-    
     root: BABYLON.TransformNode;
 
     camera: BABYLON.ArcRotateCamera;

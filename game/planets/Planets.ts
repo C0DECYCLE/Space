@@ -6,15 +6,14 @@
 
 class Planets implements IPlanets {
 
+    /* Singleton */ 
+    private static instance: IPlanets; 
+    public static instantiate(): void { if ( this.instance === undefined ) this.instance = new Planets(); } 
+    public static getInstance(): IPlanets { return this.instance; }
+
     public config: IConfig = new Config(  
 
     );
-
-    public readonly game: IGame;
-    public readonly scene: BABYLON.Scene;
-    public readonly camera: ICamera;
-    public readonly player: IPlayer;
-    public readonly spaceships: ISpaceships;
 
     public readonly list: IPlanet[] = [];
 
@@ -26,15 +25,7 @@ class Planets implements IPlanets {
 
     private maskMaterial: BABYLON.StandardMaterial;
 
-    public constructor( game: IGame, config: IConfig ) {
-        
-        this.game = game;
-        this.scene = this.game.scene;
-        this.camera = this.game.camera;
-        this.player = this.game.player;
-        this.spaceships = this.game.spaceships;
-
-        EngineUtils.configure( this, config );
+    private constructor() {
         
         this.createMaskMaterial();
         this.setupObsticles();
@@ -42,7 +33,7 @@ class Planets implements IPlanets {
 
     public register( config: IConfig ): void {
 
-        this.list.push( new Planet( this.game, config ) );
+        this.list.push( new Planet( config ) );
     }
 
     public registerFromConfigs( configs: IConfig[] ): void {
@@ -69,11 +60,11 @@ class Planets implements IPlanets {
         for ( let i: number = 0; i < this.list.length; i++ ) {
 
             const planet: IPlanet = this.list[i];
-            const distance: number = this.camera.getScreenDistance( planet.root );
+            const distance: number = Camera.getInstance().getScreenDistance( planet.root );
             const planetThreashold: number = planet.config.radius + planet.config.influence;
             
-            //this.player.planetInsert( planet, distance, planetThreashold );
-            this.spaceships.planetInsert( planet, distance, planetThreashold );
+            //Player.getInstance().planetInsert( planet, distance, planetThreashold );
+            Spaceships.getInstance().planetInsert( planet, distance, planetThreashold );
            
             planet.helper.toggleShadow( distance < planet.config.radius * 5 );
             planet.insert( distance );
@@ -90,7 +81,7 @@ class Planets implements IPlanets {
 
     private createMaskMaterial(): void {
 
-        this.maskMaterial = new BABYLON.StandardMaterial( "planet_mask_material", this.scene );
+        this.maskMaterial = new BABYLON.StandardMaterial( "planet_mask_material", Space.scene );
         this.maskMaterial.disableLighting = true;
         
         this.maskMaterial.diffuseColor = new BABYLON.Color3( 0, 0, 0 );
@@ -125,11 +116,11 @@ class Planets implements IPlanets {
 
     private setupModels( obsticleKey: string, variant: string ): IModels {
         
-        return this.scene.assets.provide( `${ obsticleKey }-${ variant }`, ( mesh: BABYLON.Mesh, i: number ): void => {
+        return Space.scene.assets.provide( `${ obsticleKey }-${ variant }`, ( mesh: BABYLON.Mesh, i: number ): void => {
             
             if ( i === 0 ) {
 
-                this.game.star.shadow.receive( mesh, false, true );
+                Star.getInstance().shadow.receive( mesh, false, true );
             } 
         } );
     }

@@ -6,6 +6,11 @@
 
 class Player implements IPlayer {
 
+    /* Singleton */ 
+    private static instance: IPlayer; 
+    public static instantiate(): void { if ( this.instance === undefined ) this.instance = new Player(); } 
+    public static getInstance(): IPlayer { return this.instance; }
+    
     public config: IConfig = new Config(  
 
         [ "float", 10.005 ],
@@ -17,11 +22,6 @@ class Player implements IPlayer {
         [ "standingup", 0.05 ],
         [ "deceleration", 0.15 ]
     );
-
-    public readonly game: IGame;
-    public readonly scene: BABYLON.Scene;
-    public readonly camera: ICamera;
-    public readonly controls: IControls;
 
     public mesh: BABYLON.Mesh;
     public physics: IPlayerPhysics;
@@ -59,14 +59,7 @@ class Player implements IPlayer {
         return this.physics.spaceship;
     }
 
-    public constructor( game: IGame, config: IConfig ) {
-
-        this.game = game;
-        this.scene = this.game.scene;
-        this.camera = this.game.camera;
-        this.controls = this.game.controls;
-
-        EngineUtils.configure( this, config );
+    private constructor() {
 
         this.createMesh();    
         this.setupStates();
@@ -104,9 +97,9 @@ class Player implements IPlayer {
 
     private createMesh(): void {
 
-        const body: BABYLON.Mesh = BABYLON.MeshBuilder.CreateCapsule( "player_mesh_body", { height: 2, radius: 0.5, tessellation: 8, subdivisions: 1, capSubdivisions: 3 }, this.scene );
+        const body: BABYLON.Mesh = BABYLON.MeshBuilder.CreateCapsule( "player_mesh_body", { height: 2, radius: 0.5, tessellation: 8, subdivisions: 1, capSubdivisions: 3 }, Space.scene );
 
-        const head: BABYLON.Mesh = BABYLON.MeshBuilder.CreateBox( "player_mesh_head", { width: 0.7, height: 0.35, depth: 0.3 }, this.scene );
+        const head: BABYLON.Mesh = BABYLON.MeshBuilder.CreateBox( "player_mesh_head", { width: 0.7, height: 0.35, depth: 0.3 }, Space.scene );
         head.position.copyFromFloats( 0, 0.5, 0.4 );
 
         const merged: BABYLON.Mesh | null = BABYLON.Mesh.MergeMeshes( [ body, head ], true );
@@ -120,19 +113,19 @@ class Player implements IPlayer {
             this.mesh.name = this.mesh.id;
             this.mesh.isPickable = false;
 
-            const material: BABYLON.StandardMaterial = new BABYLON.StandardMaterial( "player_material", this.scene );
+            const material: BABYLON.StandardMaterial = new BABYLON.StandardMaterial( "player_material", Space.scene );
             EngineExtensions.setStandardMaterialColorIntensity( material, "#ff226b", 0.5 );
             material.freeze();
 
             this.mesh.material = material;
             this.mesh.rotationQuaternion = this.mesh.rotation.toQuaternion();
             
-            this.game.star.shadow.cast( this.mesh, false, true );
-            this.game.star.shadow.receive( this.mesh, false, true );
+            Star.getInstance().shadow.cast( this.mesh, false, true );
+            Star.getInstance().shadow.receive( this.mesh, false, true );
         }
 
         /*
-        var light = new BABYLON.SpotLight("spotLight", new BABYLON.Vector3(0, 0, 0), new BABYLON.Vector3(0, 0, 1), Math.PI / 3, 20, this.scene);
+        var light = new BABYLON.SpotLight("spotLight", new BABYLON.Vector3(0, 0, 0), new BABYLON.Vector3(0, 0, 1), Math.PI / 3, 20, Space.scene);
         light.intensity = 4;
         light.parent = this.root;
         */
@@ -152,7 +145,7 @@ class Player implements IPlayer {
 
         log( "player entered space" );
 
-        this.camera.attachToPlayer( this );
+        Camera.getInstance().attachToPlayer( this );
     }
 
     private onSpaceLeave( _newState: string ): void {
@@ -183,7 +176,7 @@ class Player implements IPlayer {
         this.physics.spaceship = spaceship;
         this.physics.spaceship.enter( this );
 
-        this.camera.attachToSpaceship( this.physics.spaceship );
+        Camera.getInstance().attachToSpaceship( this.physics.spaceship );
     }
     
     private onSpaceshipLeave( _newState: string ): void {

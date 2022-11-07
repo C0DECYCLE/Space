@@ -7,7 +7,6 @@
 class SpaceshipPhysics extends PhysicsEntity implements ISpaceshipPhysics {
 
     public readonly spaceship: ISpaceship;
-    public readonly controls: IControls;
 
     public travel: ISpaceshipPhysicsTravel;
 
@@ -25,10 +24,9 @@ class SpaceshipPhysics extends PhysicsEntity implements ISpaceshipPhysics {
 
     public constructor( spaceship: ISpaceship ) {
 
-        super( spaceship.game, spaceship.root );
+        super( spaceship.root );
         
         this.spaceship = spaceship;
-        this.controls = this.spaceship.game.controls;
 
         this.setupTravel();
     }
@@ -68,47 +66,47 @@ class SpaceshipPhysics extends PhysicsEntity implements ISpaceshipPhysics {
 
     private movement(): void {
 
-        const deltaCorrection: number = this.spaceship.game.engine.deltaCorrection;
+        const deltaCorrection: number = Space.engine.deltaCorrection;
         const mainAcceleration: number = this.spaceship.config.mainAcceleration * deltaCorrection;
         const brakeScale: number = ( 1 - this.spaceship.config.brakeAcceleration ) * deltaCorrection;
         const minorAcceleration: number = this.spaceship.config.minorAcceleration * deltaCorrection;
         const rollSpeed: number = this.spaceship.config.rollSpeed * deltaCorrection;
         const acceleration: BABYLON.Vector3 = new BABYLON.Vector3( 0, 0, 0 );
 
-        if ( this.controls.activeKeys.has( Controls.KEYS.For ) === true ) {
+        if ( Controls.getInstance().activeKeys.has( Controls.KEYS.For ) === true ) {
 
             acceleration.z = mainAcceleration;
 
-        } else if ( this.controls.activeKeys.has( Controls.KEYS.Back ) === true ) {
+        } else if ( Controls.getInstance().activeKeys.has( Controls.KEYS.Back ) === true ) {
 
             this.brakeVelocity( brakeScale );
         }
         
-        if ( this.controls.activeKeys.has( Controls.KEYS.Right ) === true ) {
+        if ( Controls.getInstance().activeKeys.has( Controls.KEYS.Right ) === true ) {
 
             acceleration.x = minorAcceleration;
 
-        } else if ( this.controls.activeKeys.has( Controls.KEYS.Left ) === true ) {
+        } else if ( Controls.getInstance().activeKeys.has( Controls.KEYS.Left ) === true ) {
 
             acceleration.x = -minorAcceleration;
         }
         
-        if ( this.controls.activeKeys.has( Controls.KEYS.Up ) === true ) {
+        if ( Controls.getInstance().activeKeys.has( Controls.KEYS.Up ) === true ) {
 
             acceleration.y = minorAcceleration;
 
-        } else if ( this.controls.activeKeys.has( Controls.KEYS.Down ) === true ) {
+        } else if ( Controls.getInstance().activeKeys.has( Controls.KEYS.Down ) === true ) {
 
             acceleration.y = -minorAcceleration;
         }
 
         if ( this.spaceship.isLanded === false ) {
                 
-            if ( this.controls.activeKeys.has( Controls.KEYS.LeftRoll ) === true ) {
+            if ( Controls.getInstance().activeKeys.has( Controls.KEYS.LeftRoll ) === true ) {
 
                 this.spaceship.root.rotate( BABYLON.Axis.Z, rollSpeed, BABYLON.Space.LOCAL );
 
-            } else if ( this.controls.activeKeys.has( Controls.KEYS.RightRoll ) === true ) {
+            } else if ( Controls.getInstance().activeKeys.has( Controls.KEYS.RightRoll ) === true ) {
 
                 this.spaceship.root.rotate( BABYLON.Axis.Z, -rollSpeed, BABYLON.Space.LOCAL );
             }
@@ -130,7 +128,7 @@ class SpaceshipPhysics extends PhysicsEntity implements ISpaceshipPhysics {
 
         if ( brakeScale === undefined ) {
 
-            const deltaCorrection: number = this.spaceship.game.engine.deltaCorrection;
+            const deltaCorrection: number = Space.engine.deltaCorrection;
             brakeScale = ( 1 - this.spaceship.config.brakeAcceleration ) * deltaCorrection;
         }
 

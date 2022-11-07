@@ -30,7 +30,7 @@ Space.addOnReady( (): void => {
     Space.scene.autoClear = false;
     Space.scene.autoClearDepthAndStencil = false;
 
-    Space.scene.assets = new EngineAssets( Space );
+    Space.scene.assets = new EngineAssets();
     Space.scene.assets.onLoadObservable.addOnce( (): void => { Space.install(); Space.stage(); Space.update( Space.scene, Space.run ); } );
     Space.scene.assets.load( [
 
@@ -49,29 +49,27 @@ Space.addOnReady( (): void => {
 Space.add( "install", (): void => {
 
 
-    Space.physics = new Physics( Space, new Config() );
+    Physics.instantiate();
     
-    Space.controls = new Controls( Space, new Config() );
+    Controls.instantiate();
 
-    Space.camera = new Camera( Space, new Config() );
+    Camera.instantiate();
     
-    Space.postprocess = new PostProcess( Space, new Config() );
+    PostProcess.instantiate();
 
-    Space.ui = new UI( Space, new Config() );
+    UI.instantiate();
 
-    Space.star = new Star( Space, new Config(), new Config() );
+    Star.instantiate();
 
-    Space.player = new Player( Space, new Config() );
+    Player.instantiate();
 
-    Space.spaceships = new Spaceships( Space, new Config() );
+    Spaceships.instantiate();
+    Spaceships.getInstance().register( "vulcan", new Config( [ "key", 0 ] ) );
 
-    Space.spaceships.register( "vulcan", new Config( [ "key", 0 ] ) );
+    Clouds.instantiate();
 
-    Space.clouds = new Clouds( Space, new Config() );
-
-    Space.planets = new Planets( Space, new Config() );
-    
-    Space.planets.registerFromConfigs( [
+    Planets.instantiate();
+    Planets.getInstance().registerFromConfigs( [
 
         //new Config( [ "key", 0 ] )...
         { 
@@ -106,10 +104,9 @@ Space.add( "install", (): void => {
         }
     ] );
 
-    Asteroids.instantiate(); log(Asteroids.i);
-                                    //new Config( [ "key", 0 ] )...
-    Asteroids.i.register( "ring", { key: 0, seed: "7417", radius: 5 * 1000, spread: 400, height: 80, density: 0.06 } );
-    Asteroids.i.register( "ring", { key: 1, seed: "4674", radius: 5 * 1000, spread: 1200, height: 40, density: 0.04 } );
+    Asteroids.instantiate();
+    Asteroids.getInstance().register( "ring", { key: 0, seed: "7417", radius: 5 * 1000, spread: 400, height: 80, density: 0.06 } );
+    Asteroids.getInstance().register( "ring", { key: 1, seed: "4674", radius: 5 * 1000, spread: 1200, height: 40, density: 0.04 } );
 
     //make better optimized lod system
     // -> optimized blend in distance
@@ -155,6 +152,7 @@ Space.add( "install", (): void => {
 
 
     // 6. Fix/remove whole game structure? by using the game stuff as singletons
+    // 10. use abstract classes!
 
     // 2. make configs in constructor optional, configs as enums? 
     // 5. look where it makes more sense to use {} again, configs etc the indexable ones?
@@ -171,18 +169,18 @@ Space.add( "install", (): void => {
 Space.add( "stage", (): void => {
     
 
-    Space.planets.list[0].place( Space.star.position, 500 * 1000, 90 );
-    Space.planets.list[1].place( Space.star.position, 800 * 1000, -45 );
-    Space.planets.list[2].place( Space.star.position, 1000 * 1000, 240 );
-    Space.planets.list[3].place( Space.planets.list[2].position, 60 * 1000, 60 );
+    Planets.getInstance().list[0].place( Star.getInstance().position, 500 * 1000, 90 );
+    Planets.getInstance().list[1].place( Star.getInstance().position, 800 * 1000, -45 );
+    Planets.getInstance().list[2].place( Star.getInstance().position, 1000 * 1000, 240 );
+    Planets.getInstance().list[3].place( Planets.getInstance().list[2].position, 60 * 1000, 60 );
     
-    Asteroids.i.list[0].position?.copyFrom( Space.planets.list[0].position );
-    Asteroids.i.list[1].position?.copyFrom( Space.planets.list[0].position );
+    Asteroids.getInstance().list[0].position?.copyFrom( Planets.getInstance().list[0].position );
+    Asteroids.getInstance().list[1].position?.copyFrom( Planets.getInstance().list[0].position );
 
-    Space.spaceships.list[0].position.copyFrom( Space.planets.list[0].position ).addInPlace( new BABYLON.Vector3( 5 * 1000, 0, 0 ) );
-    Space.spaceships.list[0].root.rotate( BABYLON.Axis.Y, 90 * EngineUtils.toRadian, BABYLON.Space.LOCAL );
+    Spaceships.getInstance().list[0].position.copyFrom( Planets.getInstance().list[0].position ).addInPlace( new BABYLON.Vector3( 5 * 1000, 0, 0 ) );
+    Spaceships.getInstance().list[0].root.rotate( BABYLON.Axis.Y, 90 * EngineUtils.toRadian, BABYLON.Space.LOCAL );
     
-    Space.player.position.copyFrom( Space.spaceships.list[0].position ).addInPlace( new BABYLON.Vector3( 0, 0, -10 ) );
+    Player.getInstance().position.copyFrom( Spaceships.getInstance().list[0].position ).addInPlace( new BABYLON.Vector3( 0, 0, -10 ) );
 
 
     Space.scene.debugLayer.show( { embedMode: true } );
@@ -193,19 +191,19 @@ Space.add( "stage", (): void => {
 Space.add( "run", (): void => {
     
     
-    Space.planets.update();
+    Planets.getInstance().update();
 
-    Asteroids.i.update();
+    Asteroids.getInstance().update();
 
-    Space.spaceships.update(); 
+    Spaceships.getInstance().update(); 
 
-    Space.player.update();
+    Player.getInstance().update();
     
-    Space.camera.update();
+    Camera.getInstance().update();
 
-    Space.star.update();
+    Star.getInstance().update();
 
-    Space.ui.update();
+    UI.getInstance().update();
 
 
 } );

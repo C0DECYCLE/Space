@@ -6,10 +6,6 @@
 
 interface IPlanet extends IConfigurable {
 
-    readonly game: IGame;
-
-    readonly scene: BABYLON.Scene;
-
     root: BABYLON.TransformNode;
 
     lod: ILOD;

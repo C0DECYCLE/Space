@@ -29,7 +29,7 @@ class PlayerInteraction implements IPlayerInteraction {
         mesh.edgesWidth = PlayerInteraction.EDGE;
         mesh.edgesColor = BABYLON.Color4.FromHexString( UI.NEUTRAL );
 
-        this.player.game.ui.registerMarker( mesh, new Config( [ "type", "interactable" ] ) );
+        UI.getInstance().registerMarker( mesh, new Config( [ "type", "interactable" ] ) );
 
         this.list.push( new Interaction( mesh, event, leaveEvent, false ) );
     }
@@ -56,7 +56,7 @@ class PlayerInteraction implements IPlayerInteraction {
 
     private interactingUpdate(): void {
 
-        if ( this.player.controls.activeKeys.has( Controls.KEYS.Exit ) === true ) {
+        if ( Controls.getInstance().activeKeys.has( Controls.KEYS.Exit ) === true ) {
 
             this.interactionCarrier?.();
             this.interactionCarrier = undefined;
@@ -73,13 +73,13 @@ class PlayerInteraction implements IPlayerInteraction {
 
     private evaluateInteraction( interaction: IInteraction ): void {
 
-        const distance: number = this.player.camera.getApproximateScreenDistance( interaction.mesh );
+        const distance: number = Camera.getInstance().getApproximateScreenDistance( interaction.mesh );
 
         if ( distance <= PlayerInteraction.RADIUS /*&& view direction pointing towards it*/ ) {
 
             this.highlight( interaction );
 
-            if ( this.player.controls.activeKeys.has( Controls.KEYS.Interact ) === true ) {
+            if ( Controls.getInstance().activeKeys.has( Controls.KEYS.Interact ) === true ) {
 
                 interaction.event();
                 this.interactionCarrier = interaction.leaveEvent;

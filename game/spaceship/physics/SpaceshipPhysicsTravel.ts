@@ -8,7 +8,6 @@ class SpaceshipPhysicsTravel implements ISpaceshipPhysicsTravel {
 
     public static readonly VELOCITY: number = 128;
 
-    public readonly game: IGame;
     public readonly spaceshipPhysics: ISpaceshipPhysics;
 
     public get isTraveling(): boolean {
@@ -30,7 +29,6 @@ class SpaceshipPhysicsTravel implements ISpaceshipPhysicsTravel {
 
     public constructor( spaceshipPhysics: ISpaceshipPhysics ) {
 
-        this.game = spaceshipPhysics.spaceship.game;
         this.spaceshipPhysics = spaceshipPhysics;
     }
 
@@ -68,7 +66,7 @@ class SpaceshipPhysicsTravel implements ISpaceshipPhysicsTravel {
 
     private evaluateKeyPress(): boolean {
 
-        if ( this.spaceshipPhysics.controls.activeKeys.has( Controls.KEYS.Travel ) === true && Date.now() - this.pressedTime > this.pressedThreshold ) {
+        if ( Controls.getInstance().activeKeys.has( Controls.KEYS.Travel ) === true && Date.now() - this.pressedTime > this.pressedThreshold ) {
 
             this.pressedTime = Date.now();
 
@@ -80,7 +78,7 @@ class SpaceshipPhysicsTravel implements ISpaceshipPhysicsTravel {
 
     private getPotentialMarker(): IUIMarker | null {
 
-        const markers: IUIMarker[] | undefined = this.game.ui.markers.get( "travel" );
+        const markers: IUIMarker[] | undefined = UI.getInstance().markers.get( "travel" );
         const direction: BABYLON.Vector3 = this.spaceshipPhysics.spaceship.root.forward;
         
         if ( markers === undefined ) {
@@ -138,7 +136,7 @@ class SpaceshipPhysicsTravel implements ISpaceshipPhysicsTravel {
         
         if ( this.jumping.distance > size / 2 && this.evaluateKeyPress() === false ) {
 
-            this.spaceshipPhysics.velocity.copyFrom( this.jumping.direction ).scaleInPlace( SpaceshipPhysicsTravel.VELOCITY * this.game.engine.deltaCorrection );
+            this.spaceshipPhysics.velocity.copyFrom( this.jumping.direction ).scaleInPlace( SpaceshipPhysicsTravel.VELOCITY * Space.engine.deltaCorrection );
 
         } else {
 

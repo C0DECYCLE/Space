@@ -13,7 +13,6 @@ class AbstractLOD implements IAbstractLOD {
         return Number( name.split( "_" )[2] ).clamp( AbstractLOD.minimum, Infinity );
     }
 
-    public readonly game: IGame;
     public readonly levels: [ any, number ][] = [];
 
     public get isEnabled(): boolean {
@@ -32,9 +31,8 @@ class AbstractLOD implements IAbstractLOD {
     protected currentLevel?: number;
     protected lastValidLevel: number = 0;
 
-    protected constructor( game: IGame ) {
+    protected constructor() {
 
-        this.game = game;
     }
 
     public add( level: any, min: number ): void {

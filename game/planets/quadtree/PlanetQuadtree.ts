@@ -73,7 +73,7 @@ class PlanetQuadtree implements IPlanetQuadtree {
         const terrainifyWorldRotatePosition: BABYLON.Vector3 = BABYLON.Vector3.TransformCoordinates( terrainifyPosition, this.planet.root._worldMatrix );
         
         return [
-            this.planet.game.camera.getScreenSquaredDistance( terrainifyWorldRotatePosition ),
+            Camera.getInstance().getScreenSquaredDistance( terrainifyWorldRotatePosition ),
             BABYLON.Vector3.Dot( params.centerToInsertion, terrainifyWorldRotatePosition.subtract( this.planet.position ).normalize() )
         ];
     }

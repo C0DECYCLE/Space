@@ -6,8 +6,6 @@
 
 interface IAbstractLOD {
 
-    readonly game: IGame;
-
     readonly levels: [ any, number ][];
 
     get isEnabled(): boolean;

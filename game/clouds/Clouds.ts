@@ -6,6 +6,11 @@
 
 class Clouds implements IClouds {
 
+    /* Singleton */ 
+    private static instance: IClouds; 
+    public static instantiate(): void { if ( this.instance === undefined ) this.instance = new Clouds(); } 
+    public static getInstance(): IClouds { return this.instance; }
+
     public static readonly lods: number[][] = [
 
         [ 7, 0.25 ],
@@ -17,18 +22,11 @@ class Clouds implements IClouds {
 
     );
 
-    public readonly game: IGame;
-    public readonly scene: BABYLON.Scene;
-    
     public readonly materials: Map< string, ICloudMaterial > = new Map< string, ICloudMaterial >();
     public readonly list: ICloudsDistributer[] = [];
 
-    public constructor( game: IGame, config: IConfig ) {
-
-        this.game = game;
-        this.scene = this.game.scene;
-
-        EngineUtils.configure( this, config );
+    private constructor() {
+        
     }
 
     public createModels( blueprints: number[][], material: ICloudMaterial ): ICloudModel[] {
@@ -47,12 +45,12 @@ class Clouds implements IClouds {
 
         const mesh: ICloudModel = new CloudModel( this, level, subdivisions, min, material );
 
-        mesh.parent = this.game.scene.assets.cache;
+        mesh.parent = Space.scene.assets.cache;
         mesh.setEnabled( false );
 
         const invMin: number = Math.round( 1 / AbstractLOD.getMinimum( mesh.name ) );
             
-        mesh.entitymanager = new EntityManager( mesh.name, this.scene, () => this.game.scene.assets.instance( mesh, ( _instance: BABYLON.InstancedMesh ): void => {} ), invMin * 4, invMin );
+        mesh.entitymanager = new EntityManager( mesh.name, Space.scene, () => Space.scene.assets.instance( mesh, ( _instance: BABYLON.InstancedMesh ): void => {} ), invMin * 4, invMin );
 
         return mesh;
     }

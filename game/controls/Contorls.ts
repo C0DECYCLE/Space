@@ -6,6 +6,11 @@
 
 class Controls implements IControls {
 
+    /* Singleton */ 
+    private static instance: IControls; 
+    public static instantiate(): void { if ( this.instance === undefined ) this.instance = new Controls(); } 
+    public static getInstance(): IControls { return this.instance; }
+
     public static readonly KEYS = EControlsKeys;
 
     public config: IConfig = new Config(  
@@ -14,9 +19,6 @@ class Controls implements IControls {
 
         [ "experimentalPointerLock", true ]
     );
-
-    public readonly game: IGame;
-    public readonly scene: BABYLON.Scene;
 
     public readonly activeKeys: Set< string > = new Set< string >();
 
@@ -37,12 +39,7 @@ class Controls implements IControls {
     private isUsingKeyboard: boolean = false;
     private isDowningPointer: boolean = false;
 
-    public constructor( game: IGame, config: IConfig ) {
-
-        this.game = game;
-        this.scene = this.game.scene;
-
-        EngineUtils.configure( this, config );
+    private constructor() {
 
         this.bindKeyboard();
         this.bindMouse();
@@ -50,7 +47,7 @@ class Controls implements IControls {
 
     private bindKeyboard(): void {
 
-        this.scene.onKeyboardObservable.add( ( kbInfo: BABYLON.KeyboardInfo ): void => this.onKeyboardObservable( kbInfo ) );
+        Space.scene.onKeyboardObservable.add( ( kbInfo: BABYLON.KeyboardInfo ): void => this.onKeyboardObservable( kbInfo ) );
     }
 
     private onKeyboardObservable( kbInfo: BABYLON.KeyboardInfo ): void {
@@ -69,7 +66,7 @@ class Controls implements IControls {
 
     private bindMouse(): void {
 
-        this.scene.onPointerObservable.add( ( pointerInfo: BABYLON.PointerInfo ): void => this.onPointerObservable( pointerInfo ) );
+        Space.scene.onPointerObservable.add( ( pointerInfo: BABYLON.PointerInfo ): void => this.onPointerObservable( pointerInfo ) );
 
         if ( this.config.experimentalPointerLock === true ) {
 
@@ -97,7 +94,7 @@ class Controls implements IControls {
 
     private pointerLock(): void {
 
-        const canvas: HTMLCanvasElement  = this.game.engine.canvas;
+        const canvas: HTMLCanvasElement  = Space.engine.canvas;
         const mouseMove: ( event: MouseEvent ) => void = ( event: MouseEvent ): void =>  {
 
             const pointerInfo: BABYLON.PointerInfo = new BABYLON.PointerInfo( BABYLON.PointerEventTypes.POINTERMOVE, event, null );

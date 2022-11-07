@@ -6,14 +6,15 @@
 
 class Camera implements ICamera {
 
+    /* Singleton */ 
+    private static instance: ICamera; 
+    public static instantiate(): void { if ( this.instance === undefined ) this.instance = new Camera(); } 
+    public static getInstance(): ICamera { return this.instance; }
+
     public config: IConfig = new Config(  
 
         [ "max", 10_000_000 ]
     );
-
-    public readonly game: IGame;
-    public readonly scene: BABYLON.Scene;
-    public readonly controls: IControls;
     
     public root: BABYLON.TransformNode;
     public camera: BABYLON.ArcRotateCamera;
@@ -43,13 +44,7 @@ class Camera implements ICamera {
     private playerTargetCamera: ICameraTargetPlayer;
     private spaceshipTargetCamera: ICameraTargetSpaceship;
 
-    public constructor( game: IGame, config: IConfig ) {
-
-        this.game = game;
-        this.scene = this.game.scene;
-        this.controls = this.game.controls;
-
-        EngineUtils.configure( this, config );
+    private constructor() {
 
         this.createRoot();
         this.setupStates();
@@ -107,7 +102,7 @@ class Camera implements ICamera {
 
     private createRoot(): void {
 
-        this.root = new BABYLON.TransformNode( "camera", this.scene );
+        this.root = new BABYLON.TransformNode( "camera", Space.scene );
         this.root.rotationQuaternion = this.root.rotation.toQuaternion();
     }
 
@@ -119,7 +114,7 @@ class Camera implements ICamera {
 
     private createCamera(): void {
 
-        this.camera = new BABYLON.ArcRotateCamera( "camera_camera", -Math.PI / 2, Math.PI / 2, 0, BABYLON.Vector3.Zero(), this.scene );
+        this.camera = new BABYLON.ArcRotateCamera( "camera_camera", -Math.PI / 2, Math.PI / 2, 0, BABYLON.Vector3.Zero(), Space.scene );
         this.camera.maxZ = this.config.max;
         this.camera.parent = this.root;
     }
@@ -137,7 +132,7 @@ class Camera implements ICamera {
     
     private registerObservables(): void {
 
-        this.controls.onPointerMove.add( ( event: BABYLON.PointerInfo ): void => this.onPointerMove( event ) );
+        Controls.getInstance().onPointerMove.add( ( event: BABYLON.PointerInfo ): void => this.onPointerMove( event ) );
     }
 
     private onPointerMove( event: BABYLON.PointerInfo ): void {

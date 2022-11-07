@@ -4,11 +4,7 @@
     2022
 */
 
-interface IPhysics extends IConfigurable {
-
-    readonly game: IGame;
-    
-    readonly scene: BABYLON.Scene;
+interface IPhysics extends IConfigurable, ISingleton {
 
     get isPaused(): boolean;
 

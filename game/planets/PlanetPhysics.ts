@@ -72,7 +72,7 @@ class PlanetPhysics {
 
         if ( this.planet.config.spin !== false ) {
 
-            const deltaCorrection = this.planet.game.engine.deltaCorrection;
+            const deltaCorrection = Space.engine.deltaCorrection;
             const deltaAngle = this.planet.config.spin * EngineUtils.toRadian * deltaCorrection * this.getSpinFactor( distanceCenter );
 
             physicsEntity.delta.addInPlace( 
@@ -98,7 +98,7 @@ class PlanetPhysics {
 
     private pullGravity( physicsEntity: IPhysicsEntity, up: BABYLON.Vector3 ): void {
 
-        const deltaCorrection = this.planet.game.engine.deltaCorrection;
+        const deltaCorrection = Space.engine.deltaCorrection;
         const acceleration = physicsEntity.getAcceleration();
         
         physicsEntity.delta.addInPlace( up.scale( -this.planet.config.gravity * 0.1 * acceleration * deltaCorrection ) );

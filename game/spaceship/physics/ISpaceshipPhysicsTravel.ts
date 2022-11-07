@@ -6,8 +6,6 @@
 
 interface ISpaceshipPhysicsTravel {
 
-    readonly game: IGame;
-
     readonly spaceshipPhysics: ISpaceshipPhysics;
 
     get isTraveling(): boolean;

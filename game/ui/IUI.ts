@@ -4,9 +4,7 @@
     2022
 */
 
-interface IUI extends IConfigurable {
-
-    readonly game: IGame;
+interface IUI extends IConfigurable, ISingleton {
 
     gui: BABYLON.GUI.AdvancedDynamicTexture;
 

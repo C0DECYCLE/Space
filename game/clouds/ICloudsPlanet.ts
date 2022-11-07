@@ -6,8 +6,6 @@
 
 interface ICloudsPlanet extends ICloudsDistributer {
 
-    readonly clouds: IClouds;
-
     readonly list: ICloud[];
 
     material: ICloudMaterial;

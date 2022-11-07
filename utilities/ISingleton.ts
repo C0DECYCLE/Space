@@ -5,6 +5,5 @@
 */
 
 interface ISingleton {
-
     
 }

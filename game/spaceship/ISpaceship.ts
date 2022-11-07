@@ -6,12 +6,6 @@
 
 interface ISpaceship extends ICameraTargetable, IConfigurable {
 
-    readonly game: IGame;
-
-    readonly scene: BABYLON.Scene;
-
-    readonly spaceships: ISpaceships;
-
     lod: ILOD;
 
     travel: ISpaceshipTravel;

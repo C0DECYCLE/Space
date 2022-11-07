@@ -6,10 +6,6 @@
 
 interface IAsteroidsDistributer extends IConfigurable {
 
-    readonly game: IGame;
-
-    readonly scene: BABYLON.Scene;
-
     readonly list: any[];
     
     root: BABYLON.TransformNode;

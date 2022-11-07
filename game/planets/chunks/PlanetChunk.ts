@@ -98,11 +98,11 @@ class PlanetChunk extends BABYLON.Mesh implements IPlanetChunk {
     private addShadow( _size: number ): void {
 
         //causes weird glitch
-        //if ( size < this.planet.game.star.shadow.config.radius / PlanetQuadtree.divisionSizeFactor ) {
+        //if ( size < Star.getInstance().shadow.config.radius / PlanetQuadtree.divisionSizeFactor ) {
         if ( this.doesShadows === false ) {    
 
-            //this.planet.game.star.shadow.cast( this, false, true );        
-            this.planet.game.star.shadow.receive( this, false, true );  
+            //Star.getInstance().shadow.cast( this, false, true );        
+            Star.getInstance().shadow.receive( this, false, true );  
 
             this.doesShadows = true;
         }
@@ -112,8 +112,8 @@ class PlanetChunk extends BABYLON.Mesh implements IPlanetChunk {
 
         if ( this.doesShadows === true ) {
 
-            //this.planet.game.star.shadow.cast( this, false, false );        
-            this.planet.game.star.shadow.receive( this, false, false );  
+            //Star.getInstance().shadow.cast( this, false, false );        
+            Star.getInstance().shadow.receive( this, false, false );  
 
             this.doesShadows = false;
         }

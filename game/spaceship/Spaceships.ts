@@ -6,21 +6,18 @@
 
 class Spaceships implements ISpaceships {
 
+    /* Singleton */ 
+    private static instance: ISpaceships; 
+    public static instantiate(): void { if ( this.instance === undefined ) this.instance = new Spaceships(); } 
+    public static getInstance(): ISpaceships { return this.instance; }
+    
     public config: IConfig = new Config(  
 
     );
 
-    public readonly game: IGame;
-    public readonly scene: BABYLON.Scene;
-
     public readonly list: ISpaceship[] = [];
 
-    public constructor( game: IGame, config: IConfig ) {
-
-        this.game = game;
-        this.scene = this.game.scene;
-
-        EngineUtils.configure( this, config );
+    private constructor() {
 
         this.setupVariants();
     }
@@ -31,7 +28,7 @@ class Spaceships implements ISpaceships {
 
         switch ( variant ) {
 
-            case "vulcan": spaceship = new VulcanSpaceship( this.game, config ); break;
+            case "vulcan": spaceship = new VulcanSpaceship( config ); break;
         }
 
         if ( spaceship !== null ) {
@@ -63,20 +60,20 @@ class Spaceships implements ISpaceships {
 
     private load( target: IModels, name: string, interactables: string[] ): void {
         
-        const importLods: BABYLON.Mesh[] = this.game.scene.assets.list.get( `spaceship-${ name.toLowerCase() }` )?.getChildren() || [];
+        const importLods: BABYLON.Mesh[] = Space.scene.assets.list.get( `spaceship-${ name.toLowerCase() }` )?.getChildren() || [];
         
         for ( let i: number = 0; i < importLods.length; i++ ) {
             
-            const model: BABYLON.Mesh = this.game.scene.assets.traverse( importLods[i], mesh => {
+            const model: BABYLON.Mesh = Space.scene.assets.traverse( importLods[i], mesh => {
             
                 if ( i === 0 ) {
 
-                    this.game.star.shadow.receive( mesh, false, true );
+                    Star.getInstance().shadow.receive( mesh, false, true );
                 }
             }, interactables );
             
-            //model = game.scene.assets.merge( model );
-            //game.star.shadow.receive( model, false, true );
+            //model = Space.scene.assets.merge( model );
+            //Star.getInstance().shadow.receive( model, false, true );
             
             target.push( model );
         }

@@ -115,8 +115,8 @@ class UIMarker implements IUIMarker {
         const worldPosition: BABYLON.Vector3 = EngineUtils.getWorldPosition( this.transformNode );
         const size: number = EngineUtils.getBoundingSize( this.transformNode );
 
-        this.distanceValue = this.ui.game.camera.getScreenDistance( worldPosition );
-        this.directionValue = worldPosition.subtractInPlace( this.ui.game.player.position ).normalize();
+        this.distanceValue = Camera.getInstance().getScreenDistance( worldPosition );
+        this.directionValue = worldPosition.subtractInPlace( Player.getInstance().position ).normalize();
 
         if ( this.config.type === "travel" ) {
 
@@ -138,13 +138,13 @@ class UIMarker implements IUIMarker {
 
         if ( this.config.type === "travel" ) {
 
-            const spaceship = this.ui.game.player.physics.spaceship;
+            const spaceship = Player.getInstance().physics.spaceship;
 
             return spaceship?.physics.travel.isTraveling === true && spaceship?.physics.travel.isJumping === false;
 
         } else if ( this.config.type === "interactable" ) {
 
-            return this.isNear === true && this.ui.game.player.interaction.isInteracting === false;
+            return this.isNear === true && Player.getInstance().interaction.isInteracting === false;
 
         } else if ( this.config.type === "hint" ) {
 

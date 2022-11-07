@@ -4,17 +4,7 @@
     2022
 */
 
-interface IPlanets extends IConfigurable {
-
-    readonly game: IGame;
-
-    readonly scene: BABYLON.Scene;
-
-    readonly camera: ICamera;
-
-    readonly player: IPlayer;
-
-    readonly spaceships: ISpaceships;
+interface IPlanets extends IConfigurable, ISingleton {
 
     readonly list: IPlanet[];
 

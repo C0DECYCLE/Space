@@ -18,17 +18,14 @@ class CloudsPlanet extends EntitySpawnerPlanet implements ICloudsPlanet {
         [ "heightScale", 1.0 ],
     );
 
-    public readonly clouds: IClouds;
     public override readonly list: ICloud[] = [];
 
     public material: ICloudMaterial;
     public models: ICloudModel[];
 
-    public constructor( clouds: IClouds, planet: IPlanet, config: IConfig ) {
+    public constructor( planet: IPlanet, config: IConfig ) {
 
         super( planet, config );
-
-        this.clouds = clouds;
 
         EngineUtils.configure( this, config );
 
@@ -42,7 +39,7 @@ class CloudsPlanet extends EntitySpawnerPlanet implements ICloudsPlanet {
         
         const height: number = this.noise( position.clone().scaleInPlace( this.planet.config.radius * -this.config.cullScale * 2.5 ).addInPlace( varyings.noiseOffset ) );
         
-        const cloud: ICloud = new Cloud( this.clouds.game, this.models, {} );
+        const cloud: ICloud = new Cloud( this.models, {} );
         cloud.position.copyFrom( position ).scaleInPlace( this.planet.config.radius + this.planet.config.maxHeight * (0.5 + height * 0.5) * this.config.heightScale );
 
         EngineUtils.setDirection( cloud.rotationQuaternion, cloud.position, 0, Math.PI / 2, 0 );
@@ -69,8 +66,8 @@ class CloudsPlanet extends EntitySpawnerPlanet implements ICloudsPlanet {
 
     private setupModels(): void {
 
-        this.material = this.clouds.materials.get( this.config.color ) || new CloudMaterial( this.clouds, this.config.color );
-        this.models = this.clouds.createModels( Clouds.lods, this.material );
+        this.material = Clouds.getInstance().materials.get( this.config.color ) || new CloudMaterial( Clouds.getInstance(), this.config.color );
+        this.models = Clouds.getInstance().createModels( Clouds.lods, this.material );
     }
 
     private setupFilters(): void {
@@ -97,7 +94,7 @@ class CloudsPlanet extends EntitySpawnerPlanet implements ICloudsPlanet {
 
     private register(): void {
 
-        this.clouds.list.push( this );
+        Clouds.getInstance().list.push( this );
     }
 
 
@@ -106,7 +103,7 @@ class CloudsPlanet extends EntitySpawnerPlanet implements ICloudsPlanet {
     private updateClouds( distance: number ): void {
 
         const radiusDistance: number = distance / this.planet.config.radius;
-        const planetToCamera: BABYLON.Vector3 = this.planet.game.camera.position.subtract( this.planet.position ).normalize();
+        const planetToCamera: BABYLON.Vector3 = Camera.getInstance().position.subtract( this.planet.position ).normalize();
         const occlusionFallOf: number = this.planet.helper.getOcclusionFallOf( distance ).clamp( -0.35, Infinity );
         const distanceLODLevel: number = (radiusDistance / CloudsPlanet.LOD_LIMIT).clamp( 0, 1 );
         const starLightDirection: BABYLON.Vector3 = this.planet.position.normalizeToNew().applyRotationQuaternionInPlace( this.planet.rotationQuaternion.invert() );

@@ -8,15 +8,13 @@ class PlayerInteractionMaterial extends BABYLON.CustomMaterial implements IPlaye
 
     public static interactableColor: BABYLON.Vector3 = EngineUtils.color3ToVector3( BABYLON.Color3.FromHexString( UI.NEUTRAL ) );
 
-    private readonly game: IGame;
     private readonly screenSize: BABYLON.Vector2;
 
-    public constructor( name: string, game: IGame ) {
+    public constructor( name: string ) {
     
-        super( `${ name }-interactable`, game.scene );
+        super( `${ name }-interactable`, Space.scene );
 
-        this.game = game;
-        this.screenSize = this.game.engine.screenSize;
+        this.screenSize = Space.engine.screenSize;
 
         this.setupUniforms();
         this.setupAttributes();

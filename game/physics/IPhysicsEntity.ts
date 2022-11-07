@@ -9,11 +9,7 @@ interface IPhysicsEntity {
     readonly delta: BABYLON.Vector3;
 
     readonly velocity: BABYLON.Vector3;
-
-    readonly game: IGame;
-
-    readonly scene: BABYLON.Scene;
-
+    
     readonly mesh: BABYLON.AbstractMesh | BABYLON.TransformNode;
     
     readonly type: EPhysicsTypes;

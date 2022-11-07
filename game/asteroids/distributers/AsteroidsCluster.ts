@@ -18,9 +18,6 @@ class AsteroidsCluster implements IAsteroidsCluster {
         [ "offset", null ]
     );
 
-    public readonly game: IGame;
-    public readonly scene: BABYLON.Scene;
-
     public readonly list: IAsteroid[] = [];
     public root: BABYLON.TransformNode;
 
@@ -77,10 +74,7 @@ class AsteroidsCluster implements IAsteroidsCluster {
 
     private hasCustomParent: boolean = false;
 
-    public constructor( game: IGame, config: IConfig, customParent?: BABYLON.TransformNode ) {
-
-        this.game = game;
-        this.scene = this.game.scene;
+    public constructor( config: IConfig, customParent?: BABYLON.TransformNode ) {
 
         EngineUtils.configure( this, config );
 
@@ -114,7 +108,7 @@ class AsteroidsCluster implements IAsteroidsCluster {
 
         } else {
 
-            this.root = new BABYLON.TransformNode( `asteroids_cluster${ this.config.key }`, this.scene );
+            this.root = new BABYLON.TransformNode( `asteroids_cluster${ this.config.key }`, Space.scene );
             this.root.rotationQuaternion = this.root.rotation.toQuaternion();
         }
     }
@@ -127,7 +121,7 @@ class AsteroidsCluster implements IAsteroidsCluster {
 
         for ( let i: number = 0; i < count; i++ ) {
             
-            const asteroid: IAsteroid = new Asteroid( this.game, { random: random } );
+            const asteroid: IAsteroid = new Asteroid( { random: random } );
             asteroid.position.copyFromFloats( random() * 2 - 1, random() * 2 - 1, random() * 2 - 1 ).multiplyInPlace( spread );
             asteroid.parent = this.root;
 

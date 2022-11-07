@@ -13,17 +13,6 @@ class Game implements IGame {
     public stage: () => void = (): void => {};
     public run: () => void = (): void => {};
 
-    public physics: IPhysics;
-    public controls: IControls;
-    public camera: ICamera;
-    public postprocess: IPostProcess;
-    public ui: IUI;
-    public star: IStar;
-    public player: IPlayer;
-    public spaceships: ISpaceships;
-    public clouds: IClouds;
-    public planets: IPlanets;
-
     public constructor() {
 
         const ready: Event = new Event( "ready" );

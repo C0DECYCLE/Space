@@ -14,11 +14,11 @@ class Asteroid extends EntityLOD implements IAsteroid {
     private variantKey: string;
     private models: IModels;
 
-    public constructor( game: IGame, config: IConfig ) {
+    public constructor( config: IConfig ) {
 
-        super( game, ( instance: BABYLON.InstancedMesh, value: boolean ): void => { 
+        super( ( instance: BABYLON.InstancedMesh, value: boolean ): void => { 
 
-            game.star.shadow.cast( instance, false, value );  
+            Star.getInstance().shadow.cast( instance, false, value );  
 
         }, true );
 
@@ -32,11 +32,11 @@ class Asteroid extends EntityLOD implements IAsteroid {
 
     private pickVariant(): void {
 
-        const variants: string[] = [ ...this.game.asteroids.variants.keys() ];
+        const variants: string[] = [ ...Asteroids.getInstance().variants.keys() ];
         
         this.variantKey = variants[ Math.round( variants.length * Math.random() ).clamp( 0, variants.length - 1 ) ];
         
-        const models: IModels | undefined = this.game.asteroids.variants.get( this.variantKey );
+        const models: IModels | undefined = Asteroids.getInstance().variants.get( this.variantKey );
 
         if ( models !== undefined ) {
 

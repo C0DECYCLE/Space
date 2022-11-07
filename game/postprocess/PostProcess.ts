@@ -6,33 +6,28 @@
 
 class PostProcess implements IPostProcess {
 
+    /* Singleton */ 
+    private static instance: IPostProcess; 
+    public static instantiate(): void { if ( this.instance === undefined ) this.instance = new PostProcess(); } 
+    public static getInstance(): IPostProcess { return this.instance; }
+    
     public config: IConfig = new Config(  
 
         [ "samples", 3 ]
     );
 
-    public readonly game: IGame;
-    public readonly scene: BABYLON.Scene;
-    public readonly camera: BABYLON.Camera;
-
     public readonly pipelines: any[] = [];
 
-    public constructor( game: IGame, config: IConfig ) {
+    private constructor() {
 
-        this.game = game;
-        this.scene = this.game.scene;
-        this.camera = this.game.camera.camera;
-
-        EngineUtils.configure( this, config );
-
-        this.scene.clearColor = this.scene.clearColor.toLinearSpace();
+        Space.scene.clearColor = Space.scene.clearColor.toLinearSpace();
 
         this.defaultPipeline();
     }
 
     public godrays( mesh: BABYLON.Mesh ): BABYLON.VolumetricLightScatteringPostProcess {
 
-        const postprocess: BABYLON.VolumetricLightScatteringPostProcess = new BABYLON.VolumetricLightScatteringPostProcess( `${ mesh.name }_godrays`, 1.0, this.camera, mesh, 60, BABYLON.Texture.BILINEAR_SAMPLINGMODE, this.game.engine.babylon, false );
+        const postprocess: BABYLON.VolumetricLightScatteringPostProcess = new BABYLON.VolumetricLightScatteringPostProcess( `${ mesh.name }_godrays`, 1.0, Camera.getInstance().camera, mesh, 60, BABYLON.Texture.BILINEAR_SAMPLINGMODE, Space.engine.babylon, false );
         postprocess.weight = 0.15;
 
         this.pipelines.push( postprocess );
@@ -42,7 +37,7 @@ class PostProcess implements IPostProcess {
 
     public atmosphere( planet: IPlanet ): AtmosphericScatteringPostProcess {
 
-        const postprocess: AtmosphericScatteringPostProcess = new AtmosphericScatteringPostProcess( `${ planet.root.name }_atmosphere`, planet, this.game.star, this.game.camera, this.scene );
+        const postprocess: AtmosphericScatteringPostProcess = new AtmosphericScatteringPostProcess( `${ planet.root.name }_atmosphere`, planet, Star.getInstance(), Camera.getInstance(), Space.scene );
 
         postprocess.settings.redWaveLength = planet.config.waveLengths.r;
         postprocess.settings.greenWaveLength = planet.config.waveLengths.g;
@@ -55,7 +50,7 @@ class PostProcess implements IPostProcess {
 
     private defaultPipeline(): void {
 
-        const pipeline: BABYLON.DefaultRenderingPipeline = new BABYLON.DefaultRenderingPipeline( "postprocess_default", true, this.scene, [ this.camera ] );
+        const pipeline: BABYLON.DefaultRenderingPipeline = new BABYLON.DefaultRenderingPipeline( "postprocess_default", true, Space.scene, [ Camera.getInstance().camera ] );
         pipeline.samples = this.config.samples;
         pipeline.chromaticAberrationEnabled = true;
         pipeline.chromaticAberration.radialIntensity = 1;

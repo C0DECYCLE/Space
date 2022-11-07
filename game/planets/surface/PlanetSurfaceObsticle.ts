@@ -13,11 +13,11 @@ class PlanetSurfaceObsticle extends EntityLOD implements IPlanetSurfaceObsticle 
 
     private models: IModels;
 
-    public constructor( game: IGame, obsticleKey: string, config: IConfig ) {
+    public constructor( obsticleKey: string, config: IConfig ) {
 
-        super( game, ( instance: BABYLON.InstancedMesh, value: boolean ): void => { 
+        super( ( instance: BABYLON.InstancedMesh, value: boolean ): void => { 
 
-            this.game.star.shadow.cast( instance, false, value );  
+            Star.getInstance().shadow.cast( instance, false, value );  
 
         }, true );
 
@@ -30,10 +30,10 @@ class PlanetSurfaceObsticle extends EntityLOD implements IPlanetSurfaceObsticle 
 
     private pickModels( obsticleKey: string ) {
 
-        const variants: string[] = this.game.planets.obsticleKeys[ obsticleKey ];
+        const variants: string[] = Planets.getInstance().obsticleKeys[ obsticleKey ];
         const variant: string = variants[ Math.round( variants.length * Math.random() ).clamp( 0, variants.length - 1 ) ];
         
-        const models: IModels | undefined = this.game.planets.obsticles.get( obsticleKey )?.get( variant );
+        const models: IModels | undefined = Planets.getInstance().obsticles.get( obsticleKey )?.get( variant );
 
         if ( models !== undefined ) {
 
