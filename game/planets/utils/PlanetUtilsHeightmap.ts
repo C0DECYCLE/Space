@@ -6,6 +6,7 @@
 
 class PlanetUtilsHeightmap implements IPlanetUtilsHeightmap {
 
+    public static VARIANTS = EPlanetUtilsHeightmapVariants;
     public static PARAMETERS = EPlanetUtilsHeightmapParameters;
 
     public static get( planet: IPlanet, vector: BABYLON.Vector3 ): number {
@@ -15,14 +16,14 @@ class PlanetUtilsHeightmap implements IPlanetUtilsHeightmap {
 
         switch ( planet.config.variant ) {
 
-            case "0": return PlanetUtilsHeightmap.variant0( planet, vector );
-            case "1": return PlanetUtilsHeightmap.variant1( planet, vector );
+            case PlanetUtilsHeightmap.VARIANTS.DEFAULT: return PlanetUtilsHeightmap.variantDefault( planet, vector );
+            case PlanetUtilsHeightmap.VARIANTS.SWIRL: return PlanetUtilsHeightmap.variantSwirl( planet, vector );
         }
 
-        return PlanetUtilsHeightmap.variant0( planet, vector );
+        return PlanetUtilsHeightmap.variantDefault( planet, vector );
     }
     
-    public static variant0( planet: IPlanet, vector: BABYLON.Vector3 ): number {
+    public static variantDefault( planet: IPlanet, vector: BABYLON.Vector3 ): number {
         
         const fbm: ( perlin: perlinNoise3d, vector: BABYLON.Vector3 ) => number = PlanetUtilsHeightmap.fractionalBrownianMotion;
         const perlin: perlinNoise3d = planet.perlin;
@@ -35,7 +36,7 @@ class PlanetUtilsHeightmap implements IPlanetUtilsHeightmap {
         return fbm( perlin, offset.addInPlace( vector ) ) * heightScale;
     }
 
-    public static variant1( planet: IPlanet, vector: BABYLON.Vector3 ): number {
+    public static variantSwirl( planet: IPlanet, vector: BABYLON.Vector3 ): number {
 
         const fbm: ( perlin: perlinNoise3d, vector: BABYLON.Vector3 ) => number = PlanetUtilsHeightmap.fractionalBrownianMotion;
         const perlin: perlinNoise3d = planet.perlin;

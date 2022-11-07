@@ -87,7 +87,7 @@ Space.add( "install", (): void => {
         { 
             key: 1, radius: 2048, spin: 0.005, 
             gravity: 0.7, atmosphere: 512, waveLengths: new BABYLON.Color3( 450, 500, 680 ), clouds: { color: "#a56325", cullScale: 0.003, limit: 0.375, mainScale: 0.85, heightScale: 0.5 },
-            seed: new BABYLON.Vector3( 8513, -9011, -5910 ), variant: "1", mountainy: 3.5, warp: 1.0,
+            seed: new BABYLON.Vector3( 8513, -9011, -5910 ), variant: PlanetUtilsHeightmap.VARIANTS.SWIRL, mountainy: 3.5, warp: 1.0,
             colors: { main: "#f1993b", second: "#fab05c", third: "#945e41", steep: "#51515f" },
             //surface: true
         },
@@ -148,16 +148,18 @@ Space.add( "install", (): void => {
     //instead of reduce/avoid sqrt -> reduce / avoid loops
 
 
-// 1. also use correctly undefined (unintentional not knowing of value) and null (intentional absence of value)
-// 2. make configs in constructor optional, configs as enums? 
-// 3. planet utils heightmap variants as enums
-// 4. remove objectcontainer system and do better approach!! backup objectcontainer before removal!!! plan removal and better approach!!!
-// 5. look where it makes more sense to use {} again, configs etc the indexable ones?
-// 6. Fix/remove whole game structure? by using the game stuff as singletons
-// 7. take assets and co out of scene into standalone, like ambient etc... go to everywhere Object is interfaced and try to reduce that, also stop with the indexable interface/class thing
-// 8. go through everything look whats good whats bad what change what remove
+    // 4. remove objectcontainer system and do better approach!! backup objectcontainer before removal!!! plan removal and better approach!!!
 
-//!!!! before merge make javascript backup branch!!!
+    // 6. Fix/remove whole game structure? by using the game stuff as singletons
+
+    // 2. make configs in constructor optional, configs as enums? 
+    // 5. look where it makes more sense to use {} again, configs etc the indexable ones?
+    // 1. also use correctly undefined (unintentional not knowing of value) and null (intentional absence of value)
+
+    // 7. take assets and co out of scene into standalone, like ambient etc... go to everywhere Object is interfaced and try to reduce that, also stop with the indexable interface/class thing
+    // 8. go through everything look whats good whats bad what change what remove
+    
+    //!!!! before merge make javascript backup branch!!!
 
 } );
 

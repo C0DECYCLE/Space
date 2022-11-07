@@ -24,7 +24,7 @@ class Planet implements IPlanet {
         [ "resolution", 24 ],
 
         [ "seed", null ],
-        [ "variant", "0" ],
+        [ "variant", PlanetUtilsHeightmap.VARIANTS.DEFAULT ],
         [ "mountainy", 7.5 ],
         [ "warp", 0.3 ],
 
