@@ -148,6 +148,14 @@ Space.add( "install", (): void => {
     //instead of reduce/avoid sqrt -> reduce / avoid loops
 
 
+    /*
+    
+        Object Container did help to speed up but aren't usfull generally rather the concept of chunking together and calculate once there is usefull
+        and should be applied not generally, rather there where the other method like dot with planets doesnt work! problem is amount of update calls!
+    
+    */
+
+
     // 4. remove objectcontainer system and do better approach!! backup objectcontainer before removal!!! plan removal and better approach!!!
 
     // 6. Fix/remove whole game structure? by using the game stuff as singletons
@@ -155,9 +163,10 @@ Space.add( "install", (): void => {
     // 2. make configs in constructor optional, configs as enums? 
     // 5. look where it makes more sense to use {} again, configs etc the indexable ones?
     // 1. also use correctly undefined (unintentional not knowing of value) and null (intentional absence of value)
-
+    
     // 7. take assets and co out of scene into standalone, like ambient etc... go to everywhere Object is interfaced and try to reduce that, also stop with the indexable interface/class thing
     // 8. go through everything look whats good whats bad what change what remove
+    // 9. Make messurement of update calls to contrary of draw calls, debug both in upper corner!
     
     //!!!! before merge make javascript backup branch!!!
 
