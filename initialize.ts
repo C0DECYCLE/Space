@@ -195,10 +195,8 @@ window.addEventListener( "compile", ( _event: Event ): void => { console.log( `\
 
 
 
-    // 5. look where it makes more sense to use {} again, configs (enums instead?) etc the no indexables anymore
-    // 1. also use correctly undefined (unintentional not knowing of value) and null (intentional absence of value)
-    
+    // 1. undefined (unintentional not knowing of value) / null (intentional absence of value) [undefined,?,null]
+    // 9. Draw Calls & update calls stats
     // 8. go through everything look whats good whats bad what change what remove
-    // 9. Make messurement of update calls to contrary of draw calls, debug both in upper corner!
-    
+
     //!!!! before merge make javascript backup branch!!!

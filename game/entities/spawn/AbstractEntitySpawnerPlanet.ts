@@ -84,11 +84,11 @@ abstract class AbstractEntitySpawnerPlanet implements IAbstractEntitySpawnerPlan
 
         const pretest: false | IVaryings = this.test( this.preFilters, [ position ] );
 
-        if ( pretest instanceof Varyings ) {
+        if ( pretest !== false ) {
             
             const creation: [ ISpawnable, IVaryings ] = this.create( position, n, pretest );
 
-            if ( this.test( this.postFilters, creation ) instanceof Varyings ) {
+            if ( this.test( this.postFilters, creation ) !== false ) {
             
                 this.list.push( creation[0] );
             }
