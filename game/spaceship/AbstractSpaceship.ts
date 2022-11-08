@@ -54,7 +54,7 @@ class AbstractSpaceship implements IAbstractSpaceship {
     private nearPlanetValue?: IPlanet;
     private isLandedValue: boolean = false;
 
-    protected constructor( models: IModels, config: IConfig ) {
+    protected constructor( models: IModels, config?: IConfig ) {
         
         EngineUtils.configure( this, config );
         

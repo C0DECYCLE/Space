@@ -10,7 +10,7 @@ interface IAsteroids extends IConfigurable, ISingleton {
 
     readonly list: IAsteroidsDistributer[];
 
-    register( type: string, config: IConfig ): void;
+    register( type: string, config?: IConfig ): void;
 
     update(): void;
 

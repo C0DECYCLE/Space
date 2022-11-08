@@ -22,7 +22,7 @@ abstract class AbstractCameraTarget implements IAbstractCameraTarget {
 
     protected readonly camera: ICamera;
 
-    protected constructor( camera: ICamera, config: IConfig ) {
+    protected constructor( camera: ICamera, config?: IConfig ) {
 
         this.camera = camera;
 

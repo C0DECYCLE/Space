@@ -23,7 +23,7 @@ class CloudsPlanet extends AbstractEntitySpawnerPlanet implements ICloudsPlanet 
     public material: ICloudMaterial;
     public models: ICloudModel[];
 
-    public constructor( planet: IPlanet, config: IConfig ) {
+    public constructor( planet: IPlanet, config?: IConfig ) {
 
         super( planet, config );
 
@@ -39,7 +39,7 @@ class CloudsPlanet extends AbstractEntitySpawnerPlanet implements ICloudsPlanet 
         
         const height: number = this.noise( position.clone().scaleInPlace( this.planet.config.radius * -this.config.cullScale * 2.5 ).addInPlace( varyings.noiseOffset ) );
         
-        const cloud: ICloud = new Cloud( this.models, {} );
+        const cloud: ICloud = new Cloud( this.models );
         cloud.position.copyFrom( position ).scaleInPlace( this.planet.config.radius + this.planet.config.maxHeight * (0.5 + height * 0.5) * this.config.heightScale );
 
         EngineUtils.setDirection( cloud.rotationQuaternion, cloud.position, 0, Math.PI / 2, 0 );

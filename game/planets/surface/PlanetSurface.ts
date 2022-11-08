@@ -17,7 +17,7 @@ class PlanetSurface extends AbstractEntitySpawnerPlanet implements IPlanetSurfac
 
     public override readonly list: IPlanetSurfaceObsticle[] = [];
 
-    public constructor( planet: IPlanet, config: IConfig ) {
+    public constructor( planet: IPlanet, config?: IConfig ) {
 
         super( planet, config );
 
@@ -29,7 +29,7 @@ class PlanetSurface extends AbstractEntitySpawnerPlanet implements IPlanetSurfac
 
     protected create( position: BABYLON.Vector3, _n: number, _varyings: IVaryings ): [ ISpawnable, IVaryings ] {
         
-        const obsticle: IPlanetSurfaceObsticle = new PlanetSurfaceObsticle( "tree", new Config() );
+        const obsticle: IPlanetSurfaceObsticle = new PlanetSurfaceObsticle( "tree" );
 
         obsticle.position.copyFrom( PlanetUtils.displace( this.planet, position ) );
         EngineUtils.setDirection( obsticle.rotationQuaternion, obsticle.position, 0, Math.PI / 2, 0 );

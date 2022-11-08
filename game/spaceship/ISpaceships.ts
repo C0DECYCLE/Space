@@ -8,7 +8,7 @@ interface ISpaceships extends IConfigurable, ISingleton {
 
     readonly list: IAbstractSpaceship[];
 
-    register( variant: string, config: IConfig ): void;
+    register( variant: string, config?: IConfig ): void;
 
     update(): void;
     

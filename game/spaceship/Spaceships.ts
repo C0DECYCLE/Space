@@ -22,7 +22,7 @@ class Spaceships implements ISpaceships {
         this.setupVariants();
     }
 
-    public register( variant: string, config: IConfig ): void {
+    public register( variant: string, config?: IConfig ): void {
 
         let spaceship: IAbstractSpaceship | null = null;
 

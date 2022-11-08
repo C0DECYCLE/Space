@@ -25,7 +25,7 @@ class Asteroids implements IAsteroids {
         this.setupVariants();
     }
 
-    public register( type: string, config: IConfig ): void {
+    public register( type: string, config?: IConfig ): void {
 
         let asteroids: IAsteroidsDistributer | null = null;
 

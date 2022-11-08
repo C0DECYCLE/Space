@@ -31,7 +31,7 @@ class Planets implements IPlanets {
         this.setupObsticles();
     }
 
-    public register( config: IConfig ): void {
+    public register( config?: IConfig ): void {
 
         this.list.push( new Planet( config ) );
     }

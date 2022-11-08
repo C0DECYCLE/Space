@@ -74,7 +74,7 @@ class AsteroidsCluster implements IAsteroidsCluster {
 
     private hasCustomParent: boolean = false;
 
-    public constructor( config: IConfig, customParent?: BABYLON.TransformNode ) {
+    public constructor( config?: IConfig, customParent?: BABYLON.TransformNode ) {
 
         EngineUtils.configure( this, config );
 

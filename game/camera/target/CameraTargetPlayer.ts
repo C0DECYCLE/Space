@@ -17,7 +17,7 @@ class CameraTargetPlayer extends AbstractCameraTarget implements ICameraTargetPl
     
     private wasUnfocused: boolean = false;
 
-    public constructor( camera: ICamera, config: IConfig ) {
+    public constructor( camera: ICamera, config?: IConfig ) {
 
         super( camera, config );
         

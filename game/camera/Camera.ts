@@ -126,8 +126,8 @@ class Camera implements ICamera {
 
     private addTargets(): void {
 
-        this.playerTargetCamera = new CameraTargetPlayer( this, {} );
-        this.spaceshipTargetCamera = new CameraTargetSpaceship( this, {} );
+        this.playerTargetCamera = new CameraTargetPlayer( this );
+        this.spaceshipTargetCamera = new CameraTargetSpaceship( this );
     }
     
     private registerObservables(): void {

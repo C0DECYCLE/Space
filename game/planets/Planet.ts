@@ -73,7 +73,7 @@ class Planet implements IPlanet {
     private distanceInOrbit: number = 0;
     private angleAroundOrbit: number = 0;
 
-    public constructor( config: IConfig ) {
+    public constructor( config?: IConfig ) {
 
         EngineUtils.configure( this, config );
 

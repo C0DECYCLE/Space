@@ -28,7 +28,7 @@ class VulcanSpaceship extends AbstractSpaceship implements IVulcanSpaceship {
         [ "velocityDrag", 0.005 ],
     );
 
-    public constructor( config: IConfig ) {
+    public constructor( config?: IConfig ) {
 
         super( VulcanSpaceship.models, config );
         

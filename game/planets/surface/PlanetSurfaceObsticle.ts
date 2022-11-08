@@ -13,7 +13,7 @@ class PlanetSurfaceObsticle extends EntityLOD implements IPlanetSurfaceObsticle 
 
     private models: IModels;
 
-    public constructor( obsticleKey: string, config: IConfig ) {
+    public constructor( obsticleKey: string, config?: IConfig ) {
 
         super( ( instance: BABYLON.InstancedMesh, value: boolean ): void => { 
 

@@ -22,7 +22,7 @@ abstract class AbstractEntitySpawnerPlanet implements IAbstractEntitySpawnerPlan
     private preFilters: TFilter[] = [];
     private postFilters: TFilter[] = [];
 
-    protected constructor( planet: IPlanet, config: IConfig ) {
+    protected constructor( planet: IPlanet, config?: IConfig ) {
         
         this.planet = planet;
 

@@ -28,18 +28,21 @@ class EngineUtils implements IEngineUtils {
         return delta * fpsTarget / 1000;
     }
 
-    public static configure( self: IConfigurable, inject: IConfig ): void {
+    public static configure( self: IConfigurable, inject?: IConfig ): void {
 
-        const keys: string[] = Object.keys( self.config );
+        if ( inject !== undefined ) {
 
-        for ( let i: number = 0; i < keys.length; i++ ) {
-
-            const key: string = keys[i];
-            const value: any = inject[ key ];
-
-            if ( value !== undefined ) {
-
-                self.config[ key ] = value;
+            const keys: string[] = Object.keys( self.config );
+    
+            for ( let i: number = 0; i < keys.length; i++ ) {
+    
+                const key: string = keys[i];
+                const value: any = inject[ key ];
+    
+                if ( value !== undefined ) {
+    
+                    self.config[ key ] = value;
+                }
             }
         }
         

@@ -14,7 +14,7 @@ class Asteroid extends EntityLOD implements IAsteroid {
     private variantKey: string;
     private models: IModels;
 
-    public constructor( config: IConfig ) {
+    public constructor( config?: IConfig ) {
 
         super( ( instance: BABYLON.InstancedMesh, value: boolean ): void => { 
 

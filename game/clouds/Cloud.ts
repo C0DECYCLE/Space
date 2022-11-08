@@ -15,7 +15,7 @@ class Cloud extends EntityLOD implements ICloud {
 
     private readonly models: IModels;
 
-    public constructor( models: IModels, config: IConfig ) {
+    public constructor( models: IModels, config?: IConfig ) {
 
         super( undefined, false, ( instance: BABYLON.InstancedMesh ): void => this.onLODRequest( instance ) );
 

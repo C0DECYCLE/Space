@@ -12,7 +12,7 @@ interface IPlanets extends IConfigurable, ISingleton {
 
     readonly obsticleKeys: IConfig;
 
-    register( config: IConfig ): void;
+    register( config?: IConfig ): void;
 
     registerFromConfigs( configs: IConfig[] ): void;
 

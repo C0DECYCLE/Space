@@ -52,7 +52,7 @@ class AsteroidsRing implements IAsteroidsRing {
         return count;
     }
 
-    public constructor( config: IConfig ) {
+    public constructor( config?: IConfig ) {
 
         EngineUtils.configure( this, config );
 

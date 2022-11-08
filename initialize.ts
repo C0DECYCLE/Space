@@ -141,17 +141,11 @@ function update(): void {
     
     
     Planets.getInstance().update();
-
     Asteroids.getInstance().update();
-
     Spaceships.getInstance().update(); 
-
     Player.getInstance().update();
-    
     Camera.getInstance().update();
-
     Star.getInstance().update();
-
     UI.getInstance().update();
 
 
@@ -202,7 +196,6 @@ window.addEventListener( "compile", ( _event: Event ): void => { console.log( `\
 
 
 
-    // 2. make configs in constructor optional
     // 5. look where it makes more sense to use {} again, configs (enums instead?) etc the no indexables anymore
     // 1. also use correctly undefined (unintentional not knowing of value) and null (intentional absence of value)
     

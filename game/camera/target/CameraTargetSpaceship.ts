@@ -21,7 +21,7 @@ class CameraTargetSpaceship extends AbstractCameraTarget implements ICameraTarge
     private followXVelocity: number = 0;
     private followYVelocity: number = 0;
 
-    public constructor( camera: ICamera, config: IConfig ) {
+    public constructor( camera: ICamera, config?: IConfig ) {
 
         super( camera, config );
         

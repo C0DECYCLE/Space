@@ -55,7 +55,7 @@ class UIMarker implements IUIMarker {
     private distanceValue: number;
     private isNearValue: boolean;
 
-    public constructor( ui: IUI, transformNode: BABYLON.TransformNode, config: IConfig ) {
+    public constructor( ui: IUI, transformNode: BABYLON.TransformNode, config?: IConfig ) {
 
         this.ui = ui;
         this.transformNode = transformNode;
