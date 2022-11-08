@@ -11,13 +11,13 @@ class Star implements IStar {
     public static instantiate(): void { if ( this.instance === undefined ) this.instance = new Star(); } 
     public static getInstance(): IStar { return this.instance; }
     
-    public config: IConfig = new Config(  
-
-        [ "color", "#fff9bc" ],
-
-        [ "size", 20_000 ],
-        [ "resolution", 16 ]
-    );
+    public config: IConfig = {
+        
+        color: "#fff9bc",
+    
+        size: 20_000,
+        resolution: 16
+    };
 
     public directionalLight: BABYLON.DirectionalLight;
     public hemisphericLight: BABYLON.HemisphericLight;

@@ -6,18 +6,18 @@
 
 class StarShadow implements IStarShadow {
 
-    public config: IConfig = new Config(  
-
-        [ "radius", 2048 ],
-        [ "resolution", 2048 ],
-
-        [ "bias", 0.005 ],
-        [ "blend", 0.3 ],
-        [ "lambda", 0.85 ],
-
-        [ "filter", "PCF" ], //"NONE" "PCF" "CONHRD"
-        [ "quality", "HIGH" ] //LOW MEDIUM HIGH
-    );
+    public config: IConfig = {
+        
+        radius: 2048,
+        resolution: 2048,
+    
+        bias: 0.005,
+        blend: 0.3,
+        lambda: 0.85,
+    
+        filter: "PCF", //"NONE" "PCF" "CONHRD"
+        quality: "HIGH" //LOW MEDIUM HIGH
+    };
 
     public readonly star: IStar;
     public readonly light: BABYLON.DirectionalLight;

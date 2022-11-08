@@ -33,13 +33,13 @@ function setup(): void {
     EngineAssets.getInstance().onLoadObservable.addOnce( instantiate );
     EngineAssets.getInstance().load( [
 
-        new LoadConfig( "asteroid-a", "assets/models/asteroid-a.glb" ),
-        new LoadConfig( "asteroid-b", "assets/models/asteroid-b.glb" ),
-        new LoadConfig( "asteroid-c", "assets/models/asteroid-c.glb" ),
+        [ "asteroid-a", "assets/models/asteroid-a.glb" ],
+        [ "asteroid-b", "assets/models/asteroid-b.glb" ],
+        [ "asteroid-c", "assets/models/asteroid-c.glb" ],
 
-        new LoadConfig( "tree-a", "assets/models/tree-a.glb" ),
+        [ "tree-a", "assets/models/tree-a.glb" ],
 
-        new LoadConfig( "spaceship-vulcan", "assets/models/spaceship-vulcan.glb" )
+        [ "spaceship-vulcan", "assets/models/spaceship-vulcan.glb" ]
     ] );
 
 
@@ -71,7 +71,6 @@ function register(): void {
 
     Planets.getInstance().registerFromConfigs( [
 
-        //new Config( [ "key", 0 ] )...
         { 
             key: 0, radius: 1024, spin: 0.005, 
             gravity: 0.6, atmosphere: 256, waveLengths: new BABYLON.Color3( 450, 370, 420 ),
@@ -90,7 +89,7 @@ function register(): void {
 
         { 
             key: 2, radius: 4096, spin: 0.0025, 
-            gravity: 0.8, atmosphere: 1024, waveLengths: new BABYLON.Color3( 700, 600, 500 ), clouds: new Config(),
+            gravity: 0.8, atmosphere: 1024, waveLengths: new BABYLON.Color3( 700, 600, 500 ), clouds: {},
             seed: new BABYLON.Vector3( -925, -2011, 7770 ),
             colors: { main: "#7a8161", second: "#856160", third: "#a8ceb0", steep: "#252123" },
             //surface: true
@@ -108,7 +107,7 @@ function register(): void {
     Asteroids.getInstance().register( "ring", { key: 0, seed: "7417", radius: 5 * 1000, spread: 400, height: 80, density: 0.06 } );
     Asteroids.getInstance().register( "ring", { key: 1, seed: "4674", radius: 5 * 1000, spread: 1200, height: 40, density: 0.04 } );
 
-    Spaceships.getInstance().register( "vulcan", new Config( [ "key", 0 ] ) );
+    Spaceships.getInstance().register( "vulcan", { key: 0 } );
 
 
     stage();

@@ -6,17 +6,17 @@
 
 class CameraTargetSpaceship extends AbstractCameraTarget implements ICameraTargetSpaceship {
 
-    public override config: IConfig = new Config(  
+    public override config: IConfig = {
 
-        [ "offsetRadius", 18 ],
-
-        [ "focusBeta", Math.PI / 2.2 ],
-
-        [ "lerpPos", 0.1 ],
-        [ "lerpRot", 0.025 ],
-
-        [ "follow", 0.0015 ]
-    );
+        offsetRadius: 18,
+    
+        focusBeta: Math.PI / 2.2,
+    
+        lerpPos: 0.1,
+        lerpRot: 0.025,
+    
+        follow: 0.0015
+    }
 
     private followXVelocity: number = 0;
     private followYVelocity: number = 0;

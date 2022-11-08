@@ -6,18 +6,18 @@
 
 class UIMarker implements IUIMarker {
 
-    public config: IConfig = new Config(  
-
-        [ "type", "hint" ],
-
-        [ "size", 32 ],
-        [ "color", UI.NEUTRAL ],
-        [ "lightUpColor", UI.LIGHTUP ],
-        [ "thickness", 5 ],
-        [ "fontFamily", "ExtraBold" ],
-        [ "fontSize", 20 ],
-    );
+    public config: IConfig = {
+        
+        type: "hint",
     
+        size: 32,
+        color: UI.NEUTRAL,
+        lightUpColor: UI.LIGHTUP,
+        thickness: 5,
+        fontFamily: "ExtraBold",
+        fontSize: 20
+    };
+
     public readonly ui: IUI;
     public readonly transformNode: BABYLON.TransformNode;
     public lightUp: boolean = false;

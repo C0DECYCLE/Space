@@ -6,17 +6,17 @@
 
 class AsteroidsCluster implements IAsteroidsCluster {
 
-    public config: IConfig = new Config(
+    public config: IConfig = {
 
-        [ "key", UUIDv4() ],
-        [ "seed", undefined ],
+        key: UUIDv4(),
+        seed: undefined,
 
-        [ "radius", 1000 ],
-        [ "height", 1000 ],
-        [ "density", 0.1 ],
+        radius: 1000,
+        height: 1000,
+        density: 0.1,
 
-        [ "offset", null ]
-    );
+        offset: null
+    };
 
     public readonly list: IAsteroid[] = [];
     public root: BABYLON.TransformNode;

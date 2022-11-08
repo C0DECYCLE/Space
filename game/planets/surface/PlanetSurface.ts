@@ -8,12 +8,12 @@ class PlanetSurface extends AbstractEntitySpawnerPlanet implements IPlanetSurfac
 
     public static readonly LOD_LIMIT: number = 2.0;
 
-    public override config: IConfig = new Config(  
+    public override config: IConfig = {
 
-        [ "density", 0.5 ],
-        [ "cullScale", 0.002 ],
-        [ "limit", 0.4 ]
-    );
+        density: 0.5,
+        cullScale: 0.002,
+        limit: 0.4
+    };
 
     public override readonly list: IPlanetSurfaceObsticle[] = [];
 
@@ -43,10 +43,7 @@ class PlanetSurface extends AbstractEntitySpawnerPlanet implements IPlanetSurfac
 
         obsticle.parent = this.planet.root;
 
-        return [ obsticle, new Varyings( 
-
-            [ "steepUp", steepUp ]
-        ) ];
+        return [ obsticle, { steepUp: steepUp } ];
     }
 
     public update( distance: number ): void {
@@ -70,7 +67,7 @@ class PlanetSurface extends AbstractEntitySpawnerPlanet implements IPlanetSurfac
 
         if ( cull < this.config.limit ) {
 
-            return new Varyings();
+            return {};
         }
 
         return false;
@@ -80,7 +77,7 @@ class PlanetSurface extends AbstractEntitySpawnerPlanet implements IPlanetSurfac
 
         const tooSteep: boolean = BABYLON.Vector3.Dot( varyings.steepUp, obsticle.position.normalizeToNew() ) > 0.95;
 
-        return tooSteep === false ? false : new Varyings();
+        return tooSteep === false ? false : {};
     }
 
 

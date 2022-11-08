@@ -6,19 +6,19 @@
 
 abstract class AbstractCameraTarget implements IAbstractCameraTarget {
     
-    public config: IConfig = new Config(  
+    public config: IConfig = {
 
-        [ "offset", new BABYLON.Vector3( 0, 0, 0 ) ],
-        [ "offsetRadius", 10 ],
-
-        [ "focusAlpha", -Math.PI / 2 ],
-        [ "focusBeta", Math.PI / 2 ],
-
-        [ "lerpPos", 0.075 ],
-        [ "lerpRot", 0.05 ],
-
-        [ "follow", 0.0025 ]
-    );
+        offset: new BABYLON.Vector3( 0, 0, 0 ),
+        offsetRadius: 10,
+    
+        focusAlpha: -Math.PI / 2,
+        focusBeta: Math.PI / 2,
+    
+        lerpPos: 0.075,
+        lerpRot: 0.05,
+    
+        follow: 0.0025
+    };
 
     protected readonly camera: ICamera;
 

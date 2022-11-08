@@ -13,13 +13,13 @@ class Controls implements IControls {
 
     public static readonly KEYS = EControlsKeys;
 
-    public config: IConfig = new Config(  
-
-        [ "panning", 0.005 ],
-
-        [ "experimentalPointerLock", true ]
-    );
-
+    public config: IConfig = {
+        
+        panning: 0.005,
+    
+        experimentalPointerLock: true
+    };
+    
     public readonly activeKeys: Set< string > = new Set< string >();
 
     public readonly onPointerDown: Set< TPointerEvent > = new Set< TPointerEvent >();

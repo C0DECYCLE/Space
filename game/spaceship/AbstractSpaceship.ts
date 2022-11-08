@@ -6,13 +6,13 @@
 
 class AbstractSpaceship implements IAbstractSpaceship {
 
-    public config: IConfig = new Config(  
-
-        [ "key", UUIDv4() ],
-
-        [ "landingAngle", 45 * EngineUtils.toRadian ],
-        [ "upLerp", 0.1 ]
-    );
+    public config: IConfig = {
+        
+        key: UUIDv4(),
+    
+        landingAngle: 45 * EngineUtils.toRadian,
+        upLerp: 0.1
+    }; 
 
     public lod: ILOD;
     public travel: ISpaceshipTravel;
@@ -130,7 +130,7 @@ class AbstractSpaceship implements IAbstractSpaceship {
 
         this.root.name = `spaceships_spaceship${ this.config.key }`;
 
-        UI.getInstance().registerMarker( this.root, new Config( [ "type", "hint" ] ) );
+        UI.getInstance().registerMarker( this.root, { type: "hint" } );
     }
 
     private setupTravel(): void {

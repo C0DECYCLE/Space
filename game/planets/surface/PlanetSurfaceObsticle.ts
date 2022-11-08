@@ -6,10 +6,10 @@
 
 class PlanetSurfaceObsticle extends EntityLOD implements IPlanetSurfaceObsticle {
 
-    public config: IConfig = new Config(  
-
-        [ "random", Math.random ]
-    );
+    public config: IConfig = {
+        
+        random: Math.random
+    };
 
     private models: IModels;
 

@@ -8,7 +8,7 @@ interface IEngineAssets {
 
     cache: BABYLON.Node;
 
-    readonly list: Map< ILoadConfig[ "key" ], BABYLON.TransformNode >;
+    readonly list: Map< string, BABYLON.TransformNode >;
 
     readonly materials: Map< string, BABYLON.StandardMaterial >;
 
@@ -16,7 +16,7 @@ interface IEngineAssets {
 
     readonly onLoadObservable: BABYLON.Observable< void >;
     
-    load( list: ILoadConfig[] ): void;
+    load( list: [ string, string ][] ): void;
         
     traverse( importLod: BABYLON.Mesh, onEveryMesh: ( mesh: BABYLON.Mesh ) => void, interactables?: string[] ): BABYLON.Mesh;
 

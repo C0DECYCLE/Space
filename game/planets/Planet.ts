@@ -6,36 +6,36 @@
 
 class Planet implements IPlanet {
 
-    public config: IConfig = new Config(  
+    public config: IConfig = {
 
-        [ "key", UUIDv4() ],
-        [ "radius", 2048 ],
-        [ "spin", false ],
-
-        [ "influence", 512 ],
-        [ "maxHeight", 512 * 0.75 ],
-        [ "gravity", 0.8 ],
-
-        [ "atmosphere", 512 ],
-        [ "waveLengths", new BABYLON.Color3( 700, 530, 440 ) ],
-        [ "clouds", false ],
-
-        [ "min", 64 ],
-        [ "resolution", 24 ],
-
-        [ "seed", null ],
-        [ "variant", PlanetUtilsHeightmap.VARIANTS.DEFAULT ],
-        [ "mountainy", 7.5 ],
-        [ "warp", 0.3 ],
-
-        [ "colors", new Config(
-
-            [ "main", "#7e7e7e" ],
-            [ "steep", "#222222" ]
-        ) ],
-
-        [ "surface", false ]
-    );
+        key: UUIDv4(),
+        radius: 2048,
+        spin: false,
+    
+        influence: 512,
+        maxHeight: 512 * 0.75,
+        gravity: 0.8,
+    
+        atmosphere: 512,
+        waveLengths: new BABYLON.Color3( 700, 530, 440 ),
+        clouds: false,
+    
+        min: 64,
+        resolution: 24,
+    
+        seed: null,
+        variant: PlanetUtilsHeightmap.VARIANTS.DEFAULT,
+        mountainy: 7.5,
+        warp: 0.3,
+    
+        colors: {
+    
+            main: "#7e7e7e",
+            steep: "#222222"
+        },
+    
+        surface: false
+    };
 
     public root: BABYLON.TransformNode;
     public lod: ILOD;
@@ -138,7 +138,7 @@ class Planet implements IPlanet {
         this.root = new BABYLON.TransformNode( `planets_planet${ this.config.key }`, scene );
         this.root.rotationQuaternion = this.root.rotation.toQuaternion();
 
-        UI.getInstance().registerMarker( this.root, new Config( [ "type", "travel" ] ) );
+        UI.getInstance().registerMarker( this.root, { type: "travel" } );
     }
 
     private createLod(): void {

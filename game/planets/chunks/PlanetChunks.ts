@@ -55,14 +55,14 @@ class PlanetChunks implements IPlanetChunks {
 
         } else {
 
-            this.nodes.set( nodeKey, new PlanetChunksNode( new PlanetChunk( this.planet, nodeKey, new Config(
-
-                [ "position", position ],
-                [ "fixRotationQuaternion", fixRotationQuaternion ],
-
-                [ "size", size ],
-                [ "resolution", resolution ]
-            ) ) ) ); 
+            this.nodes.set( nodeKey, new PlanetChunksNode( new PlanetChunk( this.planet, nodeKey, {
+        
+                position: position,
+                fixRotationQuaternion: fixRotationQuaternion,
+    
+                size: size,
+                resolution: resolution
+            } ) ) ); 
         }
     }
 

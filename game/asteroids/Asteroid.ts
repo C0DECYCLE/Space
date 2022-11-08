@@ -6,10 +6,10 @@
 
 class Asteroid extends EntityLOD implements IAsteroid {
 
-    public config: IConfig = new Config(  
+    public config: IConfig = {
 
-        [ "random", Math.random ] 
-    );
+        random: Math.random
+    };
 
     private variantKey: string;
     private models: IModels;
@@ -21,7 +21,7 @@ class Asteroid extends EntityLOD implements IAsteroid {
             Star.getInstance().shadow.cast( instance, false, value );  
 
         }, true );
-
+        
         EngineUtils.configure( this, config );
         
         this.pickVariant();

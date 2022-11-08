@@ -11,9 +11,9 @@ class Physics implements IPhysics {
     public static instantiate(): void { if ( this.instance === undefined ) this.instance = new Physics(); } 
     public static getInstance(): IPhysics { return this.instance; }
 
-    public config: IConfig = new Config(  
-
-    );
+    public config: IConfig = {
+        
+    };
 
     public get isPaused(): boolean {
         

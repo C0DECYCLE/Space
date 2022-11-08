@@ -11,9 +11,9 @@ class Asteroids implements IAsteroids {
     public static instantiate(): void { if ( this.instance === undefined ) this.instance = new Asteroids(); } 
     public static getInstance(): IAsteroids { return this.instance; }
 
-    public config: IConfig = new Config(
-
-    );
+    public config: IConfig = {
+        
+    };
 
     public readonly variants: Map< string, IModels > = new Map< string, IModels >();
     public readonly list: IAsteroidsDistributer[] = [];

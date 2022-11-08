@@ -29,7 +29,7 @@ class PlayerInteraction implements IPlayerInteraction {
         mesh.edgesWidth = PlayerInteraction.EDGE;
         mesh.edgesColor = BABYLON.Color4.FromHexString( UI.NEUTRAL );
 
-        UI.getInstance().registerMarker( mesh, new Config( [ "type", "interactable" ] ) );
+        UI.getInstance().registerMarker( mesh, { type: "interactable" } );
 
         this.list.push( new Interaction( mesh, event, leaveEvent, false ) );
     }

@@ -11,17 +11,17 @@ class Player implements IPlayer {
     public static instantiate(): void { if ( this.instance === undefined ) this.instance = new Player(); } 
     public static getInstance(): IPlayer { return this.instance; }
     
-    public config: IConfig = new Config(  
-
-        [ "float", 10.005 ],
-
-        [ "walk", 0.005 ],
-        [ "run", 0.015 ],
-        [ "jump", 0.01 ],
-
-        [ "standingup", 0.05 ],
-        [ "deceleration", 0.15 ]
-    );
+    public config: IConfig = {
+        
+        float: 10.005,
+    
+        walk: 0.005,
+        run: 0.015,
+        jump: 0.01,
+    
+        standingup: 0.05,
+        deceleration: 0.15
+    };
 
     public mesh: BABYLON.Mesh;
     public physics: IPlayerPhysics;

@@ -8,15 +8,15 @@ class CloudsPlanet extends AbstractEntitySpawnerPlanet implements ICloudsPlanet 
 
     public static readonly LOD_LIMIT: number = 2 ** 2.5;
 
-    public override config: IConfig = new Config(  
-
-        [ "color", "#ffffff" ],
-
-        [ "cullScale", 0.00175 ],
-        [ "limit", 0.35 ],
-        [ "mainScale", 1.5 ],
-        [ "heightScale", 1.0 ],
-    );
+    public override config: IConfig = {
+        
+        color: "#ffffff",
+    
+        cullScale: 0.00175,
+        limit: 0.35,
+        mainScale: 1.5,
+        heightScale: 1.0
+    };  
 
     public override readonly list: ICloud[] = [];
 
@@ -53,7 +53,7 @@ class CloudsPlanet extends AbstractEntitySpawnerPlanet implements ICloudsPlanet 
         cloud.randomValue = Math.random() * n;
         cloud.post();
 
-        return [ cloud, new Varyings() ];
+        return [ cloud, {} ];
     }
 
     public update( distance: number ): void {
@@ -82,11 +82,11 @@ class CloudsPlanet extends AbstractEntitySpawnerPlanet implements ICloudsPlanet 
 
         if ( cull < this.config.limit ) {
 
-            return new Varyings( 
-
-                [ "noiseOffset", noiseOffset ], 
-                [ "cull", 1 - (cull / this.config.limit) ]
-            );
+            return {
+        
+                noiseOffset: noiseOffset, 
+                cull: 1 - (cull / this.config.limit)
+            };
         }
 
         return false;

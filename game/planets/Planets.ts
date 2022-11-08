@@ -11,17 +11,17 @@ class Planets implements IPlanets {
     public static instantiate(): void { if ( this.instance === undefined ) this.instance = new Planets(); } 
     public static getInstance(): IPlanets { return this.instance; }
 
-    public config: IConfig = new Config(  
-
-    );
+    public config: IConfig = {
+        
+    };
 
     public readonly list: IPlanet[] = [];
 
     public readonly obsticles: Map< string, Map< string, IModels > > = new Map< string, Map< string, IModels > >();
-    public readonly obsticleKeys: IConfig = new Config( 
-
-        [ "tree", [ "a" ] ] 
-    );
+    public readonly obsticleKeys: IConfig = {
+        
+        tree: [ "a" ]
+    };
 
     private maskMaterial: BABYLON.StandardMaterial;
 
@@ -49,7 +49,7 @@ class Planets implements IPlanets {
         return this.maskMaterial;
     }
 
-    public update(): void { if ( window.freeze === true ) return;
+    public update(): void { //if ( window.freeze === true ) return;
 
         this.insert();
         this.updatePlanets();

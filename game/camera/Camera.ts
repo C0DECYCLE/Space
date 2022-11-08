@@ -11,10 +11,10 @@ class Camera implements ICamera {
     public static instantiate(): void { if ( this.instance === undefined ) this.instance = new Camera(); } 
     public static getInstance(): ICamera { return this.instance; }
 
-    public config: IConfig = new Config(  
+    public config: IConfig = {
 
-        [ "max", 10_000_000 ]
-    );
+        max: 10_000_000
+    };
     
     public root: BABYLON.TransformNode;
     public camera: BABYLON.ArcRotateCamera;

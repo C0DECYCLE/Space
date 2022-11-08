@@ -11,10 +11,10 @@ class PostProcess implements IPostProcess {
     public static instantiate(): void { if ( this.instance === undefined ) this.instance = new PostProcess(); } 
     public static getInstance(): IPostProcess { return this.instance; }
     
-    public config: IConfig = new Config(  
-
-        [ "samples", 3 ]
-    );
+    public config: IConfig = {
+        
+        samples: 3
+    }; 
 
     public readonly pipelines: any[] = [];
 

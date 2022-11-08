@@ -24,7 +24,7 @@ class EngineAssets implements IEngineAssets {
 
     public cache: BABYLON.Node;
 
-    public readonly list: Map< ILoadConfig[ "key" ], BABYLON.TransformNode > = new Map< ILoadConfig[ "key" ], BABYLON.TransformNode >();
+    public readonly list: Map< string, BABYLON.TransformNode > = new Map< string, BABYLON.TransformNode >();
     public readonly materials: Map< string, BABYLON.StandardMaterial > = new Map< string, BABYLON.StandardMaterial >();
     public readonly interactableMaterials: Map< string, IPlayerInteractionMaterial > = new Map< string, IPlayerInteractionMaterial >();
     public readonly onLoadObservable: BABYLON.Observable< void > = new BABYLON.Observable< void >();
@@ -39,22 +39,22 @@ class EngineAssets implements IEngineAssets {
         this.listen();
     }
     
-    public load( list: ILoadConfig[] ): void {
+    public load( list: [ string, string ][] ): void {
         
         const sync: ISync = new Sync( list.length, (): void  => { this.notify = true; } );
 
         for ( let i: number = 0; i < list.length; i++ ) {
 
-            if ( this.list.has( list[i].key ) === true ) {
+            if ( this.list.has( list[i][0] ) === true ) {
 
-                console.warn( `EngineAssets: ${ list[i].key } already loaded.` );
+                console.warn( `EngineAssets: ${ list[i][0] } already loaded.` );
             }
 
-            BABYLON.SceneLoader.LoadAssetContainer( "", list[i].path, scene, ( container: BABYLON.AssetContainer ): void => {
+            BABYLON.SceneLoader.LoadAssetContainer( "", list[i][1], scene, ( container: BABYLON.AssetContainer ): void => {
                 
-                const asset: BABYLON.TransformNode = container.transformNodes.filter( ( transformNode: BABYLON.TransformNode ): boolean => ( transformNode.id === list[i].key || transformNode.name === list[i].key ) )[0] || null;
+                const asset: BABYLON.TransformNode = container.transformNodes.filter( ( transformNode: BABYLON.TransformNode ): boolean => ( transformNode.id === list[i][0] || transformNode.name === list[i][0] ) )[0] || null;
 
-                this.list.set( list[i].key, asset );
+                this.list.set( list[i][0], asset );
                 sync.next();
             } );
         }

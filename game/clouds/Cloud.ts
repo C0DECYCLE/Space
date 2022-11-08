@@ -6,9 +6,9 @@
 
 class Cloud extends EntityLOD implements ICloud {
 
-    public config: IConfig = new Config(  
-
-    );
+    public config: IConfig = {
+        
+    };
 
     public randomValue: number = 0;
     public readonly starLightDirection: BABYLON.Vector3 = new BABYLON.Vector3();

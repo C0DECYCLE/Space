@@ -18,9 +18,9 @@ class Clouds implements IClouds {
         [ 2, AbstractLOD.minimum ]
     ];
 
-    public config: IConfig = new Config(  
-
-    );
+    public config: IConfig = {
+        
+    };
 
     public readonly materials: Map< string, ICloudMaterial > = new Map< string, ICloudMaterial >();
     public readonly list: ICloudsDistributer[] = [];

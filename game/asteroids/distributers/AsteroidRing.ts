@@ -6,16 +6,16 @@
 
 class AsteroidsRing implements IAsteroidsRing {
 
-    public config: IConfig = new Config(
+    public config: IConfig = {
 
-        [ "key", UUIDv4() ],
-        [ "seed", undefined ],
+        key: UUIDv4(),
+        seed: undefined,
 
-        [ "radius", 1000 ],
-        [ "spread", 200 ],
-        [ "height", 1000 ],
-        [ "density", 0.05 ]
-    );
+        radius: 1000,
+        spread: 200,
+        height: 1000,
+        density: 0.05
+    };
 
     public readonly list: IAsteroidsCluster[] = [];
     public root: BABYLON.TransformNode;

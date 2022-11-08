@@ -6,12 +6,12 @@
 
 abstract class AbstractEntitySpawnerPlanet implements IAbstractEntitySpawnerPlanet {
 
-    public config: IConfig = new Config(  
+    public config: IConfig = {
 
-        [ "seed", undefined ],
-
-        [ "density", 0.0015 ]
-    );
+        seed: undefined,
+    
+        density: 0.0015
+    };
 
     public readonly planet: IPlanet;
 
@@ -97,7 +97,7 @@ abstract class AbstractEntitySpawnerPlanet implements IAbstractEntitySpawnerPlan
 
     private test( filter: TFilter[], args: any[] ): false | IVaryings {
 
-        const varyings: IVaryings = new Varyings();
+        const varyings: IVaryings = {};
 
         for ( let i: number = 0; i < filter.length; i++ ) {
 

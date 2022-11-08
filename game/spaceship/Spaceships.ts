@@ -11,9 +11,9 @@ class Spaceships implements ISpaceships {
     public static instantiate(): void { if ( this.instance === undefined ) this.instance = new Spaceships(); } 
     public static getInstance(): ISpaceships { return this.instance; }
     
-    public config: IConfig = new Config(  
-
-    );
+    public config: IConfig = {
+        
+    };
 
     public readonly list: IAbstractSpaceship[] = [];
 

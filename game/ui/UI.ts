@@ -15,9 +15,9 @@ class UI implements IUI {
     public static readonly BAD: string = "#ff255b";
     public static readonly LIGHTUP: string = "#ffdb6f";
 
-    public config: IConfig = new Config(  
-
-    );
+    public config: IConfig = {
+        
+    };
 
     public gui: BABYLON.GUI.AdvancedDynamicTexture;
     public readonly markers: Map< string, IUIMarker[] > = new Map< string, IUIMarker[] >();

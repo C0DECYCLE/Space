@@ -6,14 +6,14 @@
 
 class CameraTargetPlayer extends AbstractCameraTarget implements ICameraTargetPlayer {
 
-    public override config: IConfig = new Config(  
+    public override config: IConfig = {
 
-        [ "offset", new BABYLON.Vector3( 0, 1, 0 ) ],
-        [ "offsetRadius", 8 ],
-
-        [ "spaceFocusBeta", Math.PI / 2 ],
-        [ "planetFocusBeta", Math.PI / 2.5 ],
-    );
+        offset: new BABYLON.Vector3( 0, 1, 0 ),
+        offsetRadius: 8,
+    
+        spaceFocusBeta: Math.PI / 2,
+        planetFocusBeta: Math.PI / 2.5,
+    };
     
     private wasUnfocused: boolean = false;
 
