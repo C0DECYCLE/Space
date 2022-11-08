@@ -6,9 +6,9 @@
 
 interface Object {
 
-    collisionMesh: BABYLON.Mesh | BABYLON.InstancedMesh;
+    __collisionMesh?: BABYLON.Mesh | BABYLON.InstancedMesh;
 
-    isCollisionMesh: boolean;
+    __isCollisionMesh?: boolean;
 
 }
 
@@ -69,8 +69,8 @@ class EngineAssets implements IEngineAssets {
 
             if ( subs[i].name.includes( EngineAssets.collisionKey ) === true || subs[i].id.includes( EngineAssets.collisionKey ) ) {
 
-                lod.collisionMesh = this.traverseCollisionMesh( subs[i] );
-                lod.collisionMesh.parent = lod;
+                lod.__collisionMesh = this.traverseCollisionMesh( subs[i] );
+                lod.__collisionMesh.parent = lod;
 
             } else {
 
@@ -92,7 +92,7 @@ class EngineAssets implements IEngineAssets {
 
         for ( let i: number = 0; i < subs.length; i++ ) {
 
-            const list: BABYLON.Mesh[] = subs[i].isCollisionMesh === true ? collisionMeshes : meshes;
+            const list: BABYLON.Mesh[] = subs[i].__isCollisionMesh === true ? collisionMeshes : meshes;
             list.push( subs[i] );
         }
 
@@ -122,10 +122,10 @@ class EngineAssets implements IEngineAssets {
 
         for ( let i: number = 0; i < subs.length; i++ ) {
 
-            if ( subs[i].isCollisionMesh === true ) {
+            if ( subs[i].__isCollisionMesh === true ) {
 
-                instance.collisionMesh = this.instanceCollisionMesh( subs[i] );
-                instance.collisionMesh.parent = instance;
+                instance.__collisionMesh = this.instanceCollisionMesh( subs[i] );
+                instance.__collisionMesh.parent = instance;
 
             } else {
 
@@ -198,7 +198,7 @@ class EngineAssets implements IEngineAssets {
 
         const mesh: BABYLON.Mesh = this.traverseMeshGeneral( importCollisionMesh, EngineAssets.collisionColor, false );
 
-        mesh.isCollisionMesh = true;
+        mesh.__isCollisionMesh = true;
         
         return mesh;
     }
@@ -314,7 +314,7 @@ class EngineAssets implements IEngineAssets {
             instance.rotationQuaternion = instance.rotation.toQuaternion();
         }
 
-        instance.isCollisionMesh = true;
+        instance.__isCollisionMesh = true;
         instance.isVisible = false;
         
         return instance;

@@ -19,7 +19,10 @@ class EngineExtensions implements IEngineExtensions {
 
     public static setLightIntensity( light: BABYLON.DirectionalLight | BABYLON.PointLight | BABYLON.HemisphericLight, intensity: number = 1.0 ): void {
 
-        light.intensity = intensity * scene.ambientColor.lightFactor;
+        if ( scene.ambientColor.ambientCache !== undefined ) {
+
+            light.intensity = intensity * ( 1 / (scene.ambientColor.ambientCache[1] * 0.5) );
+        }
     }
 
     public static setStandardMaterialColorIntensity( material: BABYLON.StandardMaterial, hexColor: string, intensity: number = 1.0 ): void {
@@ -46,12 +49,15 @@ class EngineExtensions implements IEngineExtensions {
         material.emissiveColor = new BABYLON.Color3( 0, 0, 0 );
         material.ambientColor = new BABYLON.Color3( 0, 0, 0 );
 
-        for ( let i = 0; i < list.length; i++ ) {
-
-            list[i].scaleToRef( scene.ambientColor.intensity, list[i] );
+        if ( scene.ambientColor.ambientCache !== undefined ) {
+        
+            for ( let i = 0; i < list.length; i++ ) {
+    
+                list[i].scaleToRef( scene.ambientColor.ambientCache[1], list[i] );
+            }
+    
+            BABYLON.Color3.FromHexString( scene.ambientColor.ambientCache[0] ).scaleToRef( scene.ambientColor.ambientCache[1] * 0.5, material.ambientColor );
         }
-
-        BABYLON.Color3.FromHexString( scene.ambientColor.hexString ).scaleToRef( scene.ambientColor.materialFactor, material.ambientColor );
     }
 
 }

@@ -6,7 +6,7 @@
 
 interface Object {
 
-    physicsEntityType: EPhysicsTypes;
+    physicsEntityType?: EPhysicsTypes;
 
 }
 
@@ -26,9 +26,9 @@ class PhysicsEntity implements IPhysicsEntity {
 
     protected static collisions( mesh: BABYLON.AbstractMesh, checkCollisions: boolean ): void {
         
-        if ( mesh.collisionMesh !== undefined ) {
+        if ( mesh.__collisionMesh !== undefined ) {
 
-            mesh.collisionMesh.checkCollisions = checkCollisions;
+            mesh.__collisionMesh.checkCollisions = checkCollisions;
 
             return;
         }
@@ -77,7 +77,7 @@ class PhysicsEntity implements IPhysicsEntity {
 
         if ( this.mesh instanceof BABYLON.AbstractMesh ) {
 
-            return this.mesh.ellipsoid.max + this.mesh.ellipsoidOffset.biggest;
+            return (this.mesh.ellipsoid.max || 0) + (this.mesh.ellipsoidOffset.biggest || 0);
         }
 
         return 0;
@@ -224,7 +224,7 @@ class PhysicsEntity implements IPhysicsEntity {
         if ( this.mesh instanceof BABYLON.AbstractMesh ) {
 
             this.fitCollider();
-            this.colliderMinValue = this.mesh.ellipsoid.min;
+            this.colliderMinValue = this.mesh.ellipsoid.min || 0;
         }
     }
     
@@ -232,7 +232,7 @@ class PhysicsEntity implements IPhysicsEntity {
 
         if ( this.mesh instanceof BABYLON.AbstractMesh ) {
 
-            const boundingInfo: BABYLON.BoundingInfo = this.mesh.collisionMesh !== undefined ? this.mesh.collisionMesh.getBoundingInfo() : this.mesh.getBoundingInfo();
+            const boundingInfo: BABYLON.BoundingInfo = this.mesh.__collisionMesh !== undefined ? this.mesh.__collisionMesh.getBoundingInfo() : this.mesh.getBoundingInfo();
 
             this.mesh.ellipsoid.copyFrom( boundingInfo.boundingBox.extendSizeWorld ).scaleInPlace( PhysicsEntity.COLLIDER_SCALE );
             this.mesh.ellipsoidOffset.copyFrom( boundingInfo.boundingBox.center ).applyRotationQuaternionInPlace( this.rotationQuaternion ).multiplyInPlace( this.mesh.scaling );
@@ -258,12 +258,12 @@ class PhysicsEntity implements IPhysicsEntity {
 
             this.debugMesh = BABYLON.MeshBuilder.CreateSphere( "debugMesh", { diameter: 1, segments: 8 }, scene );
             this.debugMesh.isPickable = false;
-            this.debugMesh.material = scene.debugMaterialRed;
+            this.debugMesh.material = debugMaterialRed;
             this.updateDebug( mesh );
             
-            if ( mesh.collisionMesh !== undefined ) {
+            if ( mesh.__collisionMesh !== undefined ) {
 
-                mesh.collisionMesh.isVisible = true;
+                mesh.__collisionMesh.isVisible = true;
             }
         }
     }

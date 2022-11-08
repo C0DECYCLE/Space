@@ -4,7 +4,7 @@
     2022
 */
 
-interface ICameraTargetSpaceship extends ICameraTarget {
+interface ICameraTargetSpaceship extends IAbstractCameraTarget {
 
     update( spaceship: IAbstractSpaceship ): void;
 

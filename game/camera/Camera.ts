@@ -39,7 +39,7 @@ class Camera implements ICamera {
     protected origin: ICameraOrigin;
 
     private target: ICameraTargetable | null;
-    private targetCamera: ICameraTarget | null;
+    private targetCamera: IAbstractCameraTarget | null;
 
     private playerTargetCamera: ICameraTargetPlayer;
     private spaceshipTargetCamera: ICameraTargetSpaceship;
@@ -115,7 +115,7 @@ class Camera implements ICamera {
     private createCamera(): void {
 
         this.camera = new BABYLON.ArcRotateCamera( "camera_camera", -Math.PI / 2, Math.PI / 2, 0, BABYLON.Vector3.Zero(), scene );
-        this.camera.maxZ = this.config.max;
+        this.camera.maxZ = this.config.max || 0;
         this.camera.parent = this.root;
     }
 
@@ -143,7 +143,7 @@ class Camera implements ICamera {
         }
     }
     
-    private enterTarget( target: ICameraTargetable, camera: ICameraTarget ) {
+    private enterTarget( target: ICameraTargetable, camera: IAbstractCameraTarget ) {
 
         this.target = target;
         this.targetCamera = camera;

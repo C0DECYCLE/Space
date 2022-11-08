@@ -6,9 +6,9 @@
 
 interface Object {
 
-    _actualPosition: BABYLON.Vector3;
+    __actualPosition?: BABYLON.Vector3;
 
-    _relativePosition: BABYLON.Vector3;
+    __relativePosition?: BABYLON.Vector3;
 
 }
 
@@ -39,8 +39,8 @@ class CameraOrigin implements ICameraOrigin {
 
     private setupNode( node: BABYLON.Node ): void {
 
-        node._actualPosition = new BABYLON.Vector3();
-        node._relativePosition = new BABYLON.Vector3();
+        node.__actualPosition = new BABYLON.Vector3();
+        node.__relativePosition = new BABYLON.Vector3();
 
         const insProps = this.inspectorCustomProperties();
 
@@ -49,8 +49,8 @@ class CameraOrigin implements ICameraOrigin {
 
     private setupRoot(): void {
 
-        this.camera.root._actualPosition = this.actualPosition;
-        this.camera.root._relativePosition = this.relativePosition;
+        this.camera.root.__actualPosition = this.actualPosition;
+        this.camera.root.__relativePosition = this.relativePosition;
         this.camera.root.inspectableCustomProperties = this.inspectorCustomProperties();
     }
 
@@ -66,13 +66,13 @@ class CameraOrigin implements ICameraOrigin {
 
             {
                 label: "Actual Position",
-                propertyName: "_actualPosition",
+                propertyName: "__actualPosition",
                 type: BABYLON.InspectableType.Vector3,
             },
 
             {
                 label: "Render Position",
-                propertyName: "_relativePosition",
+                propertyName: "__relativePosition",
                 type: BABYLON.InspectableType.Vector3,
             }
         ];
@@ -89,16 +89,16 @@ class CameraOrigin implements ICameraOrigin {
                 continue;
             }
             
-            if ( !node._actualPosition && !node._relativePosition ) {
+            if ( !node.__actualPosition && !node.__relativePosition ) {
 
                 this.setupNode( node );
             }
             
-            node._actualPosition.copyFrom( node.position );
+            node.__actualPosition.copyFrom( node.position );
 
             this.toRelative( node.position );
             
-            node._relativePosition.copyFrom( node.position );
+            node.__relativePosition.copyFrom( node.position );
         }
     }
 
@@ -108,9 +108,9 @@ class CameraOrigin implements ICameraOrigin {
 
             const node: any = scene.rootNodes[i];
 
-            if ( node.name !== "camera" && node.position && node._actualPosition ) {
+            if ( node.name !== "camera" && node.position && node.__actualPosition ) {
                 
-                node.position.copyFrom( node._actualPosition );
+                node.position.copyFrom( node.__actualPosition );
             }
         }
     }

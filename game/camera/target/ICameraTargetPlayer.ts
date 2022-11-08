@@ -4,7 +4,7 @@
     2022
 */
 
-interface ICameraTargetPlayer extends ICameraTarget {
+interface ICameraTargetPlayer extends IAbstractCameraTarget {
 
     update( player: IPlayer ): void;
 

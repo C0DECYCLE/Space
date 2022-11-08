@@ -49,7 +49,7 @@ class PlanetQuadtree implements IPlanetQuadtree {
 
         const factors: [ number, number ] = this.getDistanceDot( params, position );
         
-        if ( factors[0] < (size * PlanetQuadtree.divisionSizeFactor) ** 2 && size > this.planet.config.min ) {
+        if ( factors[0] < (size * PlanetQuadtree.divisionSizeFactor) ** 2 && size > (this.planet.config.min || 0) ) {
 
             this.recurseQuad( params, nodeKey, position, size );
             

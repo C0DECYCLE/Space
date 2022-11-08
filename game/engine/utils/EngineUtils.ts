@@ -6,21 +6,15 @@
 
 interface Object {
 
-    boundingCache: IBoundingCache;
+    __boundingCache?: IBoundingCache;
 
-    min: number;
+    min?: number;
     
-    max: number;
+    max?: number;
 
-    biggest: number;
+    biggest?: number;
 
-    hexString: string;
-
-    intensity: number;
-
-    materialFactor: number;
-
-    lightFactor: number;
+    ambientCache?: [ string, number ];
 
 }
 
@@ -85,12 +79,12 @@ class EngineUtils implements IEngineUtils {
 
     public static getBounding( transformNode: BABYLON.TransformNode, force: boolean = false ): IBoundingCache {
         
-        if ( transformNode.boundingCache === undefined || force === true ) {
+        if ( transformNode.__boundingCache === undefined || force === true ) {
             
-            transformNode.boundingCache = EngineUtils.createBoundingCache( transformNode );
+            transformNode.__boundingCache = EngineUtils.createBoundingCache( transformNode );
         }
 
-        return transformNode.boundingCache;
+        return transformNode.__boundingCache;
     }
 
     public static getBoundingSize( transformNode: BABYLON.TransformNode, force: boolean = false ): number {
@@ -129,13 +123,8 @@ class EngineUtils implements IEngineUtils {
     public static makeSceneAmbient( hexColor: string, intensity: number ): BABYLON.Color3 {
 
         const ambientColor: BABYLON.Color3 = new BABYLON.Color3( 1, 1, 1 );
-
-        ambientColor.hexString = hexColor;
-        ambientColor.intensity = intensity;
-
-        ambientColor.materialFactor = ambientColor.intensity * 0.5;
-        ambientColor.lightFactor = 1 / ambientColor.materialFactor;
-
+        ambientColor.ambientCache = [ hexColor, intensity ];
+        
         return ambientColor;
     }
 

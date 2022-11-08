@@ -6,7 +6,7 @@
 
 interface Object {
 
-    entitymanager: IEntityManager< any >;
+    entitymanager?: IEntityManager< any >;
 
 }
 

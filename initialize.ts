@@ -4,15 +4,9 @@
     2022
 */
 
-interface Object {
-
-    debugMaterialRed: BABYLON.StandardMaterial;
-
-    debugMaterialWhite: BABYLON.StandardMaterial;
-    
-}
-
 let scene: BABYLON.Scene;
+let debugMaterialRed: BABYLON.StandardMaterial;
+let debugMaterialWhite: BABYLON.StandardMaterial;
 
 
 function setup(): void {
@@ -24,14 +18,15 @@ function setup(): void {
     const background: string = "#af7ede";
     
     scene = new BABYLON.Scene( Engine.getInstance().babylon );
-    BABYLON.Color4.FromHexString( background ).scaleToRef( 0.15, scene.clearColor );
-    scene.ambientColor = EngineUtils.makeSceneAmbient( background, 0.3 );
-    scene.debugMaterialRed = EngineUtils.makeDebugMaterial( "#ff226b" );
-    scene.debugMaterialWhite = EngineUtils.makeDebugMaterial( "#ffffff" );
     scene.skipPointerMovePicking = true;
     scene.autoClear = false;
     scene.autoClearDepthAndStencil = false;
+    
+    BABYLON.Color4.FromHexString( background ).scaleToRef( 0.15, scene.clearColor );
+    scene.ambientColor = EngineUtils.makeSceneAmbient( background, 0.3 );
 
+    debugMaterialRed = EngineUtils.makeDebugMaterial( "#ff226b" );
+    debugMaterialWhite = EngineUtils.makeDebugMaterial( "#ffffff" );
 
     EngineAssets.instantiate();
 
@@ -207,11 +202,10 @@ window.addEventListener( "compile", ( _event: Event ): void => { console.log( `\
 
 
 
-    // 2. make configs in constructor optional, configs as enums? 
-    // 5. look where it makes more sense to use {} again, configs etc the indexable ones?
+    // 2. make configs in constructor optional
+    // 5. look where it makes more sense to use {} again, configs (enums instead?) etc the no indexables anymore
     // 1. also use correctly undefined (unintentional not knowing of value) and null (intentional absence of value)
     
-    // 7. take assets and co out of scene into standalone, like ambient etc... go to everywhere Object is interfaced and try to reduce that, also stop with the indexable interface/class thing
     // 8. go through everything look whats good whats bad what change what remove
     // 9. Make messurement of update calls to contrary of draw calls, debug both in upper corner!
     

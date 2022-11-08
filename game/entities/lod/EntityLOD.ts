@@ -35,13 +35,16 @@ class EntityLOD extends AbstractLOD implements IEntityLOD {
 
         for ( let i: number = 0; i < models.length; i++ ) {
             
-            this.add( models[i].entitymanager, AbstractLOD.getMinimum( models[i].name ) );
+            if ( models[i].entitymanager !== undefined ) {
+
+                this.add( models[i].entitymanager, AbstractLOD.getMinimum( models[i].name ) );
+            }
         }
     }
 
     public setBounding( boundingCache: IBoundingCache ): void {
 
-        this.boundingCache = boundingCache;
+        this.__boundingCache = boundingCache;
     }
 
     public getInstance(): BABYLON.InstancedMesh | null {
@@ -56,7 +59,7 @@ class EntityLOD extends AbstractLOD implements IEntityLOD {
             return;
         }
 
-        this.coverage = Camera.getInstance().getScreenCoverage( this );
+        this.coverage = Camera.getInstance().getScreenCoverage( this ); //ITransformable
         this.setLevel( this.getLevelFromCoverage( this.coverage ) );
     }
 

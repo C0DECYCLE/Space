@@ -6,7 +6,7 @@
 
 interface Object {
 
-    metalist: Map< string, number >;
+    metalist?: Map< string, number >;
 
 }
 
@@ -138,7 +138,7 @@ class ObjectArray< T extends object > extends Array< T > implements IObjectArray
 
         if ( typeof element === "object" ) {
 
-            element.metalist.delete( this.uuid );
+            element.metalist?.delete( this.uuid );
         }
 
         return element;
@@ -158,7 +158,7 @@ class ObjectArray< T extends object > extends Array< T > implements IObjectArray
             }
 
             this[ index ] = lastElement;
-            lastElement.metalist.set( this.uuid, index );
+            lastElement.metalist?.set( this.uuid, index );
             this[ length - 1 ] = element;
         }
     }
