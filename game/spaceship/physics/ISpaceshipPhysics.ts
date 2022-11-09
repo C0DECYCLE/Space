@@ -10,7 +10,7 @@ interface ISpaceshipPhysics extends IPhysicsEntity {
 
     travel: ISpaceshipPhysicsTravel;
 
-    get thrust(): number;
+    get thrust(): float;
 
     update(): void;
 

@@ -74,11 +74,11 @@ class PlayerPhysics extends PhysicsEntity implements IPlayerPhysics {
 
     private spaceMovement(): void {
 
-        const floatConfig: number = this.player.config.float;
-        const deltaCorrection: number = Engine.getInstance().deltaCorrection;
+        const floatConfig: float = this.player.config.float;
+        const deltaCorrection: float = Engine.getInstance().deltaCorrection;
         const translate: BABYLON.Vector3 = new BABYLON.Vector3( 0, 0, 0 );
 
-        const float: number = floatConfig * deltaCorrection;
+        const float: float = floatConfig * deltaCorrection;
 
         if ( Controls.getInstance().activeKeys.has( Controls.KEYS.For ) === true ) {
 
@@ -127,17 +127,17 @@ class PlayerPhysics extends PhysicsEntity implements IPlayerPhysics {
             return;
         }
 
-        const walkConfig: number = this.player.config.walk;
-        const runConfig: number = this.player.config.run;
-        const jumpConfig: number = this.player.config.jump;
-        const deltaCorrection: number = Engine.getInstance().deltaCorrection;
+        const walkConfig: float = this.player.config.walk;
+        const runConfig: float = this.player.config.run;
+        const jumpConfig: float = this.player.config.jump;
+        const deltaCorrection: float = Engine.getInstance().deltaCorrection;
         const translate: BABYLON.Vector3 = new BABYLON.Vector3( 0, 0, 0 );
 
-        const walk: number = ( walkConfig / this.planet.config.gravity ) * deltaCorrection;
-        const run: number = ( runConfig / this.planet.config.gravity ) * deltaCorrection;
-        const jump: number = ( jumpConfig / this.planet.config.gravity ) * deltaCorrection;
+        const walk: float = ( walkConfig / this.planet.config.gravity ) * deltaCorrection;
+        const run: float = ( runConfig / this.planet.config.gravity ) * deltaCorrection;
+        const jump: float = ( jumpConfig / this.planet.config.gravity ) * deltaCorrection;
 
-        let speed: number = walk;
+        let speed: float = walk;
 
         if ( Controls.getInstance().activeKeys.has( Controls.KEYS.Fast ) === true ) {
 
@@ -172,7 +172,7 @@ class PlayerPhysics extends PhysicsEntity implements IPlayerPhysics {
 
     private movementTranslate( translate: BABYLON.Vector3 ): void {
         
-        const deceleration: number = 1 - this.player.config.deceleration;
+        const deceleration: float = 1.0 - this.player.config.deceleration;
 
         if ( translate.x !== 0 || translate.y !== 0 || translate.z !== 0 ) {
 

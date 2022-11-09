@@ -73,7 +73,7 @@ class Player implements IPlayer {
         this.interaction.update();
     }
 
-    public planetInsert( planet: IPlanet, distance: number, planetThreashold: number ): void {
+    public planetInsert( planet: IPlanet, distance: float, planetThreashold: float ): void {
 
         if ( distance <= planetThreashold && this.state.is( "space" ) === true ) {
 

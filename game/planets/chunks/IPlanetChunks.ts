@@ -10,9 +10,9 @@ interface IPlanetChunks {
     
     readonly nodes: Map< string, IPlanetChunksNode >;
 
-    insertQuadtrees( distance: number ): void;
+    insertQuadtrees( distance: float ): void;
 
-    node( params: IPlanetInsertParameters, dot: number, nodeKey: string, position: BABYLON.Vector3, fixRotationQuaternion: BABYLON.Quaternion, size: number, faceSize: number ): void;
+    node( params: IPlanetInsertParameters, dot: float, nodeKey: string, position: BABYLON.Vector3, fixRotationQuaternion: BABYLON.Quaternion, size: int, faceSize: int ): void;
 
     toggleShadows( value: boolean ): void;
 

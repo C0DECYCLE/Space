@@ -8,7 +8,7 @@ class CloudModel extends BABYLON.Mesh implements ICloudModel {
 
     public readonly clouds: IClouds;
     
-    public constructor( clouds: IClouds, level: number, subdivisions: number, min: number, material: BABYLON.StandardMaterial ) {
+    public constructor( clouds: IClouds, level: int, subdivisions: int, min: float, material: BABYLON.StandardMaterial ) {
     
         super( `cloud_${ level }_${ min }`, scene );
     
@@ -28,7 +28,7 @@ class CloudModel extends BABYLON.Mesh implements ICloudModel {
         EngineUtilsShader.registerInstanceAttribute( this, "starLightDirection", new BABYLON.Vector3() );
     }
 
-    private setupGeometry( subdivisions: number ): void {
+    private setupGeometry( subdivisions: int ): void {
         
         this._originalBuilderSideOrientation = BABYLON.Mesh._GetDefaultSideOrientation();
 
@@ -48,7 +48,7 @@ class CloudModel extends BABYLON.Mesh implements ICloudModel {
 
     private modifyGeometry( positions: BABYLON.FloatArray ): void {
 
-        for ( let i: number = 0; i < positions.length; i += 3 ) {
+        for ( let i: int = 0; i < positions.length; i += 3 ) {
 
             const position: BABYLON.Vector3 = new BABYLON.Vector3( positions[i], positions[i+1], positions[i+2] );
             

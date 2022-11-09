@@ -17,7 +17,7 @@ class EngineExtensions implements IEngineExtensions {
         }
     }
 
-    public static setLightIntensity( light: BABYLON.DirectionalLight | BABYLON.PointLight | BABYLON.HemisphericLight, intensity: number = 1.0 ): void {
+    public static setLightIntensity( light: BABYLON.DirectionalLight | BABYLON.PointLight | BABYLON.HemisphericLight, intensity: float = 1.0 ): void {
 
         if ( scene.ambientColor.ambientCache !== undefined ) {
 
@@ -25,7 +25,7 @@ class EngineExtensions implements IEngineExtensions {
         }
     }
 
-    public static setStandardMaterialColorIntensity( material: BABYLON.StandardMaterial, hexColor: string, intensity: number = 1.0 ): void {
+    public static setStandardMaterialColorIntensity( material: BABYLON.StandardMaterial, hexColor: string, intensity: float = 1.0 ): void {
         
         BABYLON.Color3.FromHexString( hexColor ).scaleToRef( intensity, material.diffuseColor );
         

@@ -8,6 +8,6 @@ interface IAsteroidsRing extends IAsteroidsDistributer {
 
     readonly list: IAsteroidsCluster[];
 
-    get numberOfClusters(): number;
+    get numberOfClusters(): int;
 
 }

@@ -18,8 +18,8 @@ class CameraTargetSpaceship extends AbstractCameraTarget implements ICameraTarge
         follow: 0.0015
     }
 
-    private followXVelocity: number = 0;
-    private followYVelocity: number = 0;
+    private followXVelocity: float = 0.0;
+    private followYVelocity: float = 0.0;
 
     public constructor( camera: ICamera, config?: IConfig ) {
 
@@ -80,7 +80,7 @@ class CameraTargetSpaceship extends AbstractCameraTarget implements ICameraTarge
 
     private applyFollowVelocity( spaceship: IAbstractSpaceship ): void {
 
-        const deltaCorrection: number = Engine.getInstance().deltaCorrection;
+        const deltaCorrection: float = Engine.getInstance().deltaCorrection;
 
         spaceship.root.rotate( BABYLON.Axis.Y, this.followXVelocity * deltaCorrection, BABYLON.Space.LOCAL );
         spaceship.root.rotate( BABYLON.Axis.X, this.followYVelocity * deltaCorrection, BABYLON.Space.LOCAL );

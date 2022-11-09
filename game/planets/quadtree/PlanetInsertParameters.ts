@@ -6,13 +6,13 @@
 
 class PlanetInsertParameters implements IPlanetInsertParameters {
     
-    public readonly distanceCenterInsertion: number;
-    public readonly distanceRadiusFactor: number;
+    public readonly distanceCenterInsertion: float;
+    public readonly distanceRadiusFactor: float;
 
     public readonly centerToInsertion: BABYLON.Vector3;
-    public readonly occlusionFallOf: number;
+    public readonly occlusionFallOf: float;
 
-    public constructor( planet: IPlanet, distance: number ) {
+    public constructor( planet: IPlanet, distance: float ) {
         
         this.distanceCenterInsertion = distance;
         this.distanceRadiusFactor = distance / planet.config.radius;

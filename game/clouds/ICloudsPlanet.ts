@@ -12,6 +12,6 @@ interface ICloudsPlanet extends ICloudsDistributer {
 
     models: ICloudModel[];
 
-    update( distance: number ): void;
+    update( distance: float ): void;
     
 }

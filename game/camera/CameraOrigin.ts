@@ -80,7 +80,7 @@ class CameraOrigin implements ICameraOrigin {
 
     private beforeRender(): void {
         
-        for ( let i: number = 0; i < scene.rootNodes.length; i++ ) {
+        for ( let i: int = 0; i < scene.rootNodes.length; i++ ) {
 
             const node: any = scene.rootNodes[i];
 
@@ -104,7 +104,7 @@ class CameraOrigin implements ICameraOrigin {
 
     private afterRender(): void {
     
-        for ( let i: number = 0; i < scene.rootNodes.length; i++ ) {
+        for ( let i: int = 0; i < scene.rootNodes.length; i++ ) {
 
             const node: any = scene.rootNodes[i];
 

@@ -16,13 +16,13 @@ class Engine implements IEngine {
     public screenSize: BABYLON.Vector2;
     public readonly stats: Stats[] = [];
 
-    public get deltaCorrection(): number {
+    public get deltaCorrection(): float {
 
         return this.deltaCorrectionValue;
     }
 
-    private readonly fpsTarget: number = 60;
-    private deltaCorrectionValue: number = 1.0;
+    private readonly fpsTarget: int = 60;
+    private deltaCorrectionValue: float = 1.0;
     private update: TEmptyCallback;
     private renderScene: BABYLON.Scene;
 
@@ -85,7 +85,7 @@ class Engine implements IEngine {
         //this.stats.push( this.createStat( 3, 3, 0 ) ); // calls draw
     }
 
-    private createStat( i: number, x: number, y: number ): Stats { // 0: fps, 1: ms, 2: mb, 3+: custom -> 3: calls
+    private createStat( i: int, x: int, y: int ): Stats { // 0: fps, 1: ms, 2: mb, 3+: custom -> 3: calls
 
         const stat: Stats = new Stats();
         stat.showPanel( i );
@@ -102,12 +102,12 @@ class Engine implements IEngine {
 
     private renderLoop(): void {
 
-        for ( let i: number = 0; i < 3; i++ ) {
+        for ( let i: int = 0; i < 3; i++ ) {
 
             this.stats[i].begin();
         }
         
-        const deltaTime: number = this.babylon.getDeltaTime();
+        const deltaTime: float = this.babylon.getDeltaTime();
         this.deltaCorrectionValue = EngineUtils.getDeltaCorrection( deltaTime, this.fpsTarget );
         
         //this.stats[5].begin();
@@ -123,7 +123,7 @@ class Engine implements IEngine {
         //this.stats[5].calls.update( this.babylon._drawCalls.current, this.babylon._drawCalls.max );
         //this.stats[5].end();
         
-        for ( let i: number = 0; i < 3; i++ ) {
+        for ( let i: int = 0; i < 3; i++ ) {
 
             this.stats[i].end();
         }

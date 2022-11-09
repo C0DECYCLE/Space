@@ -10,6 +10,6 @@ interface IClouds extends IConfigurable, ISingleton {
 
     readonly list: ICloudsDistributer[];
 
-    createModels( blueprints: number[][], material: ICloudMaterial ): ICloudModel[];
+    createModels( blueprints: [ int, float ][], material: ICloudMaterial ): ICloudModel[];
 
 }

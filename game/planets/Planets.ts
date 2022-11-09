@@ -38,7 +38,7 @@ class Planets implements IPlanets {
 
     public registerFromConfigs( configs: IConfig[] ): void {
 
-        for ( let i: number = 0; i < configs.length; i++ ) {
+        for ( let i: int = 0; i < configs.length; i++ ) {
 
             this.register( configs[i] );
         }
@@ -57,11 +57,11 @@ class Planets implements IPlanets {
 
     private insert(): void {
 
-        for ( let i: number = 0; i < this.list.length; i++ ) {
+        for ( let i: int = 0; i < this.list.length; i++ ) {
 
             const planet: IPlanet = this.list[i];
-            const distance: number = Camera.getInstance().getScreenDistance( planet.root );
-            const planetThreashold: number = planet.config.radius + planet.config.influence;
+            const distance: float = Camera.getInstance().getScreenDistance( planet.root );
+            const planetThreashold: float = planet.config.radius + planet.config.influence;
             
             //Player.getInstance().planetInsert( planet, distance, planetThreashold );
             Spaceships.getInstance().planetInsert( planet, distance, planetThreashold );
@@ -73,7 +73,7 @@ class Planets implements IPlanets {
 
     private updatePlanets(): void {
 
-        for ( let i: number = 0; i < this.list.length; i++ ) {
+        for ( let i: int = 0; i < this.list.length; i++ ) {
 
             this.list[i].update();
         }
@@ -96,7 +96,7 @@ class Planets implements IPlanets {
         
         const keys: string[] = Object.keys( this.obsticleKeys );
 
-        for ( let i: number = 0; i < keys.length; i++ ) {
+        for ( let i: int = 0; i < keys.length; i++ ) {
 
             this.setupObsticle( keys[i] );
         }
@@ -106,7 +106,7 @@ class Planets implements IPlanets {
 
         const target: Map< string, IModels > = new Map< string, IModels >();
 
-        for ( let i: number = 0; i < this.obsticleKeys[ obsticleKey ].length; i++ ) {
+        for ( let i: int = 0; i < this.obsticleKeys[ obsticleKey ].length; i++ ) {
 
             target.set( this.obsticleKeys[ obsticleKey ][i], this.setupModels( obsticleKey, this.obsticleKeys[ obsticleKey ][i] ) );
         }
@@ -116,7 +116,7 @@ class Planets implements IPlanets {
 
     private setupModels( obsticleKey: string, variant: string ): IModels {
         
-        return EngineAssets.getInstance().provide( `${ obsticleKey }-${ variant }`, ( mesh: BABYLON.Mesh, i: number ): void => {
+        return EngineAssets.getInstance().provide( `${ obsticleKey }-${ variant }`, ( mesh: BABYLON.Mesh, i: int ): void => {
             
             if ( i === 0 ) {
 

@@ -35,16 +35,16 @@ class AsteroidsRing implements IAsteroidsRing {
         return this.root.rotationQuaternion;
     }
 
-    public get numberOfClusters(): number {
+    public get numberOfClusters(): int {
 
         return this.list.length;
     }
 
-    public get numberOfAsteroids(): number {
+    public get numberOfAsteroids(): int {
 
-        let count: number = 0;
+        let count: int = 0;
 
-        for ( let i: number = 0; i < this.list.length; i++ ) {
+        for ( let i: int = 0; i < this.list.length; i++ ) {
 
             count += this.list[i].numberOfAsteroids;
         }
@@ -62,7 +62,7 @@ class AsteroidsRing implements IAsteroidsRing {
 
     public update(): void {
 
-        for ( let i: number = 0; i < this.list.length; i++ ) {
+        for ( let i: int = 0; i < this.list.length; i++ ) {
 
             this.list[i].update();
         }
@@ -77,11 +77,11 @@ class AsteroidsRing implements IAsteroidsRing {
     private spawnClusters(): void {
 
         const random: any = seedrandom( this.config.seed );
-        const count: number = Math.floor( ( Math.PI * 2 * this.config.radius ) / ( this.config.spread * 2 ) );
+        const count: int = Math.floor( ( Math.PI * 2 * this.config.radius ) / ( this.config.spread * 2 ) );
         
-        for ( let i: number = 0; i < count; i++ ) {
+        for ( let i: int = 0; i < count; i++ ) {
 
-            const angle: number = ( 360 / count ) * i * EngineUtils.toRadian;
+            const angle: float = ( 360 / count ) * i * EngineUtils.toRadian;
             const offset: BABYLON.Vector3 = new BABYLON.Vector3( Math.cos( angle ), 0, Math.sin( angle ) ).scaleInPlace( this.config.radius );
 
             const cluster: IAsteroidsCluster = new AsteroidsCluster( { key: i, seed: random, radius: this.config.spread, height: this.config.height, density: this.config.density, offset: offset }, this.root );

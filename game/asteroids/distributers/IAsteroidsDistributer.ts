@@ -14,7 +14,7 @@ interface IAsteroidsDistributer extends IConfigurable {
 
     get rotationQuaternion(): BABYLON.Quaternion | void;
 
-    get numberOfAsteroids(): number;
+    get numberOfAsteroids(): int;
 
     update(): void;
 

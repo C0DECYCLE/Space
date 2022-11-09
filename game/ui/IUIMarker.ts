@@ -18,7 +18,7 @@ interface IUIMarker extends IConfigurable {
 
     get direction(): BABYLON.Vector3;
 
-    get distance(): number;
+    get distance(): float;
 
     get isNear(): boolean;
 

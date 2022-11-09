@@ -6,15 +6,15 @@
 
 class PlanetQuadtree implements IPlanetQuadtree {
 
-    public static readonly divisionSizeFactor: number = 1.2;
+    public static readonly divisionSizeFactor: float = 1.2;
 
-    public static readonly INSERT_HALF_LIMIT: number = 2 ** 4;
-    public static readonly INSERT_LIMIT: number = PlanetQuadtree.INSERT_HALF_LIMIT + 2 ** 5;
+    public static readonly INSERT_HALF_LIMIT: float = 2 ** 4;
+    public static readonly INSERT_LIMIT: float = PlanetQuadtree.INSERT_HALF_LIMIT + 2 ** 5;
 
     public readonly planet: IPlanet;
     public readonly suffix: string;
 
-    private readonly size: number;
+    private readonly size: int;
     private readonly fixRotationQuaternion: BABYLON.Quaternion;
 
     private up: BABYLON.Vector3;
@@ -45,9 +45,9 @@ class PlanetQuadtree implements IPlanetQuadtree {
         this.recurse( params, this.suffix, this.up.scale( this.planet.config.radius ), this.size );
     }
 
-    private recurse( params: IPlanetInsertParameters, nodeKey: string, position: BABYLON.Vector3, size: number ): void {
+    private recurse( params: IPlanetInsertParameters, nodeKey: string, position: BABYLON.Vector3, size: int ): void {
 
-        const factors: [ number, number ] = this.getDistanceDot( params, position );
+        const factors: [ float, float ] = this.getDistanceDot( params, position );
         
         if ( factors[0] < (size * PlanetQuadtree.divisionSizeFactor) ** 2 && size > (this.planet.config.min || 0) ) {
 
@@ -59,7 +59,7 @@ class PlanetQuadtree implements IPlanetQuadtree {
         }
     }
 
-    private recurseQuad( params: IPlanetInsertParameters, nodeKey: string, position: BABYLON.Vector3, size: number ): void {
+    private recurseQuad( params: IPlanetInsertParameters, nodeKey: string, position: BABYLON.Vector3, size: int ): void {
 
         this.recurse( params, `${ nodeKey }0`, this.leftforward.scale( size / 4 ).addInPlace( position ), size / 2 );
         this.recurse( params, `${ nodeKey }1`, this.rightforward.scale( size / 4 ).addInPlace( position ), size / 2 );
@@ -67,7 +67,7 @@ class PlanetQuadtree implements IPlanetQuadtree {
         this.recurse( params, `${ nodeKey }3`, this.rightbackward.scale( size / 4 ).addInPlace( position ), size / 2 );
     }
 
-    private getDistanceDot( params: IPlanetInsertParameters, position: BABYLON.Vector3 ): [ number, number ] {
+    private getDistanceDot( params: IPlanetInsertParameters, position: BABYLON.Vector3 ): [ float, float ] {
 
         const terrainifyPosition: BABYLON.Vector3 = PlanetUtils.terrainify( this.planet, position.clone() );
         const terrainifyWorldRotatePosition: BABYLON.Vector3 = BABYLON.Vector3.TransformCoordinates( terrainifyPosition, this.planet.root._worldMatrix );

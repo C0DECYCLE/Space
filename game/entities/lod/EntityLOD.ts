@@ -6,7 +6,7 @@
 
 class EntityLOD extends AbstractLOD implements IEntityLOD {
 
-    public override readonly levels: [ IEntityManager< BABYLON.InstancedMesh >, number ][] = [];
+    public override readonly levels: [ IEntityManager< BABYLON.InstancedMesh >, float ][] = [];
 
     public readonly position: BABYLON.Vector3 = new BABYLON.Vector3();
     public readonly rotationQuaternion: BABYLON.Quaternion = new BABYLON.Quaternion();
@@ -33,7 +33,7 @@ class EntityLOD extends AbstractLOD implements IEntityLOD {
 
     public fromModels( models: IModels ): void {
 
-        for ( let i: number = 0; i < models.length; i++ ) {
+        for ( let i: int = 0; i < models.length; i++ ) {
             
             if ( models[i].entitymanager !== undefined ) {
 
@@ -63,7 +63,7 @@ class EntityLOD extends AbstractLOD implements IEntityLOD {
         this.setLevel( this.getLevelFromCoverage( this.coverage ) );
     }
 
-    protected override disposeCurrent( currentLevel: number ): void {
+    protected override disposeCurrent( currentLevel: int ): void {
 
         if ( this.doCollidable === true && this.currentEntity instanceof BABYLON.AbstractMesh ) {
 
@@ -83,7 +83,7 @@ class EntityLOD extends AbstractLOD implements IEntityLOD {
         super.disposeCurrent( currentLevel );
     }
 
-    protected override makeCurrent( level: number ): void {
+    protected override makeCurrent( level: int ): void {
 
         if ( level >= 0 && level < this.levels.length ) {
 

@@ -55,7 +55,7 @@ class UI implements IUI {
 
         this.markers.forEach( ( list: IUIMarker[], _type: string ): void => {
 
-            for ( let i: number = 0; i < list.length; i++ ) {
+            for ( let i: int = 0; i < list.length; i++ ) {
 
                 list[i].update();
             }

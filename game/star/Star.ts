@@ -83,14 +83,14 @@ class Star implements IStar {
         PhysicsEntity.collidable( this.mesh );
     }
 
-    private createDirectionalLight( intensity: number ): void {
+    private createDirectionalLight( intensity: float ): void {
 
         this.directionalLight = new BABYLON.DirectionalLight( "star_directionalLight", BABYLON.Vector3.Zero(), scene );
         EngineExtensions.setLightColor( this.directionalLight, this.config.color );
         EngineExtensions.setLightIntensity( this.directionalLight, intensity );
     }
 
-    private createHemisphericLight( intensity: number ): void {
+    private createHemisphericLight( intensity: float ): void {
 
         this.hemisphericLight = new BABYLON.HemisphericLight( "star_hemisphericLight", BABYLON.Vector3.Up(), scene );
         EngineExtensions.setLightColor( this.hemisphericLight, this.config.color );

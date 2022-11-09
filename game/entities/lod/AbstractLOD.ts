@@ -6,14 +6,14 @@
 
 abstract class AbstractLOD implements IAbstractLOD {
 
-    public static readonly minimum: number = 0.01;
+    public static readonly minimum: float = 0.01;
 
-    public static getMinimum( name: string ): number {
+    public static getMinimum( name: string ): float {
 
         return Number( name.split( "_" )[2] ).clamp( AbstractLOD.minimum, Infinity );
     }
 
-    public readonly levels: [ any, number ][] = [];
+    public readonly levels: [ any, float ][] = [];
 
     public get isEnabled(): boolean {
 
@@ -27,15 +27,15 @@ abstract class AbstractLOD implements IAbstractLOD {
 
     protected enabled: boolean = true;
 
-    protected coverage: number;
-    protected currentLevel?: number;
-    protected lastValidLevel: number = 0;
+    protected coverage: float;
+    protected currentLevel?: int;
+    protected lastValidLevel: int = 0;
 
     protected constructor() {
 
     }
 
-    public add( level: any, min: number ): void {
+    public add( level: any, min: float ): void {
 
         this.levels.push( [ level, min ] );
     }
@@ -45,24 +45,24 @@ abstract class AbstractLOD implements IAbstractLOD {
         this.set( value === true ? this.lastValidLevel : -1 );
     }
 
-    public set( level: number ): void {
+    public set( level: int ): void {
 
         this.setLevel( level );
         this.enabled = this.isVisible;
     }
 
-    protected disposeCurrent( _currentLevel: number ): void {
+    protected disposeCurrent( _currentLevel: int ): void {
 
         this.currentLevel = undefined;
     }
 
-    protected makeCurrent( level: number ): void {
+    protected makeCurrent( level: int ): void {
 
         this.currentLevel = level;
         this.lastValidLevel = this.currentLevel;
     }
 
-    protected setLevel( level: number | false ): void {
+    protected setLevel( level: int | false ): void {
 
         if ( level !== this.currentLevel ) {
 
@@ -78,9 +78,9 @@ abstract class AbstractLOD implements IAbstractLOD {
         }
     }
 
-    protected getLevelFromCoverage( coverage: number ): number | false {
+    protected getLevelFromCoverage( coverage: float ): int | false {
 
-        for ( let i: number = 0; i < this.levels.length; i++ ) {
+        for ( let i: int = 0; i < this.levels.length; i++ ) {
 
             if ( ( i - 1 < 0 ? coverage <= Infinity : coverage < this.levels[ i - 1 ][1] ) && coverage >= this.levels[i][1] ) {
 

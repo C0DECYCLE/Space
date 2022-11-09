@@ -20,7 +20,7 @@ class EngineUtilsShader implements IEngineUtilsShader {
 
     public static registerInstanceAttribute( mesh: BABYLON.Mesh, name: string, defaultValue: any ): void {
         
-        const arrayValue: number[] = [];
+        const arrayValue: float[] = [];
 
         defaultValue.toArray?.( arrayValue );
         

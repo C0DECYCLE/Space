@@ -11,7 +11,7 @@ class Clouds implements IClouds {
     public static instantiate(): void { if ( this.instance === undefined ) this.instance = new Clouds(); } 
     public static getInstance(): IClouds { return this.instance; }
 
-    public static readonly lods: number[][] = [
+    public static readonly lods: [ int, float ][] = [
 
         [ 7, 0.25 ],
         [ 4, 0.1 ],
@@ -29,11 +29,11 @@ class Clouds implements IClouds {
         
     }
 
-    public createModels( blueprints: number[][], material: ICloudMaterial ): ICloudModel[] {
+    public createModels( blueprints: [ int, float ][], material: ICloudMaterial ): ICloudModel[] {
 
         const models: ICloudModel[] = [];
 
-        for ( let i: number = 0; i < blueprints.length; i++ ) {
+        for ( let i: int = 0; i < blueprints.length; i++ ) {
 
             models.push( this.createModel( i, blueprints[i][0], blueprints[i][1], material ) );
         }
@@ -41,14 +41,14 @@ class Clouds implements IClouds {
         return models;
     }
 
-    private createModel( level: number, subdivisions: number, min: number, material: ICloudMaterial ): ICloudModel {
+    private createModel( level: int, subdivisions: int, min: float, material: ICloudMaterial ): ICloudModel {
 
         const mesh: ICloudModel = new CloudModel( this, level, subdivisions, min, material );
 
         mesh.parent = EngineAssets.getInstance().cache;
         mesh.setEnabled( false );
 
-        const invMin: number = Math.round( 1 / AbstractLOD.getMinimum( mesh.name ) );
+        const invMin: int = Math.round( 1 / AbstractLOD.getMinimum( mesh.name ) );
             
         mesh.entitymanager = new EntityManager( mesh.name, () => EngineAssets.getInstance().instance( mesh, ( _instance: BABYLON.InstancedMesh ): void => {} ), invMin * 4, invMin );
 

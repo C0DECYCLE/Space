@@ -70,8 +70,8 @@ class Planet implements IPlanet {
     private cachedInsertionString: string = "";
     private oversteppedInsertLimit: boolean = false;
     private orbitCenter: BABYLON.Vector3 = new BABYLON.Vector3( 0, 0, 0 );
-    private distanceInOrbit: number = 0;
-    private angleAroundOrbit: number = 0;
+    private distanceInOrbit: float = 0.0;
+    private angleAroundOrbit: float = 0.0;
 
     public constructor( config?: IConfig ) {
 
@@ -88,7 +88,7 @@ class Planet implements IPlanet {
         this.setupSurface();
     }
 
-    public place( orbitCenter: BABYLON.Vector3, distanceInOrbit: number, angleAroundOrbit: number ): void {
+    public place( orbitCenter: BABYLON.Vector3, distanceInOrbit: float, angleAroundOrbit: float ): void {
 
         this.orbitCenter = orbitCenter;
         this.distanceInOrbit = distanceInOrbit;
@@ -99,7 +99,7 @@ class Planet implements IPlanet {
         .addInPlace( this.orbitCenter );
     }
 
-    public insert( distance: number, force: boolean = false ): void {
+    public insert( distance: float, force: boolean = false ): void {
 
         this.updateAtmosphereDensity( distance );
 
@@ -199,7 +199,7 @@ class Planet implements IPlanet {
         }
     }
     
-    private updateClouds( distance: number ): void {
+    private updateClouds( distance: float ): void {
 
         if ( this.clouds !== undefined ) {
 
@@ -207,7 +207,7 @@ class Planet implements IPlanet {
         }
     }
 
-    private updateAtmosphereDensity( distance: number ): void {
+    private updateAtmosphereDensity( distance: float ): void {
 
         if ( this.config.atmosphere !== false ) {
 
@@ -220,16 +220,16 @@ class Planet implements IPlanet {
             
             } else {
 
-                const distanceCenterInfluence: number = this.config.radius + this.config.maxHeight;
-                const distanceToInfluence: number = distance - distanceCenterInfluence;
-                const distanceInfluenceLimit: number = ( PlanetQuadtree.INSERT_LIMIT * this.config.radius ) - distanceCenterInfluence;
+                const distanceCenterInfluence: float = this.config.radius + this.config.maxHeight;
+                const distanceToInfluence: float = distance - distanceCenterInfluence;
+                const distanceInfluenceLimit: float = ( PlanetQuadtree.INSERT_LIMIT * this.config.radius ) - distanceCenterInfluence;
 
                 this.atmosphere.settings.densityModifier = ( 1 - ( ( distanceToInfluence / distanceInfluenceLimit ).clamp( 0, 1 ) * 0.8 ) );
             }
         }
     }
     
-    private updateSurface( distance: number ): void {
+    private updateSurface( distance: float ): void {
         
         if ( this.surface !== undefined ) {
 
@@ -241,13 +241,13 @@ class Planet implements IPlanet {
         
         if ( this.config.spin !== false ) {
 
-            const deltaCorrection: number = Engine.getInstance().deltaCorrection;
+            const deltaCorrection: float = Engine.getInstance().deltaCorrection;
 
             this.root.rotate( BABYLON.Axis.Y, this.config.spin * EngineUtils.toRadian * deltaCorrection, BABYLON.Space.LOCAL ); //make very movement speed * delta time
         }
     }
     
-    private evalInsertionWithString( distance: number ): void {
+    private evalInsertionWithString( distance: float ): void {
 
         this.root.computeWorldMatrix( true );
         const insertionString: string = this.getInsertionString();
@@ -264,7 +264,7 @@ class Planet implements IPlanet {
 
     private getInsertionString(): string {
 
-        const rdez: number = 10;
+        const rdez: int = 10;
         const diffrence: BABYLON.Vector3 = Camera.getInstance().position.subtract( BABYLON.Vector3.TransformCoordinates( BABYLON.Vector3.One().scaleInPlace( this.config.radius ), this.root._worldMatrix ) );
         diffrence.copyFromFloats( Math.round( diffrence.x / rdez ) * rdez,  Math.round( diffrence.y / rdez ) * rdez, Math.round( diffrence.z / rdez ) * rdez );
 

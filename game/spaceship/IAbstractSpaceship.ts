@@ -30,7 +30,7 @@ interface IAbstractSpaceship extends ICameraTargetable, IConfigurable {
 
     update(): void;
 
-    planetInsert( planet: IPlanet, distance: number, planetThreashold: number ): void;
+    planetInsert( planet: IPlanet, distance: float, planetThreashold: float ): void;
 
     enter( player: IPlayer ): void;
 

@@ -6,7 +6,7 @@
 
 class SpaceshipPhysicsTravel implements ISpaceshipPhysicsTravel {
 
-    public static readonly VELOCITY: number = 128;
+    public static readonly VELOCITY: float = 128.0;
 
     public readonly spaceshipPhysics: ISpaceshipPhysics;
 
@@ -20,10 +20,10 @@ class SpaceshipPhysicsTravel implements ISpaceshipPhysicsTravel {
         return this.jumping === false ? false : true;
     }
 
-    private pressedThreshold: number = 500;
-    private pointingThreshold: number = 0.1;
+    private pressedThreshold: float = 500.0;
+    private pointingThreshold: float = 0.1;
 
-    private pressedTime: number = 0;
+    private pressedTime: int = 0;
     private traveling: boolean = false;
     private jumping: false | IUIMarker = false;
 
@@ -86,7 +86,7 @@ class SpaceshipPhysicsTravel implements ISpaceshipPhysicsTravel {
             return null;
         }
 
-        for ( let i: number = 0; i < markers.length; i++ ) {
+        for ( let i: int = 0; i < markers.length; i++ ) {
 
             markers[i].lightUp = false;
 

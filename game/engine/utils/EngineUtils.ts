@@ -8,22 +8,22 @@ interface Object {
 
     __boundingCache?: IBoundingCache;
 
-    min?: number;
+    min?: float;
     
-    max?: number;
+    max?: float;
 
-    biggest?: number;
+    biggest?: float;
 
-    ambientCache?: [ string, number ];
+    ambientCache?: [ string, float ];
 
 }
 
 class EngineUtils implements IEngineUtils {
 
-    public static readonly toAngle: number = 180 / Math.PI;
-    public static readonly toRadian: number = Math.PI / 180;
+    public static readonly toAngle: float = 180 / Math.PI;
+    public static readonly toRadian: float = Math.PI / 180;
 
-    public static getDeltaCorrection( delta: number, fpsTarget: number ): number {
+    public static getDeltaCorrection( delta: float, fpsTarget: int ): float {
 
         return delta * fpsTarget / 1000;
     }
@@ -34,7 +34,7 @@ class EngineUtils implements IEngineUtils {
 
             const keys: string[] = Object.keys( self.config );
     
-            for ( let i: number = 0; i < keys.length; i++ ) {
+            for ( let i: int = 0; i < keys.length; i++ ) {
     
                 const key: string = keys[i];
                 const value: any = inject[ key ];
@@ -90,7 +90,7 @@ class EngineUtils implements IEngineUtils {
         return transformNode.__boundingCache;
     }
 
-    public static getBoundingSize( transformNode: BABYLON.TransformNode, force: boolean = false ): number {
+    public static getBoundingSize( transformNode: BABYLON.TransformNode, force: boolean = false ): float {
 
         return EngineUtils.getBounding( transformNode, force ).size;
     }
@@ -123,7 +123,7 @@ class EngineUtils implements IEngineUtils {
         EngineUtils.recurseParentsPosition( result, transformNode.parent );
     }
 
-    public static makeSceneAmbient( hexColor: string, intensity: number ): BABYLON.Color3 {
+    public static makeSceneAmbient( hexColor: string, intensity: float ): BABYLON.Color3 {
 
         const ambientColor: BABYLON.Color3 = new BABYLON.Color3( 1, 1, 1 );
         ambientColor.ambientCache = [ hexColor, intensity ];
@@ -141,7 +141,7 @@ class EngineUtils implements IEngineUtils {
         return debugMaterial;
     }
 
-    public static setTransformNodeDirection( transformNode: BABYLON.TransformNode, forward?: BABYLON.Vector3, up?: BABYLON.Vector3, lerp: number = 1.0 ): void {
+    public static setTransformNodeDirection( transformNode: BABYLON.TransformNode, forward?: BABYLON.Vector3, up?: BABYLON.Vector3, lerp: float = 1.0 ): void {
     
         if ( transformNode.rotationQuaternion === null ) {
 
@@ -153,16 +153,16 @@ class EngineUtils implements IEngineUtils {
         transformNode.rotationQuaternion.copyFrom( lerp === 1.0 ? direction : BABYLON.Quaternion.Slerp( transformNode.rotationQuaternion, direction, lerp ) );
     }
 
-    public static setDirection( rotationQuaternion: BABYLON.Quaternion, forward: BABYLON.Vector3, yawCor: number = 0, pitchCor: number = 0, rollCor: number = 0 ): void {
+    public static setDirection( rotationQuaternion: BABYLON.Quaternion, forward: BABYLON.Vector3, yawCor: float = 0.0, pitchCor: float = 0.0, rollCor: float = 0.0 ): void {
     
-        const yaw: number = -Math.atan2( forward.z, forward.x ) + Math.PI / 2;
-        const len: number = Math.sqrt( forward.x * forward.x + forward.z * forward.z );
-        const pitch: number = -Math.atan2( forward.y, len );
+        const yaw: float = -Math.atan2( forward.z, forward.x ) + Math.PI / 2;
+        const len: float = Math.sqrt( forward.x * forward.x + forward.z * forward.z );
+        const pitch: float = -Math.atan2( forward.y, len );
         
         BABYLON.Quaternion.RotationYawPitchRollToRef( yaw + yawCor, pitch + pitchCor, rollCor, rotationQuaternion );
     }
 
-    public static rotate( rotationQuaternion: BABYLON.Quaternion, axis: BABYLON.Vector3, value: number ): void {
+    public static rotate( rotationQuaternion: BABYLON.Quaternion, axis: BABYLON.Vector3, value: float ): void {
     
         rotationQuaternion.multiplyInPlace( BABYLON.Quaternion.RotationAxisToRef( axis, value, new BABYLON.Quaternion() ) );
     }

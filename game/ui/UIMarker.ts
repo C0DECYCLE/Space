@@ -37,7 +37,7 @@ class UIMarker implements IUIMarker {
         return this.directionValue;
     }
 
-    public get distance(): number {
+    public get distance(): float {
 
         return this.distanceValue;
     }
@@ -52,7 +52,7 @@ class UIMarker implements IUIMarker {
     private text: BABYLON.GUI.TextBlock;
 
     private directionValue: BABYLON.Vector3;
-    private distanceValue: number;
+    private distanceValue: float;
     private isNearValue: boolean;
 
     public constructor( ui: IUI, transformNode: BABYLON.TransformNode, config?: IConfig ) {
@@ -113,7 +113,7 @@ class UIMarker implements IUIMarker {
     private evaluateNear(): boolean {
 
         const worldPosition: BABYLON.Vector3 = EngineUtils.getWorldPosition( this.transformNode );
-        const size: number = EngineUtils.getBoundingSize( this.transformNode );
+        const size: float = EngineUtils.getBoundingSize( this.transformNode );
 
         this.distanceValue = Camera.getInstance().getScreenDistance( worldPosition );
         this.directionValue = worldPosition.subtractInPlace( Player.getInstance().position ).normalize();

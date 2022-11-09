@@ -15,13 +15,13 @@ class PlanetChunks implements IPlanetChunks {
         this.planet = planet;
     }
 
-    public insertQuadtrees( distance: number ): void {
+    public insertQuadtrees( distance: float ): void {
         
         this.doQuadtree( distance );
         this.doChunks();
     }
 
-    public node( params: IPlanetInsertParameters, dot: number, nodeKey: string, position: BABYLON.Vector3, fixRotationQuaternion: BABYLON.Quaternion, size: number, faceSize: number ): void {
+    public node( params: IPlanetInsertParameters, dot: float, nodeKey: string, position: BABYLON.Vector3, fixRotationQuaternion: BABYLON.Quaternion, size: int, faceSize: int ): void {
 
         if ( dot > params.occlusionFallOf ) {
                 
@@ -34,16 +34,16 @@ class PlanetChunks implements IPlanetChunks {
         this.nodes.forEach( ( data: IPlanetChunksNode, _nodeKey: string ): void => data.chunk.toggleShadow( value ) );
     }
 
-    private doQuadtree( distance: number ): void {
+    private doQuadtree( distance: float ): void {
         
         const params: IPlanetInsertParameters = new PlanetInsertParameters( this.planet, distance );
         
         this.planet.faces.forEach( ( face: IPlanetQuadtree, _suffic: string ): void => face.insert( params ) );
     }
 
-    private evalNode( params: IPlanetInsertParameters, nodeKey: string, position: BABYLON.Vector3, fixRotationQuaternion: BABYLON.Quaternion, size: number, faceSize: number ): void {
+    private evalNode( params: IPlanetInsertParameters, nodeKey: string, position: BABYLON.Vector3, fixRotationQuaternion: BABYLON.Quaternion, size: int, faceSize: int ): void {
 
-        const resolution: number = this.getResolution( params, size, faceSize );
+        const resolution: int = this.getResolution( params, size, faceSize );
         const node: IPlanetChunksNode | undefined = this.nodes.get( nodeKey );
         
         if ( node !== undefined ) {
@@ -66,7 +66,7 @@ class PlanetChunks implements IPlanetChunks {
         }
     }
 
-    private getResolution( params: IPlanetInsertParameters, size: number, faceSize: number ): number {
+    private getResolution( params: IPlanetInsertParameters, size: int, faceSize: int ): int {
         
         if ( size >= faceSize ) { 
             

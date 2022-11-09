@@ -29,9 +29,9 @@ class SpaceshipThrusters implements ISpaceshipThrusters {
         
         this.resume();
 
-        const thrust: number = this.spaceship.physics.thrust * 20;
+        const thrust: float = this.spaceship.physics.thrust * 20;
 
-        for ( let i: number = 0; i < this.list.length; i++ ) {
+        for ( let i: int = 0; i < this.list.length; i++ ) {
 
             this.updateThruster( this.list[i], thrust );
         }
@@ -39,7 +39,7 @@ class SpaceshipThrusters implements ISpaceshipThrusters {
 
     private setupThrusters( config: IConfig ): void {
 
-        for ( let i: number = 0; i < config.length; i++ ) {
+        for ( let i: int = 0; i < config.length; i++ ) {
 
             this.list.push( [ this.setupThruster(), config[i] ] );
         }
@@ -78,7 +78,7 @@ class SpaceshipThrusters implements ISpaceshipThrusters {
         return thruster;
     }
 
-    private updateThruster( thruster: [ BABYLON.GPUParticleSystem, IConfig ], thrust: number ): void {
+    private updateThruster( thruster: [ BABYLON.GPUParticleSystem, IConfig ], thrust: float ): void {
         
         thruster[0].isLocal = this.spaceship.hasController === false;
         
@@ -97,7 +97,7 @@ class SpaceshipThrusters implements ISpaceshipThrusters {
 
         if ( this.isPaused === false ) {
 
-            for ( let i: number = 0; i < this.list.length; i++ ) {
+            for ( let i: int = 0; i < this.list.length; i++ ) {
 
                 this.list[i][0].stop();
             }
@@ -110,7 +110,7 @@ class SpaceshipThrusters implements ISpaceshipThrusters {
 
         if ( this.isPaused === true ) {
 
-            for ( let i: number = 0; i < this.list.length; i++ ) {
+            for ( let i: int = 0; i < this.list.length; i++ ) {
 
                 this.list[i][0].start();
             }

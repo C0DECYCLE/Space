@@ -10,7 +10,7 @@ class Cloud extends EntityLOD implements ICloud {
         
     };
 
-    public randomValue: number = 0;
+    public randomValue: float = 0.0;
     public readonly starLightDirection: BABYLON.Vector3 = new BABYLON.Vector3();
 
     private readonly models: IModels;

@@ -6,8 +6,8 @@
 
 class PlayerInteraction implements IPlayerInteraction {
 
-    public static readonly RADIUS: number = 4;
-    public static readonly EDGE: number = 8;
+    public static readonly RADIUS: float = 4.0;
+    public static readonly EDGE: float = 8.0;
     
     public readonly player: IPlayer;
     public readonly list: IInteraction[] = [];
@@ -36,7 +36,7 @@ class PlayerInteraction implements IPlayerInteraction {
 
     public unhighlightAll(): void {
 
-        for ( let i: number = 0; i < this.list.length; i++ ) {
+        for ( let i: int = 0; i < this.list.length; i++ ) {
 
             this.unhighlight( this.list[i] );
         }
@@ -65,7 +65,7 @@ class PlayerInteraction implements IPlayerInteraction {
 
     private defaultUpdate(): void {
 
-        for ( let i: number = 0; i < this.list.length; i++ ) {
+        for ( let i: int = 0; i < this.list.length; i++ ) {
 
             this.evaluateInteraction( this.list[i] );
         }
@@ -73,7 +73,7 @@ class PlayerInteraction implements IPlayerInteraction {
 
     private evaluateInteraction( interaction: IInteraction ): void {
 
-        const distance: number = Camera.getInstance().getApproximateScreenDistance( interaction.mesh );
+        const distance: float = Camera.getInstance().getApproximateScreenDistance( interaction.mesh );
 
         if ( distance <= PlayerInteraction.RADIUS /*&& view direction pointing towards it*/ ) {
 

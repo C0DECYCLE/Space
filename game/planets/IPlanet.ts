@@ -34,9 +34,9 @@ interface IPlanet extends IConfigurable {
 
     get rotationQuaternion(): BABYLON.Quaternion;
 
-    place( orbitCenter: BABYLON.Vector3, distanceInOrbit: number, angleAroundOrbit: number ): void;
+    place( orbitCenter: BABYLON.Vector3, distanceInOrbit: float, angleAroundOrbit: float ): void;
 
-    insert( distance: number, force?: boolean ): void;
+    insert( distance: float, force?: boolean ): void;
 
     update(): void;
 

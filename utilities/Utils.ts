@@ -7,7 +7,7 @@
 
 const log = console.log;
 
-const PHI: number = ( 1 + 5 ** 0.5 ) / 2;
+const PHI: float = ( 1.0 + 5.0 ** 0.5 ) / 2.0;
 
 
 
@@ -20,15 +20,15 @@ function UUIDv4(): string {
 
 interface Number {
     
-    between( a: number, b: number ): boolean;
+    between( a: float, b: float ): boolean;
 
     dotit(): string;
 
-    clamp( min: number, max: number ): number;
+    clamp( min: float, max: float ): float;
 
 }
 
-Number.prototype.between = function( a: number, b: number ): boolean {
+Number.prototype.between = function( a: float, b: float ): boolean {
 
     return this.valueOf() > Math.min( a, b ) && this.valueOf() < Math.max( a, b );
 };
@@ -38,7 +38,7 @@ Number.prototype.dotit = function(): string {
     return Math.round( this.valueOf() ).toString().replace( /(\d)(?=(\d{3})+(?!\d))/g, "$1," );
 };
 
-Number.prototype.clamp = function( min: number, max: number ): number {
+Number.prototype.clamp = function( min: float, max: float ): float {
 
     return Math.min( Math.max( this.valueOf(), min ), max );
 };
@@ -49,7 +49,7 @@ interface String {
     
     firstLetterUppercase(): string;
 
-    replaceAt( index: number, replacement: string ): string;
+    replaceAt( index: int, replacement: string ): string;
 
 }
 
@@ -58,7 +58,7 @@ String.prototype.firstLetterUppercase = function(): string {
     return this.charAt( 0 ).toUpperCase() + this.slice( 1 );
 };
 
-String.prototype.replaceAt = function( index: number, replacement: string ): string {
+String.prototype.replaceAt = function( index: int, replacement: string ): string {
     
     return this.substring( 0, index ) + replacement + this.substring( index + replacement.length );
 }

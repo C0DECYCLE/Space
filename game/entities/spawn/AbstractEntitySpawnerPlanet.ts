@@ -43,18 +43,18 @@ abstract class AbstractEntitySpawnerPlanet implements IAbstractEntitySpawnerPlan
 
     protected spawn(): void {
 
-        const planetSurfaceArea: number = 4 * Math.PI * (this.planet.config.radius ** 2);
-        const n: number = Math.floor( planetSurfaceArea * 0.01 * this.config.density );
+        const planetSurfaceArea: float = 4 * Math.PI * (this.planet.config.radius ** 2);
+        const n: int = Math.floor( planetSurfaceArea * 0.01 * this.config.density );
         
-        for ( let i: number = 0; i < n; i++ ) {
+        for ( let i: int = 0; i < n; i++ ) {
 
             this.evaluate( this.getPosition( i, n ), n );
         }
     }
 
-    protected abstract create( _position: BABYLON.Vector3, _n: number, _varyings: IVaryings ): [ ISpawnable, IVaryings ];
+    protected abstract create( _position: BABYLON.Vector3, _n: int, _varyings: IVaryings ): [ ISpawnable, IVaryings ];
 
-    protected noise( input: number | BABYLON.Vector3 ): number {
+    protected noise( input: float | BABYLON.Vector3 ): float {
 
         if ( input instanceof BABYLON.Vector3 ) {
 
@@ -72,15 +72,15 @@ abstract class AbstractEntitySpawnerPlanet implements IAbstractEntitySpawnerPlan
         this.perlin.noiseSeed( this.config.seed );
     }
     
-    protected getPosition( i: number, n: number ): BABYLON.Vector3 {
+    protected getPosition( i: int, n: int ): BABYLON.Vector3 {
 
-        const theta: number = 2 * Math.PI * i / PHI;
-        const phi: number = Math.acos( 1 - 2 * ( i + 0.5 ) / n );
+        const theta: float = 2 * Math.PI * i / PHI;
+        const phi: float = Math.acos( 1 - 2 * ( i + 0.5 ) / n );
 
         return new BABYLON.Vector3( Math.cos( theta ) * Math.sin( phi ), Math.sin( theta ) * Math.sin( phi ), Math.cos( phi ) ); 
     }
 
-    private evaluate( position: BABYLON.Vector3, n: number ): void {
+    private evaluate( position: BABYLON.Vector3, n: int ): void {
 
         const pretest: false | IVaryings = this.test( this.preFilters, [ position ] );
 
@@ -99,7 +99,7 @@ abstract class AbstractEntitySpawnerPlanet implements IAbstractEntitySpawnerPlan
 
         const varyings: IVaryings = {};
 
-        for ( let i: number = 0; i < filter.length; i++ ) {
+        for ( let i: int = 0; i < filter.length; i++ ) {
 
             const result: false | IVaryings = filter[i]( ...args );
 

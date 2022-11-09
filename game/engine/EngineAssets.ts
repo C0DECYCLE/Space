@@ -43,7 +43,7 @@ class EngineAssets implements IEngineAssets {
         
         const sync: ISync = new Sync( list.length, (): void  => { this.notify = true; } );
 
-        for ( let i: number = 0; i < list.length; i++ ) {
+        for ( let i: int = 0; i < list.length; i++ ) {
 
             if ( this.list.has( list[i][0] ) === true ) {
 
@@ -65,7 +65,7 @@ class EngineAssets implements IEngineAssets {
         const lod: BABYLON.Mesh = this.traverseMesh( importLod, onEveryMesh, interactables );
         const subs: BABYLON.Mesh[] = importLod.getChildMeshes( true );
         
-        for ( let i: number = 0; i < subs.length; i++ ) {
+        for ( let i: int = 0; i < subs.length; i++ ) {
 
             if ( subs[i].name.includes( EngineAssets.collisionKey ) === true || subs[i].id.includes( EngineAssets.collisionKey ) ) {
 
@@ -90,7 +90,7 @@ class EngineAssets implements IEngineAssets {
         const subs: BABYLON.Mesh[] = mesh.getChildMeshes( true );
         const collisionMeshes: BABYLON.Mesh[] = [];
 
-        for ( let i: number = 0; i < subs.length; i++ ) {
+        for ( let i: int = 0; i < subs.length; i++ ) {
 
             const list: BABYLON.Mesh[] = subs[i].__isCollisionMesh === true ? collisionMeshes : meshes;
             list.push( subs[i] );
@@ -100,7 +100,7 @@ class EngineAssets implements IEngineAssets {
 
         if ( result instanceof BABYLON.Mesh ) {
 
-            for ( let i: number = 0; i < collisionMeshes.length; i++ ) {
+            for ( let i: int = 0; i < collisionMeshes.length; i++ ) {
 
                 collisionMeshes[i].clone( collisionMeshes[i].name ).parent = result;
             }
@@ -120,7 +120,7 @@ class EngineAssets implements IEngineAssets {
         const instance: BABYLON.InstancedMesh = this.instanceMesh( lod, onEveryInstance );
         const subs: BABYLON.Mesh[] = lod.getChildMeshes( true );
 
-        for ( let i: number = 0; i < subs.length; i++ ) {
+        for ( let i: int = 0; i < subs.length; i++ ) {
 
             if ( subs[i].__isCollisionMesh === true ) {
 
@@ -139,15 +139,15 @@ class EngineAssets implements IEngineAssets {
         return instance;
     }
 
-    public provide( name: string, onMeshTraverse: ( mesh: BABYLON.Mesh, i: number ) => void ): IModels {
+    public provide( name: string, onMeshTraverse: ( mesh: BABYLON.Mesh, i: int ) => void ): IModels {
         
         const models: IModels = new Models();
         const importLods: BABYLON.Mesh[] = EngineAssets.getInstance().list.get( name )?.getChildren() || [];
         
-        for ( let i: number = 0; i < importLods.length; i++ ) {
+        for ( let i: int = 0; i < importLods.length; i++ ) {
             
             const model: BABYLON.Mesh = EngineAssets.getInstance().traverse( importLods[i], ( mesh: BABYLON.Mesh ): void => onMeshTraverse( mesh, i ) );
-            const invMin: number = Math.round( 1 / AbstractLOD.getMinimum( model.name ) );
+            const invMin: int = Math.round( 1 / AbstractLOD.getMinimum( model.name ) );
             
             model.entitymanager = new EntityManager( model.name, (): BABYLON.InstancedMesh => EngineAssets.getInstance().instance( model, ( _mesh: BABYLON.InstancedMesh ): void => {} ), invMin * 4, invMin );
             models.push( model );
@@ -169,7 +169,7 @@ class EngineAssets implements IEngineAssets {
 
     private listen(): void {
 
-        const id: number = setInterval( (): void => {
+        const id: int = setInterval( (): void => {
 
             if ( this.notify === true ) {
 

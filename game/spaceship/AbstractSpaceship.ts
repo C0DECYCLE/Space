@@ -81,7 +81,7 @@ class AbstractSpaceship implements IAbstractSpaceship {
         }
     }
 
-    public planetInsert( planet: IPlanet, distance: number, planetThreashold: number ): void {
+    public planetInsert( planet: IPlanet, distance: float, planetThreashold: float ): void {
 
         if ( distance <= planetThreashold && this.nearPlanet === false ) {
 
@@ -126,7 +126,7 @@ class AbstractSpaceship implements IAbstractSpaceship {
             }
         } );
 
-        this.lod.fromModels( model, ( _instance: BABYLON.InstancedMesh, _level: number ): void => {} );
+        this.lod.fromModels( model, ( _instance: BABYLON.InstancedMesh, _level: int ): void => {} );
 
         this.root.name = `spaceships_spaceship${ this.config.key }`;
 

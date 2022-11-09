@@ -6,12 +6,12 @@
 
 interface IPlanetInsertParameters {
 
-    readonly distanceCenterInsertion: number;
+    readonly distanceCenterInsertion: float;
 
-    readonly distanceRadiusFactor: number;
+    readonly distanceRadiusFactor: float;
 
     readonly centerToInsertion: BABYLON.Vector3;
     
-    readonly occlusionFallOf: number;
+    readonly occlusionFallOf: float;
 
 }

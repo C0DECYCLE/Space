@@ -72,12 +72,12 @@ class Camera implements ICamera {
         }
     }
 
-    public getScreenDistance( source: BABYLON.Vector3 | BABYLON.TransformNode ): number {
+    public getScreenDistance( source: BABYLON.Vector3 | BABYLON.TransformNode ): float {
 
         return Math.sqrt( this.getScreenSquaredDistance( source ) );
     }
 
-    public getScreenSquaredDistance( source: BABYLON.Vector3 | BABYLON.TransformNode ): number {
+    public getScreenSquaredDistance( source: BABYLON.Vector3 | BABYLON.TransformNode ): float {
 
         if ( source instanceof BABYLON.Vector3 ) {
 
@@ -87,15 +87,15 @@ class Camera implements ICamera {
         return BABYLON.Vector3.DistanceSquared( EngineUtils.getWorldPosition( source ), this.position );
     }
 
-    public getApproximateScreenDistance( source: BABYLON.TransformNode ): number {
+    public getApproximateScreenDistance( source: BABYLON.TransformNode ): float {
         
         return this.getScreenDistance( source );
     }
 
-    public getScreenCoverage( node: BABYLON.TransformNode, size?: number ): number {
+    public getScreenCoverage( node: BABYLON.TransformNode, size?: float ): float {
 
-        const distance: number = this.getApproximateScreenDistance( node );
-        const useSize: number = size || EngineUtils.getBoundingSize( node );
+        const distance: float = this.getApproximateScreenDistance( node );
+        const useSize: float = size || EngineUtils.getBoundingSize( node );
         
         return useSize / distance;
     }

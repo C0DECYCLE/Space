@@ -9,7 +9,7 @@ class PlanetUtilsHeightmap implements IPlanetUtilsHeightmap {
     public static VARIANTS = EPlanetUtilsHeightmapVariants;
     public static PARAMETERS = EPlanetUtilsHeightmapParameters;
 
-    public static get( planet: IPlanet, vector: BABYLON.Vector3 ): number {
+    public static get( planet: IPlanet, vector: BABYLON.Vector3 ): float {
 
         //https://github.com/dandrino/terrain-erosion-3-ways
         //https://starcitizenguidetothegalaxy.com/planet-modelling/
@@ -23,12 +23,12 @@ class PlanetUtilsHeightmap implements IPlanetUtilsHeightmap {
         return PlanetUtilsHeightmap.variantDefault( planet, vector );
     }
     
-    public static variantDefault( planet: IPlanet, vector: BABYLON.Vector3 ): number {
+    public static variantDefault( planet: IPlanet, vector: BABYLON.Vector3 ): float {
         
-        const fbm: ( perlin: perlinNoise3d, vector: BABYLON.Vector3 ) => number = PlanetUtilsHeightmap.fractionalBrownianMotion;
+        const fbm: ( perlin: perlinNoise3d, vector: BABYLON.Vector3 ) => float = PlanetUtilsHeightmap.fractionalBrownianMotion;
         const perlin: perlinNoise3d = planet.perlin;
-        const heightScale: number = planet.config.mountainy * 200;
-        const warp: number = planet.config.warp;
+        const heightScale: float = planet.config.mountainy * 200;
+        const warp: float = planet.config.warp;
 
         const vOffset: BABYLON.Vector3 = vector.add( planet.config.seed.scale( 0.001 ) );
         const offset: BABYLON.Vector3 = planet.config.seed.scale( fbm( perlin, vOffset ) * warp );
@@ -36,34 +36,34 @@ class PlanetUtilsHeightmap implements IPlanetUtilsHeightmap {
         return fbm( perlin, offset.addInPlace( vector ) ) * heightScale;
     }
 
-    public static variantSwirl( planet: IPlanet, vector: BABYLON.Vector3 ): number {
+    public static variantSwirl( planet: IPlanet, vector: BABYLON.Vector3 ): float {
 
-        const fbm: ( perlin: perlinNoise3d, vector: BABYLON.Vector3 ) => number = PlanetUtilsHeightmap.fractionalBrownianMotion;
+        const fbm: ( perlin: perlinNoise3d, vector: BABYLON.Vector3 ) => float = PlanetUtilsHeightmap.fractionalBrownianMotion;
         const perlin: perlinNoise3d = planet.perlin;
-        const heightScale: number = planet.config.mountainy * 200;
-        const warp: number = planet.config.warp;
+        const heightScale: float = planet.config.mountainy * 200;
+        const warp: float = planet.config.warp;
 
         const vOffset: BABYLON.Vector3 = vector.add( planet.config.seed.scale( 0.001 ) );
-        const fbmOffset: number = fbm( perlin, vOffset ); 
+        const fbmOffset: float = fbm( perlin, vOffset ); 
         const offset: BABYLON.Vector3 = new BABYLON.Vector3( fbmOffset * 2 - 1, Math.sin( fbmOffset * 10 ), Math.cos( fbmOffset * 10 ) ).scaleInPlace( heightScale * warp );
 
         return fbm( perlin, offset.addInPlace( vector ) ) * heightScale;
     }
 
-    public static fractionalBrownianMotion( perlin: perlinNoise3d, vector: BABYLON.Vector3 ): number {
+    public static fractionalBrownianMotion( perlin: perlinNoise3d, vector: BABYLON.Vector3 ): float {
 
-        const xs: number = vector.x / PlanetUtilsHeightmap.PARAMETERS.noiseScale;
-        const ys: number = vector.y / PlanetUtilsHeightmap.PARAMETERS.noiseScale;
-        const zs: number = vector.z / PlanetUtilsHeightmap.PARAMETERS.noiseScale;
+        const xs: float = vector.x / PlanetUtilsHeightmap.PARAMETERS.noiseScale;
+        const ys: float = vector.y / PlanetUtilsHeightmap.PARAMETERS.noiseScale;
+        const zs: float = vector.z / PlanetUtilsHeightmap.PARAMETERS.noiseScale;
 
-        let total: number = 0;
-        let frequency: number = 1.0;
-        let normalization: number = 0;
-        let amplitude: number = 1.0;
+        let total: float = 0.0;
+        let frequency: float = 1.0;
+        let normalization: float = 0.0;
+        let amplitude: float = 1.0;
 
-        for ( let o: number = 0; o < PlanetUtilsHeightmap.PARAMETERS.octaves; o++ ) {
+        for ( let o: int = 0; o < PlanetUtilsHeightmap.PARAMETERS.octaves; o++ ) {
 
-            const noiseValue: number = perlin.get( xs * frequency, ys * frequency, zs * frequency );
+            const noiseValue: float = perlin.get( xs * frequency, ys * frequency, zs * frequency );
             total += noiseValue * amplitude;
             
             frequency *= PlanetUtilsHeightmap.PARAMETERS.multiplyFrequencyBy;

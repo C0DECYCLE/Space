@@ -8,20 +8,20 @@ class SmartObjectArray< T extends object > extends ObjectArray< T > implements I
 
     private static readonly default: any = null;
 
-    public get size(): number {
+    public get size(): int {
 
         return this.capacity;
     }
     
-    private capacity: number = 0;
+    private capacity: int = 0;
 
-    public constructor( capacity: number ) {
+    public constructor( capacity: int ) {
     
         super( capacity );
         this.flood();
     }
 
-    public override push( ...elements: T[] ): number {
+    public override push( ...elements: T[] ): int {
             
         this[ this.capacity ] = this.initialize( elements[0], this.capacity++ );
 
@@ -50,7 +50,7 @@ class SmartObjectArray< T extends object > extends ObjectArray< T > implements I
 
     public override clear(): void {
         
-        let i: number;
+        let i: int;
 
         for ( i = 0; i < this.capacity; i++ ) {
 
@@ -66,9 +66,9 @@ class SmartObjectArray< T extends object > extends ObjectArray< T > implements I
         super.delete( element, this.capacity );
     }
 
-    private flood( start: number = 0, end: number = this.length ): void {
+    private flood( start: int = 0, end: int = this.length ): void {
 
-        let i: number;
+        let i: int;
 
         for ( i = start; i < end; i++ ) {
 
@@ -76,7 +76,7 @@ class SmartObjectArray< T extends object > extends ObjectArray< T > implements I
         }
     }
 
-    private clean( index: number ): void {
+    private clean( index: int ): void {
 
         this[ index ] = SmartObjectArray.default;
     }

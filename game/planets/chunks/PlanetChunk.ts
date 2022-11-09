@@ -8,18 +8,18 @@ class PlanetChunk extends BABYLON.Mesh implements IPlanetChunk {
 
     public readonly planet: IPlanet;
     
-    public get size(): number {
+    public get size(): int {
 
         return this.sizeValue;
     }
 
-    public get resolution(): number {
+    public get resolution(): int {
 
         return this.resolutionValue;
     }
     
-    private sizeValue: number;
-    private resolutionValue: number;
+    private sizeValue: int;
+    private resolutionValue: int;
 
     private doesShadows: boolean = false;
     
@@ -82,12 +82,12 @@ class PlanetChunk extends BABYLON.Mesh implements IPlanetChunk {
         vertexData.applyToMesh( this, false );
     } 
 
-    private setupPhysics( size: number ): void {
+    private setupPhysics( size: int ): void {
 
         this.planet.physics.enable( this, size );
     }
 
-    private setupShadow( size: number ): void {
+    private setupShadow( size: int ): void {
 
         if ( this.planet.helper.maskEnabled === true ) {
 
@@ -95,7 +95,7 @@ class PlanetChunk extends BABYLON.Mesh implements IPlanetChunk {
         }
     }
 
-    private addShadow( _size: number ): void {
+    private addShadow( _size: int ): void {
 
         //causes weird glitch
         //if ( size < Star.getInstance().shadow.config.radius / PlanetQuadtree.divisionSizeFactor ) {
@@ -119,13 +119,13 @@ class PlanetChunk extends BABYLON.Mesh implements IPlanetChunk {
         }
     }
 
-    private buildPositions( offset: BABYLON.Vector3, fixRotationQuaternion: BABYLON.Quaternion, size: number, resolution: number ): Float32Array {
+    private buildPositions( offset: BABYLON.Vector3, fixRotationQuaternion: BABYLON.Quaternion, size: int, resolution: int ): Float32Array {
 
-        let row: number;
-        let col: number;
+        let row: int;
+        let col: int;
         const positions: Float32Array = new Float32Array( (resolution+1) * (resolution+1) * 3 );
         let position: BABYLON.Vector3;
-        let i: number = 0;
+        let i: int = 0;
 
         for ( row = 0; row <= resolution; row++ ) {
             for ( col = 0; col <= resolution; col++) {
@@ -146,12 +146,12 @@ class PlanetChunk extends BABYLON.Mesh implements IPlanetChunk {
         return positions;
     }
 
-    private buildIndices( resolution: number ): Uint16Array {
+    private buildIndices( resolution: int ): Uint16Array {
 
-        let row: number;
-        let col: number;
+        let row: int;
+        let col: int;
         const indices: Uint16Array = new Uint16Array( resolution * resolution * 6 );
-        let i: number = 0;
+        let i: int = 0;
 
         for ( row = 0; row < resolution; row++ ) {
             for ( col = 0; col < resolution; col++ ) {

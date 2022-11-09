@@ -8,6 +8,6 @@ interface IPlanetSurface extends IConfigurable {
 
     readonly list: IPlanetSurfaceObsticle[];
 
-    update( distance: number ): void;
+    update( distance: float ): void;
 
 }

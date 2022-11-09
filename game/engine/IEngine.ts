@@ -14,7 +14,7 @@ interface IEngine {
 
     readonly stats: Stats[];
     
-    get deltaCorrection(): number;
+    get deltaCorrection(): float;
 
     set( update: TEmptyCallback, renderScene: BABYLON.Scene ): void;
 

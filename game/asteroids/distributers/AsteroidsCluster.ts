@@ -50,7 +50,7 @@ class AsteroidsCluster implements IAsteroidsCluster {
         }
     }
 
-    public get numberOfAsteroids(): number {
+    public get numberOfAsteroids(): int {
 
         return this.list.length;
     }
@@ -84,7 +84,7 @@ class AsteroidsCluster implements IAsteroidsCluster {
     
     public update(): void {
 
-        for ( let i: number = 0; i < this.list.length; i++ ) {
+        for ( let i: int = 0; i < this.list.length; i++ ) {
 
             this.list[i].update();
         }
@@ -92,7 +92,7 @@ class AsteroidsCluster implements IAsteroidsCluster {
 
     public offsetAllAsteroids( position: BABYLON.Vector3 ): void {
 
-        for ( let i: number = 0; i < this.list.length; i++ ) {
+        for ( let i: int = 0; i < this.list.length; i++ ) {
 
             this.list[i].position.addInPlace( position );
         }
@@ -116,10 +116,10 @@ class AsteroidsCluster implements IAsteroidsCluster {
     private spawnAsteroids(): void {
 
         const random: any = this.config.seed !== undefined && typeof this.config.seed === "function" ? this.config.seed : seedrandom( this.config.seed );
-        const count: number = ( ( 2 * this.config.radius + this.config.height ) / 3 ) * this.config.density;
+        const count: int = Math.floor( ( ( 2 * this.config.radius + this.config.height ) / 3 ) * this.config.density );
         const spread: BABYLON.Vector3 = new BABYLON.Vector3( this.config.radius, this.config.height, this.config.radius );
 
-        for ( let i: number = 0; i < count; i++ ) {
+        for ( let i: int = 0; i < count; i++ ) {
             
             const asteroid: IAsteroid = new Asteroid( { random: random } );
             asteroid.position.copyFromFloats( random() * 2 - 1, random() * 2 - 1, random() * 2 - 1 ).multiplyInPlace( spread );

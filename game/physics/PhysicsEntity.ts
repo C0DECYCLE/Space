@@ -15,7 +15,7 @@ class PhysicsEntity implements IPhysicsEntity {
     public static TYPES = EPhysicsTypes;
     public static STATES = EPhysicsStates;
 
-    protected static COLLIDER_SCALE: number = 0.8;
+    protected static COLLIDER_SCALE: float = 0.8;
     
     public static collidable( mesh: BABYLON.AbstractMesh, type: EPhysicsTypes = PhysicsEntity.TYPES.STATIC, value?: boolean ): void {
         //!!!!EntityLOD line 60 investigate!!!!
@@ -73,7 +73,7 @@ class PhysicsEntity implements IPhysicsEntity {
         }
     }
 
-    public get colliderMax(): number {
+    public get colliderMax(): float {
 
         if ( this.mesh instanceof BABYLON.AbstractMesh ) {
 
@@ -83,7 +83,7 @@ class PhysicsEntity implements IPhysicsEntity {
         return 0;
     }
 
-    public get colliderMin(): number {
+    public get colliderMin(): float {
 
         return this.colliderMinValue / PhysicsEntity.COLLIDER_SCALE;
     }
@@ -105,9 +105,9 @@ class PhysicsEntity implements IPhysicsEntity {
     
     private isPaused: boolean = false;
     private isCollidingPaused: boolean = false;
-    private colliderMinValue: number;
+    private colliderMinValue: float;
     
-    private lastTimeOnGround: number = 0;
+    private lastTimeOnGround: int = 0;
 
     public constructor( mesh: BABYLON.AbstractMesh | BABYLON.TransformNode, type: EPhysicsTypes = PhysicsEntity.TYPES.DYNAMIC ) {
 
@@ -150,7 +150,7 @@ class PhysicsEntity implements IPhysicsEntity {
         this.isPaused = false;
     }
 
-    public registerPull( distanceAboveGround: number ): void {
+    public registerPull( distanceAboveGround: float ): void {
         
         this.lastTimeOnGround++;
         
@@ -164,7 +164,7 @@ class PhysicsEntity implements IPhysicsEntity {
         }
     }
 
-    public getAcceleration(): number {
+    public getAcceleration(): float {
 
         return this.lastTimeOnGround / 100;
     }

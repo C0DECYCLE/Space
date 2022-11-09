@@ -37,7 +37,7 @@ class PlanetHelper implements IPlanetHelper {
         }
     }
 
-    public getOcclusionFallOf( distance: number, c: number = 0.8 ): number {
+    public getOcclusionFallOf( distance: float, c: float = 0.8 ): float {
 
         return ( 1 - ( (distance / this.planet.config.radius) - c ) ).clamp( -1.05, 0.9 ) || -1.05;
     }
@@ -65,7 +65,7 @@ class PlanetHelper implements IPlanetHelper {
             new BABYLON.Vector3( 0, 0, -1 ) //Right
         ];
 
-        for ( let i: number = 0; i < rotations.length; i++ ) {
+        for ( let i: int = 0; i < rotations.length; i++ ) {
 
             faces.set( suffix[i], new PlanetQuadtree( this.planet, suffix[i], rotations[i] ) );
         }

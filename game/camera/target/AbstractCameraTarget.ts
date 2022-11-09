@@ -29,7 +29,7 @@ abstract class AbstractCameraTarget implements IAbstractCameraTarget {
         EngineUtils.configure( this, config );
     }
 
-    public focus( lerp: number = this.config.lerpRot ): void {
+    public focus( lerp: float = this.config.lerpRot ): void {
         
         this.camera.camera.alpha = BABYLON.Scalar.Lerp( this.camera.camera.alpha, this.config.focusAlpha, lerp );
         this.camera.camera.beta = BABYLON.Scalar.Lerp( this.camera.camera.beta, this.config.focusBeta, lerp );
@@ -52,7 +52,7 @@ abstract class AbstractCameraTarget implements IAbstractCameraTarget {
     
     protected free( event: BABYLON.PointerInfo ): void {
 
-        const deltaCorrection: number = Engine.getInstance().deltaCorrection;
+        const deltaCorrection: float = Engine.getInstance().deltaCorrection;
 
         this.camera.camera.alpha -= event.event.movementX * Controls.getInstance().config.panning * deltaCorrection;
         this.camera.camera.beta -= event.event.movementY * Controls.getInstance().config.panning * deltaCorrection;
@@ -60,7 +60,7 @@ abstract class AbstractCameraTarget implements IAbstractCameraTarget {
 
     protected followPointer( target: ICameraTargetable, event: BABYLON.PointerInfo ): void {
         
-        const deltaCorrection: number = Engine.getInstance().deltaCorrection;
+        const deltaCorrection: float = Engine.getInstance().deltaCorrection;
         
         target.root.rotate( BABYLON.Axis.Y, event.event.movementX * this.config.follow * deltaCorrection, BABYLON.Space.LOCAL );
         target.root.rotate( BABYLON.Axis.X, event.event.movementY * this.config.follow * deltaCorrection, BABYLON.Space.LOCAL );
@@ -83,7 +83,7 @@ abstract class AbstractCameraTarget implements IAbstractCameraTarget {
         return BABYLON.Quaternion.Slerp( this.camera.rotationQuaternion, target.rotationQuaternion, this.config.lerpRot );
     }
 
-    protected syncRadius( _target: ICameraTargetable ): number {
+    protected syncRadius( _target: ICameraTargetable ): float {
 
         return BABYLON.Scalar.Lerp( this.camera.camera.radius, this.config.offsetRadius, this.config.lerpPos );
     }

@@ -24,6 +24,6 @@ interface IEngineAssets {
 
     instance( lod: BABYLON.Mesh, onEveryInstance?: ( instance: BABYLON.InstancedMesh ) => void ): BABYLON.InstancedMesh;
 
-    provide( name: string, onMeshTraverse: ( mesh: BABYLON.Mesh, i: number ) => void ): IModels;
+    provide( name: string, onMeshTraverse: ( mesh: BABYLON.Mesh, i: int ) => void ): IModels;
 
 }

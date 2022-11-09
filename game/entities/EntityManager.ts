@@ -16,11 +16,11 @@ class EntityManager< T extends BABYLON.AbstractMesh > implements IEntityManager<
     private readonly used: ISmartObjectArray< T >;
 
     private readonly create: () => T;
-    private readonly increase: number;
+    private readonly increase: int;
 
     private root: BABYLON.Node;
 
-    public constructor( name: string, create: () => T, size: number, increase: number ) {
+    public constructor( name: string, create: () => T, size: int, increase: int ) {
         
         this.increase = increase;
         this.create = create;
@@ -54,9 +54,9 @@ class EntityManager< T extends BABYLON.AbstractMesh > implements IEntityManager<
         this.root.setEnabled( false );
     }
 
-    private make( amount: number ): void {
+    private make( amount: int ): void {
 
-        for ( let i: number = 0; i < amount; i++ ) {
+        for ( let i: int = 0; i < amount; i++ ) {
 
             this.store( this.create() );
         }

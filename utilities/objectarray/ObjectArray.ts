@@ -6,7 +6,7 @@
 
 interface Object {
 
-    metalist?: Map< string, number >;
+    metalist?: Map< string, int >;
 
 }
 
@@ -14,21 +14,21 @@ class ObjectArray< T extends object > extends Array< T > implements IObjectArray
 
     protected readonly uuid: string = UUIDv4();
 
-    public override push( ...elements: T[] ): number {
+    public override push( ...elements: T[] ): int {
             
         super.push( this.initialize( elements[0] ) );
 
         return this.length;
     }
     
-    public override indexOf( element: T, fromIndex?: number ): number {
+    public override indexOf( element: T, fromIndex?: int ): int {
         
         if ( element.metalist === undefined ) {
             
             return -1;
         }
         
-        const index: number | undefined = element.metalist.get( this.uuid );
+        const index: int | undefined = element.metalist.get( this.uuid );
         
         if ( index === undefined || ( fromIndex !== undefined && index < fromIndex ) ) {
             
@@ -43,7 +43,7 @@ class ObjectArray< T extends object > extends Array< T > implements IObjectArray
         return index;
     }
     
-    public override includes( element: T, _fromIndex?: number ): boolean {
+    public override includes( element: T, _fromIndex?: int ): boolean {
 
         return element.metalist === undefined ? false : element.metalist.has( this.uuid );
     }
@@ -53,8 +53,8 @@ class ObjectArray< T extends object > extends Array< T > implements IObjectArray
         return this.decommission( super.pop() );
     }
     
-    public override splice( start: number, deleteCount?: number ): T[];
-    public override splice( start: number, _deleteCount: number, ..._items: T[] ): T[] {
+    public override splice( start: int, deleteCount?: int ): T[];
+    public override splice( start: int, _deleteCount: int, ..._items: T[] ): T[] {
         
         if ( start !== Number.MIN_VALUE ) {
             
@@ -71,14 +71,14 @@ class ObjectArray< T extends object > extends Array< T > implements IObjectArray
         return undefined;
     }
     
-    public override sort( _compareFn?: ( ( a: T, b: T ) => number) ): this {
+    public override sort( _compareFn?: ( ( a: T, b: T ) => int) ): this {
         
         console.warn( "ObjectArray: Illegal sort operation." );
 
         return this;
     }
     
-    public override unshift( ..._items: T[] ): number {
+    public override unshift( ..._items: T[] ): int {
         
         console.warn( "ObjectArray: Illegal unshift operation." );
     
@@ -87,7 +87,7 @@ class ObjectArray< T extends object > extends Array< T > implements IObjectArray
 
     public override clear(): void {
         
-        let i: number;
+        let i: int;
 
         for ( i = 0; i < this.length; i++ ) {
 
@@ -110,7 +110,7 @@ class ObjectArray< T extends object > extends Array< T > implements IObjectArray
         return this.includes( element );
     }
 
-    public delete( element: T, length: number = this.length ): void {
+    public delete( element: T, length: int = this.length ): void {
 
         if ( this.has( element ) === false ) {
 
@@ -122,11 +122,11 @@ class ObjectArray< T extends object > extends Array< T > implements IObjectArray
         this.splice( Number.MIN_VALUE ); //for babylon rtt hook
     }
 
-    protected initialize( element: T, length: number = this.length ): T {
+    protected initialize( element: T, length: int = this.length ): T {
 
         if ( element.metalist === undefined ) {
 
-            element.metalist = new Map< string, number >();  
+            element.metalist = new Map< string, int >();  
         }
         
         element.metalist.set( this.uuid, length );
@@ -144,13 +144,13 @@ class ObjectArray< T extends object > extends Array< T > implements IObjectArray
         return element;
     }
 
-    private interchange( element: T, length: number = this.length ): void {
+    private interchange( element: T, length: int = this.length ): void {
 
         const lastElement: T = this[ length - 1 ];
            
         if ( element !== lastElement ) {
             
-            const index: number = this.indexOf( element );
+            const index: int = this.indexOf( element );
 
             if ( index === -1 ) {
                 

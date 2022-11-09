@@ -12,7 +12,7 @@ interface IBoundingCache {
 
     readonly diagonal: BABYLON.Vector3;
     
-    size: number;
+    size: float;
     
     update(): void;
 

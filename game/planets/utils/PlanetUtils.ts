@@ -18,7 +18,7 @@ class PlanetUtils implements IPlanetUtils {
         return PlanetUtils.displace( planet, vector );
     }
 
-    public static cubesphere( v: BABYLON.Vector3, r: number ): BABYLON.Vector3 {
+    public static cubesphere( v: BABYLON.Vector3, r: float ): BABYLON.Vector3 {
         
         v.scaleInPlace( 1 / r );
         
@@ -33,7 +33,7 @@ class PlanetUtils implements IPlanetUtils {
         return v;
     }
 
-    public static noise( planet: IPlanet, vector: BABYLON.Vector3 ): number {
+    public static noise( planet: IPlanet, vector: BABYLON.Vector3 ): float {
 
         return PlanetUtilsHeightmap.get( planet, vector.scale( planet.config.radius ).addInPlace( planet.config.seed ) ).clamp( 0, planet.config.maxHeight );
     }

@@ -6,7 +6,7 @@
 
 class CloudsPlanet extends AbstractEntitySpawnerPlanet implements ICloudsPlanet {
 
-    public static readonly LOD_LIMIT: number = 2 ** 2.5;
+    public static readonly LOD_LIMIT: float = 2 ** 2.5;
 
     public override config: IConfig = {
         
@@ -35,9 +35,9 @@ class CloudsPlanet extends AbstractEntitySpawnerPlanet implements ICloudsPlanet 
         this.register();
     }
 
-    protected create( position: BABYLON.Vector3, n: number, varyings: IVaryings ): [ ISpawnable, IVaryings ] {
+    protected create( position: BABYLON.Vector3, n: int, varyings: IVaryings ): [ ISpawnable, IVaryings ] {
         
-        const height: number = this.noise( position.clone().scaleInPlace( this.planet.config.radius * -this.config.cullScale * 2.5 ).addInPlace( varyings.noiseOffset ) );
+        const height: float = this.noise( position.clone().scaleInPlace( this.planet.config.radius * -this.config.cullScale * 2.5 ).addInPlace( varyings.noiseOffset ) );
         
         const cloud: ICloud = new Cloud( this.models );
         cloud.position.copyFrom( position ).scaleInPlace( this.planet.config.radius + this.planet.config.maxHeight * (0.5 + height * 0.5) * this.config.heightScale );
@@ -56,7 +56,7 @@ class CloudsPlanet extends AbstractEntitySpawnerPlanet implements ICloudsPlanet 
         return [ cloud, {} ];
     }
 
-    public update( distance: number ): void {
+    public update( distance: float ): void {
 
         if ( this.planet.lod.isVisible === true ) {
 
@@ -78,7 +78,7 @@ class CloudsPlanet extends AbstractEntitySpawnerPlanet implements ICloudsPlanet 
     private cull_filter( position: BABYLON.Vector3 ): false | IVaryings {
         
         const noiseOffset: BABYLON.Vector3 = new BABYLON.Vector3( this.planet.position.x, this.config.seed, this.planet.position.z );
-        const cull: number = this.noise( position.clone().scaleInPlace( this.planet.config.radius * this.config.cullScale ).addInPlace( noiseOffset ) );
+        const cull: float = this.noise( position.clone().scaleInPlace( this.planet.config.radius * this.config.cullScale ).addInPlace( noiseOffset ) );
 
         if ( cull < this.config.limit ) {
 
@@ -100,25 +100,25 @@ class CloudsPlanet extends AbstractEntitySpawnerPlanet implements ICloudsPlanet 
 
     /////////////////////////////////////////////////////////////////
 
-    private updateClouds( distance: number ): void {
+    private updateClouds( distance: float ): void {
 
-        const radiusDistance: number = distance / this.planet.config.radius;
+        const radiusDistance: float = distance / this.planet.config.radius;
         const planetToCamera: BABYLON.Vector3 = Camera.getInstance().position.subtract( this.planet.position ).normalize();
-        const occlusionFallOf: number = this.planet.helper.getOcclusionFallOf( distance ).clamp( -0.35, Infinity );
-        const distanceLODLevel: number = (radiusDistance / CloudsPlanet.LOD_LIMIT).clamp( 0, 1 );
+        const occlusionFallOf: float = this.planet.helper.getOcclusionFallOf( distance ).clamp( -0.35, Infinity );
+        const distanceLODLevel: float = (radiusDistance / CloudsPlanet.LOD_LIMIT).clamp( 0, 1 );
         const starLightDirection: BABYLON.Vector3 = this.planet.position.normalizeToNew().applyRotationQuaternionInPlace( this.planet.rotationQuaternion.invert() );
 
-        for ( let i: number = 0; i < this.list.length; i++ ) {
+        for ( let i: int = 0; i < this.list.length; i++ ) {
 
             this.updateLOD( this.list[i], radiusDistance, planetToCamera, occlusionFallOf, distanceLODLevel );
             this.updateStarLight( this.list[i], starLightDirection );
         }
     }
 
-    private updateLOD( cloud: ICloud, radiusDistance: number, planetToCamera: BABYLON.Vector3, occlusionFallOf: number, distanceLODLevel: number ): void {
+    private updateLOD( cloud: ICloud, radiusDistance: float, planetToCamera: BABYLON.Vector3, occlusionFallOf: float, distanceLODLevel: float ): void {
 
         const cloudWorld: BABYLON.Vector3 = BABYLON.Vector3.TransformCoordinates( cloud.position, this.planet.root._worldMatrix );
-        const dot: number = BABYLON.Vector3.Dot( planetToCamera, cloudWorld.subtract( this.planet.position ).normalize() );
+        const dot: float = BABYLON.Vector3.Dot( planetToCamera, cloudWorld.subtract( this.planet.position ).normalize() );
                                                                     //cache normal cloud direction
         if ( dot > occlusionFallOf ) {
             

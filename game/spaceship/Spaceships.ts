@@ -39,15 +39,15 @@ class Spaceships implements ISpaceships {
 
     public update(): void {
 
-        for ( let i: number = 0; i < this.list.length; i++ ) {
+        for ( let i: int = 0; i < this.list.length; i++ ) {
 
             this.list[i].update();
         }
     }
     
-    public planetInsert( planet: IPlanet, distance: number, planetThreashold: number ): void {
+    public planetInsert( planet: IPlanet, distance: float, planetThreashold: float ): void {
 
-        for ( let i: number = 0; i < this.list.length; i++ ) {
+        for ( let i: int = 0; i < this.list.length; i++ ) {
 
             this.list[i].planetInsert( planet, distance, planetThreashold );
         }
@@ -62,7 +62,7 @@ class Spaceships implements ISpaceships {
         
         const importLods: BABYLON.Mesh[] = EngineAssets.getInstance().list.get( `spaceship-${ name.toLowerCase() }` )?.getChildren() || [];
         
-        for ( let i: number = 0; i < importLods.length; i++ ) {
+        for ( let i: int = 0; i < importLods.length; i++ ) {
             
             const model: BABYLON.Mesh = EngineAssets.getInstance().traverse( importLods[i], mesh => {
             

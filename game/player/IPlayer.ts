@@ -26,6 +26,6 @@ interface IPlayer extends ICameraTargetable, IConfigurable, ISingleton {
 
     update(): void;
 
-    planetInsert( planet: IPlanet, distance: number, planetThreashold: number ): void;
+    planetInsert( planet: IPlanet, distance: float, planetThreashold: float ): void;
 
 }

@@ -13,7 +13,7 @@ class PlanetPhysics {
         this.planet = planet;
     }
 
-    public enable( mesh: BABYLON.Mesh, size: number ): void {
+    public enable( mesh: BABYLON.Mesh, size: int ): void {
         
         if ( size === this.planet.config.min ) {
 
@@ -29,7 +29,7 @@ class PlanetPhysics {
     public pull( physicsEntity: IPhysicsEntity ): BABYLON.Vector3 {
 
         const delta: BABYLON.Vector3 = this.getDelta( physicsEntity.position );
-        const distanceCenter: number = delta.length();
+        const distanceCenter: float = delta.length();
         const up: BABYLON.Vector3 = delta.clone().normalize();
         
         this.pullSpin( physicsEntity, distanceCenter );
@@ -43,7 +43,7 @@ class PlanetPhysics {
     public spin( physicsEntity: IPhysicsEntity ): BABYLON.Vector3 {
 
         const delta: BABYLON.Vector3 = this.getDelta( physicsEntity.position );
-        const distanceCenter: number = delta.length();
+        const distanceCenter: float = delta.length();
         const up: BABYLON.Vector3 = delta.clone().normalize();
         
         this.pullSpin( physicsEntity, distanceCenter );
@@ -51,7 +51,7 @@ class PlanetPhysics {
         return up;
     }
 
-    public getDistanceAboveGround( physicsEntity: IPhysicsEntity, up: BABYLON.Vector3 ): number {
+    public getDistanceAboveGround( physicsEntity: IPhysicsEntity, up: BABYLON.Vector3 ): float {
 
         return BABYLON.Vector3.Distance( this.projectOnSurface( up ), physicsEntity.position );
     }
@@ -63,12 +63,12 @@ class PlanetPhysics {
 
     private projectOnSurface( up: BABYLON.Vector3 ): BABYLON.Vector3 {
 
-        const noise: number = PlanetUtils.noise( this.planet, up.rotateByQuaternionToRef( this.planet.rotationQuaternion.invert(), BABYLON.Vector3.Zero() ) );
+        const noise: float = PlanetUtils.noise( this.planet, up.rotateByQuaternionToRef( this.planet.rotationQuaternion.invert(), BABYLON.Vector3.Zero() ) );
 
         return up.clone().scaleInPlace( this.planet.config.radius + noise ).addInPlace( this.planet.position );
     }
 
-    private pullSpin( physicsEntity: IPhysicsEntity, distanceCenter: number ): void {
+    private pullSpin( physicsEntity: IPhysicsEntity, distanceCenter: float ): void {
 
         if ( this.planet.config.spin !== false ) {
 
@@ -83,7 +83,7 @@ class PlanetPhysics {
         }
     }
 
-    private getSpinFactor( distanceCenter: number ): number {
+    private getSpinFactor( distanceCenter: float ): float {
 
         const distanceAboveMaxHeight = distanceCenter - this.planet.config.radius - this.planet.config.maxHeight;
         const distanceBetweenMaxHeight = this.planet.config.influence - this.planet.config.maxHeight;
@@ -91,7 +91,7 @@ class PlanetPhysics {
         return ( 1 - ( distanceAboveMaxHeight / distanceBetweenMaxHeight ) ).clamp( 0, 1 );
     }
 
-    private deltaAngleToQuaternion( deltaAngle: number ): BABYLON.Quaternion {
+    private deltaAngleToQuaternion( deltaAngle: float ): BABYLON.Quaternion {
 
         return BABYLON.Quaternion.FromEulerVector( BABYLON.Vector3.Up().scaleInPlace( deltaAngle ) );
     }

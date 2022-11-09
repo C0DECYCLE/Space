@@ -10,6 +10,6 @@ interface IAbstractCameraTarget extends IConfigurable {
 
     onPointerMove( target: ICameraTargetable, event: BABYLON.PointerInfo ): void;
 
-    focus( lerp: number ): void;
+    focus( lerp: float ): void;
 
 }

@@ -10,7 +10,7 @@ class SpaceshipPhysics extends PhysicsEntity implements ISpaceshipPhysics {
 
     public travel: ISpaceshipPhysicsTravel;
 
-    public get thrust(): number {
+    public get thrust(): float {
 
         if ( this.spaceship.isLanded === true || this.travel.isJumping === true ) {
 
@@ -66,11 +66,11 @@ class SpaceshipPhysics extends PhysicsEntity implements ISpaceshipPhysics {
 
     private movement(): void {
 
-        const deltaCorrection: number = Engine.getInstance().deltaCorrection;
-        const mainAcceleration: number = this.spaceship.config.mainAcceleration * deltaCorrection;
-        const brakeScale: number = ( 1 - this.spaceship.config.brakeAcceleration ) * deltaCorrection;
-        const minorAcceleration: number = this.spaceship.config.minorAcceleration * deltaCorrection;
-        const rollSpeed: number = this.spaceship.config.rollSpeed * deltaCorrection;
+        const deltaCorrection: float = Engine.getInstance().deltaCorrection;
+        const mainAcceleration: float = this.spaceship.config.mainAcceleration * deltaCorrection;
+        const brakeScale: float = ( 1.0 - this.spaceship.config.brakeAcceleration ) * deltaCorrection;
+        const minorAcceleration: float = this.spaceship.config.minorAcceleration * deltaCorrection;
+        const rollSpeed: float = this.spaceship.config.rollSpeed * deltaCorrection;
         const acceleration: BABYLON.Vector3 = new BABYLON.Vector3( 0, 0, 0 );
 
         if ( Controls.getInstance().activeKeys.has( Controls.KEYS.For ) === true ) {
@@ -117,18 +117,18 @@ class SpaceshipPhysics extends PhysicsEntity implements ISpaceshipPhysics {
     
     private brake(): void {
 
-        const velocityDrag: number = this.spaceship.config.velocityDrag;
+        const velocityDrag: float = this.spaceship.config.velocityDrag;
 
         this.brakeVelocity();
 
         this.velocity.copyFrom( BABYLON.Vector3.Lerp( this.velocity, this.localVelocity.applyRotationQuaternion( this.spaceship.rotationQuaternion ), velocityDrag ) );
     }
 
-    private brakeVelocity( brakeScale?: number ): void {
+    private brakeVelocity( brakeScale?: float ): void {
 
         if ( brakeScale === undefined ) {
 
-            const deltaCorrection: number = Engine.getInstance().deltaCorrection;
+            const deltaCorrection: float = Engine.getInstance().deltaCorrection;
             brakeScale = ( 1 - this.spaceship.config.brakeAcceleration ) * deltaCorrection;
         }
 
@@ -143,8 +143,8 @@ class SpaceshipPhysics extends PhysicsEntity implements ISpaceshipPhysics {
 
     private movementTranslate( acceleration: BABYLON.Vector3 ): void {
         
-        const velocityLimit: number = this.spaceship.config.velocityLimit;
-        const velocityDrag: number = this.spaceship.config.velocityDrag;
+        const velocityLimit: float = this.spaceship.config.velocityLimit;
+        const velocityDrag: float = this.spaceship.config.velocityDrag;
         
         if ( acceleration.x !== 0 || acceleration.y !== 0 || acceleration.z !== 0 ) {
 
@@ -165,7 +165,7 @@ class SpaceshipPhysics extends PhysicsEntity implements ISpaceshipPhysics {
 
             if ( this.spaceship.nearPlanet !== false ) {
 
-                const distanceAboveGround: number = this.spaceship.nearPlanet.physics.getDistanceAboveGround( this, up ).clamp( 0, Infinity );
+                const distanceAboveGround: float = this.spaceship.nearPlanet.physics.getDistanceAboveGround( this, up ).clamp( 0, Infinity );
             
                 this.adjustCollider( distanceAboveGround );
                 this.checkLanding( up, distanceAboveGround );
@@ -180,12 +180,12 @@ class SpaceshipPhysics extends PhysicsEntity implements ISpaceshipPhysics {
         }
     }
 
-    private adjustCollider( distanceAboveGround: number ): void {
+    private adjustCollider( distanceAboveGround: float ): void {
 
         if ( distanceAboveGround - this.colliderMax < 0 ) {
 
-            const targetSize: number = this.colliderMin;
-            const lerp: number = 1 - ( ( distanceAboveGround - targetSize ) / ( this.colliderMax - targetSize ) );
+            const targetSize: float = this.colliderMin;
+            const lerp: float = 1.0 - ( ( distanceAboveGround - targetSize ) / ( this.colliderMax - targetSize ) );
 
             this.setColliderSize( BABYLON.Vector3.Lerp( this.colliderSize, BABYLON.Vector3.One().scaleInPlace( targetSize ), lerp.clamp( 0, 1 ) ) );
         }
@@ -196,7 +196,7 @@ class SpaceshipPhysics extends PhysicsEntity implements ISpaceshipPhysics {
         this.setColliderSize( BABYLON.Vector3.One().scaleInPlace( this.colliderMin ) );
     }
 
-    private checkLanding( up: BABYLON.Vector3, distanceAboveGround: number ): void {
+    private checkLanding( up: BABYLON.Vector3, distanceAboveGround: float ): void {
 
         const downAngle = Math.acos( BABYLON.Vector3.Dot( up.negate(), this.velocity.normalizeToNew() ) );
 
@@ -211,7 +211,7 @@ class SpaceshipPhysics extends PhysicsEntity implements ISpaceshipPhysics {
     
     private checkTakeoff(): void {
 
-        const upAngle: number = Math.acos( BABYLON.Vector3.Dot( BABYLON.Vector3.Up(), this.localVelocity.normalizeToNew() ) );
+        const upAngle: float = Math.acos( BABYLON.Vector3.Dot( BABYLON.Vector3.Up(), this.localVelocity.normalizeToNew() ) );
 
         if ( upAngle < this.spaceship.config.landingAngle ) {
 

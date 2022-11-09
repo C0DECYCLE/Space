@@ -6,7 +6,7 @@
 
 interface ICloud extends IEntityLOD, ISpawnable, IConfigurable {
 
-    randomValue: number;
+    randomValue: float;
 
     readonly starLightDirection: BABYLON.Vector3;
 

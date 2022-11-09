@@ -6,7 +6,7 @@
 
 interface ILOD extends IAbstractLOD {
 
-    readonly levels: [ BABYLON.TransformNode, number ][];
+    readonly levels: [ BABYLON.TransformNode, float ][];
 
     get root(): BABYLON.TransformNode;
 
@@ -20,10 +20,10 @@ interface ILOD extends IAbstractLOD {
 
     fromSingle( node: BABYLON.TransformNode ): void;
 
-    fromModels( models: IModels, onEveryInstance?: ( instance: BABYLON.InstancedMesh, level: number ) => void ): void;
+    fromModels( models: IModels, onEveryInstance?: ( instance: BABYLON.InstancedMesh, level: int ) => void ): void;
 
     update(): void;
     
-    add( transformNode: BABYLON.TransformNode, min: number ): void;
+    add( transformNode: BABYLON.TransformNode, min: float ): void;
 
 }

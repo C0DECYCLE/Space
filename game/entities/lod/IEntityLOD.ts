@@ -6,7 +6,7 @@
 
 interface IEntityLOD extends IAbstractLOD {
 
-    readonly levels: [ IEntityManager< BABYLON.InstancedMesh >, number ][];
+    readonly levels: [ IEntityManager< BABYLON.InstancedMesh >, float ][];
 
     readonly position: BABYLON.Vector3;
 

@@ -44,7 +44,7 @@ class Asteroids implements IAsteroids {
 
     public update(): void {
 
-        for ( let i: number = 0; i < this.list.length; i++ ) {
+        for ( let i: int = 0; i < this.list.length; i++ ) {
 
             this.list[i].update();
         }
@@ -52,7 +52,7 @@ class Asteroids implements IAsteroids {
 
     private setupVariants(): void {
 
-        for ( let i: number = 0; i < this.variantKeys.length; i++ ) {
+        for ( let i: int = 0; i < this.variantKeys.length; i++ ) {
 
             this.variants.set( this.variantKeys[i], this.setupModels( this.variantKeys[i] ) );
         }
@@ -60,7 +60,7 @@ class Asteroids implements IAsteroids {
 
     private setupModels( variant: string ): IModels {
         
-        return EngineAssets.getInstance().provide( `asteroid-${ variant }`, ( mesh: BABYLON.Mesh, i: number ): void => {
+        return EngineAssets.getInstance().provide( `asteroid-${ variant }`, ( mesh: BABYLON.Mesh, i: int ): void => {
             
             if ( i === 0 ) {
 

@@ -10,7 +10,7 @@ class BoundingCache implements IBoundingCache {
     public readonly max: BABYLON.Vector3 = new BABYLON.Vector3();
 
     public readonly diagonal: BABYLON.Vector3 = new BABYLON.Vector3();
-    public size: number = 0;
+    public size: float = 0.0;
 
     public constructor( node: BABYLON.Node ) {
     

@@ -11,9 +11,9 @@ class SpaceshipTravel implements ISpaceshipTravel {
     private system: BABYLON.GPUParticleSystem;
     private isStarted: boolean = false;
 
-    //private minEmitPower_c: number;
-    //private maxEmitPower_c: number;
-    //private emitRate_c: number;
+    //private minEmitPower_c: float;
+    //private maxEmitPower_c: float;
+    //private emitRate_c: float;
 
     public constructor( spaceship: IAbstractSpaceship ) {
 

@@ -6,9 +6,9 @@
 
 interface ISmartObjectArray< T extends object > extends IObjectArray< T > {
 
-    get size(): number;
+    get size(): int;
 
-    push( ...elements: T[] ): number;
+    push( ...elements: T[] ): int;
 
     pop(): T | undefined;
 

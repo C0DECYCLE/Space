@@ -6,23 +6,23 @@
 
 interface IObjectArray< T extends object > {
 
-    push( ...elements: T[] ): number;
+    push( ...elements: T[] ): int;
 
-    indexOf( element: T, fromIndex?: number ): number;
+    indexOf( element: T, fromIndex?: int ): int;
 
-    includes( element: T, _fromIndex?: number ): boolean;
+    includes( element: T, _fromIndex?: int ): boolean;
 
     pop(): T | undefined;
 
-    splice( start: number, deleteCount?: number ): T[];
+    splice( start: int, deleteCount?: int ): T[];
 
-    splice( start: number, _deleteCount: number, ..._items: T[] ): T[];
+    splice( start: int, _deleteCount: int, ..._items: T[] ): T[];
 
     shift(): T | undefined;
 
-    sort( _compareFn?: ( ( a: T, b: T ) => number) ): this;
+    sort( _compareFn?: ( ( a: T, b: T ) => int) ): this;
 
-    unshift( ..._items: T[] ): number;
+    unshift( ..._items: T[] ): int;
 
     clear(): void;
     
@@ -30,6 +30,6 @@ interface IObjectArray< T extends object > {
 
     has( element: T ): boolean;
 
-    delete( element: T, length: number ): void;
+    delete( element: T, length: int ): void;
 
 }

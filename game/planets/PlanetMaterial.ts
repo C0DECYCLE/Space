@@ -26,7 +26,7 @@ class PlanetMaterial extends BABYLON.CustomMaterial implements IPlanetMaterial {
         const colorKeys: string[] = Object.keys( this.planet.config.colors );
         const colorList: BABYLON.Color3[] = [];
 
-        for ( let i: number = 0; i < colorKeys.length; i++ ) {
+        for ( let i: int = 0; i < colorKeys.length; i++ ) {
 
             const color3: BABYLON.Color3 = BABYLON.Color3.FromHexString( this.planet.config.colors[ colorKeys[i] ] );
 
@@ -36,7 +36,7 @@ class PlanetMaterial extends BABYLON.CustomMaterial implements IPlanetMaterial {
         
         EngineExtensions.setupStandardMaterialDefault( this, colorList );
 
-        for ( let i: number = 0; i < this.colors.length; i++ ) {
+        for ( let i: int = 0; i < this.colors.length; i++ ) {
 
             const color3: BABYLON.Color3 | BABYLON.Vector3 = this.colors[i][2];
 
@@ -51,7 +51,7 @@ class PlanetMaterial extends BABYLON.CustomMaterial implements IPlanetMaterial {
 
         this.AddUniform( "planetRotation", "vec3", undefined );
 
-        for ( let i: number = 0; i < this.colors.length; i++ ) {
+        for ( let i: int = 0; i < this.colors.length; i++ ) {
 
             this.AddUniform( this.colors[i][1], "vec3", undefined );
         }
@@ -62,7 +62,7 @@ class PlanetMaterial extends BABYLON.CustomMaterial implements IPlanetMaterial {
 
             effect.setVector3( "planetRotation", this.planet.rotationQuaternion.toEulerAngles() );
 
-            for ( let i: number = 0; i < this.colors.length; i++ ) {
+            for ( let i: int = 0; i < this.colors.length; i++ ) {
 
                 const color3: BABYLON.Color3 | BABYLON.Vector3 = this.colors[i][2];
 

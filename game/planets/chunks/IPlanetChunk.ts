@@ -8,9 +8,9 @@ interface IPlanetChunk extends BABYLON.Mesh {
 
     readonly planet: IPlanet;
     
-    get size(): number;
+    get size(): int;
 
-    get resolution(): number;
+    get resolution(): int;
     
     //stitch( /*neighbors*/ ): void;
 

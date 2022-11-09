@@ -22,12 +22,12 @@ interface ICamera extends IConfigurable, ISingleton {
 
     update(): void;
 
-    getScreenDistance( source: BABYLON.Vector3 | BABYLON.TransformNode ): number;
+    getScreenDistance( source: BABYLON.Vector3 | BABYLON.TransformNode ): float;
 
-    getScreenSquaredDistance( source: BABYLON.Vector3 | BABYLON.TransformNode ): number;
+    getScreenSquaredDistance( source: BABYLON.Vector3 | BABYLON.TransformNode ): float;
 
-    getApproximateScreenDistance( source: BABYLON.TransformNode ): number;
+    getApproximateScreenDistance( source: BABYLON.TransformNode ): float;
 
-    getScreenCoverage( node: BABYLON.TransformNode, size?: number ): number;
+    getScreenCoverage( node: BABYLON.TransformNode, size?: float ): float;
 
 }

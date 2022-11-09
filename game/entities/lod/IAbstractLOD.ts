@@ -6,16 +6,16 @@
 
 interface IAbstractLOD {
 
-    readonly levels: [ any, number ][];
+    readonly levels: [ any, float ][];
 
     get isEnabled(): boolean;
 
     get isVisible(): boolean;
 
-    add( level: any, min: number ): void;
+    add( level: any, min: float ): void;
 
     setEnabled( value: boolean ): void;
 
-    set( level: number ): void;
+    set( level: int ): void;
 
 }

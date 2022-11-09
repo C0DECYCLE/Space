@@ -22,9 +22,9 @@ interface IPhysicsEntity {
 
     set state( value );
 
-    get colliderMax(): number;
+    get colliderMax(): float;
 
-    get colliderMin(): number;
+    get colliderMin(): float;
 
     get colliderSize(): BABYLON.Vector3;
 
@@ -34,9 +34,9 @@ interface IPhysicsEntity {
 
     resume(): void;
 
-    registerPull( distanceAboveGround: number ): void;
+    registerPull( distanceAboveGround: float ): void;
 
-    getAcceleration(): number;
+    getAcceleration(): float;
 
     setColliderSize( size: BABYLON.Vector3 ): void;
 

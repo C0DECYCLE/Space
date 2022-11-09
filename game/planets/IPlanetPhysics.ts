@@ -8,7 +8,7 @@ interface IPlanetPhysics {
 
     readonly planet: IPlanet;
 
-    enable( mesh: BABYLON.Mesh, size: number ): void;
+    enable( mesh: BABYLON.Mesh, size: int ): void;
 
     disable( mesh: BABYLON.Mesh ): void;
 
@@ -16,6 +16,6 @@ interface IPlanetPhysics {
 
     spin( physicsEntity: IPhysicsEntity ): BABYLON.Vector3;
 
-    getDistanceAboveGround( physicsEntity: IPhysicsEntity, up: BABYLON.Vector3 ): number;
+    getDistanceAboveGround( physicsEntity: IPhysicsEntity, up: BABYLON.Vector3 ): float;
 
 }

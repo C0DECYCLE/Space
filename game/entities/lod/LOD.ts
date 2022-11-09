@@ -6,7 +6,7 @@
 
 class LOD extends AbstractLOD implements ILOD {
 
-    public override readonly levels: [ BABYLON.TransformNode, number ][] = [];
+    public override readonly levels: [ BABYLON.TransformNode, float ][] = [];
 
     public get root(): BABYLON.TransformNode {
 
@@ -55,7 +55,7 @@ class LOD extends AbstractLOD implements ILOD {
         this.add( node, AbstractLOD.minimum );
     }
 
-    public fromModels( models: IModels, onEveryInstance?: ( instance: BABYLON.InstancedMesh, level: number ) => void ): void {
+    public fromModels( models: IModels, onEveryInstance?: ( instance: BABYLON.InstancedMesh, level: int ) => void ): void {
         
         for ( let i = 0; i < models.length; i++ ) {
             
@@ -79,7 +79,7 @@ class LOD extends AbstractLOD implements ILOD {
         this.setLevel( this.getLevelFromCoverage( this.coverage ) );
     }
     
-    public override add( transformNode: BABYLON.TransformNode, min: number ): void {
+    public override add( transformNode: BABYLON.TransformNode, min: float ): void {
 
         if ( this.levels.length > 0 ) {
 
@@ -97,7 +97,7 @@ class LOD extends AbstractLOD implements ILOD {
         super.add( transformNode, min );
     }
 
-    protected override disposeCurrent( currentLevel: number ): void {
+    protected override disposeCurrent( currentLevel: int ): void {
 
         this.levels[ currentLevel ][0].setEnabled( false );
         
@@ -106,7 +106,7 @@ class LOD extends AbstractLOD implements ILOD {
         super.disposeCurrent( currentLevel );
     }
 
-    protected override makeCurrent( level: number ): void {
+    protected override makeCurrent( level: int ): void {
 
         if ( level >= 0 && level < this.levels.length ) {
 
