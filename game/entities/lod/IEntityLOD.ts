@@ -14,13 +14,13 @@ interface IEntityLOD extends IAbstractLOD {
 
     readonly scaling: BABYLON.Vector3;
 
-    parent: BABYLON.Node | null;
+    parent: Nullable< BABYLON.Node >;
 
     fromModels( models: IModels ): void;
 
     setBounding( boundingCache: IBoundingCache ): void;
 
-    getInstance(): BABYLON.InstancedMesh | null;
+    getInstance(): Nullable< BABYLON.InstancedMesh >;
 
     update(): void;
 

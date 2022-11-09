@@ -4,4 +4,4 @@
     2022
 */
 
-type TInteractionEvent = TEmptyCallback;
+type Nullable< T > = T | null;

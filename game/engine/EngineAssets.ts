@@ -96,7 +96,7 @@ class EngineAssets implements IEngineAssets {
             list.push( subs[i] );
         }
 
-        const result: BABYLON.Mesh | null = BABYLON.Mesh.MergeMeshes( meshes, false, undefined, undefined, undefined, true );
+        const result: Nullable< BABYLON.Mesh > = BABYLON.Mesh.MergeMeshes( meshes, false, undefined, undefined, undefined, true );
 
         if ( result instanceof BABYLON.Mesh ) {
 

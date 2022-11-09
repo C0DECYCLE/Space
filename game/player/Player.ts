@@ -49,12 +49,12 @@ class Player implements IPlayer {
         return this.root.rotationQuaternion;
     }
 
-    public get planet(): IPlanet | null {
+    public get planet(): Nullable< IPlanet > {
 
         return this.physics.planet;
     }
 
-    public get spaceship(): IAbstractSpaceship | null {
+    public get spaceship(): Nullable< IAbstractSpaceship > {
 
         return this.physics.spaceship;
     }
@@ -102,7 +102,7 @@ class Player implements IPlayer {
         const head: BABYLON.Mesh = BABYLON.MeshBuilder.CreateBox( "player_mesh_head", { width: 0.7, height: 0.35, depth: 0.3 }, scene );
         head.position.copyFromFloats( 0, 0.5, 0.4 );
 
-        const merged: BABYLON.Mesh | null = BABYLON.Mesh.MergeMeshes( [ body, head ], true );
+        const merged: Nullable< BABYLON.Mesh > = BABYLON.Mesh.MergeMeshes( [ body, head ], true );
 
         if ( merged !== null ) {
 

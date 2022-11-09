@@ -27,7 +27,7 @@ class Asteroids implements IAsteroids {
 
     public register( type: string, config?: IConfig ): void {
 
-        let asteroids: IAsteroidsDistributer | null = null;
+        let asteroids: Nullable< IAsteroidsDistributer > = null;
 
         switch ( type ) {
 

@@ -23,7 +23,7 @@ class Engine implements IEngine {
 
     private readonly fpsTarget: number = 60;
     private deltaCorrectionValue: number = 1.0;
-    private update: () => void;
+    private update: TEmptyCallback;
     private renderScene: BABYLON.Scene;
 
     public constructor() {
@@ -39,7 +39,7 @@ class Engine implements IEngine {
         } );
     }
 
-    public set( update: () => void, renderScene: BABYLON.Scene ): void {
+    public set( update: TEmptyCallback, renderScene: BABYLON.Scene ): void {
 
         this.update = update;
         this.renderScene = renderScene;
@@ -54,9 +54,9 @@ class Engine implements IEngine {
         document.body.appendChild( this.canvas );
     }
 
-    private browserSupport( callback: () => void ): void {
+    private browserSupport( callback: TEmptyCallback ): void {
         
-        const context: WebGL2RenderingContext | null = this.canvas.getContext( "webgl2" );
+        const context: Nullable< WebGL2RenderingContext > = this.canvas.getContext( "webgl2" );
         
         if ( context !== null && context instanceof WebGL2RenderingContext ) {
 

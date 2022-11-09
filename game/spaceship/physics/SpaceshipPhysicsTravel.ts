@@ -76,7 +76,7 @@ class SpaceshipPhysicsTravel implements ISpaceshipPhysicsTravel {
         return false;
     }
 
-    private getPotentialMarker(): IUIMarker | null {
+    private getPotentialMarker(): Nullable< IUIMarker > {
 
         const markers: IUIMarker[] | undefined = UI.getInstance().markers.get( "travel" );
         const direction: BABYLON.Vector3 = this.spaceshipPhysics.spaceship.root.forward;
@@ -99,7 +99,7 @@ class SpaceshipPhysicsTravel implements ISpaceshipPhysicsTravel {
         return null;
     }
     
-    private onKeyPress( potential: IUIMarker | null ): void {
+    private onKeyPress( potential: Nullable< IUIMarker > ): void {
 
         if ( this.traveling === false ) {
 

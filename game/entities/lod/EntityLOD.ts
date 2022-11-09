@@ -12,14 +12,14 @@ class EntityLOD extends AbstractLOD implements IEntityLOD {
     public readonly rotationQuaternion: BABYLON.Quaternion = new BABYLON.Quaternion();
     public readonly scaling: BABYLON.Vector3 = BABYLON.Vector3.One();
 
-    public parent: BABYLON.Node | null = null;
+    public parent: Nullable< BABYLON.Node > = null;
 
     private readonly doShadow?: ( currentEntity: BABYLON.InstancedMesh, value: boolean ) => void;
     private readonly doCollidable: boolean = false;
     private readonly onRequest?: ( currentEntity: BABYLON.InstancedMesh ) => void;
     private readonly onReturn?: ( currentEntity: BABYLON.InstancedMesh ) => void;
 
-    private currentEntity: BABYLON.InstancedMesh | null = null;
+    private currentEntity: Nullable< BABYLON.InstancedMesh > = null;
 
     public constructor( doShadow?: ( currentEntity: BABYLON.InstancedMesh, value: boolean ) => void, doCollidable: boolean = false, onRequest?: ( currentEntity: BABYLON.InstancedMesh ) => void, onReturn?: ( currentEntity: BABYLON.InstancedMesh ) => void ) {
 
@@ -47,7 +47,7 @@ class EntityLOD extends AbstractLOD implements IEntityLOD {
         this.__boundingCache = boundingCache;
     }
 
-    public getInstance(): BABYLON.InstancedMesh | null {
+    public getInstance(): Nullable< BABYLON.InstancedMesh > {
 
         return this.currentEntity;
     }
@@ -89,7 +89,7 @@ class EntityLOD extends AbstractLOD implements IEntityLOD {
 
             super.makeCurrent( level );
 
-            const requestResult: BABYLON.InstancedMesh | null = this.levels[ level ][0].request();
+            const requestResult: Nullable< BABYLON.InstancedMesh > = this.levels[ level ][0].request();
 
             if ( requestResult instanceof BABYLON.InstancedMesh ) {
 

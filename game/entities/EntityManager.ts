@@ -32,14 +32,14 @@ class EntityManager< T extends BABYLON.AbstractMesh > implements IEntityManager<
         this.make( size );
     }
 
-    public request(): T | null {
+    public request(): Nullable< T > {
 
         if ( this.free.size === 0 ) {
 
             this.make( this.increase );
         }
 
-        return this.release( this.free.pop() || ( (): undefined => { console.warn( "EntityManager: Request malfunctioned." ); return undefined; } )() );
+        return this.release( this.free.pop() );
     }
 
     public return( entity: T ): null {
@@ -62,9 +62,9 @@ class EntityManager< T extends BABYLON.AbstractMesh > implements IEntityManager<
         }
     }
 
-    private release( entity: T | undefined ): T | null {
+    private release( entity?: T ): Nullable< T > {
         
-        if ( entity !== undefined ) {
+        if ( typeof entity === "object" ) {
 
             this.used.add( entity );
             scene.addMesh( entity );

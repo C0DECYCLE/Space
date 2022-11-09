@@ -24,7 +24,7 @@ class Spaceships implements ISpaceships {
 
     public register( variant: string, config?: IConfig ): void {
 
-        let spaceship: IAbstractSpaceship | null = null;
+        let spaceship: Nullable< IAbstractSpaceship > = null;
 
         switch ( variant ) {
 

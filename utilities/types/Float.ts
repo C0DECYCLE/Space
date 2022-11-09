@@ -4,4 +4,4 @@
     2022
 */
 
-type TInteractionEvent = TEmptyCallback;
+type float = number;

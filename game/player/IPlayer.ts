@@ -20,9 +20,9 @@ interface IPlayer extends ICameraTargetable, IConfigurable, ISingleton {
 
     get rotationQuaternion(): BABYLON.Quaternion;
 
-    get planet(): IPlanet | null;
+    get planet(): Nullable< IPlanet >;
 
-    get spaceship(): IAbstractSpaceship | null;
+    get spaceship(): Nullable< IAbstractSpaceship >;
 
     update(): void;
 

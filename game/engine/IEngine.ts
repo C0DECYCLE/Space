@@ -16,6 +16,6 @@ interface IEngine {
     
     get deltaCorrection(): number;
 
-    set( update: () => void, renderScene: BABYLON.Scene ): void;
+    set( update: TEmptyCallback, renderScene: BABYLON.Scene ): void;
 
 }

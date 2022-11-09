@@ -134,7 +134,7 @@ class ObjectArray< T extends object > extends Array< T > implements IObjectArray
         return element;
     }
 
-    protected decommission( element: T | undefined ): T | undefined {
+    protected decommission( element?: T ): T | undefined {
 
         if ( typeof element === "object" ) {
 

@@ -35,7 +35,7 @@ class Cloud extends EntityLOD implements ICloud {
 
         this.starLightDirection.copyFrom( starLightDirection );
 
-        const instance: BABYLON.InstancedMesh | null = this.getInstance();
+        const instance: Nullable< BABYLON.InstancedMesh > = this.getInstance();
 
         if ( instance !== null ) {
 

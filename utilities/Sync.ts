@@ -8,9 +8,9 @@ class Sync implements ISync {
 
     private length: number;
     private hasFired: boolean = false;
-    private callback: () => void;
+    private callback: TEmptyCallback;
 
-    constructor( length: number = 0, callback: () => void = (): void => {} ) {
+    constructor( length: number = 0, callback: TEmptyCallback = (): void => {} ) {
         
         this.length = length;
         this.callback = callback;

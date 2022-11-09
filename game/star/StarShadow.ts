@@ -108,7 +108,7 @@ class StarShadow implements IStarShadow {
         this.generator.shadowMaxZ = this.config.radius;
         this.generator.penumbraDarkness = 1.0;
 
-        const map: BABYLON.RenderTargetTexture | null = this.generator.getShadowMap();
+        const map: Nullable< BABYLON.RenderTargetTexture > = this.generator.getShadowMap();
 
         if ( map !== null ) {
             

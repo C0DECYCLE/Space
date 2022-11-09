@@ -38,8 +38,8 @@ class Camera implements ICamera {
 
     protected origin: ICameraOrigin;
 
-    private target: ICameraTargetable | null;
-    private targetCamera: IAbstractCameraTarget | null;
+    private target: Nullable< ICameraTargetable >;
+    private targetCamera: Nullable< IAbstractCameraTarget >;
 
     private playerTargetCamera: ICameraTargetPlayer;
     private spaceshipTargetCamera: ICameraTargetSpaceship;

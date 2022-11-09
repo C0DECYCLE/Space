@@ -8,8 +8,8 @@ interface IPlayerPhysics extends IPhysicsEntity {
 
     readonly player: IPlayer;
 
-    planet: IPlanet | null;
+    planet: Nullable< IPlanet >;
     
-    spaceship: IAbstractSpaceship | null;
+    spaceship: Nullable< IAbstractSpaceship >;
 
 }

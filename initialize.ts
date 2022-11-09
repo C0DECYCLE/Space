@@ -191,12 +191,12 @@ window.addEventListener( "compile", ( _event: Event ): void => { console.log( `\
     /*
         Object Container did help to speed up but aren't usfull generally rather the concept of chunking together and calculate once there is usefull
         and should be applied not generally, rather there where the other method like dot with planets doesnt work! problem is amount of update calls!
+    
+        instead of object container spatial hash map, octree/quadtree or bvh structure
     */
-
-
+    
 
     // 1. undefined (unintentional not knowing of value) / null (intentional absence of value) [undefined,?,null]
-    // 9. Draw Calls & update calls stats
     // 8. go through everything look whats good whats bad what change what remove
 
     //!!!! before merge make javascript backup branch!!!

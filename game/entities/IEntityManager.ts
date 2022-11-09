@@ -6,7 +6,7 @@
 
 interface IEntityManager< T extends BABYLON.AbstractMesh > {
 
-    request(): T | null;
+    request(): Nullable< T >;
 
     return( entity: T ): null;
 
