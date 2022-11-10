@@ -175,24 +175,30 @@ window.addEventListener( "compile", ( _event: Event ): void => { console.log( `\
     //https://www.google.com/search?q=low+poly+tree&rlz=1C5CHFA_enCH1016CH1016&sxsrf=ALiCzsaJOUdzPf_Hf8KiUElBecM-saF2GQ:1666198656789&source=lnms&tbm=isch&sa=X&ved=2ahUKEwitm8DY4ez6AhXUxQIHHX_9A4wQ_AUoAXoECAIQAw&biw=1920&bih=891&dpr=2#imgrc=4i0Qfmxjg0EccM
     //https://www.google.com/search?q=star+citizen+planets+with+trees&tbm=isch&ved=2ahUKEwifvYmihO36AhUlvicCHbm1DLcQ2-cCegQIABAA&oq=star+citizen+planets&gs_lcp=CgNpbWcQARgBMgQIIxAnMgQIABAeMgYIABAIEB4yBggAEAgQHjIGCAAQCBAeUABYAGDBCmgAcAB4AIABcogBcpIBAzAuMZgBAKoBC2d3cy13aXotaW1nwAEB&sclient=img&ei=wVBQY9_YNaX8nsEPueuyuAs&bih=891&biw=1920&rlz=1C5CHFA_enCH1016CH1016#imgrc=NVAmONWSu1x8pM
     
-    //adjust asteroid min values
+    
+    //has to loop through every asteroid and call update -> inefficient chunk? clusters?
+    //not update cluster when nothing will be visible, how?, cull cluster behind planet
 
-    //rethink the objectcontainer system, has to loop through every asteroid and call update -> inefficient chunk? clusters? not update cluster when nothing will be visible, how?, cull cluster behind planet
-    //for what is the objectcontainer system good for??? remove!
-    //find all times where the code dummly loops over big n of things (asteroids, clouds, surface obsticles, chunks) -> target: no loop n greater than 100-500? possible?
-    //stop avoiding sqrt! thats not the problem, other things are more expencive, go back to every time avoided the distance function! and find a better solution like chunking, which was done with objectcontainer
-    //DOTs are not faster than sqrt when first normalizing vectors, not every frame normalize entities on planet again! store normal direction of entity!
+    //find all times where the code dummly loops over big n of things (asteroids, clouds, surface obsticles, chunks) 
+    //-> target: no loop n greater than 100-500? possible?
+
+    //stop avoiding sqrt! thats not the problem, other things are more expencive, 
+    //go back to every time avoided the distance function! better solution like chunking
+    //instead of reduce/avoid sqrt -> reduce / avoid loops
+    
+    //DOTs are not faster than sqrt when first normalizing vectors
+    //-> not every frame normalize entities on planet again! store normal direction of entity!
+
     //when chunked, distance approximation player -> target: 
     //(precalc: distance and direction from chunk center to target)
+    
     //if chunk size small approx dist = dist to chunk center
     //more precise: approx. dist. = distance to chunk center - precalc distance from target to chunk center * dot( direction chunk center to player, precalc direction chunkcenter to target )
-    //instead of reduce/avoid sqrt -> reduce / avoid loops
+    
 
     /*
-        Object Container did help to speed up but aren't usfull generally rather the concept of chunking together and calculate once there is usefull
-        and should be applied not generally, rather there where the other method like dot with planets doesnt work! problem is amount of update calls!
-    
-        instead of object container spatial hash map, octree/quadtree or bvh structure
+    Object Container did help to speed up but aren't usfull generally rather the concept of chunking together and calculate once there is usefull
+    and should be applied not generally, rather there where the other method like dot with planets doesnt work! problem is amount of update calls!
     */
-    
-    //!!!! before merge make javascript backup branch!!!
+
+    //adjust asteroid min values
