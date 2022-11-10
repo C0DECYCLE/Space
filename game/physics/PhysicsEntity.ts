@@ -18,7 +18,7 @@ class PhysicsEntity implements IPhysicsEntity {
     protected static COLLIDER_SCALE: float = 0.8;
     
     public static collidable( mesh: BABYLON.AbstractMesh, type: EPhysicsTypes = PhysicsEntity.TYPES.STATIC, value?: boolean ): void {
-        //!!!!EntityLOD line 60 investigate!!!!
+        
         mesh.physicsEntityType = type;
         
         PhysicsEntity.collisions( mesh, value === undefined ? true : value );
@@ -175,7 +175,7 @@ class PhysicsEntity implements IPhysicsEntity {
 
             this.mesh.ellipsoid.copyFrom( size );
         
-            EngineUtils.minmax( this.mesh.ellipsoid );
+            EngineExtensions.minmax( this.mesh.ellipsoid );
         }
     }
 
@@ -237,8 +237,8 @@ class PhysicsEntity implements IPhysicsEntity {
             this.mesh.ellipsoid.copyFrom( boundingInfo.boundingBox.extendSizeWorld ).scaleInPlace( PhysicsEntity.COLLIDER_SCALE );
             this.mesh.ellipsoidOffset.copyFrom( boundingInfo.boundingBox.center ).applyRotationQuaternionInPlace( this.rotationQuaternion ).multiplyInPlace( this.mesh.scaling );
 
-            EngineUtils.minmax( this.mesh.ellipsoid );
-            EngineUtils.minmax( this.mesh.ellipsoidOffset );
+            EngineExtensions.minmax( this.mesh.ellipsoid );
+            EngineExtensions.minmax( this.mesh.ellipsoidOffset );
         }
     }
 

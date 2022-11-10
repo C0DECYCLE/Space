@@ -7,9 +7,10 @@
 class Player implements IPlayer {
 
     /* Singleton */ 
-    private static instance: IPlayer; 
-    public static instantiate(): void { if ( this.instance === undefined ) this.instance = new Player(); } 
-    public static getInstance(): IPlayer { return this.instance; }
+        private static instance: IPlayer; 
+        public static instantiate(): void { if ( this.instance === undefined ) this.instance = new Player(); } 
+        public static getInstance(): IPlayer { return this.instance; }
+        
     
     public config: IConfig = {
         

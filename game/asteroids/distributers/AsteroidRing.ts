@@ -83,7 +83,6 @@ class AsteroidsRing implements IAsteroidsRing {
 
             const angle: float = ( 360 / count ) * i * EngineUtils.toRadian;
             const offset: BABYLON.Vector3 = new BABYLON.Vector3( Math.cos( angle ), 0, Math.sin( angle ) ).scaleInPlace( this.config.radius );
-
             const cluster: IAsteroidsCluster = new AsteroidsCluster( { key: i, seed: random, radius: this.config.spread, height: this.config.height, density: this.config.density, offset: offset }, this.root );
 
             this.list.push( cluster );

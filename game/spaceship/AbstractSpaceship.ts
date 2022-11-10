@@ -51,7 +51,7 @@ class AbstractSpaceship implements IAbstractSpaceship {
 
     private readonly seatDiffrence: BABYLON.Vector3 = new BABYLON.Vector3();
     private hasControllerValue: boolean = false;
-    private nearPlanetValue?: IPlanet;
+    private nearPlanetValue: Nullable< IPlanet >;
     private isLandedValue: boolean = false;
 
     protected constructor( models: IModels, config?: IConfig ) {
@@ -90,7 +90,7 @@ class AbstractSpaceship implements IAbstractSpaceship {
 
         if ( this.nearPlanet !== false && PlanetUtils.compare( this.nearPlanet, planet ) && distance > planetThreashold ) {
 
-            this.nearPlanetValue = undefined;
+            this.nearPlanetValue = null;
         }
     }
 

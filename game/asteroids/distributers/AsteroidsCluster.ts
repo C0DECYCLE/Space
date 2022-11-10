@@ -21,33 +21,19 @@ class AsteroidsCluster implements IAsteroidsCluster {
     public readonly list: IAsteroid[] = [];
     public root: BABYLON.TransformNode;
 
-    public get position(): BABYLON.Vector3 | void {
+    public get position(): BABYLON.Vector3 {
         
-        if ( this.hasCustomParent === false ) {
-
-            return this.root.position;     
-
-        } else {
-
-            console.warn( "AsteroidCluster: Doesn't has a own position." );
-        }
+        return this.root.position;     
     }
 
-    public get rotationQuaternion(): BABYLON.Quaternion | void {
-        
-        if ( this.hasCustomParent === false ) {
+    public get rotationQuaternion(): BABYLON.Quaternion {
+    
+        if ( this.root.rotationQuaternion === null ) {
 
-            if ( this.root.rotationQuaternion === null ) {
-
-                this.root.rotationQuaternion = this.root.rotation.toQuaternion();
-            }
-
-            return this.root.rotationQuaternion;     
-
-        } else {
-
-            console.warn( "AsteroidCluster: Doesn't has a own rotationQuaternion." );
+            this.root.rotationQuaternion = this.root.rotation.toQuaternion();
         }
+
+        return this.root.rotationQuaternion;     
     }
 
     public get numberOfAsteroids(): int {
@@ -57,7 +43,7 @@ class AsteroidsCluster implements IAsteroidsCluster {
 
     public set parent( value: BABYLON.TransformNode ) {
 
-        if ( this.hasCustomParent === false ) {
+        if ( this.hasCustomRoot === false ) {
 
             this.root.parent = value;     
 
@@ -65,20 +51,20 @@ class AsteroidsCluster implements IAsteroidsCluster {
 
             this.root = value;
 
-            for ( let i = 0; i < this.list.length; i++ ) {
+            for ( let i: int = 0; i < this.list.length; i++ ) {
 
                 this.list[i].parent = this.root;
             }
         }
     }
 
-    private hasCustomParent: boolean = false;
+    private hasCustomRoot: boolean = false;
 
-    public constructor( config?: IConfig, customParent?: BABYLON.TransformNode ) {
+    public constructor( config?: IConfig, customRoot?: BABYLON.TransformNode ) {
 
         EngineUtils.configure( this, config );
 
-        this.createRoot( customParent );
+        this.createRoot( customRoot );
         this.spawnAsteroids();
     }
     
@@ -98,13 +84,12 @@ class AsteroidsCluster implements IAsteroidsCluster {
         }
     }
 
-    private createRoot( customParent?: BABYLON.TransformNode ): void {
+    private createRoot( customRoot?: BABYLON.TransformNode ): void {
 
-        this.hasCustomParent = customParent !== undefined;
+        if ( customRoot instanceof BABYLON.TransformNode ) {
 
-        if ( customParent instanceof BABYLON.TransformNode ) {
-
-            this.root = customParent;
+            this.hasCustomRoot = true;
+            this.root = customRoot;
 
         } else {
 

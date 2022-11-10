@@ -167,25 +167,4 @@ class EngineUtils implements IEngineUtils {
         rotationQuaternion.multiplyInPlace( BABYLON.Quaternion.RotationAxisToRef( axis, value, new BABYLON.Quaternion() ) );
     }
 
-    public static minmax( vector: BABYLON.Vector3 ): void {
-
-        vector.min = Math.min( vector.x, vector.y, vector.z );
-        vector.max = Math.max( vector.x, vector.y, vector.z );
-        vector.biggest = Math.abs( vector.min ) > Math.abs( vector.max ) ? vector.min : vector.max;
-    }
-
-    public static round( vector: BABYLON.Vector3 ): BABYLON.Vector3 {
-
-        vector.x = Math.round( vector.x );
-        vector.y = Math.round( vector.y );
-        vector.z = Math.round( vector.z );
-
-        return vector;
-    }
-
-    public static color3ToVector3( color: BABYLON.Color3 ): BABYLON.Vector3 {
-
-        return new BABYLON.Vector3( color.r, color.g, color.b );
-    }
-
 }

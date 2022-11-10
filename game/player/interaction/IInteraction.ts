@@ -10,7 +10,7 @@ interface IInteraction {
     
     readonly event: TInteractionEvent;
     
-    readonly leaveEvent: TInteractionEvent | undefined;
+    readonly leaveEvent?: TInteractionEvent;
 
     highlight: boolean;
 

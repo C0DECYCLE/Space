@@ -10,7 +10,7 @@ interface ICloud extends IEntityLOD, ISpawnable, IConfigurable {
 
     readonly starLightDirection: BABYLON.Vector3;
 
-    post(): void;
+    ready(): void;
 
     updateStarLightDirection( starLightDirection: BABYLON.Vector3 ): void;
 

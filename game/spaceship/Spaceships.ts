@@ -7,10 +7,11 @@
 class Spaceships implements ISpaceships {
 
     /* Singleton */ 
-    private static instance: ISpaceships; 
-    public static instantiate(): void { if ( this.instance === undefined ) this.instance = new Spaceships(); } 
-    public static getInstance(): ISpaceships { return this.instance; }
-    
+        private static instance: ISpaceships; 
+        public static instantiate(): void { if ( this.instance === undefined ) this.instance = new Spaceships(); } 
+        public static getInstance(): ISpaceships { return this.instance; }
+        
+        
     public config: IConfig = {
         
     };

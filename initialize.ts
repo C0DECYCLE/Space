@@ -122,8 +122,8 @@ function stage(): void {
     Planets.getInstance().list[2].place( Star.getInstance().position, 1000 * 1000, 240 );
     //Planets.getInstance().list[3].place( Planets.getInstance().list[2].position, 60 * 1000, 60 );
     
-    Asteroids.getInstance().list[0].position?.copyFrom( Planets.getInstance().list[0].position );
-    Asteroids.getInstance().list[1].position?.copyFrom( Planets.getInstance().list[0].position );
+    Asteroids.getInstance().list[0].position.copyFrom( Planets.getInstance().list[0].position );
+    Asteroids.getInstance().list[1].position.copyFrom( Planets.getInstance().list[0].position );
 
     Spaceships.getInstance().list[0].position.copyFrom( Planets.getInstance().list[0].position ).addInPlace( new BABYLON.Vector3( 5 * 1000, 0, 0 ) );
     Spaceships.getInstance().list[0].root.rotate( BABYLON.Axis.Y, 90 * EngineUtils.toRadian, BABYLON.Space.LOCAL );
@@ -195,8 +195,4 @@ window.addEventListener( "compile", ( _event: Event ): void => { console.log( `\
         instead of object container spatial hash map, octree/quadtree or bvh structure
     */
     
-
-    // 1. undefined (unintentional not knowing of value) / null (intentional absence of value) [undefined,?,null]
-    // 8. go through everything look whats good whats bad what change what remove
-
     //!!!! before merge make javascript backup branch!!!

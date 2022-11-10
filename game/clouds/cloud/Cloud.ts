@@ -26,7 +26,7 @@ class Cloud extends EntityLOD implements ICloud {
         this.fromModels( this.models );  
     }
 
-    public post(): void {
+    public ready(): void {
 
         this.setBounding( EngineUtils.createBoundingCache( this.models[0], this.scaling ) );
     }

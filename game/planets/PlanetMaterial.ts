@@ -42,7 +42,7 @@ class PlanetMaterial extends BABYLON.CustomMaterial implements IPlanetMaterial {
 
             if ( color3 instanceof BABYLON.Color3 ) {
 
-                this.colors[i][2] = EngineUtils.color3ToVector3( color3 );
+                this.colors[i][2] = EngineExtensions.color3ToVector3( color3 );
             }
         }
     }

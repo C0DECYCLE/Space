@@ -7,10 +7,11 @@
 class Camera implements ICamera {
 
     /* Singleton */ 
-    private static instance: ICamera; 
-    public static instantiate(): void { if ( this.instance === undefined ) this.instance = new Camera(); } 
-    public static getInstance(): ICamera { return this.instance; }
+        private static instance: ICamera; 
+        public static instantiate(): void { if ( this.instance === undefined ) this.instance = new Camera(); } 
+        public static getInstance(): ICamera { return this.instance; }
 
+        
     public config: IConfig = {
 
         max: 10_000_000

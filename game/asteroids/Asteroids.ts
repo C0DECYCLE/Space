@@ -7,10 +7,11 @@
 class Asteroids implements IAsteroids {
 
     /* Singleton */ 
-    private static instance: IAsteroids; 
-    public static instantiate(): void { if ( this.instance === undefined ) this.instance = new Asteroids(); } 
-    public static getInstance(): IAsteroids { return this.instance; }
+        private static instance: IAsteroids; 
+        public static instantiate(): void { if ( this.instance === undefined ) this.instance = new Asteroids(); } 
+        public static getInstance(): IAsteroids { return this.instance; }
 
+        
     public config: IConfig = {
         
     };

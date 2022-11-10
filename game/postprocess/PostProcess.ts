@@ -7,10 +7,11 @@
 class PostProcess implements IPostProcess {
 
     /* Singleton */ 
-    private static instance: IPostProcess; 
-    public static instantiate(): void { if ( this.instance === undefined ) this.instance = new PostProcess(); } 
-    public static getInstance(): IPostProcess { return this.instance; }
+        private static instance: IPostProcess; 
+        public static instantiate(): void { if ( this.instance === undefined ) this.instance = new PostProcess(); } 
+        public static getInstance(): IPostProcess { return this.instance; }
     
+        
     public config: IConfig = {
         
         samples: 3

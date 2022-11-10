@@ -99,10 +99,7 @@ class LOD extends AbstractLOD implements ILOD {
 
     protected override disposeCurrent( currentLevel: int ): void {
 
-        this.levels[ currentLevel ][0].setEnabled( false );
-        
-        this.doShadow?.( this.levels[ currentLevel ][0], false );
-
+        this.disposeCurrentEntity( currentLevel );
         super.disposeCurrent( currentLevel );
     }
 
@@ -111,14 +108,25 @@ class LOD extends AbstractLOD implements ILOD {
         if ( level >= 0 && level < this.levels.length ) {
 
             super.makeCurrent( level );
-            
-            if ( level === 0 ) {
-                
-                this.doShadow?.( this.levels[ level ][0], true );      
-            }
-
-            this.levels[ level ][0].setEnabled( true );
+            this.setupCurrentEntity( level );
         }
+    }
+
+    private disposeCurrentEntity( currentLevel: int ): void {
+
+        this.levels[ currentLevel ][0].setEnabled( false );
+        
+        this.doShadow?.( this.levels[ currentLevel ][0], false );
+    }
+
+    private setupCurrentEntity( level: int ): void {
+
+        if ( level === 0 ) {
+                
+            this.doShadow?.( this.levels[ level ][0], true );      
+        }
+
+        this.levels[ level ][0].setEnabled( true );
     }
 
 }

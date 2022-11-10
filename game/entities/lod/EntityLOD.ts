@@ -65,21 +65,7 @@ class EntityLOD extends AbstractLOD implements IEntityLOD {
 
     protected override disposeCurrent( currentLevel: int ): void {
 
-        if ( this.doCollidable === true && this.currentEntity instanceof BABYLON.AbstractMesh ) {
-
-            PhysicsEntity.collidable( this.currentEntity, undefined, false );
-        }
-
-        if ( this.currentEntity !== null ) {
-            
-            this.onReturn?.( this.currentEntity );
-            this.doShadow?.( this.currentEntity, false );
-
-            this.currentEntity = this.levels[ currentLevel ][0].return( this.currentEntity );
-        }
-
-        this.currentEntity = null;
-
+        this.disposeCurrentEntity( currentLevel );
         super.disposeCurrent( currentLevel );
     }
 
@@ -93,31 +79,54 @@ class EntityLOD extends AbstractLOD implements IEntityLOD {
 
             if ( requestResult instanceof BABYLON.InstancedMesh ) {
 
-                this.currentEntity = requestResult;
-
-                if ( this.currentEntity.rotationQuaternion === null ) {
-
-                    this.currentEntity.rotationQuaternion = this.currentEntity.rotation.toQuaternion();
-                }
-
-                this.currentEntity.position.copyFrom( this.position );
-                this.currentEntity.rotationQuaternion.copyFrom( this.rotationQuaternion );
-                this.currentEntity.scaling.copyFrom( this.scaling );
-                this.currentEntity.parent = this.parent;
-    
-                if ( level === 0 ) {
-                    
-                    if ( this.doCollidable === true ) {
-        
-                        PhysicsEntity.collidable( this.currentEntity );
-                    }
-    
-                    this.doShadow?.( this.currentEntity, true );     
-                }
-    
-                this.onRequest?.( this.currentEntity );
+                this.setupCurrentEntity( requestResult, level );
             }
         }
+    }
+
+    private disposeCurrentEntity( currentLevel: int ): void {
+
+        if ( this.currentEntity !== null ) {
+                
+            if ( this.doCollidable === true ) {
+
+                PhysicsEntity.collidable( this.currentEntity, undefined, false );
+            }
+            
+            this.onReturn?.( this.currentEntity );
+            this.doShadow?.( this.currentEntity, false );
+
+            this.currentEntity = this.levels[ currentLevel ][0].return( this.currentEntity );
+        }
+
+        this.currentEntity = null;
+    }
+
+    private setupCurrentEntity( requestResult: BABYLON.InstancedMesh, level: int ): void {
+
+        this.currentEntity = requestResult;
+
+        if ( this.currentEntity.rotationQuaternion === null ) {
+
+            this.currentEntity.rotationQuaternion = this.currentEntity.rotation.toQuaternion();
+        }
+
+        this.currentEntity.position.copyFrom( this.position );
+        this.currentEntity.rotationQuaternion.copyFrom( this.rotationQuaternion );
+        this.currentEntity.scaling.copyFrom( this.scaling );
+        this.currentEntity.parent = this.parent;
+
+        if ( level === 0 ) {
+                    
+            if ( this.doCollidable === true ) {
+
+                PhysicsEntity.collidable( this.currentEntity );
+            }
+
+            this.doShadow?.( this.currentEntity, true );     
+        }
+
+        this.onRequest?.( this.currentEntity );
     }
 
 }

@@ -44,9 +44,9 @@ class PlanetChunks implements IPlanetChunks {
     private evalNode( params: IPlanetInsertParameters, nodeKey: string, position: BABYLON.Vector3, fixRotationQuaternion: BABYLON.Quaternion, size: int, faceSize: int ): void {
 
         const resolution: int = this.getResolution( params, size, faceSize );
-        const node: IPlanetChunksNode | undefined = this.nodes.get( nodeKey );
+        const node: Nullable< IPlanetChunksNode > = this.nodes.get( nodeKey ) || null;
         
-        if ( node !== undefined ) {
+        if ( node !== null ) {
 
             if ( node.chunk.resolution === resolution ) {
 

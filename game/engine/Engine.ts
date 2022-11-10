@@ -7,10 +7,11 @@
 class Engine implements IEngine {
 
     /* Singleton */ 
-    private static instance: IEngine; 
-    public static instantiate(): void { if ( this.instance === undefined ) this.instance = new Engine(); } 
-    public static getInstance(): IEngine { return this.instance; }
+        private static instance: IEngine; 
+        public static instantiate(): void { if ( this.instance === undefined ) this.instance = new Engine(); } 
+        public static getInstance(): IEngine { return this.instance; }
 
+        
     public canvas: HTMLCanvasElement;
     public babylon: BABYLON.Engine;
     public screenSize: BABYLON.Vector2;

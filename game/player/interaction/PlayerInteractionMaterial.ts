@@ -6,7 +6,7 @@
 
 class PlayerInteractionMaterial extends BABYLON.CustomMaterial implements IPlayerInteractionMaterial {
 
-    public static interactableColor: BABYLON.Vector3 = EngineUtils.color3ToVector3( BABYLON.Color3.FromHexString( UI.NEUTRAL ) );
+    public static interactableColor: BABYLON.Vector3 = EngineExtensions.color3ToVector3( BABYLON.Color3.FromHexString( UI.NEUTRAL ) );
 
     private readonly screenSize: BABYLON.Vector2;
 

@@ -7,10 +7,11 @@
 class Controls implements IControls {
 
     /* Singleton */ 
-    private static instance: IControls; 
-    public static instantiate(): void { if ( this.instance === undefined ) this.instance = new Controls(); } 
-    public static getInstance(): IControls { return this.instance; }
+        private static instance: IControls; 
+        public static instantiate(): void { if ( this.instance === undefined ) this.instance = new Controls(); } 
+        public static getInstance(): IControls { return this.instance; }
 
+        
     public static readonly KEYS = EControlsKeys;
 
     public config: IConfig = {

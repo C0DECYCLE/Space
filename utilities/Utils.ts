@@ -20,15 +20,15 @@ function UUIDv4(): string {
 
 interface Number {
     
-    between( a: float, b: float ): boolean;
+    between( a: int | float, b: int | float ): boolean;
 
     dotit(): string;
 
-    clamp( min: float, max: float ): float;
+    clamp( min: int | float, max: int | float ): float;
 
 }
 
-Number.prototype.between = function( a: float, b: float ): boolean {
+Number.prototype.between = function( a: int | float, b: int | float ): boolean {
 
     return this.valueOf() > Math.min( a, b ) && this.valueOf() < Math.max( a, b );
 };
@@ -38,7 +38,7 @@ Number.prototype.dotit = function(): string {
     return Math.round( this.valueOf() ).toString().replace( /(\d)(?=(\d{3})+(?!\d))/g, "$1," );
 };
 
-Number.prototype.clamp = function( min: float, max: float ): float {
+Number.prototype.clamp = function( min: int | float, max: int | float ): float {
 
     return Math.min( Math.max( this.valueOf(), min ), max );
 };

@@ -27,7 +27,7 @@ class Asteroid extends EntityLOD implements IAsteroid {
         this.pickVariant();
         this.fromModels( this.models );
         this.makeUnique();
-        this.post();
+        this.ready();
     }
 
     private pickVariant(): void {
@@ -36,9 +36,9 @@ class Asteroid extends EntityLOD implements IAsteroid {
         
         this.variantKey = variants[ Math.round( variants.length * Math.random() ).clamp( 0, variants.length - 1 ) ];
         
-        const models: IModels | undefined = Asteroids.getInstance().variants.get( this.variantKey );
+        const models: Nullable< IModels > = Asteroids.getInstance().variants.get( this.variantKey ) || null;
 
-        if ( models !== undefined ) {
+        if ( models !== null ) {
 
             this.models = models;
         }
@@ -50,7 +50,7 @@ class Asteroid extends EntityLOD implements IAsteroid {
         this.scaling.scaleInPlace( 0.8 + this.config.random() * 0.4 );
     }
 
-    private post(): void {
+    private ready(): void {
 
         if ( this.models[0] instanceof BABYLON.TransformNode ) {
 

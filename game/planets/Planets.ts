@@ -7,10 +7,11 @@
 class Planets implements IPlanets {
 
     /* Singleton */ 
-    private static instance: IPlanets; 
-    public static instantiate(): void { if ( this.instance === undefined ) this.instance = new Planets(); } 
-    public static getInstance(): IPlanets { return this.instance; }
+        private static instance: IPlanets; 
+        public static instantiate(): void { if ( this.instance === undefined ) this.instance = new Planets(); } 
+        public static getInstance(): IPlanets { return this.instance; }
 
+        
     public config: IConfig = {
         
     };

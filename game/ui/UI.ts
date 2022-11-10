@@ -7,10 +7,11 @@
 class UI implements IUI {
 
     /* Singleton */ 
-    private static instance: IUI; 
-    public static instantiate(): void { if ( this.instance === undefined ) this.instance = new UI(); } 
-    public static getInstance(): IUI { return this.instance; }
-    
+        private static instance: IUI; 
+        public static instantiate(): void { if ( this.instance === undefined ) this.instance = new UI(); } 
+        public static getInstance(): IUI { return this.instance; }
+        
+        
     public static readonly NEUTRAL: string = "#4a9cff";
     public static readonly BAD: string = "#ff255b";
     public static readonly LIGHTUP: string = "#ffdb6f";

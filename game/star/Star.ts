@@ -7,10 +7,11 @@
 class Star implements IStar {
 
     /* Singleton */ 
-    private static instance: IStar; 
-    public static instantiate(): void { if ( this.instance === undefined ) this.instance = new Star(); } 
-    public static getInstance(): IStar { return this.instance; }
-    
+        private static instance: IStar; 
+        public static instantiate(): void { if ( this.instance === undefined ) this.instance = new Star(); } 
+        public static getInstance(): IStar { return this.instance; }
+        
+        
     public config: IConfig = {
         
         color: "#fff9bc",

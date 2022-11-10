@@ -9,7 +9,7 @@ class Interaction implements IInteraction {
     public readonly mesh: BABYLON.InstancedMesh;
     
     public readonly event: TInteractionEvent;
-    public readonly leaveEvent: TInteractionEvent | undefined;
+    public readonly leaveEvent?: TInteractionEvent;
 
     public highlight: boolean;
     

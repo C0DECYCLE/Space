@@ -8,9 +8,11 @@ abstract class AbstractLOD implements IAbstractLOD {
 
     public static readonly minimum: float = 0.01;
 
-    public static getMinimum( name: string ): float {
+    public static getMinimum( nameOrMin: string | float ): float {
 
-        return Number( name.split( "_" )[2] ).clamp( AbstractLOD.minimum, Infinity );
+        const min: float = ( typeof nameOrMin === "string" ) ? Number( nameOrMin.split( "_" )[2] ) : nameOrMin;
+
+        return min.clamp( AbstractLOD.minimum, Infinity );
     }
 
     public readonly levels: [ any, float ][] = [];

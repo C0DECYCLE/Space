@@ -51,7 +51,7 @@ class CloudsPlanet extends AbstractEntitySpawnerPlanet implements ICloudsPlanet 
 
         cloud.parent = this.planet.root;
         cloud.randomValue = Math.random() * n;
-        cloud.post();
+        cloud.ready();
 
         return [ cloud, {} ];
     }
@@ -82,11 +82,7 @@ class CloudsPlanet extends AbstractEntitySpawnerPlanet implements ICloudsPlanet 
 
         if ( cull < this.config.limit ) {
 
-            return {
-        
-                noiseOffset: noiseOffset, 
-                cull: 1 - (cull / this.config.limit)
-            };
+            return { noiseOffset: noiseOffset, cull: 1 - (cull / this.config.limit) };
         }
 
         return false;
@@ -124,7 +120,7 @@ class CloudsPlanet extends AbstractEntitySpawnerPlanet implements ICloudsPlanet 
             
             if ( radiusDistance < CloudsPlanet.LOD_LIMIT ) {
 
-                cloud.set( Math.round( cloud.levels.length * ((1 - dot) + distanceLODLevel) * 0.5 ).clamp( 0, cloud.levels.length - 1 )  );
+                cloud.set( Math.round( Math.round( cloud.levels.length * ((1 - dot) + distanceLODLevel) * 0.5 ).clamp( 0, cloud.levels.length - 1 ) ) );
 
             } else {
 

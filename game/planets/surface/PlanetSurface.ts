@@ -101,17 +101,9 @@ class PlanetSurface extends AbstractEntitySpawnerPlanet implements IPlanetSurfac
         const obsticleWorld: BABYLON.Vector3 = BABYLON.Vector3.TransformCoordinates( obsticle.position, this.planet.root._worldMatrix );
         const dot: float = BABYLON.Vector3.Dot( planetToCamera, obsticleWorld.subtract( this.planet.position ).normalize() );
         
-        if ( dot > occlusionFallOf ) {
+        if ( dot > occlusionFallOf && radiusDistance < PlanetSurface.LOD_LIMIT ) {
             
-            if ( radiusDistance < PlanetSurface.LOD_LIMIT ) {
-
-                obsticle.set( Math.round( obsticle.levels.length * ((1 - dot) + distanceLODLevel) * 0.5 ).clamp( 0, obsticle.levels.length - 1 )  );
-
-            } else {
-
-                obsticle.setEnabled( false );
-                //obsticle.set( obsticle.levels.length - 1 );
-            }
+            obsticle.set( Math.round( Math.round( obsticle.levels.length * ((1 - dot) + distanceLODLevel) * 0.5 ).clamp( 0, obsticle.levels.length - 1 ) ) );
 
         } else {
 

@@ -15,10 +15,11 @@ interface Object {
 class EngineAssets implements IEngineAssets {
 
     /* Singleton */ 
-    private static instance: IEngineAssets; 
-    public static instantiate(): void { if ( this.instance === undefined ) this.instance = new EngineAssets(); } 
-    public static getInstance(): IEngineAssets { return this.instance; }
-    
+        private static instance: IEngineAssets; 
+        public static instantiate(): void { if ( this.instance === undefined ) this.instance = new EngineAssets(); } 
+        public static getInstance(): IEngineAssets { return this.instance; }
+        
+        
     private static collisionKey: string = "COLLISION";
     private static collisionColor: string = "#43ff53";
 
@@ -52,7 +53,7 @@ class EngineAssets implements IEngineAssets {
 
             BABYLON.SceneLoader.LoadAssetContainer( "", list[i][1], scene, ( container: BABYLON.AssetContainer ): void => {
                 
-                const asset: BABYLON.TransformNode = container.transformNodes.filter( ( transformNode: BABYLON.TransformNode ): boolean => ( transformNode.id === list[i][0] || transformNode.name === list[i][0] ) )[0] || null;
+                const asset: BABYLON.TransformNode = container.transformNodes.filter( ( transformNode: BABYLON.TransformNode ): boolean => ( transformNode.id === list[i][0] || transformNode.name === list[i][0] ) )[0];
 
                 this.list.set( list[i][0], asset );
                 sync.next();

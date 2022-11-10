@@ -7,10 +7,11 @@
 class Physics implements IPhysics {
 
     /* Singleton */ 
-    private static instance: IPhysics; 
-    public static instantiate(): void { if ( this.instance === undefined ) this.instance = new Physics(); } 
-    public static getInstance(): IPhysics { return this.instance; }
+        private static instance: IPhysics; 
+        public static instantiate(): void { if ( this.instance === undefined ) this.instance = new Physics(); } 
+        public static getInstance(): IPhysics { return this.instance; }
 
+        
     public config: IConfig = {
         
     };

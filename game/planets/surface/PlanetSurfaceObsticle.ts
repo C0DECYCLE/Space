@@ -25,7 +25,7 @@ class PlanetSurfaceObsticle extends EntityLOD implements IPlanetSurfaceObsticle 
         
         this.pickModels( obsticleKey );
         this.makeUnique();
-        this.post();
+        this.ready();
     }
 
     private pickModels( obsticleKey: string ) {
@@ -33,9 +33,9 @@ class PlanetSurfaceObsticle extends EntityLOD implements IPlanetSurfaceObsticle 
         const variants: string[] = Planets.getInstance().obsticleKeys[ obsticleKey ];
         const variant: string = variants[ Math.round( variants.length * Math.random() ).clamp( 0, variants.length - 1 ) ];
         
-        const models: IModels | undefined = Planets.getInstance().obsticles.get( obsticleKey )?.get( variant );
+        const models: Nullable< IModels > = Planets.getInstance().obsticles.get( obsticleKey )?.get( variant ) || null;
 
-        if ( models !== undefined ) {
+        if ( models !== null ) {
 
             this.models = models;
             this.fromModels( this.models );
@@ -48,7 +48,7 @@ class PlanetSurfaceObsticle extends EntityLOD implements IPlanetSurfaceObsticle 
         this.scaling.scaleInPlace( 0.8 + this.config.random() * 0.4 );
     }
 
-    private post(): void {
+    private ready(): void {
 
         this.setBounding( EngineUtils.createBoundingCache( this.models[0], this.scaling ) );
     }

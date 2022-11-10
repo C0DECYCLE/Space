@@ -78,10 +78,10 @@ class SpaceshipPhysicsTravel implements ISpaceshipPhysicsTravel {
 
     private getPotentialMarker(): Nullable< IUIMarker > {
 
-        const markers: IUIMarker[] | undefined = UI.getInstance().markers.get( "travel" );
+        const markers: Nullable< IUIMarker[] > = UI.getInstance().markers.get( "travel" ) || null;
         const direction: BABYLON.Vector3 = this.spaceshipPhysics.spaceship.root.forward;
         
-        if ( markers === undefined ) {
+        if ( markers === null ) {
 
             return null;
         }

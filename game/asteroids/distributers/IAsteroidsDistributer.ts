@@ -10,9 +10,9 @@ interface IAsteroidsDistributer extends IConfigurable {
     
     root: BABYLON.TransformNode;
     
-    get position(): BABYLON.Vector3 | void;
+    get position(): BABYLON.Vector3;
 
-    get rotationQuaternion(): BABYLON.Quaternion | void;
+    get rotationQuaternion(): BABYLON.Quaternion;
 
     get numberOfAsteroids(): int;
 

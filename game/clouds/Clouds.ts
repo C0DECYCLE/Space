@@ -7,10 +7,11 @@
 class Clouds implements IClouds {
 
     /* Singleton */ 
-    private static instance: IClouds; 
-    public static instantiate(): void { if ( this.instance === undefined ) this.instance = new Clouds(); } 
-    public static getInstance(): IClouds { return this.instance; }
+        private static instance: IClouds; 
+        public static instantiate(): void { if ( this.instance === undefined ) this.instance = new Clouds(); } 
+        public static getInstance(): IClouds { return this.instance; }
 
+        
     public static readonly lods: [ int, float ][] = [
 
         [ 7, 0.25 ],
@@ -43,17 +44,14 @@ class Clouds implements IClouds {
 
     private createModel( level: int, subdivisions: int, min: float, material: ICloudMaterial ): ICloudModel {
 
+        const invMin: int = Math.round( 1 / AbstractLOD.getMinimum( min ) );
         const mesh: ICloudModel = new CloudModel( this, level, subdivisions, min, material );
 
         mesh.parent = EngineAssets.getInstance().cache;
         mesh.setEnabled( false );
-
-        const invMin: int = Math.round( 1 / AbstractLOD.getMinimum( mesh.name ) );
-            
         mesh.entitymanager = new EntityManager( mesh.name, () => EngineAssets.getInstance().instance( mesh, ( _instance: BABYLON.InstancedMesh ): void => {} ), invMin * 4, invMin );
 
         return mesh;
     }
-
 
 }
