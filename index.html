@@ -21,115 +21,116 @@
         
 
             <link rel="stylesheet" href="style.css" type="text/css" charset="utf-8" />
-        
-        
-        <!--
-        <script src="cordova.js"></script>
-        -->
-        
-        <script src="libraries/babylon.5.14.1/babylon.max.js"></script>
-        <script src="libraries/babylon.5.14.1/loaders/babylonjs.loaders.min.js"></script>
-        <script src="libraries/babylon.5.14.1/materialsLibrary/babylon.customMaterial.min.js"></script>
-        <script src="libraries/babylon.5.14.1/inspector/babylon.inspector.bundle.js"></script>
-        <script src="libraries/babylon.5.14.1/gui/babylon.gui.min.js"></script>
+    
+    
+        <script src="libraries/typescript/typescript-script.js"></script>
 
-        <script src="libraries/babylon.5.14.1/cannon-es.cjs.js"></script>
-        <script src="libraries/scattering/atmosphericScattering-custum.js"></script>
+        <script src="libraries/babylon.5.29.0/babylon.max.js"></script>
+        <script src="libraries/babylon.5.29.0/loaders/babylonjs.loaders.min.js"></script>
+        <script src="libraries/babylon.5.29.0/materialsLibrary/babylon.customMaterial.min.js"></script>
+        <script src="libraries/babylon.5.29.0/inspector/babylon.inspector.bundle.js"></script>
+        <script src="libraries/babylon.5.29.0/gui/babylon.gui.min.js"></script>
         
+        <script type="text/typescript" src="libraries/scattering/AtmosphericScatteringSettings.ts"></script>
+        <script type="text/typescript" src="libraries/scattering/AtmosphericScatteringPostProcess.ts"></script>
+
         <script src="libraries/generic-noise-3d.js"></script>
         <script src="libraries/perlin-noise-3d.js"></script>
         <script src="libraries/stats.js"></script>
-        <script src="libraries/tween.umd.js"></script>
-        <script src="libraries/dat.gui.min.js"></script>
         <script src="libraries/seedrandom.min.js"></script>
 
+
+            <script type="text/typescript" src="utilities/Utils.ts"></script>
+            <script type="text/typescript" src="utilities/Sync.ts"></script>
+            <script type="text/typescript" src="utilities/Singleton.ts"></script>
+            <script type="text/typescript" src="utilities/objectarray/ObjectArray.ts"></script>
+            <script type="text/typescript" src="utilities/objectarray/SmartObjectArray.ts"></script>
+            <script type="text/typescript" src="utilities/statemachine/State.ts"></script>
+            <script type="text/typescript" src="utilities/statemachine/StateMachine.ts"></script>
+             
                 
-            <script src="utilities/utils.js"></script>
-            <script src="utilities/sync.js"></script>
-            <script src="utilities/statemachine.js"></script>
-            <script src="utilities/objectarray/objectarray.js"></script>
-            <script src="utilities/objectarray/smartobjectarray.js"></script>
+                <script type="text/typescript" src="game/engine/Engine.ts"></script>  
+                <script type="text/typescript" src="game/engine/EngineExtensions.ts"></script>    
+                <script type="text/typescript" src="game/engine/EngineAssets.ts"></script>      
+                <script type="text/typescript" src="game/engine/config/LoadConfig.ts"></script>    
+                <script type="text/typescript" src="game/engine/utils/EngineUtils.ts"></script> 
+                <script type="text/typescript" src="game/engine/utils/EngineUtilsShader.ts"></script> 
+                <script type="text/typescript" src="game/engine/utils/BoundingCache.ts"></script> 
+      
+                <script type="text/typescript" src="game/controls/EControlsKeys.ts"></script>    
+                <script type="text/typescript" src="game/controls/Contorls.ts"></script>         
+
+                <script type="text/typescript" src="game/entities/Models.ts"></script>    
+                <script type="text/typescript" src="game/entities/EntityManager.ts"></script>        
+                <script type="text/typescript" src="game/entities/lod/AbstractLOD.ts"></script>        
+                <script type="text/typescript" src="game/entities/lod/LOD.ts"></script>        
+                <script type="text/typescript" src="game/entities/lod/EntityLOD.ts"></script>      
+                <script type="text/typescript" src="game/entities/spawn/AbstractEntitySpawnerPlanet.ts"></script>        
+               
+                <script type="text/typescript" src="game/physics/Physics.ts"></script>
+                <script type="text/typescript" src="game/physics/EPhysicsTypes.ts"></script>
+                <script type="text/typescript" src="game/physics/EPhysicsStates.ts"></script>
+                <script type="text/typescript" src="game/physics/PhysicsEntity.ts"></script>
+
+                <script type="text/typescript" src="game/camera/Camera.ts"></script> 
+                <script type="text/typescript" src="game/camera/CameraOrigin.ts"></script>   
+                <script type="text/typescript" src="game/camera/target/AbstractCameraTarget.ts"></script>   
+                <script type="text/typescript" src="game/camera/target/CameraTargetPlayer.ts"></script>  
+                <script type="text/typescript" src="game/camera/target/CameraTargetSpaceship.ts"></script>   
+
+                <script type="text/typescript" src="game/star/Star.ts"></script>   
+                <script type="text/typescript" src="game/star/StarShadow.ts"></script>   
+
+                <script type="text/typescript" src="game/clouds/Clouds.ts"></script>   
+                <script type="text/typescript" src="game/clouds/CloudsPlanet.ts"></script>  
+                <script type="text/typescript" src="game/clouds/cloud/CloudModel.ts"></script>    
+                <script type="text/typescript" src="game/clouds/cloud/CloudMaterial.ts"></script>   
+                <script type="text/typescript" src="game/clouds/cloud/Cloud.ts"></script>   
+
+                <script type="text/typescript" src="game/planets/Planets.ts"></script>         
+                <script type="text/typescript" src="game/planets/Planet.ts"></script>          
+                <script type="text/typescript" src="game/planets/PlanetMaterial.ts"></script>        
+                <script type="text/typescript" src="game/planets/PlanetPhysics.ts"></script>         
+                <script type="text/typescript" src="game/planets/PlanetHelper.ts"></script>       
+                <script type="text/typescript" src="game/planets/chunks/PlanetChunksNode.ts"></script>    
+                <script type="text/typescript" src="game/planets/chunks/PlanetChunks.ts"></script>    
+                <script type="text/typescript" src="game/planets/chunks/PlanetChunk.ts"></script>    
+                <script type="text/typescript" src="game/planets/quadtree/PlanetInsertParameters.ts"></script>    
+                <script type="text/typescript" src="game/planets/quadtree/PlanetQuadtree.ts"></script>    
+                <script type="text/typescript" src="game/planets/quadtree/PlanetQuadtreeStitch.ts"></script>  
+                <script type="text/typescript" src="game/planets/surface/PlanetSurface.ts"></script>
+                <script type="text/typescript" src="game/planets/surface/PlanetSurfaceObsticle.ts"></script>
+                <script type="text/typescript" src="game/planets/utils/EPlanetUtilsHeightmapVariants.ts"></script>         
+                <script type="text/typescript" src="game/planets/utils/EPlanetUtilsHeightmapParameters.ts"></script>         
+                <script type="text/typescript" src="game/planets/utils/PlanetUtils.ts"></script>         
+                <script type="text/typescript" src="game/planets/utils/PlanetUtilsHeightmap.ts"></script> 
+        
+                <script type="text/typescript" src="game/asteroids/Asteroids.ts"></script>   
+                <script type="text/typescript" src="game/asteroids/Asteroid.ts"></script>   
+                <script type="text/typescript" src="game/asteroids/distributers/AsteroidsCluster.ts"></script>   
+                <script type="text/typescript" src="game/asteroids/distributers/AsteroidRing.ts"></script>
+
+                <script type="text/typescript" src="game/spaceship/Spaceships.ts"></script>     
+                <script type="text/typescript" src="game/spaceship/AbstractSpaceship.ts"></script>     
+                <script type="text/typescript" src="game/spaceship/SpaceshipThrusters.ts"></script>     
+                <script type="text/typescript" src="game/spaceship/SpaceshipTravel.ts"></script>     
+                <script type="text/typescript" src="game/spaceship/physics/SpaceshipPhysics.ts"></script>     
+                <script type="text/typescript" src="game/spaceship/physics/SpaceshipPhysicsTravel.ts"></script>
+                <script type="text/typescript" src="game/spaceship/variants/VulcanSpaceship.ts"></script>                
+
+                <script type="text/typescript" src="game/ui/UI.ts"></script>       
+                <script type="text/typescript" src="game/ui/UIMarker.ts"></script>      
+           
+                <script type="text/typescript" src="game/player/Player.ts"></script>            
+                <script type="text/typescript" src="game/player/PlayerPhysics.ts"></script>    
+                <script type="text/typescript" src="game/player/interaction/Interaction.ts"></script>       
+                <script type="text/typescript" src="game/player/interaction/PlayerInteraction.ts"></script>       
+                <script type="text/typescript" src="game/player/interaction/PlayerInteractionMaterial.ts"></script>       
+
+                <script type="text/typescript" src="game/postprocess/PostProcess.ts"></script>        
+
                 
-            
-                <script src="game/game.js"></script>         
-                
-                <script src="game/engine/engine.js"></script>   
-                <script src="game/engine/engine.extensions.js"></script>   
-                <script src="game/engine/engine.ambient.js"></script>  
-                <script src="game/engine/engine.assets.js"></script> 
-                <script src="game/engine/utils/engine.utils.js"></script> 
-                <script src="game/engine/utils/engine.utils.shader.glsl"></script> 
-                <script src="game/engine/utils/engine.utils.shader.js"></script> 
-
-                <script src="game/objectcontainer/objectcontainers.js"></script>     
-                <script src="game/objectcontainer/objectcontainer.js"></script>     
-                <script src="game/objectcontainer/objectcontainer.utils.js"></script>    
-                  
-                <script src="game/controls/contorls.js"></script>        
-                  
-                <script src="game/entities/abstractlod.js"></script>        
-                <script src="game/entities/lod.js"></script>        
-                <script src="game/entities/entitylod.js"></script>        
-                <script src="game/entities/entitymanager.js"></script>        
-                <script src="game/entities/entityspawner.planet.js"></script>        
-                
-                <script src="game/physics/physics.js"></script>
-                <script src="game/physics/physics.entity.js"></script>
-
-                <script src="game/camera/camera.js"></script> 
-                <script src="game/camera/camera.origin.js"></script>   
-                <script src="game/camera/target/camera.target.js"></script>   
-                <script src="game/camera/target/camera.target.player.js"></script>  
-                <script src="game/camera/target/camera.target.spaceship.js"></script>   
-
-                <script src="game/star/star.js"></script>   
-                <script src="game/star/star.shadow.js"></script>   
-
-                <script src="game/clouds/clouds.js"></script>   
-                <script src="game/clouds/clouds.planet.js"></script>  
-                <script src="game/clouds/cloud.model.js"></script>    
-                <script src="game/clouds/cloud.material.js"></script>   
-                <script src="game/clouds/cloud.js"></script>   
-
-                <script src="game/planets/planets.js"></script>         
-                <script src="game/planets/planet.js"></script>          
-                <script src="game/planets/planet.helper.js"></script>       
-                <script src="game/planets/planet.chunks.js"></script>    
-                <script src="game/planets/planet.chunk.js"></script>    
-                <script src="game/planets/planet.material.js"></script>        
-                <script src="game/planets/planet.physics.js"></script>         
-                <script src="game/planets/quadtree/planet.quadtree.js"></script>    
-                <script src="game/planets/quadtree/planet.quadtree.stitch.js"></script>  
-                <script src="game/planets/surface/planet.surface.js"></script>
-                <script src="game/planets/surface/planet.surface.obsticle.js"></script>
-                <script src="game/planets/utils/planet.utils.js"></script>         
-                <script src="game/planets/utils/planet.utils.heightmap.js"></script> 
-
-                <script src="game/asteroids/asteroids.js"></script>                
-                <script src="game/asteroids/asteroids.cluster.js"></script>                
-                <script src="game/asteroids/asteroids.ring.js"></script>                
-                <script src="game/asteroids/asteroid.js"></script>      
-
-                <script src="game/spaceship/spaceships.js"></script>     
-                <script src="game/spaceship/spaceship.js"></script>     
-                <script src="game/spaceship/spaceship.thrusters.js"></script>     
-                <script src="game/spaceship/spaceship.travel.js"></script>     
-                <script src="game/spaceship/physics/spaceship.physics.js"></script>     
-                <script src="game/spaceship/physics/spaceship.physics.travel.js"></script>
-                <script src="game/spaceship/variants/spaceship.vulcan.js"></script>                
-
-                <script src="game/ui/ui.js"></script>       
-                <script src="game/ui/ui.marker.js"></script>      
-                
-                <script src="game/player/player.js"></script>            
-                <script src="game/player/player.physics.js"></script>    
-                <script src="game/player/interaction/player.interaction.js"></script>       
-                <script src="game/player/interaction/player.interaction.material.js"></script>       
-
-                <script src="game/postprocess/postprocess.js"></script>        
-
-
-        <script src="initialize.js"></script>
+            <script type="text/typescript" src="initialize.ts"></script>
 
 
     </head>
