@@ -10,7 +10,7 @@ class PlanetInsertParameters implements IPlanetInsertParameters {
     public readonly distanceRadiusFactor: float;
 
     public readonly centerToInsertion: BABYLON.Vector3;
-    public readonly occlusionFallOf: float;
+    public readonly occlusionLimit: float;
 
     public constructor( planet: IPlanet, distance: float ) {
         
@@ -18,7 +18,7 @@ class PlanetInsertParameters implements IPlanetInsertParameters {
         this.distanceRadiusFactor = distance / planet.config.radius;
     
         this.centerToInsertion = Camera.getInstance().position.subtract( planet.position ).normalize();
-        this.occlusionFallOf = planet.helper.getOcclusionFallOf( distance, 0.9 );
+        this.occlusionLimit = planet.helper.getOcclusionLimit( distance, 0.9 );
     }
     
 }

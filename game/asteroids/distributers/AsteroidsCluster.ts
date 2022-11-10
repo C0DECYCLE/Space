@@ -59,6 +59,7 @@ class AsteroidsCluster implements IAsteroidsCluster {
     }
 
     private hasCustomRoot: boolean = false;
+    private currentToggleValue: boolean = true;
 
     public constructor( config?: IConfig, customRoot?: BABYLON.TransformNode ) {
 
@@ -68,6 +69,10 @@ class AsteroidsCluster implements IAsteroidsCluster {
         this.spawnAsteroids();
     }
     
+    public linkPlanet( _planet: IPlanet ): void {
+     
+    }
+
     public update(): void {
 
         for ( let i: int = 0; i < this.list.length; i++ ) {
@@ -81,6 +86,21 @@ class AsteroidsCluster implements IAsteroidsCluster {
         for ( let i: int = 0; i < this.list.length; i++ ) {
 
             this.list[i].position.addInPlace( position );
+        }
+    }
+
+    public toggleAllAsteroids( value: boolean ): void {
+        
+        if ( this.currentToggleValue === value ) {
+
+            return;
+        }
+
+        this.currentToggleValue = value;
+
+        for ( let i: int = 0; i < this.list.length; i++ ) {
+
+            this.list[i].setEnabled( value );
         }
     }
 

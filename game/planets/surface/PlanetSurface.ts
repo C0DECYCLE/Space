@@ -87,21 +87,22 @@ class PlanetSurface extends AbstractEntitySpawnerPlanet implements IPlanetSurfac
 
         const radiusDistance: float = distance / this.planet.config.radius;
         const planetToCamera: BABYLON.Vector3 = Camera.getInstance().position.subtract( this.planet.position ).normalize();
-        const occlusionFallOf: float = this.planet.helper.getOcclusionFallOf( distance ).clamp( 0.85, Infinity );
+        const occlusionLimit: float = this.planet.helper.getOcclusionLimit( distance, undefined, 0.85 );
         const distanceLODLevel: float = (radiusDistance / PlanetSurface.LOD_LIMIT).clamp( 0, 1 );
         
         for ( let i: int = 0; i < this.list.length; i++ ) {
 
-            this.updateLOD( this.list[i], radiusDistance, planetToCamera, occlusionFallOf, distanceLODLevel );
+            this.updateLOD( this.list[i], radiusDistance, planetToCamera, occlusionLimit, distanceLODLevel );
         }
     }
 
-    private updateLOD( obsticle: IPlanetSurfaceObsticle, radiusDistance: float, planetToCamera: BABYLON.Vector3, occlusionFallOf: float, distanceLODLevel: float ): void {
+    private updateLOD( obsticle: IPlanetSurfaceObsticle, radiusDistance: float, planetToCamera: BABYLON.Vector3, occlusionLimit: float, distanceLODLevel: float ): void {
 
         const obsticleWorld: BABYLON.Vector3 = BABYLON.Vector3.TransformCoordinates( obsticle.position, this.planet.root._worldMatrix );
-        const dot: float = BABYLON.Vector3.Dot( planetToCamera, obsticleWorld.subtract( this.planet.position ).normalize() );
+        const planetToObsticle: BABYLON.Vector3 = obsticleWorld.subtract( this.planet.position ).normalize(); //cache normal cloud direction
+        const dot: float = BABYLON.Vector3.Dot( planetToCamera, planetToObsticle );
         
-        if ( dot > occlusionFallOf && radiusDistance < PlanetSurface.LOD_LIMIT ) {
+        if ( dot > occlusionLimit && radiusDistance < PlanetSurface.LOD_LIMIT ) {
             
             obsticle.set( Math.round( Math.round( obsticle.levels.length * ((1 - dot) + distanceLODLevel) * 0.5 ).clamp( 0, obsticle.levels.length - 1 ) ) );
 

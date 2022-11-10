@@ -37,9 +37,9 @@ class PlanetHelper implements IPlanetHelper {
         }
     }
 
-    public getOcclusionFallOf( distance: float, c: float = 0.8 ): float {
+    public getOcclusionLimit( distance: float, correct: float = 0.8, limit: float = -1.05 ): float {
 
-        return ( 1 - ( (distance / this.planet.config.radius) - c ) ).clamp( -1.05, 0.9 ) || -1.05;
+        return ( 1 - ( (distance / this.planet.config.radius) - correct ) ).clamp( limit, 0.9 ) || limit;
     }
 
     public createBasicMaterial(): BABYLON.StandardMaterial {

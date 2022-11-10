@@ -55,7 +55,7 @@ class PlanetQuadtree implements IPlanetQuadtree {
             
         } else {
 
-            this.planet.chunks.node( params, factors[0], nodeKey, position, this.fixRotationQuaternion, size, this.size );
+            this.planet.chunks.node( params, factors[1], nodeKey, position, this.fixRotationQuaternion, size, this.size );
         }
     }
 

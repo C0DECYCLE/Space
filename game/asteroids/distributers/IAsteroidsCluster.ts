@@ -12,4 +12,6 @@ interface IAsteroidsCluster extends IAsteroidsDistributer {
 
     offsetAllAsteroids( position: BABYLON.Vector3 ): void;
 
+    toggleAllAsteroids( value: boolean ): void;
+
 }

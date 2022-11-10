@@ -52,6 +52,8 @@ class AsteroidsRing implements IAsteroidsRing {
         return count;
     }
 
+    private linkedPlanet: Nullable< IPlanet > = null;
+
     public constructor( config?: IConfig ) {
 
         EngineUtils.configure( this, config );
@@ -60,11 +62,22 @@ class AsteroidsRing implements IAsteroidsRing {
         this.spawnClusters();
     }
 
+    public linkPlanet( planet: IPlanet ): void {
+     
+        this.linkedPlanet = planet;
+        
+        this.position.copyFrom( this.linkedPlanet.position );
+    }
+
     public update(): void {
 
-        for ( let i: int = 0; i < this.list.length; i++ ) {
+        if ( this.linkedPlanet !== null ) { if ( freeze === true ) return;
 
-            this.list[i].update();
+            this.updateByPlanet( this.linkedPlanet );
+
+        } else {
+
+            this.updateAll();
         }
     }
 
@@ -86,6 +99,46 @@ class AsteroidsRing implements IAsteroidsRing {
             const cluster: IAsteroidsCluster = new AsteroidsCluster( { key: i, seed: random, radius: this.config.spread, height: this.config.height, density: this.config.density, offset: offset }, this.root );
 
             this.list.push( cluster );
+        }
+    }
+
+    private updateAll(): void {
+
+        for ( let i: int = 0; i < this.list.length; i++ ) {
+
+            this.list[i].update();
+        }
+    }
+
+    private updateByPlanet( planet: IPlanet ): void {
+
+        if ( planet.lod.isVisible === true ) {
+
+            const distance: float = Camera.getInstance().getScreenDistance( planet.root );
+            const planetToCamera: BABYLON.Vector3 = Camera.getInstance().position.subtract( planet.position ).normalize();
+            const occlusionLimit: float = planet.helper.getOcclusionLimit( distance, 0.2 );
+            
+            for ( let i: int = 0; i < this.list.length; i++ ) {
+
+                this.updateCullCluster( i, planetToCamera, occlusionLimit );
+            }
+        }
+    }
+
+    private updateCullCluster( i: int, planetToCamera: BABYLON.Vector3, occlusionLimit: float ): void {
+
+        const angle: float = ( 360 / this.list.length ) * i * EngineUtils.toRadian;
+        const planetToCluster: BABYLON.Vector3 = new BABYLON.Vector3( Math.cos( angle ), 0, Math.sin( angle ) );
+        const dot: float = BABYLON.Vector3.Dot( planetToCamera, planetToCluster );
+        
+        if ( dot > occlusionLimit ) {
+
+            this.list[i].toggleAllAsteroids( true );
+            this.list[i].update();
+
+        } else {
+
+            this.list[i].toggleAllAsteroids( false );
         }
     }
 

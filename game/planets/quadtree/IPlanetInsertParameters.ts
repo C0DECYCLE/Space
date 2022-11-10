@@ -12,6 +12,6 @@ interface IPlanetInsertParameters {
 
     readonly centerToInsertion: BABYLON.Vector3;
     
-    readonly occlusionFallOf: float;
+    readonly occlusionLimit: float;
 
 }

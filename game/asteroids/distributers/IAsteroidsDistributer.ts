@@ -16,6 +16,8 @@ interface IAsteroidsDistributer extends IConfigurable {
 
     get numberOfAsteroids(): int;
 
+    linkPlanet( planet: IPlanet ): void;
+    
     update(): void;
 
 }

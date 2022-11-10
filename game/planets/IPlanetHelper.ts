@@ -12,7 +12,7 @@ interface IPlanetHelper {
 
     toggleShadow( value: boolean ): void;
 
-    getOcclusionFallOf( distance: float, c?: float ): float;
+    getOcclusionLimit( distance: float, correct?: float, limit?: float ): float;
 
     createBasicMaterial(): BABYLON.StandardMaterial;
 

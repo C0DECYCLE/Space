@@ -100,23 +100,24 @@ class CloudsPlanet extends AbstractEntitySpawnerPlanet implements ICloudsPlanet 
 
         const radiusDistance: float = distance / this.planet.config.radius;
         const planetToCamera: BABYLON.Vector3 = Camera.getInstance().position.subtract( this.planet.position ).normalize();
-        const occlusionFallOf: float = this.planet.helper.getOcclusionFallOf( distance ).clamp( -0.35, Infinity );
+        const occlusionLimit: float = this.planet.helper.getOcclusionLimit( distance, undefined, -0.35 );
         const distanceLODLevel: float = (radiusDistance / CloudsPlanet.LOD_LIMIT).clamp( 0, 1 );
         const starLightDirection: BABYLON.Vector3 = this.planet.position.normalizeToNew().applyRotationQuaternionInPlace( this.planet.rotationQuaternion.invert() );
 
         for ( let i: int = 0; i < this.list.length; i++ ) {
 
-            this.updateLOD( this.list[i], radiusDistance, planetToCamera, occlusionFallOf, distanceLODLevel );
+            this.updateLOD( this.list[i], radiusDistance, planetToCamera, occlusionLimit, distanceLODLevel );
             this.updateStarLight( this.list[i], starLightDirection );
         }
     }
 
-    private updateLOD( cloud: ICloud, radiusDistance: float, planetToCamera: BABYLON.Vector3, occlusionFallOf: float, distanceLODLevel: float ): void {
+    private updateLOD( cloud: ICloud, radiusDistance: float, planetToCamera: BABYLON.Vector3, occlusionLimit: float, distanceLODLevel: float ): void {
 
         const cloudWorld: BABYLON.Vector3 = BABYLON.Vector3.TransformCoordinates( cloud.position, this.planet.root._worldMatrix );
-        const dot: float = BABYLON.Vector3.Dot( planetToCamera, cloudWorld.subtract( this.planet.position ).normalize() );
-                                                                    //cache normal cloud direction
-        if ( dot > occlusionFallOf ) {
+        const planetToCloud: BABYLON.Vector3 = cloudWorld.subtract( this.planet.position ).normalize(); //cache normal cloud direction
+        const dot: float = BABYLON.Vector3.Dot( planetToCamera, planetToCloud );
+
+        if ( dot > occlusionLimit ) {
             
             if ( radiusDistance < CloudsPlanet.LOD_LIMIT ) {
 

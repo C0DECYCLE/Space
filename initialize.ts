@@ -7,6 +7,7 @@
 let scene: BABYLON.Scene;
 let debugMaterialRed: BABYLON.StandardMaterial;
 let debugMaterialWhite: BABYLON.StandardMaterial;
+let freeze: boolean = false;
 
 
 function setup(): void {
@@ -76,7 +77,7 @@ function register(): void {
             gravity: 0.6, atmosphere: 256, waveLengths: new BABYLON.Color3( 450, 370, 420 ),
             seed: new BABYLON.Vector3( -1123, 7237, -3943 ), mountainy: 5, warp: 0.8,
             colors: { main: "#92a4a8", second: "#a58685", third: "#caa88d", steep: "#66515f" },
-            surface: true
+            //surface: true
         },
 
         { 
@@ -122,8 +123,8 @@ function stage(): void {
     Planets.getInstance().list[2].place( Star.getInstance().position, 1000 * 1000, 240 );
     //Planets.getInstance().list[3].place( Planets.getInstance().list[2].position, 60 * 1000, 60 );
     
-    Asteroids.getInstance().list[0].position.copyFrom( Planets.getInstance().list[0].position );
-    Asteroids.getInstance().list[1].position.copyFrom( Planets.getInstance().list[0].position );
+    Asteroids.getInstance().list[0].linkPlanet( Planets.getInstance().list[0] );
+    Asteroids.getInstance().list[1].linkPlanet( Planets.getInstance().list[0] );
 
     Spaceships.getInstance().list[0].position.copyFrom( Planets.getInstance().list[0].position ).addInPlace( new BABYLON.Vector3( 5 * 1000, 0, 0 ) );
     Spaceships.getInstance().list[0].root.rotate( BABYLON.Axis.Y, 90 * EngineUtils.toRadian, BABYLON.Space.LOCAL );
@@ -188,6 +189,8 @@ window.addEventListener( "compile", ( _event: Event ): void => { console.log( `\
     
     //DOTs are not faster than sqrt when first normalizing vectors
     //-> not every frame normalize entities on planet again! store normal direction of entity!
+
+    //generall occluded by planet funtion with dot product (not normalize at runtime!!!) and distance to surface then use it for every object when in planet space
 
     //when chunked, distance approximation player -> target: 
     //(precalc: distance and direction from chunk center to target)

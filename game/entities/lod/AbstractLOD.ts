@@ -44,6 +44,11 @@ abstract class AbstractLOD implements IAbstractLOD {
 
     public setEnabled( value: boolean ): void {
 
+        if ( value === this.isEnabled ) {
+
+            return;
+        }
+
         this.set( value === true ? this.lastValidLevel : -1 );
     }
 

@@ -50,7 +50,7 @@ class Planets implements IPlanets {
         return this.maskMaterial;
     }
 
-    public update(): void { //if ( window.freeze === true ) return;
+    public update(): void { if ( freeze === true ) return;
 
         this.insert();
         this.updatePlanets();

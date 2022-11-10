@@ -22,8 +22,8 @@ class PlanetChunks implements IPlanetChunks {
     }
 
     public node( params: IPlanetInsertParameters, dot: float, nodeKey: string, position: BABYLON.Vector3, fixRotationQuaternion: BABYLON.Quaternion, size: int, faceSize: int ): void {
-
-        if ( dot > params.occlusionFallOf ) {
+        
+        if ( dot > params.occlusionLimit ) {
                 
             this.evalNode( params, nodeKey, position, fixRotationQuaternion, size, faceSize );
         }
