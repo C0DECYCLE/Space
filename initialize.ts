@@ -77,7 +77,7 @@ function register(): void {
             gravity: 0.6, atmosphere: 256, waveLengths: new BABYLON.Color3( 450, 370, 420 ),
             seed: new BABYLON.Vector3( -1123, 7237, -3943 ), mountainy: 5, warp: 0.8,
             colors: { main: "#92a4a8", second: "#a58685", third: "#caa88d", steep: "#66515f" },
-            //surface: true
+            surface: true
         },
 
         { 

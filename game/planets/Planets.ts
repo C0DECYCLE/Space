@@ -64,7 +64,7 @@ class Planets implements IPlanets {
             const distance: float = Camera.getInstance().getScreenDistance( planet.root );
             const planetThreashold: float = planet.config.radius + planet.config.influence;
             
-            //Player.getInstance().planetInsert( planet, distance, planetThreashold );
+            Player.getInstance().planetInsert( planet, distance, planetThreashold );
             Spaceships.getInstance().planetInsert( planet, distance, planetThreashold );
            
             planet.helper.toggleShadow( distance < planet.config.radius * 5 );
