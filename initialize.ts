@@ -155,6 +155,8 @@ function update(): void {
 window.addEventListener( "compile", ( _event: Event ): void => { console.log( `\n\n${ document.title }\n\nPalto Studio\nCopyright Noah Bussinger ${ new Date().getUTCFullYear() }\n\n` ); setup(); } );
 
 
+    //asteroid/far around planet object -> occlusion culling not by dot but by sphere tracing ray!
+
     //make better optimized lod system
     // -> optimized blend in distance
     // -> optimized occlusionCullFalloff
