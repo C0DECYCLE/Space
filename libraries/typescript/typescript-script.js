@@ -3,120 +3,169 @@
 /*
     Palto Studio
     Developed by Noah Bussinger
-    2022
+    2023
 */
 
-( function () {
-
+(function () {
     const initTimestamp = performance.now();
-    const compileEvent = new Event( "compile" );
+    const compileEvent = new Event("compile");
+    const workerURL = `${document.location.origin}/libraries/typescript/typescript-worker.js`;
+    const compilerURL = `${document.location.origin}/libraries/typescript/typescript.4.8.4.js`;
 
     function fetchConfig() {
-
-        fetch( "/tsconfig.json" ).then( response => response.json() ).then( onConfigLoaded ).catch( onConfigFailed );
+        fetch("/tsconfig.json")
+            .then((response) => response.json())
+            .then(onConfigLoaded)
+            .catch(onConfigFailed);
     }
-    
-    const transpileWorker = window.URL.createObjectURL( new Blob( [ `
 
-        const load = sourceUrl => {
+    function onConfigFailed(error) {
+        console.log(`[Typescript]: Config: Failed`);
+        console.warn(error);
+    }
 
-            const xhr = XMLHttpRequest ? new XMLHttpRequest() : ActiveXObject ? new ActiveXObject( "Microsoft.XMLHTTP" ) : null;
+    function initWorkers(n, tsconfig) {
+        const workers = { requests: [], free: [] /*, working: []*/ };
 
-            if ( !xhr ) return "";
+        for (let i = 0; i < n; i++) {
+            const worker = new Worker(workerURL);
+            /*worker.index = i;*/
+            worker.postMessage({
+                key: "init",
+                tsconfig: tsconfig,
+                compilerURL: compilerURL,
+            });
+            worker.onmessage = ({ data }) => {
+                workers.free.push(worker);
+                workers.processRequestQueue();
+            };
+            /*workers.working[i] = undefined;*/
+        }
 
-            xhr.open( "GET", sourceUrl, false );
-            xhr.overrideMimeType && xhr.overrideMimeType( "text/plain" );
-            xhr.send( null );
-
-            return xhr.status == 200 ? xhr.responseText : "";
+        workers.request = (instructions, callback) => {
+            if (workers.free.length > 0) {
+                workers.processRequest(instructions, callback);
+            } else {
+                workers.requests.push({
+                    instructions: instructions,
+                    callback: callback,
+                });
+            }
         };
 
-        onmessage = ( { data: [ sourceUrl, sourceCode, tsconfig, tspath ] } ) => {
-
-            importScripts( tspath );
-
-            const raw = sourceCode ? sourceCode : load( sourceUrl );
-            
-            postMessage( [ ts.transpile( raw, tsconfig.compilerOptions ), raw.split( "\\n" ).length ] );
+        workers.processRequestQueue = () => {
+            if (workers.requests.length > 0 && workers.free.length > 0) {
+                const request = workers.requests.pop();
+                workers.processRequest(request.instructions, request.callback);
+            }
         };
 
-    ` ], { type: "text/javascript" } ) );
+        workers.processRequest = (instructions, callback) => {
+            if (workers.free.length > 0) {
+                const worker = workers.free.pop();
+                /*workers.working[worker.index] = worker;*/
 
-    function onConfigFailed( error ) {
+                worker.postMessage(instructions);
+                worker.onmessage = ({ data }) => {
+                    /*workers.working[worker.index] = undefined;*/
+                    workers.free.push(worker);
+                    callback(data.transpiled, data.linesCount);
+                    workers.processRequestQueue();
+                };
+            }
+        };
 
-        console.log( `[Typescript]: Config: Failed` );
-    } 
+        return workers;
+    }
 
-    async function onConfigLoaded( tsconfig ) {
+    function compilePromise(workers, src, innerHTML, callback) {
+        const instructions = { key: "compile", src: src, innerHTML: innerHTML };
+        return new Promise((resolve) => {
+            workers.request(instructions, (transpiled, linesCount) =>
+                callback(resolve, transpiled, linesCount)
+            );
+        });
+    }
 
-        console.log( `[Typescript]: Config: Successful` );
+    async function onConfigLoaded(tsconfig) {
+        console.log(`[Typescript]: Config: Successful`);
 
-        const scripts = document.getElementsByTagName( "script" );
+        window.tsconfig = tsconfig;
+        const workers = initWorkers(4, tsconfig);
+        window.typescriptCompileService = workers.request;
+
+        const scripts = document.getElementsByTagName("script");
         const pending = [];
         const transpilations = [];
 
         let j = 0;
         let linesSum = 0;
 
-        for ( let i = 0; i < scripts.length; i++ ) {
-
-            if ( scripts[i].type === "text/typescript" ) {
-
+        for (let i = 0; i < scripts.length; i++) {
+            if (scripts[i].type === "text/typescript") {
                 const { src } = scripts[i];
                 const innerHTML = src ? null : scripts[i].innerHTML;
                 const index = j++;
-
-                pending.push( new Promise( resolve => {
-                
-                    const w = new Worker( transpileWorker );
-
-                    w.postMessage( [ src, innerHTML, tsconfig, `${ document.location.origin }/libraries/typescript/typescript.4.8.4.js` ] );
-                    w.onmessage = ( { data: [ transpiled, linesCount ] } ) => {
-
-                        transpilations[ index ] = [ transpiled, scripts[i], linesCount ];
-                        linesSum += linesCount;
-
-                        w.terminate();
-                        resolve();
-                    };
-                } ) );
+                const callback = (resolve, transpiled, linesCount) => {
+                    transpilations[index] = [
+                        transpiled,
+                        scripts[i],
+                        linesCount,
+                    ];
+                    linesSum += linesCount;
+                    resolve();
+                };
+                pending.push(compilePromise(workers, src, innerHTML, callback));
             }
         }
 
-        await Promise.all( pending );
+        await Promise.all(pending);
 
         let t = 0;
         let e = 0;
 
-        function onTranspileError( error ) {
-
+        function onTranspileError(error) {
             error.preventDefault();
 
-            console.error( `[Typescript]: ${ error.message }\n    (at ${ transpilations[t][1].src })` );
+            console.error(
+                `[Typescript]: ${error.message}\n    (at ${transpilations[t][1].src})`
+            );
             e++;
         }
-        
-        window.addEventListener( "error", onTranspileError );
-        
-        for ( let i = 0; i < transpilations.length; i++ ) {
 
-            const newScript = document.createElement( "script" );
-            newScript.id = `${ transpilations[i][1].src }`.replace( `${ document.location.origin }/`, "" );
+        window.addEventListener("error", onTranspileError);
+
+        for (let i = 0; i < transpilations.length; i++) {
+            const newScript = document.createElement("script");
+            newScript.id = `${transpilations[i][1].src}`.replace(
+                `${document.location.origin}/`,
+                ""
+            );
             newScript.innerHTML = transpilations[i][0];
 
-            transpilations[i][1].replaceWith( newScript );
+            transpilations[i][1].replaceWith(newScript);
             t++;
         }
-        
-        window.removeEventListener( "error", onTranspileError );
+
+        window.removeEventListener("error", onTranspileError);
 
         const time = performance.now() - initTimestamp;
 
-        console.log( `[Typescript]: Files: ${ transpilations.length }, Lines: ${ linesSum } (${ Math.round( linesSum / transpilations.length ) }/file), Time: ${ Math.round( time / 1000 * 100 ) / 100 }s (${ Math.round( time / transpilations.length ) }ms/file), Errors: ${ e } (${ Math.round( e / transpilations.length ) }/file)` );
-        
-        window.dispatchEvent( compileEvent );
+        console.log(
+            `[Typescript]: Files: ${
+                transpilations.length
+            }, Lines: ${linesSum} (${Math.round(
+                linesSum / transpilations.length
+            )}/file), Time: ${
+                Math.round((time / 1000) * 100) / 100
+            }s (${Math.round(
+                time / transpilations.length
+            )}ms/file), Errors: ${e} (${Math.round(
+                e / transpilations.length
+            )}/file)`
+        );
+        window.dispatchEvent(compileEvent);
     }
 
-    window.addEventListener( "DOMContentLoaded", fetchConfig );
-    
-} )();
+    window.addEventListener("DOMContentLoaded", fetchConfig);
+})();
